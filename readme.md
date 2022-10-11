@@ -1,1 +1,1 @@
-Stand with me! Testing
+Stand with me!
