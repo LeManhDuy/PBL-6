@@ -1,0 +1,36 @@
+:root {
+    --body-bg: #fff;
+    --text-color: #002E64;
+    --primary-color: #83ACDC;
+    --primary-hover-color: #225896;
+    --secondary-color: #8AE8DC;
+    --info-color: #1473E6;
+    --success-color: #3DA74E;
+    --warning-color: #DA7B11;
+    --error-color: #FD5D5D;
+    --link-hover-color: #68a4c4;
+    --main-color: #26a4ba;
+    --header-color: #2e475c;
+    --subtitle-color: #656565;
+    --btn-hover-color: #5f778e;
+    --text-hover-color: #889fa5;
+    --shadow-color: #888888;
+    --bg-question-color: #ffe7e6;
+    --bg-introduce-color: #cefae0;
+    --bg-event-color: #ffe1cf;
+    --bg-topic-color: #d3f6ff;
+    --border-color: #e1e1e1;
+    --color-text-event: #656565;
+    --danger-color: #dc3545; 
+    --gold-color: #ffd700;
+    --font-super-small: 10px;
+    --font-small: 12px;
+    --font-default: 14px;
+    --font-medium: 16px;
+    --font-large: 18px;
+    --font-big-large: 20px;
+    --font-bg: 36px;
+    --font-super-large: 30px;
+    --font-big-title: 60px;
+    --font-title: 40px;
+}
