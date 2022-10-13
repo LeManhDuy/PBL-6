@@ -4,6 +4,7 @@ const mongoose = require("mongoose")
 const cors = require("cors")
 const path = require("path")
 const authRouter = require("./routes/auth.js")
+const principalRouter = require("./routes/principal.js")
 const app = express()
 app.use(express.json())
 
@@ -29,6 +30,11 @@ app.get("/", (req, res) => {
 
 //url
 app.use("/api/authentication", authRouter)
+
+//user route
+//principal
+app.use("/api/admin/principal", principalRouter)
+
 
 //port
 app.listen(process.env.PORT || 8000, function () {

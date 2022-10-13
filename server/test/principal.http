@@ -1,0 +1,21 @@
+###
+//create parent
+POST http://localhost:8000/api/admin/principal
+Content-Type: application/json
+
+{
+    "account_username":"headquater1234",
+    "account_password": "123456",
+    "person_fullname":"Le Duy",
+    "person_dateofbirth":"2001-12-01T17:00:00.000+00:00",
+    "person_email":"lmd@gmail.com",
+    "person_gender": true,
+    "person_phonenumber":"0834046795",
+    "person_address":"50 Trung Nu Vuong",
+    "person_image":"testing"
+}
+
+###
+//get principle
+GET http://localhost:8000/api/admin/principal
+Content-Type: application/json

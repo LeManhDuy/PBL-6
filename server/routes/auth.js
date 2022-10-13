@@ -53,7 +53,12 @@ router.post('/login', async (req, res) => {
             validatePassword = await argon2.verify(checkAcccountUserName.account_password, account_password)
             if (!validatePassword)
                 return res.status(400).json({ success: false, message: 'Incorrect email or password' })
-            return res.status(200).json({ success: true, AccountInformation: checkAcccountUserName, accessToken })
+            return res.status(200).json({
+                success: true,
+                AccountUserName: checkAcccountUserName.account_username,
+                AccountRole: checkAcccountUserName.account_role,
+                accessToken
+            })
         }
         else
             return res.status(400).json({ success: false, message: 'Incorrect email or password' })
