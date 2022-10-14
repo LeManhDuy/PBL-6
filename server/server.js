@@ -6,6 +6,7 @@ const path = require("path")
 const authRouter = require("./routes/auth.js")
 const principalRouter = require("./routes/principal.js")
 const affairRouter = require("./routes/affair.js")
+const subjectRouter = require("./routes/subject.js")
 const app = express()
 app.use(express.json())
 
@@ -37,7 +38,8 @@ app.use("/api/authentication", authRouter)
 app.use("/api/admin/principal", principalRouter)
 //affair
 app.use("/api/admin/affair", affairRouter)
-
+//subject
+app.use("/api/subject", subjectRouter)
 //port
 app.listen(process.env.PORT || 8000, function () {
     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
