@@ -4,10 +4,14 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/js/bootstrap.min.js";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./assets/css/custom.css";
+import "../node_modules/font-awesome/css/font-awesome.min.css";
 import "../node_modules/font-awesome/css/font-awesome.min.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
