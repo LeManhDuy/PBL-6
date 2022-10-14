@@ -1,0 +1,82 @@
+@import "../../assets/css/variables.css";
+@import "../../assets/css/custom.css";
+
+footer{
+    /* position:absolute;
+    bottom:0;
+    width:100%;
+    height: 100%; */
+}
+
+.footer-content {
+    background: var(--primary-color);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 20px 110px;
+    color: var(--text-color);
+    color: white;
+}
+
+.footer-content p {
+    font-size: var(--font-big-large);
+    display: inline;
+}
+
+.contact {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.contact-item {
+    display: inline;
+} 
+
+.footer-content .icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    align-items: center;
+}
+
+.footer-content .icon-c {
+    margin: 0 4px;
+    align-items: center;
+    width: 18px;
+    height: 18px;
+}
+
+.copyright-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.copyright-info .icon-info{
+    width: 24px;
+    height: 24px;
+    margin: 8px 6px;
+    margin-right: 0;
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 6px;
+    color: var(--text-color);
+}
+
+.info .facebook{
+    color: #0f90f3
+}
+
+.info .instagram{
+    background: -webkit-radial-gradient(32% 106%, circle cover, rgb(255, 225, 125) 0%, rgb(255, 205, 105) 10%, rgb(250, 145, 55) 28%, rgb(235, 65, 65) 42%, transparent 82%), -webkit-linear-gradient(-45deg, rgb(35, 75, 215) 12%, rgb(195, 60, 190) 58%);
+    background: -moz-radial-gradient(32% 106%, circle cover, rgb(255, 225, 125) 0%, rgb(255, 205, 105) 10%, rgb(250, 145, 55) 28%, rgb(235, 65, 65) 42%, transparent 82%), -moz-linear-gradient(-45deg, rgb(35, 75, 215) 12%, rgb(195, 60, 190) 58%);
+    background: -ms-radial-gradient(32% 106%, circle cover, rgb(255, 225, 125) 0%, rgb(255, 205, 105) 10%, rgb(250, 145, 55) 28%, rgb(235, 65, 65) 42%, transparent 82%), -ms-linear-gradient(-45deg, rgb(35, 75, 215) 12%, rgb(195, 60, 190) 58%);
+    background: -o-radial-gradient(32% 106%, circle cover, rgb(255, 225, 125) 0%, rgb(255, 205, 105) 10%, rgb(250, 145, 55) 28%, rgb(235, 65, 65) 42%, transparent 82%), -o-linear-gradient(-45deg, rgb(35, 75, 215) 12%, rgb(195, 60, 190) 58%);
+    background: radial-gradient(circle farthest-corner at 32% 106%, rgb(255, 225, 125) 0%, rgb(255, 205, 105) 10%, rgb(250, 145, 55) 28%, rgb(235, 65, 65) 42%, transparent 82%), linear-gradient(135deg, rgb(35, 75, 215) 12%, rgb(195, 60, 190) 58%);
+    color: #fff
+}
+
+.info .youtube{
+    color: #f70000
+}

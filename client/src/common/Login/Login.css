@@ -1,0 +1,111 @@
+@import "../../assets/css/variables.css";
+@import "../../assets/css/custom.css";
+
+.login-container {
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  padding: 80px;
+  border-radius: 18px;
+}
+
+.login-content {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 50px;
+  justify-content: center;
+  align-items: center;
+}
+
+.left-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+}
+
+.login-content h1{
+  color: var(--text-color)
+}
+
+.left-content img{
+  height: 350px;
+  width: auto;
+}
+
+.line-middle {
+  width: 8px;
+  height: 400px;
+  background: linear-gradient(to top, var(--primary-color), var(--secondary-color));
+  border-radius: 28px;
+}
+
+.right-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  justify-content: center;
+}
+
+.right-content img {
+  width: 150px;
+  height: auto;
+  border-radius: 50%;
+}
+
+.right-content input {
+  width: 450px;
+  height: 50px;
+}
+
+.right-content a {
+  color: var(--text-color);
+  text-decoration: none;
+  margin-top: -10px;
+  font-weight: 600;
+  text-align: right; 
+  width: 100%;
+}
+
+.right-content .login {
+  width: 100%;
+  height: 50px;
+  background: var(--primary-color);
+  color:#fff;
+  font-weight: 600;
+  font-size: var( --font-big-large);
+  margin-top: 16px;
+}
+
+.right-content .login:hover {
+  background: var(--primary-hover-color);
+  color: #fff
+}
+
+.right-content .error {
+  display: none;
+  opacity: 0;
+  text-align: left;
+  margin: 0;
+  padding:0;
+  width:100%;
+}
+
+.right-content .error-hidden {
+  display: none;
+  opacity: 0;
+}
+
+.right-content .error-show {
+  display: block;
+  opacity: 1;
+  animation: error 1s 1;
+}
+
+@keyframes error {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+
+
