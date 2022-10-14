@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken")
 const Account = require("../model/Account")
 const Person = require("../model/Person")
 const argon2 = require("argon2")
+const validator = require("email-validator")
 const multer = require("multer")
 const fs = require("fs")
 
@@ -39,9 +40,10 @@ router.post("/", upload.single("person_image"), async (req, res) => {
     if (req.file) {
         person_image = req.file.path
     }
-    if (!account_username || !account_password || !person_fullname
-        || !person_dateofbirth || !person_email || !person_gender || !person_phonenumber
-        || !person_address)
+    if (!account_username || !account_password ||
+        !person_fullname || !person_dateofbirth ||
+        !person_email || !person_gender ||
+        !person_phonenumber || !person_address)
         return res.status(400).json({
             success: false,
             message: "Please fill in complete information.",
@@ -50,6 +52,12 @@ router.post("/", upload.single("person_image"), async (req, res) => {
         return res.status(400).json({
             success: false,
             message: "Phone number must have 10 numbers",
+        })
+    }
+    if (!validator.validate(person_email)) {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid Email",
         })
     }
     if (account_password.length < 6) {
@@ -105,16 +113,16 @@ router.post("/", upload.single("person_image"), async (req, res) => {
 })
 
 // @route GET api/admin/principle
-// @desc GET parents
+// @desc GET principal
 // @access Private Only Admin
 router.get("/", async (req, res) => {
     try {
         // Return token
         const allPrinciple = await Account.find({ account_role: "Principal" })
-        const arrPrincipleId = [];
+        const arrPrincipleId = []
         allPrinciple.map((item) => {
             arrPrincipleId.push(item._id)
-        });
+        })
         const getPrincipleInfor = await Person.find({ account_id: arrPrincipleId })
             .select([
                 "person_fullname",
@@ -135,6 +143,146 @@ router.get("/", async (req, res) => {
 // @route PUT api/admin/principle
 // @desc PUT principle
 // @access Private Only Admin
+router.put(
+    "/:personID",
+    upload.single("person_image"),
+    async (req, res) => {
+        const {
+            account_username, account_password, person_fullname,
+            person_dateofbirth, person_email, person_gender,
+            person_phonenumber, person_address
+        } = req.body
+        console.log(account_username, account_password, person_fullname,
+            person_dateofbirth, person_email, person_gender,
+            person_phonenumber, person_address)
+        // Validation
+        if (!account_username || !account_password || !person_fullname || !person_dateofbirth || !person_email || !person_gender || !person_phonenumber || !person_address) {
+            return res.status(400).json({
+                success: false,
+                message: "Missing information. Please fill in!",
+            })
+        }
+        let person_image = null
+        if (req.file) {
+            person_image = req.file.path
+        }
+        if (person_phonenumber.length != 10) {
+            return res.status(400).json({
+                success: false,
+                message: "Phone number must have 10 numbers",
+            })
+        }
+        if (!validator.validate(person_email)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid Email",
+            })
+        }
+        if (account_password.length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: "Password must have at least 6 characters.",
+            })
+        }
+        try {
+            const person = await Person.findById(req.params.personID)
+            if (person.person_image) {
+                if (person_image === null) {
+                    person_image = person.person_image
+                } else {
+                    fs.unlink("./" + person.person_image, (err) => {
+                        if (err)
+                            res.status(400).json({
+                                success: false,
+                                message: "Image error: " + err,
+                            })
+                    })
+                }
+            }
+            //update Person Information
+            let updatePerson = {
+                person_fullname,
+                person_dateofbirth,
+                person_email,
+                person_gender,
+                person_phonenumber,
+                person_address,
+                person_image
+            }
+            const postUpdatePerson = { _id: req.params.personID }
+            updatedPerson = await Person.findOneAndUpdate(
+                postUpdatePerson,
+                updatePerson,
+                { new: true }
+            )
+            //update Account Information
+            const hashPassword = await argon2.hash(account_password)
+            let updateAccount = {
+                account_username,
+                account_password: hashPassword
+            }
+            const postUpdateAccount = { _id: person.account_id }
+            updatedAcccount = await Account.findOneAndUpdate(
+                postUpdateAccount,
+                updateAccount,
+                { new: true }
+            )
+            if (!updatePerson || !updateAccount)
+                return res
+                    .status(401)
+                    .json({ success: false, message: "Person is not found" })
+            res.json({
+                success: true,
+                message: "Update person information successfully!",
+                person: updatePerson,
+            })
+        } catch (error) {
+            return res
+                .status(500)
+                .json({ success: false, message: "" + error })
+        }
+    }
+)
 
+// @route PUT api/admin/principle
+// @desc DELETE principle
+// @access Private Only Admin
+router.delete("/:personID", async (req, res) => {
+    try {
+        const person = await Person.findById(req.params.personID)
+        if (person.person_image) {
+            fs.unlink("./" + person.person_image, (err) => {
+                if (err)
+                    res.status(400).json({
+                        success: false,
+                        message: "Image error: " + err,
+                    })
+                console.log("successfully deleted file")
+            })
+        }
+        const postDeletePerson = {
+            _id: req.params.personID,
+        }
+        console.log(postDeletePerson)
+        const deletedPerson = await Person.findOneAndDelete(
+            postDeletePerson
+        )
+
+        const postDeleteAccount = {
+            _id: person.account_id,
+        }
+        console.log(postDeleteAccount)
+        const deletedAccount = await Account.findOneAndDelete(
+            postDeleteAccount
+        )
+        if (!deletedPerson || !deletedAccount)
+            return res
+                .status(401)
+                .json({ success: false, message: "Person is not found" })
+        res.json({ success: true, message: "Deleted!", person: deletedPerson })
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
 
 module.exports = router
