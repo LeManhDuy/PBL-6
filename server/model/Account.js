@@ -14,10 +14,6 @@ const accountSchema = new Schema({
         type: String,
         required: true,
     },
-    person_id: {
-            type: Schema.Types.ObjectId,
-            ref: "Person",
-    },
 });
 
 module.exports = mongoose.model("Account", accountSchema);

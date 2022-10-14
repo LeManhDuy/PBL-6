@@ -1,8 +1,8 @@
-const express = require("express");
-const router = express.Router();
-const argon2 = require("argon2");
-const jwt = require("jsonwebtoken");
-const Account = require("../model/Account");
+const express = require('express')
+const router = express.Router()
+const argon2 = require('argon2')
+const jwt = require('jsonwebtoken')
+const Account = require("../model/Account")
 
 // @route POST api/auth/register
 // @desc Register user
@@ -23,10 +23,13 @@ router.post("/register", async (req, res) => {
             account_username: account_username,
         });
         if (accountExisted)
-            return res
-                .status(400)
-                .json({ success: false, message: "Username is existing" });
-
+            return res.status(400).json({ success: false, message: 'Username is existing' })
+        if (account_password.length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: "Password must have at least 6 characters.",
+            })
+        }
         // all good
         const hashPassword = await argon2.hash(account_password);
         const newAccount = new Account({
@@ -79,26 +82,16 @@ router.post("/login", async (req, res) => {
                 account_password
             );
             if (!validatePassword)
-                return res
-                    .status(400)
-                    .json({
-                        success: false,
-                        message: "Incorrect email or password",
-                    });
-            return res
-                .status(200)
-                .json({
-                    success: true,
-                    AccountInformation: checkAcccountUserName,
-                    accessToken,
-                });
-        } else
-            return res
-                .status(400)
-                .json({
-                    success: false,
-                    message: "Incorrect email or password",
-                });
+                return res.status(400).json({ success: false, message: 'Incorrect email or password' })
+            return res.status(200).json({
+                success: true,
+                AccountUserName: checkAcccountUserName.account_username,
+                AccountRole: checkAcccountUserName.account_role,
+                accessToken
+            })
+        }
+        else
+            return res.status(400).json({ success: false, message: 'Incorrect email or password' })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error });
     }
