@@ -51,13 +51,13 @@ router.post("/", upload.single("person_image"), async (req, res) => {
     if (person_phonenumber.length != 10) {
         return res.status(400).json({
             success: false,
-            message: "Phone number must have 10 numbers",
+            message: "Phone number must have 10 numbers.",
         })
     }
     if (!validator.validate(person_email)) {
         return res.status(400).json({
             success: false,
-            message: "Invalid Email",
+            message: "Invalid Email.",
         })
     }
     if (account_password.length < 6) {
@@ -72,7 +72,7 @@ router.post("/", upload.single("person_image"), async (req, res) => {
         if (accountValidate)
             return res
                 .status(400)
-                .json({ success: false, message: "Account username is existing" })
+                .json({ success: false, message: "Username is existing." })
         // all good
         const hashPassword = await argon2.hash(account_password)
 
@@ -104,7 +104,7 @@ router.post("/", upload.single("person_image"), async (req, res) => {
         )
         res.json({
             success: true,
-            message: "Create principal successfully",
+            message: "Create principal successfully.",
             accessToken,
         })
     } catch (error) {
@@ -152,9 +152,6 @@ router.put(
             person_dateofbirth, person_email, person_gender,
             person_phonenumber, person_address
         } = req.body
-        console.log(account_username, account_password, person_fullname,
-            person_dateofbirth, person_email, person_gender,
-            person_phonenumber, person_address)
         // Validation
         if (!account_username || !account_password || !person_fullname || !person_dateofbirth || !person_email || !person_gender || !person_phonenumber || !person_address) {
             return res.status(400).json({
@@ -169,13 +166,13 @@ router.put(
         if (person_phonenumber.length != 10) {
             return res.status(400).json({
                 success: false,
-                message: "Phone number must have 10 numbers",
+                message: "Phone number must have 10 numbers.",
             })
         }
         if (!validator.validate(person_email)) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid Email",
+                message: "Invalid Email.",
             })
         }
         if (account_password.length < 6) {
@@ -230,7 +227,7 @@ router.put(
             if (!updatePerson || !updateAccount)
                 return res
                     .status(401)
-                    .json({ success: false, message: "Person is not found" })
+                    .json({ success: false, message: "Person does not found." })
             res.json({
                 success: true,
                 message: "Update person information successfully!",
@@ -257,13 +254,11 @@ router.delete("/:personID", async (req, res) => {
                         success: false,
                         message: "Image error: " + err,
                     })
-                console.log("successfully deleted file")
             })
         }
         const postDeletePerson = {
             _id: req.params.personID,
         }
-        console.log(postDeletePerson)
         const deletedPerson = await Person.findOneAndDelete(
             postDeletePerson
         )
@@ -271,15 +266,14 @@ router.delete("/:personID", async (req, res) => {
         const postDeleteAccount = {
             _id: person.account_id,
         }
-        console.log(postDeleteAccount)
         const deletedAccount = await Account.findOneAndDelete(
             postDeleteAccount
         )
         if (!deletedPerson || !deletedAccount)
             return res
                 .status(401)
-                .json({ success: false, message: "Person is not found" })
-        res.json({ success: true, message: "Deleted!", person: deletedPerson })
+                .json({ success: false, message: "Person does not found." })
+        res.json({ success: true, message: "Deleted person successfully!", person: deletedPerson })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }
