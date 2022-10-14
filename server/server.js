@@ -5,6 +5,7 @@ const cors = require("cors")
 const path = require("path")
 const authRouter = require("./routes/auth.js")
 const principalRouter = require("./routes/principal.js")
+const affairRouter = require("./routes/affair.js")
 const app = express()
 app.use(express.json())
 
@@ -34,7 +35,8 @@ app.use("/api/authentication", authRouter)
 //user route
 //principal
 app.use("/api/admin/principal", principalRouter)
-
+//affair
+app.use("/api/admin/affair", affairRouter)
 
 //port
 app.listen(process.env.PORT || 8000, function () {
