@@ -6,9 +6,9 @@ const commentSchema = new Schema({
         type: String,
         require: true
     },
-    student_id:{
+    pupil_id:{
         type: Schema.Types.ObjectId,
-        ref: 'Student'
+        ref: 'Pupil'
     }
 })
 

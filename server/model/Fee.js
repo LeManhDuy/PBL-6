@@ -20,6 +20,10 @@ const feeSchema = new Schema({
     fee_category_id:{
         type: Schema.Types.ObjectId,
         ref: 'FeeCategory'
+    },
+    pupil_id:{
+        type: Schema.Types.ObjectId,
+        ref: 'Pupil'
     }
 })
 
