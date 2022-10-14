@@ -14,9 +14,9 @@ const scoreSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Student'
     },
-    subject_id:{
+    pupil_id:{
         type: Schema.Types.ObjectId,
-        ref: 'Subject'
+        ref: 'Pupil'
     }
 })
 module.exports = mongoose.model('Score',scoreSchema)

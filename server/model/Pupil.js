@@ -1,20 +1,20 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const studentSchema = new Schema({
-    student_name:{
+const pupilSchema = new Schema({
+    pupil_name:{
         type: String,
         require: true
     },
-    student_dateofbirth:{
+    pupil_dateofbirth:{
         type: Date,
         require: true
     },
-    student_gender:{
+    pupil_gender:{
         type: Boolean,
         require: true
     },
-    student_image:{
+    pupil_image:{
         type: String,
         require: true
     },
@@ -28,4 +28,4 @@ const studentSchema = new Schema({
     }
 })
 
-module.exports = mongoose.model('Student', studentSchema)
+module.exports = mongoose.model('Pupil', pupilSchema)
