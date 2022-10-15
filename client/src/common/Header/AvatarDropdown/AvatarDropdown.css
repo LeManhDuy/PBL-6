@@ -1,0 +1,37 @@
+@import "../../../assets/css/variables.css";
+@import "../../../assets/css/custom.css";
+
+.dropdown-avatar{
+    background: #fff;
+    position: absolute;
+    z-index: 999;
+    right: 0px;
+    top: 55px;
+    color: var(--text-color);
+    animation: moveInBottom 5s ease-out;
+    animation-fill-mode: backwards;
+    border-radius: 10px;
+    width: 200px;
+    display: block;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.dropdown-avatar button {
+    width: 100%;
+    margin:0;
+    background-color: rgb(255, 255, 255);
+}
+
+.dropdown-avatar button .fa-solid, .fa-regular {
+    margin-right: 20px;;
+}
+
+.dropdown-avatar button:hover {
+    background: var(--primary-hover-color);
+    color: #fff;
+}
+
+@keyframes moveInBottom {
+    0% {opacity: 0}
+    10% {opacity: 1}
+}

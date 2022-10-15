@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
+import Login from "../Login/Login";
 import Logo from "../../assets/image/Logo.png";
 import "./Header.css";
+import AuthenticationService from "../../config/service/AuthenticationService";
+import jwt_decode from "jwt-decode";
+import UserHeader from "./UserHeader/UserHeader";
 import { Link } from "react-router-dom";
-import Login from "../Login/Login";
 
 const Header = () => {
     const [isShowLogin, setIsShowLogin] = useState(false);
@@ -22,9 +25,19 @@ const Header = () => {
         </button>
     );
 
+    const HandleLoginSuccess = () => {
+        setIsLogin(true);
+    };
+
     const ViewLogin = (
-        <Login show={isShowLogin} HandleCloseLogin={HandleCloseLogin} />
+        <Login
+            show={isShowLogin}
+            HandleCloseLogin={HandleCloseLogin}
+            HandleLoginSuccess={HandleLoginSuccess}
+        />
     );
+
+    const ViewUserHeader = <UserHeader />;
 
     return (
         <header>
@@ -36,7 +49,7 @@ const Header = () => {
                             <h3>Blue School</h3>
                         </div>
                     </Link>
-                    {handleRenderButtonLogin}
+                    {isLogin ? ViewUserHeader : handleRenderButtonLogin}
                 </div>
             </nav>
             <div>{isShowLogin ? ViewLogin : null}</div>
