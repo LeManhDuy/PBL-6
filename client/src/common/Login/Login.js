@@ -42,16 +42,9 @@ const Login = (props) => {
                         props.HandleCloseLogin();
                         props.HandleLoginSuccess();
                         AuthenticationService.saveDataLogin(res);
-                        if (res.role === "admin")
+                        console.log(res.AccountRole === "Principal");
+                        if (res.AccountRole === "Principal")
                             history.push(ROUTES.ADMIN_PAGE.ADMIN_HOME);
-                        else if (res.role === "parent")
-                            history.push(
-                                ROUTES.PARENTS_PAGE.PARENTS_NOTIFICATION_PATH
-                            );
-                        else
-                            history.push(
-                                ROUTES.TEACHER_PAGE.TEACHER_NOTIFICATION_PATH
-                            );
                     } else {
                         setErrorServer(true);
                         // setErrorMessage("Does Not Exists");

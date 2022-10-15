@@ -10,9 +10,11 @@ function Admin() {
     useEffect(() => {
         if (
             (AuthenticationService.isLogin() &&
-                JSON.parse(localStorage.getItem("@Login")).role === "parent") ||
+                JSON.parse(localStorage.getItem("@Login")).AccountRole ===
+                    "parent") ||
             (AuthenticationService.isLogin() &&
-                JSON.parse(localStorage.getItem("@Login")).role === "teacher")
+                JSON.parse(localStorage.getItem("@Login")).AccountRole ===
+                    "teacher")
         ) {
             history.push(ROUTES.HOME_PAGE.path);
         }

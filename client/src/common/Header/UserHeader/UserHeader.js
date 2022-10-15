@@ -172,19 +172,12 @@ function UserHeader() {
 
     return (
         <div className="user-header">
-            <ItemHeader
-                options={
-                    AuthenticationService.isAdmin() ? optionsAdmin : null
-                    // : AuthenticationService.isParents()
-                    // ? optionsParents
-                    // : optionsTeacher
-                }
-            />
+            <ItemHeader options={optionsAdmin} />
             <div className="info-header">
                 <h5>
                     {
                         AuthenticationService.isAdmin()
-                            ? AuthenticationService.getData().admin.admin_username.toString()
+                            ? AuthenticationService.getData().AccountUserName.toString()
                             : null
                         // : AuthenticationService.isParents()
                         // ? AuthenticationService.getData().parent.parent_name

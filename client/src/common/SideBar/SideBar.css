@@ -1,0 +1,148 @@
+@import "../../assets/css/variables.css";
+@import "../../assets/css/custom.css";
+
+.side-bar-main {
+  background-color: var(--primary-color);
+  height: 114vh;
+  color: #fff; 
+  padding: 30px 20px;
+  position: relative;
+  width: 270px;
+}
+
+.logo img {
+  width: 70px;
+  border: 4px solid #fff;
+  border-radius: 50%;
+}
+
+.logo h3 {
+  color: #fff
+}
+
+.account {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  bottom: 0;
+  left: 58%;
+  transform: translateX(-56%);
+  text-align: start;
+  justify-content: center;
+}
+
+.account img {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+}
+
+
+.name-role {
+  margin-left: 8px;
+}
+
+.name-role h5 {
+  width: 120px;
+  margin: 0;
+}
+
+.name-role p {
+  width: 120px;
+}
+
+.logout {
+  height: 50px;
+  background-color: var(--primary-color);
+  color: #fff;
+  box-sizing: border-box;
+}
+
+.logout .icon {
+  font-size: 34px;
+  box-sizing: border-box;
+}
+
+.logout .icon:hover {
+  color: var(--primary-hover-color)
+}
+
+.list-button ul {
+  margin: 50px 0;
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+
+}
+
+.list-button .item.active {
+  color: var(--text-color);
+  background: #5791d4;
+  width: 100%;
+  box-sizing: border-box;
+  color: #fff;
+}
+
+.list-button ul li {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin: 10px 0;
+  box-sizing: border-box;
+  border-radius: 6px;
+  overflow: hidden;
+  color: #fff;
+}
+
+.list-button ul li .item {
+  padding: 12px 30px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  align-items: center;
+  color: #fff;
+  height: 55px;
+}
+
+.list-button ul li .item:hover {
+  background: #5791d4;
+}
+
+.list-button ul li .item p {
+  margin: 0 10px;
+  font-size: 20px;
+}
+
+.svg-inline--fa {
+  margin-right: 8px;
+  width: 30px;
+  height: auto;
+  box-sizing: border-box;
+}
+
+.list-button ul li .item .arrow {
+  width: 10px;
+  right: 30px;
+  position: absolute;
+  display: none;
+}
+
+.list-button ul li .item .show {
+  width: 10px;
+  right: 30px;
+  position: absolute;
+  display: block;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {}
+
+/* Medium devices (landscape tablets) */
+@media only screen and (max-width: 768px) {}
+
+/* Large devices (laptops/desktops) */
+@media only screen and (max-width: 992px) {
+
+}

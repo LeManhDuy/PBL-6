@@ -17,15 +17,17 @@ const isLogin = () => {
 };
 
 const isAdmin = () => {
-    return JSON.parse(localStorage.getItem("@Login")).role === "Pricipal";
+    return (
+        JSON.parse(localStorage.getItem("@Login")).AccountRole === "Pricipal"
+    );
 };
 
 const isParents = () => {
-    return JSON.parse(localStorage.getItem("@Login")).role === "parent";
+    return JSON.parse(localStorage.getItem("@Login")).AccountRole === "parent";
 };
 
 const isTeacher = () => {
-    return JSON.parse(localStorage.getItem("@Login")).role === "teacher";
+    return JSON.parse(localStorage.getItem("@Login")).AccountRole === "teacher";
 };
 
 const getData = () => {
