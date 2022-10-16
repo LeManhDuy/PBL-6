@@ -1,0 +1,46 @@
+@import "../../assets/css/variables.css";
+@import "../../assets/css/custom.css";
+
+.modal-input-wrapper {
+  visibility: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1090;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 38, 46, 0.617);
+  opacity: 0;
+  transition: visibility 0s, opacity 0.15s linear;
+}
+
+.modal-input-wrapper.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.modal-input-wrapper .btnCancel{
+    width: 30px;
+    height: 30px;
+    font-size: 26px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+}
+
+.modal-input-wrapper.hidden {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.modal-input-container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
