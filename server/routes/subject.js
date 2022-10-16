@@ -2,9 +2,6 @@ const express = require("express")
 const router = express.Router()
 const Subject = require("../model/Subject")
 const multer = require("multer")
-
-
-
 const upload = multer().any()
 
 // @route GET api/subject
