@@ -42,7 +42,6 @@ const Login = (props) => {
                         props.HandleCloseLogin();
                         props.HandleLoginSuccess();
                         AuthenticationService.saveDataLogin(res);
-                        console.log(res.AccountRole === "Principal");
                         if (res.AccountRole === "Principal")
                             history.push(ROUTES.ADMIN_PAGE.ADMIN_HOME);
                     } else {

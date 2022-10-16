@@ -8,10 +8,14 @@ import {
     faUsers,
     faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import AuthenticationService from "../../config/service/AuthenticationService";
+import ModalCustom from "../../lib/ModalCustom/ModalCustom";
+import ConfirmAlert from "../../lib/ConfirmAlert/ConfirmAlert";
 
 function SideBar() {
+    let history = useHistory();
+    const [isLogout, setIsLogout] = useState(false);
     const [fullName, setFullName] = useState("");
     useEffect(() => {
         getAdmin();
@@ -19,10 +23,39 @@ function SideBar() {
     const getAdmin = () => {
         if (AuthenticationService.isAdmin()) {
             setFullName(
-                JSON.parse(localStorage.getItem("@Login")).admin.admin_username
+                JSON.parse(localStorage.getItem("@Login")).AccountUserName
             );
         }
     };
+
+    const handleLogout = () => {
+        if (AuthenticationService.isLogin()) {
+            AuthenticationService.clearDataLogin();
+            history.push("/");
+        }
+    };
+
+    const handleCloseModalCustom = () => {
+        setIsLogout(false);
+    };
+
+    const handleClickLogout = () => {
+        setIsLogout(true);
+    };
+
+    const DivConfirmLogout = (
+        <ModalCustom
+            show={isLogout}
+            content={
+                <ConfirmAlert
+                    handleCloseModalCustom={handleCloseModalCustom}
+                    handleDelete={handleLogout}
+                    title={"Do you want to logout? "}
+                />
+            }
+            handleCloseModalCustom={handleCloseModalCustom}
+        />
+    );
 
     return (
         <div>
@@ -98,13 +131,14 @@ function SideBar() {
                         <h5>{fullName}</h5>
                         <p>Admin</p>
                     </div>
-                    <button className="logout">
+                    <button className="logout" onClick={handleClickLogout}>
                         <FontAwesomeIcon
                             className="icon"
                             icon={faRightFromBracket}
                         />
                     </button>
                 </div>
+                {isLogout ? DivConfirmLogout : null}
             </div>
         </div>
     );

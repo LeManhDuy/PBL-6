@@ -11,6 +11,17 @@ const Header = () => {
     const [isShowLogin, setIsShowLogin] = useState(false);
     const [isLogin, setIsLogin] = useState(false);
 
+    useEffect(() => {
+        let dataLogin = JSON.parse(localStorage.getItem("@Login"));
+        const decoded = dataLogin && jwt_decode(dataLogin.accessToken);
+        if (decoded && decoded.iat * 1000 + 10000000 > Date.now()) {
+            setIsLogin(true);
+        } else {
+            setIsLogin(false);
+            AuthenticationService.clearDataLogin();
+        }
+    }, []);
+
     const HandleOpenLogin = () => {
         setIsShowLogin(!isShowLogin);
     };
