@@ -7,6 +7,14 @@ import {
     faHouse,
     faUsers,
     faRightFromBracket,
+    faBoxesStacked,
+    faBookOpenReader,
+    faChalkboardUser,
+    faCalendarDays,
+    faPeopleGroup,
+    faMoneyBillTrendUp,
+    faCommentsDollar,
+    faArrowTrendUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useHistory } from "react-router-dom";
 import AuthenticationService from "../../config/service/AuthenticationService";
@@ -116,6 +124,229 @@ function SideBar() {
                                     className={
                                         window.location.pathname ===
                                         "/admin/account"
+                                            ? " show"
+                                            : " arrow"
+                                    }
+                                    icon={faAngleRight}
+                                />
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                key={1}
+                                className={
+                                    "item" +
+                                    (window.location.pathname ===
+                                    "/admin/student"
+                                        ? " active"
+                                        : "")
+                                }
+                                to={"/admin/student"}
+                            >
+                                <FontAwesomeIcon
+                                    className="icon"
+                                    icon={faPeopleGroup}
+                                />
+                                <p>Student</p>
+                                <FontAwesomeIcon
+                                    className={
+                                        window.location.pathname ===
+                                        "/admin/student"
+                                            ? " show"
+                                            : " arrow"
+                                    }
+                                    icon={faAngleRight}
+                                />
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                key={1}
+                                className={
+                                    "item" +
+                                    (window.location.pathname === "/admin/class"
+                                        ? " active"
+                                        : "")
+                                }
+                                to={"/admin/class"}
+                            >
+                                <FontAwesomeIcon
+                                    className="icon"
+                                    icon={faChalkboardUser}
+                                />
+                                <p>Class</p>
+                                <FontAwesomeIcon
+                                    className={
+                                        window.location.pathname ===
+                                        "/admin/class"
+                                            ? " show"
+                                            : " arrow"
+                                    }
+                                    icon={faAngleRight}
+                                />
+                            </Link>
+                        </li>
+
+                        <li>
+                            <Link
+                                key={1}
+                                className={
+                                    "item" +
+                                    (window.location.pathname === "/admin/grade"
+                                        ? " active"
+                                        : "")
+                                }
+                                to={"/admin/grade"}
+                            >
+                                <FontAwesomeIcon
+                                    className="icon"
+                                    icon={faBoxesStacked}
+                                />
+                                <p>Grade</p>
+                                <FontAwesomeIcon
+                                    className={
+                                        window.location.pathname ===
+                                        "/admin/grade"
+                                            ? " show"
+                                            : " arrow"
+                                    }
+                                    icon={faAngleRight}
+                                />
+                            </Link>
+                        </li>
+
+                        <li>
+                            <Link
+                                key={1}
+                                className={
+                                    "item" +
+                                    (window.location.pathname ===
+                                    "/admin/subject"
+                                        ? " active"
+                                        : "")
+                                }
+                                to={"/admin/subject"}
+                            >
+                                <FontAwesomeIcon
+                                    className="icon"
+                                    icon={faBookOpenReader}
+                                />
+                                <p>Subject</p>
+                                <FontAwesomeIcon
+                                    className={
+                                        window.location.pathname ===
+                                        "/admin/subject"
+                                            ? " show"
+                                            : " arrow"
+                                    }
+                                    icon={faAngleRight}
+                                />
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                key={1}
+                                className={
+                                    "item" +
+                                    (window.location.pathname ===
+                                    "/admin/schedule"
+                                        ? " active"
+                                        : "")
+                                }
+                                to={"/admin/schedule"}
+                            >
+                                <FontAwesomeIcon
+                                    className="icon"
+                                    icon={faCalendarDays}
+                                />
+                                <p>Schedule</p>
+                                <FontAwesomeIcon
+                                    className={
+                                        window.location.pathname ===
+                                        "/admin/schedule"
+                                            ? " show"
+                                            : " arrow"
+                                    }
+                                    icon={faAngleRight}
+                                />
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                key={1}
+                                className={
+                                    "item" +
+                                    (window.location.pathname === "/admin/fee"
+                                        ? " active"
+                                        : "")
+                                }
+                                to={"/admin/fee"}
+                            >
+                                <FontAwesomeIcon
+                                    className="icon"
+                                    icon={faMoneyBillTrendUp}
+                                />
+                                <p>Fee</p>
+                                <FontAwesomeIcon
+                                    className={
+                                        window.location.pathname ===
+                                        "/admin/fee"
+                                            ? " show"
+                                            : " arrow"
+                                    }
+                                    icon={faAngleRight}
+                                />
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                key={1}
+                                className={
+                                    "item" +
+                                    (window.location.pathname ===
+                                    "/admin/feecategory"
+                                        ? " active"
+                                        : "")
+                                }
+                                to={"/admin/feecategory"}
+                            >
+                                <FontAwesomeIcon
+                                    className="icon"
+                                    icon={faCommentsDollar}
+                                />
+                                <p>FeeCategory</p>
+                                <FontAwesomeIcon
+                                    className={
+                                        window.location.pathname ===
+                                        "/admin/feecategory"
+                                            ? " show"
+                                            : " arrow"
+                                    }
+                                    icon={faAngleRight}
+                                />
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                key={1}
+                                className={
+                                    "item" +
+                                    (window.location.pathname ===
+                                    "/admin/statistic"
+                                        ? " active"
+                                        : "")
+                                }
+                                to={"/admin/statistic"}
+                            >
+                                <FontAwesomeIcon
+                                    className="icon"
+                                    icon={faArrowTrendUp}
+                                />
+                                <p>Statistic</p>
+                                <FontAwesomeIcon
+                                    className={
+                                        window.location.pathname ===
+                                        "/admin/statistic"
                                             ? " show"
                                             : " arrow"
                                     }
