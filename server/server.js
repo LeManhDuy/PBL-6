@@ -7,6 +7,7 @@ const authRouter = require("./routes/auth.js")
 const principalRouter = require("./routes/principal.js")
 const affairRouter = require("./routes/affair.js")
 const subjectRouter = require("./routes/subject.js")
+const teacherRouter = require("./routes/teacher.js")
 const app = express()
 app.use(express.json())
 
@@ -40,6 +41,8 @@ app.use("/api/admin/principal", principalRouter)
 app.use("/api/admin/affair", affairRouter)
 //subject
 app.use("/api/subject", subjectRouter)
+//subject
+app.use("/api/teacher", teacherRouter)
 //port
 app.listen(process.env.PORT || 8000, function () {
     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
