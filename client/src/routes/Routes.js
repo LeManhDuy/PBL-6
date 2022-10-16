@@ -4,6 +4,9 @@ import ROUTES from "../constants/routes";
 import MainLayout from "../layout/MainLayout";
 import PublicRoute from "./PublicRoute";
 import Home from "../page/Home/Home";
+import AdminRoute from "./AdminRoute/AdminRoute";
+import NotFound from "../page/NotFound/NotFound";
+import HomeAdmin from "../page/ComponentAdmin/HomeAdmin/HomeAdmin";
 
 const Routes = () => {
     return (
@@ -14,6 +17,17 @@ const Routes = () => {
                         component={Home}
                         exact
                         path={ROUTES.HOME_PAGE.HOME_PATH}
+                    />
+
+                    <AdminRoute
+                        component={HomeAdmin}
+                        exact
+                        path={ROUTES.ADMIN_PAGE.ADMIN_HOME}
+                    />
+
+                    <PublicRoute
+                        component={NotFound}
+                        path={ROUTES.NOT_FOUND_PAGE.path}
                     />
                 </Switch>
             </MainLayout>

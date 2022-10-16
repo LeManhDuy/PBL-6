@@ -1,0 +1,66 @@
+@import "../../../assets/css/variables.css";
+@import "../../../assets/css/custom.css";
+
+.user-header {
+    display:flex;
+    color: #fff;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.user-header .item-header{
+    display:flex;
+    flex-wrap: nowrap;
+    height: 100%;
+    text-align: center;
+    align-items: center;
+}
+
+.user-header .item-header a{
+    display: block;
+    color: #fff;
+    padding: 0 8px;
+    font-size: 18px;
+    text-transform: uppercase;
+    line-height: 70px;
+    height: 70px;
+}
+
+.user-header .item-header a:hover{
+    background: var(--primary-hover-color)
+}
+
+.user-header .info-header{
+    display:block;
+    text-align: right;
+    margin-left: 30px;
+    margin-right: 10px;
+}
+
+.user-header .info-header h6,h5 {
+    display:block;
+    margin: 0;
+}
+
+.user-header .avatar img{
+    width: 50px;
+    border: 4px solid white;
+    border-radius: 50%;
+    height: 50px;
+    object-fit: cover;
+}
+
+.user-header .avatar{
+    display:block;
+    position: relative;
+}
+
+.active-menu {
+    color: var(--text-color);
+    background: #4077b6;
+    width: 100%;
+    box-sizing: border-box;
+    color: #fff;
+}

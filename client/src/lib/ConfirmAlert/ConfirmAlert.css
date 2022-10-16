@@ -1,0 +1,35 @@
+@import "../../assets/css/variables.css";
+@import "../../assets/css/custom.css";
+
+.confirm-alert {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 30px;
+    color: var(--text-color)
+}
+
+.confirm-alert p{
+    font-size: 22px;
+}
+
+.confirm-alert button {
+    width: 90px;
+    margin: 10px;
+    color: #fff
+}
+
+.confirm-alert .btn-ok{
+    background-color: var(--success-color);
+}
+
+.confirm-alert .btn-ok:hover{
+    background-color: #317f3e;
+}
+
+.confirm-alert .btn-cancel{
+    background-color: var(--error-color)
+}
+
+.confirm-alert .btn-cancel:hover{
+    background-color: #cf3e3e;
+}
