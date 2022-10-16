@@ -140,6 +140,29 @@ router.get("/", async (req, res) => {
     }
 })
 
+// @route GET api/admin/principle
+// @desc GET principal by Id
+// @access Private Only Admin
+router.get("/:personID", async (req, res) => {
+    try {
+        // Return token
+        const getPrincipleInfor = await Person.find({ _id: req.params.personID })
+            .select([
+                "person_fullname",
+                "person_dateofbirth",
+                "person_email",
+                "person_gender",
+                "person_phonenumber",
+                "person_address",
+                "person_image",
+            ])
+            .populate("account_id", ["account_username", "account_role"])
+        res.json({ success: true, getPrincipleInfor })
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
 // @route PUT api/admin/principle
 // @desc PUT principle
 // @access Private Only Admin
@@ -148,12 +171,12 @@ router.put(
     upload.single("person_image"),
     async (req, res) => {
         const {
-            account_username, account_password, person_fullname,
+            account_password, person_fullname,
             person_dateofbirth, person_email, person_gender,
             person_phonenumber, person_address
         } = req.body
         // Validation
-        if (!account_username || !account_password || !person_fullname || !person_dateofbirth || !person_email || !person_gender || !person_phonenumber || !person_address) {
+        if (!account_password || !person_fullname || !person_dateofbirth || !person_email || !person_gender || !person_phonenumber || !person_address) {
             return res.status(400).json({
                 success: false,
                 message: "Missing information. Please fill in!",
@@ -215,7 +238,6 @@ router.put(
             //update Account Information
             const hashPassword = await argon2.hash(account_password)
             let updateAccount = {
-                account_username,
                 account_password: hashPassword
             }
             const postUpdateAccount = { _id: person.account_id }
@@ -228,10 +250,21 @@ router.put(
                 return res
                     .status(401)
                     .json({ success: false, message: "Person does not found." })
+            const getPrincipleInfor = await Person.find({ _id: req.params.personID })
+                .select([
+                    "person_fullname",
+                    "person_dateofbirth",
+                    "person_email",
+                    "person_gender",
+                    "person_phonenumber",
+                    "person_address",
+                    "person_image",
+                ])
+                .populate("account_id", ["account_username", "account_role"])
             res.json({
                 success: true,
                 message: "Update person information successfully!",
-                person: updatePerson,
+                person: getPrincipleInfor,
             })
         } catch (error) {
             return res
