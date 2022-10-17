@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const Account = require("../model/Account");
 const Person = require("../model/Person");
+const Parent = require("../model/Parent");
 const argon2 = require("argon2");
 const validator = require("email-validator");
 const multer = require("multer");
@@ -10,7 +11,7 @@ const fs = require("fs");
 
 const storage = multer.diskStorage({
     destination: function (req, res, cb) {
-        cb(null, "./uploads/principals");
+        cb(null, "./uploads/parents");
     },
     filename: function (req, file, cb) {
         cb(null, Date.now() + file.originalname);
@@ -28,8 +29,8 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
-// @route POST api/admin/principal
-// @desc Create principal user
+// @route POST api/admin/parent
+// @desc Create parent user
 // @access Private
 router.post("/", upload.single("person_image"), async (req, res) => {
     const {
@@ -41,6 +42,10 @@ router.post("/", upload.single("person_image"), async (req, res) => {
         person_gender,
         person_phonenumber,
         person_address,
+        parent_job,
+        parent_relationship,
+        is_in_association,
+        parent_job_address,
     } = req.body;
     // Validation
     let person_image = null;
@@ -55,7 +60,10 @@ router.post("/", upload.single("person_image"), async (req, res) => {
         !person_email ||
         !person_gender ||
         !person_phonenumber ||
-        !person_address
+        !person_address ||
+        !parent_job ||
+        !parent_relationship ||
+        !parent_job_address
     )
         return res.status(400).json({
             success: false,
@@ -93,7 +101,7 @@ router.post("/", upload.single("person_image"), async (req, res) => {
         const newAccount = new Account({
             account_username,
             account_password: hashPassword,
-            account_role: "Principal",
+            account_role: "Parents",
         });
         await newAccount.save();
 
@@ -110,6 +118,16 @@ router.post("/", upload.single("person_image"), async (req, res) => {
         });
         await newPerson.save();
 
+        //create parents
+        const newParent = new Parent({
+            person_id: newPerson._id,
+            parent_job,
+            parent_relationship,
+            is_in_association,
+            parent_job_address,
+        });
+        await newParent.save();
+
         //return token
         const accessToken = jwt.sign(
             { principalId: newAccount._id },
@@ -125,19 +143,19 @@ router.post("/", upload.single("person_image"), async (req, res) => {
     }
 });
 
-// @route GET api/admin/principle
-// @desc GET principal
+// @route GET api/admin/parent
+// @desc GET parent
 // @access Private Only Admin
 router.get("/", async (req, res) => {
     try {
         // Return token
-        const allPrinciple = await Account.find({ account_role: "Principal" });
-        const arrPrincipleId = [];
-        allPrinciple.map((item) => {
-            arrPrincipleId.push(item._id);
+        const allParents = await Account.find({ account_role: "Parents" });
+        const arrParentsId = [];
+        allParents.map((item) => {
+            arrParentsId.push(item._id);
         });
-        const getPrincipleInfor = await Person.find({
-            account_id: arrPrincipleId,
+        const getParentInfor = await Person.find({
+            account_id: arrParentsId,
         })
             .select([
                 "person_fullname",
@@ -149,22 +167,28 @@ router.get("/", async (req, res) => {
                 "person_image",
             ])
             .populate("account_id", ["account_username", "account_role"]);
-        res.json({ success: true, getPrincipleInfor });
+        res.json({ success: true, getParentInfor });
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
 
-// @route GET api/admin/principle
-// @desc GET principal by Id
+// @route GET api/admin/parent
+// @desc GET parent by Id
 // @access Private Only Admin
-router.get("/:personID", async (req, res) => {
+router.get("/:parentID", async (req, res) => {
     try {
         // Return token
-        const getPrincipleInfor = await Person.find({
-            _id: req.params.personID,
+        const getParentInfor = await Parent.find({
+            _id: req.params.parentID,
         })
             .select([
+                "parent_job",
+                "parent_relationship",
+                "is_in_association",
+                "parent_job_address",
+            ])
+            .populate("person_id", [
                 "person_fullname",
                 "person_dateofbirth",
                 "person_email",
@@ -172,19 +196,19 @@ router.get("/:personID", async (req, res) => {
                 "person_phonenumber",
                 "person_address",
                 "person_image",
-            ])
-            .populate("account_id", ["account_username", "account_role"]);
-        res.json({ success: true, getPrincipleInfor });
+            ]);
+        res.json({ success: true, getParentInfor });
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
 
-// @route PUT api/admin/principle
-// @desc PUT principle
+// @route PUT api/admin/parent
+// @desc PUT parent
 // @access Private Only Admin
-router.put("/:personID", upload.single("person_image"), async (req, res) => {
+router.put("/:parentID", upload.single("person_image"), async (req, res) => {
     const {
+        account_username,
         account_password,
         person_fullname,
         person_dateofbirth,
@@ -192,16 +216,24 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
         person_gender,
         person_phonenumber,
         person_address,
+        parent_job,
+        parent_relationship,
+        is_in_association,
+        parent_job_address,
     } = req.body;
     // Validation
     if (
+        !account_username ||
         !account_password ||
         !person_fullname ||
         !person_dateofbirth ||
         !person_email ||
         !person_gender ||
         !person_phonenumber ||
-        !person_address
+        !person_address ||
+        !parent_job ||
+        !parent_relationship ||
+        !parent_job_address
     ) {
         return res.status(400).json({
             success: false,
@@ -231,7 +263,8 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
         });
     }
     try {
-        const person = await Person.findById(req.params.personID);
+        const parent = await Parent.findById(req.params.parentID);
+        const person = await Person.findById(parent.person_id.toString());
         if (person.person_image) {
             if (person_image === null) {
                 person_image = person.person_image;
@@ -255,7 +288,7 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
             person_address,
             person_image,
         };
-        const postUpdatePerson = { _id: req.params.personID };
+        const postUpdatePerson = { _id: parent.person_id.toString() };
         updatedPerson = await Person.findOneAndUpdate(
             postUpdatePerson,
             updatePerson,
@@ -272,14 +305,33 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
             updateAccount,
             { new: true }
         );
-        if (!updatePerson || !updateAccount)
+        // update Parent Information
+        let updateParent = {
+            parent_job,
+            parent_relationship,
+            is_in_association,
+            parent_job_address,
+        };
+        const postUpdateParent = { _id: req.params.parentID };
+        updatedParent = await Parent.findOneAndUpdate(
+            postUpdateParent,
+            updateParent,
+            { new: true }
+        );
+        if (!updatePerson || !updateParent || updateAccount)
             return res
                 .status(401)
-                .json({ success: false, message: "Person does not found." });
-        const getPrincipleInfor = await Person.find({
-            _id: req.params.personID,
+                .json({ success: false, message: "Parent does not found." });
+        const getParentInfor = await Parent.find({
+            _id: req.params.parentID,
         })
             .select([
+                "parent_job",
+                "parent_relationship",
+                "is_in_association",
+                "parent_job_address",
+            ])
+            .populate("person_id", [
                 "person_fullname",
                 "person_dateofbirth",
                 "person_email",
@@ -287,24 +339,24 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
                 "person_phonenumber",
                 "person_address",
                 "person_image",
-            ])
-            .populate("account_id", ["account_username", "account_role"]);
+            ]);
         res.json({
             success: true,
-            message: "Update person information successfully!",
-            person: getPrincipleInfor,
+            message: "Update parent information successfully!",
+            person: getParentInfor,
         });
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
 
-// @route PUT api/admin/principle
-// @desc DELETE principle
+// @route PUT api/admin/parent
+// @desc DELETE parent
 // @access Private Only Admin
-router.delete("/:personID", async (req, res) => {
+router.delete("/:parentID", async (req, res) => {
     try {
-        const person = await Person.findById(req.params.personID);
+        const parent = await Parent.findById(req.params.parentID);
+        const person = await Person.findById(parent.person_id.toString());
         if (person.person_image) {
             fs.unlink("./" + person.person_image, (err) => {
                 if (err)
@@ -314,8 +366,14 @@ router.delete("/:personID", async (req, res) => {
                     });
             });
         }
+        //delete Parent
+        const postDeleteParent = {
+            _id: req.params.parentID,
+        };
+        const deletedParent = await Parent.findOneAndDelete(postDeleteParent);
+
         const postDeletePerson = {
-            _id: req.params.personID,
+            _id: person._id,
         };
         const deletedPerson = await Person.findOneAndDelete(postDeletePerson);
 
@@ -325,14 +383,13 @@ router.delete("/:personID", async (req, res) => {
         const deletedAccount = await Account.findOneAndDelete(
             postDeleteAccount
         );
-        if (!deletedPerson || !deletedAccount)
+        if (!deletedParent || !deletedPerson || !deletedAccount)
             return res
                 .status(401)
-                .json({ success: false, message: "Person does not found." });
+                .json({ success: false, message: "Parent does not found." });
         res.json({
             success: true,
-            message: "Deleted person successfully!",
-            person: deletedPerson,
+            message: "Deleted parent successfully!",
         });
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error });

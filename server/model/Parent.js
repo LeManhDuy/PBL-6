@@ -2,25 +2,25 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const parentSchema = new Schema({
-    person_id:{
+    person_id: {
         type: Schema.Types.ObjectId,
-        ref: 'Person'
+        ref: "Person",
     },
-    parent_job:{
+    parent_job: {
         type: String,
-        require: true
+        require: true,
     },
-    parent_relationship:{
+    parent_relationship: {
         type: String,
-        require: true
+        require: true,
     },
-    is_in_association:{
+    is_in_association: {
         type: Boolean,
-        require: true
+        default: false,
     },
-    parent_job_address:{
-        type: String
-    }
-})
+    parent_job_address: {
+        type: String,
+    },
+});
 
-module.exports = mongoose.model('Parent',parentSchema)
+module.exports = mongoose.model("Parent", parentSchema);

@@ -4,6 +4,18 @@ import ROUTES from "../constants/routes";
 import MainLayout from "../layout/MainLayout";
 import PublicRoute from "./PublicRoute";
 import Home from "../page/Home/Home";
+import AdminRoute from "./AdminRoute/AdminRoute";
+import NotFound from "../page/NotFound/NotFound";
+import HomeAdmin from "../page/ComponentAdmin/HomeAdmin/HomeAdmin";
+import AccountAdmin from "../page/ComponentAdmin/AccountAdmin/AccountAdmin";
+import ClassAdmin from "../page/ComponentAdmin/ClassAdmin/ClassAdmin";
+import GradeAdmin from "../page/ComponentAdmin/GradeAdmin/GradeAdmin";
+import SubjectAdmin from "../page/ComponentAdmin/SubjectAdmin/SubjectAdmin.js";
+import ScheduleAdmin from "../page/ComponentAdmin/ScheduleAdmin/ScheduleAdmin";
+import StudentAdmin from "../page/ComponentAdmin/StudentAdmin/StudentAdmin";
+import FeeAdmin from "../page/ComponentAdmin/FeeAdmin/FeeAdmin";
+import FeeCategoryAdmin from "../page/ComponentAdmin/FeeCategoryAdmin/FeeCategoryAdmin";
+import StatisticAdmin from "../page/ComponentAdmin/StatisticAdmin/StatisticAdmin";
 
 const Routes = () => {
     return (
@@ -14,6 +26,71 @@ const Routes = () => {
                         component={Home}
                         exact
                         path={ROUTES.HOME_PAGE.HOME_PATH}
+                    />
+
+                    <AdminRoute
+                        component={HomeAdmin}
+                        exact
+                        path={ROUTES.ADMIN_PAGE.ADMIN_HOME}
+                    />
+
+                    <AdminRoute
+                        component={AccountAdmin}
+                        exact
+                        path={ROUTES.ADMIN_PAGE.ACCOUNT_ADMIN}
+                    />
+
+                    <AdminRoute
+                        component={StudentAdmin}
+                        exact
+                        path={ROUTES.ADMIN_PAGE.STUDENT_ADMIN}
+                    />
+
+                    <AdminRoute
+                        component={ClassAdmin}
+                        exact
+                        path={ROUTES.ADMIN_PAGE.CLASS_ADMIN}
+                    />
+
+                    <AdminRoute
+                        component={GradeAdmin}
+                        exact
+                        path={ROUTES.ADMIN_PAGE.GRADE_ADMIN}
+                    />
+
+                    <AdminRoute
+                        component={SubjectAdmin}
+                        exact
+                        path={ROUTES.ADMIN_PAGE.SUBJECT_ADMIN}
+                    />
+
+                    <AdminRoute
+                        component={ScheduleAdmin}
+                        exact
+                        path={ROUTES.ADMIN_PAGE.SCHEDULE_ADMIN}
+                    />
+
+                    <AdminRoute
+                        component={FeeAdmin}
+                        exact
+                        path={ROUTES.ADMIN_PAGE.FEE_ADMIN}
+                    />
+
+                    <AdminRoute
+                        component={FeeCategoryAdmin}
+                        exact
+                        path={ROUTES.ADMIN_PAGE.FEE_CATEGORY_ADMIN}
+                    />
+
+                    <AdminRoute
+                        component={StatisticAdmin}
+                        exact
+                        path={ROUTES.ADMIN_PAGE.STATISTIC_ADMIN}
+                    />
+
+                    <PublicRoute
+                        component={NotFound}
+                        path={ROUTES.NOT_FOUND_PAGE.path}
                     />
                 </Switch>
             </MainLayout>

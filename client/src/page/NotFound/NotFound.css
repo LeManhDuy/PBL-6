@@ -1,0 +1,41 @@
+@import "../../assets/css/variables.css";
+@import "../../assets/css/custom.css";
+
+.common {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+}
+.img_not_found {
+    text-align: center;
+}
+.img_not_found img{
+    margin-top: 10vh;
+    text-align: center;
+    height: 80vh;
+}
+
+.body_not_found {
+    text-align: left;
+}
+.body_not_found img {
+    padding-right: 60px;
+    margin-bottom: 3vh;
+}
+
+.btnBack {
+    margin-top: 3vh;
+    border: 2px solid #83ACDC;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.btnBack .fa-solid{
+    margin-right: 6px;
+}
+
+.btnBack:hover {
+    background: var(--primary-color);
+    color: #fff
+}
