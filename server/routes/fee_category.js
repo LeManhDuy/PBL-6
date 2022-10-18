@@ -1,0 +1,121 @@
+const express = require("express")
+const router = express.Router()
+const FeeCategory = require("../model/FeeCategory")
+
+// @route GET api/FeeCategory
+// @desc Get FeeCategory
+// @access Private
+router.get("/", async (req, res) => {
+    try {
+        const allFeeCategory = await FeeCategory.find()
+        res.json({ success: true, allFeeCategory })
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
+// @route GET api/FeeCategory
+// @desc GET FeeCategory by Id
+// @access Private Only Admin
+router.get("/:feeCategoryID", async (req, res) => {
+    try {
+        // Return token
+        const getFeeCategoryInfor = await FeeCategory.find({ _id: req.params.feeCategoryID })
+        res.json({ success: true, getFeeCategoryInfor })
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
+// @route POST api/FeeCategory
+// @desc post FeeCategory
+// @access Private
+router.post("/", async (req, res) => {
+    const { fee_name, fee_amount } = req.body
+    if (!fee_name || !fee_amount)
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information.",
+        })
+    try {
+        const feeCategoryValidate = await FeeCategory.findOne({ fee_name })
+        if (feeCategoryValidate)
+            return res
+                .status(400)
+                .json({ success: false, message: "Fee Category is already existed." })
+        const newFeeCategory = new FeeCategory({
+            fee_name,
+            fee_amount,
+        })
+        await newFeeCategory.save()
+        res.json({
+            success: true,
+            message: "Create Fee Category successfully.",
+            newFeeCategory,
+        })
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
+// @route PUT api/admin/grade
+// @desc put grade
+// @access Private
+router.put("/:feeCategoryId", async (req, res) => {
+    const { fee_name, fee_amount } = req.body
+    if (!fee_name || !fee_amount)
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information.",
+        })
+    try {
+        const feeCategory = await FeeCategory.findById(req.params.feeCategoryId)
+        if (!feeCategory)
+            return res
+                .status(400)
+                .json({ success: false, message: "Fee category is not existed." })
+        // const feeCategoryValidate = await FeeCategory.findOne({ fee_name })
+        // if (feeCategoryValidate)
+        //     return res
+        //         .status(400)
+        //         .json({ success: false, message: "Fee Category is already existed." })
+        let updateFeeCategory = {
+            fee_name,
+            fee_amount,
+        }
+        const postUpdateFeeCategory = { _id: req.params.feeCategoryId }
+        updateFeeCategory = await FeeCategory.findOneAndUpdate(
+            postUpdateFeeCategory,
+            updateFeeCategory,
+            { new: true }
+        )
+        res.json({
+            success: true,
+            message: "Update Fee Category successfully.",
+            updateFeeCategory: updateFeeCategory
+        })
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
+// @route DELETE api/FeeCategory
+// @desc delete FeeCategory
+// @access Private
+router.delete("/:feeCategoryId", async (req, res) => {
+    try {
+        const deletedFeeCategory = await FeeCategory.findOneAndDelete(
+            { _id: req.params.feeCategoryId }
+        )
+
+        res.json({ success: true, message: "Deleted Fee Category successfully!", feeCategory: deletedFeeCategory })
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
+module.exports = router
+
