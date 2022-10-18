@@ -9,24 +9,13 @@ const validator = require("email-validator")
 const multer = require("multer")
 const FirebaseStorage = require('multer-firebase-storage')
 const fs = require("fs")
-const { nextTick } = require("process")
-
-// const storage = multer.diskStorage({
-//     destination: function (req, res, cb) {
-//         cb(null, "./uploads/principals")
-//     },
-// filename: function (req, file, cb) {
-//     cb(null, Date.now() + file.originalname)
-// },
-// })
-// const upload = multer({ storage: storage, fileFilter: fileFilter })
 
 const fileFilter = (req, file, cb) => {
     // reject a file
     if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
         cb(null, true)
     } else {
-        return cb(new Error('Wrong extension type'))
+        return cb(new Error('Wrong extension type.'))
     }
 }
 const upload = multer({
@@ -39,6 +28,7 @@ const upload = multer({
         },
         nameSuffix: "_hashcode_",
         unique: true,
+        public: true
     }),
     fileFilter: fileFilter,
 })
@@ -60,9 +50,8 @@ router.post("/", upload.single('person_image'), async (req, res) => {
     // Validation
     let person_image = null
     if (req.file) {
-        person_image = req.file.path
-    }A
-    console.log(person_image);
+        person_image = req.file.publicUrl
+    }
     if (
         !account_username ||
         !account_password ||
@@ -112,7 +101,7 @@ router.post("/", upload.single('person_image'), async (req, res) => {
             account_password: hashPassword,
             account_role: process.env.ROLE_PRINCIPLE,
         })
-        //await newAccount.save()
+        await newAccount.save()
 
         //create person information
         const newPerson = new Person({
@@ -125,7 +114,7 @@ router.post("/", upload.single('person_image'), async (req, res) => {
             person_image,
             account_id: newAccount._id,
         })
-        //await newPerson.save()
+        await newPerson.save()
 
         //return token
         const accessToken = jwt.sign(

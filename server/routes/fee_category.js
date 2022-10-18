@@ -1,64 +1,58 @@
 const express = require("express")
 const router = express.Router()
-const Grade = require("../model/FeeCategory")
+const FeeCategory = require("../model/FeeCategory")
 
-// @route GET api/admin/FeeCategory
+// @route GET api/FeeCategory
 // @desc Get FeeCategory
 // @access Private
 router.get("/", async (req, res) => {
     try {
-        const allGrade = await Grade.find()
-            .select([
-                "grade_id",
-                "grade_name"
-            ])
-        res.json({ success: true, allGrade })
+        const allFeeCategory = await FeeCategory.find()
+        res.json({ success: true, allFeeCategory })
     }
     catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }
 })
 
-// @route GET api/admin/principle
-// @desc GET principal by Id
+// @route GET api/FeeCategory
+// @desc GET FeeCategory by Id
 // @access Private Only Admin
-router.get("/:gradeID", async (req, res) => {
+router.get("/:feeCategoryID", async (req, res) => {
     try {
         // Return token
-        const getGradeInfor = await Grade.find({ _id: req.params.gradeID })
-            .select([
-                "grade_name",
-            ])
-        res.json({ success: true, getGradeInfor })
+        const getFeeCategoryInfor = await FeeCategory.find({ _id: req.params.feeCategoryID })
+        res.json({ success: true, getFeeCategoryInfor })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }
 })
 
-// @route POST api/admin/grade
-// @desc post subject
+// @route POST api/FeeCategory
+// @desc post FeeCategory
 // @access Private
-router.post("/", multer().single(), async (req, res) => {
-    const { grade_name } = req.body
-    if (!grade_name)
+router.post("/", async (req, res) => {
+    const { fee_name, fee_amount } = req.body
+    if (!fee_name || !fee_amount)
         return res.status(400).json({
             success: false,
             message: "Please fill in complete information.",
         })
     try {
-        const gradeValidate = await Grade.findOne({ grade_name })
-        if (gradeValidate)
+        const feeCategoryValidate = await FeeCategory.findOne({ fee_name })
+        if (feeCategoryValidate)
             return res
                 .status(400)
-                .json({ success: false, message: "Grade is already existed." })
-        const newGrade = new Grade({
-            grade_name,
+                .json({ success: false, message: "Fee Category is already existed." })
+        const newFeeCategory = new FeeCategory({
+            fee_name,
+            fee_amount,
         })
-        await newGrade.save()
+        await newFeeCategory.save()
         res.json({
             success: true,
-            message: "Create grade successfully.",
-            newGrade,
+            message: "Create Fee Category successfully.",
+            newFeeCategory,
         })
     }
     catch (error) {
@@ -69,37 +63,38 @@ router.post("/", multer().single(), async (req, res) => {
 // @route PUT api/admin/grade
 // @desc put grade
 // @access Private
-router.put("/:gradeID", multer().single(), async (req, res) => {
-    const { grade_name } = req.body
-    if (!grade_name)
+router.put("/:feeCategoryId", async (req, res) => {
+    const { fee_name, fee_amount } = req.body
+    if (!fee_name || !fee_amount)
         return res.status(400).json({
             success: false,
             message: "Please fill in complete information.",
         })
     try {
-        const grade = await Grade.findById(req.params.gradeID)
-        if (!grade)
+        const feeCategory = await FeeCategory.findById(req.params.feeCategoryId)
+        if (!feeCategory)
             return res
                 .status(400)
-                .json({ success: false, message: "Grade is not existed." })
-        const gradeValidate = await Grade.findOne({ grade_name })
-        if (gradeValidate)
-            return res
-                .status(400)
-                .json({ success: false, message: "Grade is already existed." })
-        let updateGrade = {
-            grade_name,
+                .json({ success: false, message: "Fee category is not existed." })
+        // const feeCategoryValidate = await FeeCategory.findOne({ fee_name })
+        // if (feeCategoryValidate)
+        //     return res
+        //         .status(400)
+        //         .json({ success: false, message: "Fee Category is already existed." })
+        let updateFeeCategory = {
+            fee_name,
+            fee_amount,
         }
-        const postUpdateGrade = { _id: req.params.gradeID }
-        updatedGrade = await Grade.findOneAndUpdate(
-            postUpdateGrade,
-            updateGrade,
+        const postUpdateFeeCategory = { _id: req.params.feeCategoryId }
+        updateFeeCategory = await FeeCategory.findOneAndUpdate(
+            postUpdateFeeCategory,
+            updateFeeCategory,
             { new: true }
         )
         res.json({
             success: true,
-            message: "Update grade successfully.",
-            updated_grade: updateGrade
+            message: "Update Fee Category successfully.",
+            updateFeeCategory: updateFeeCategory
         })
     }
     catch (error) {
@@ -107,16 +102,16 @@ router.put("/:gradeID", multer().single(), async (req, res) => {
     }
 })
 
-// @route DELETE api/subject
-// @desc delete subject
+// @route DELETE api/FeeCategory
+// @desc delete FeeCategory
 // @access Private
-router.delete("/:gradeID", async (req, res) => {
+router.delete("/:feeCategoryId", async (req, res) => {
     try {
-        const deletedGrade = await Grade.findOneAndDelete(
-            { _id: req.params.gradeID }
+        const deletedFeeCategory = await FeeCategory.findOneAndDelete(
+            { _id: req.params.feeCategoryId }
         )
 
-        res.json({ success: true, message: "Deleted grade successfully!", grade: deletedGrade })
+        res.json({ success: true, message: "Deleted Fee Category successfully!", feeCategory: deletedFeeCategory })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }
