@@ -10,6 +10,7 @@ const affairRouter = require("./routes/affair.js")
 const subjectRouter = require("./routes/subject.js")
 const teacherRouter = require("./routes/teacher.js")
 const parentRouter = require("./routes/parent.js");
+const gradeRouter = require("./routes/grade.js");
 const app = express()
 app.use(express.json())
 
