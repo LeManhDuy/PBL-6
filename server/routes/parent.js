@@ -7,27 +7,32 @@ const Parent = require("../model/Parent");
 const argon2 = require("argon2");
 const validator = require("email-validator");
 const multer = require("multer");
+const FirebaseStorage = require("multer-firebase-storage");
 const fs = require("fs");
-
-const storage = multer.diskStorage({
-    destination: function (req, res, cb) {
-        cb(null, "./uploads/parents");
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + file.originalname);
-    },
-});
 
 const fileFilter = (req, file, cb) => {
     // reject a file
     if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
         cb(null, true);
     } else {
-        cb(null, false);
+        return cb(new Error("Wrong extension type."));
     }
 };
 
-const upload = multer({ storage: storage, fileFilter: fileFilter });
+const upload = multer({
+    storage: FirebaseStorage({
+        bucketName: process.env.FB_BUCKET_NAME,
+        credentials: {
+            client_email: process.env.FB_CLIENT_EMAIL,
+            private_key: process.env.FB_PRIVATE_KEY,
+            project_id: process.env.FB_PROJECT_ID,
+        },
+        nameSuffix: "_hashcode_",
+        unique: true,
+        public: true,
+    }),
+    fileFilter: fileFilter,
+});
 
 // @route POST api/admin/parent
 // @desc Create parent user
@@ -50,7 +55,7 @@ router.post("/", upload.single("person_image"), async (req, res) => {
     // Validation
     let person_image = null;
     if (req.file) {
-        person_image = req.file.path;
+        person_image = req.file.publicUrl;
     }
     if (
         !account_username ||
@@ -135,7 +140,7 @@ router.post("/", upload.single("person_image"), async (req, res) => {
         );
         res.json({
             success: true,
-            message: "Create principal successfully.",
+            message: "Create parent successfully.",
             accessToken,
         });
     } catch (error) {
@@ -148,26 +153,25 @@ router.post("/", upload.single("person_image"), async (req, res) => {
 // @access Private Only Admin
 router.get("/", async (req, res) => {
     try {
-        // Return token
-        const allParents = await Account.find({ account_role: "Parents" });
-        const arrParentsId = [];
-        allParents.map((item) => {
-            arrParentsId.push(item._id);
-        });
-        const getParentInfor = await Person.find({
-            account_id: arrParentsId,
-        })
+        const getParentsInfor = await Parent.find()
             .select([
-                "person_fullname",
-                "person_dateofbirth",
-                "person_email",
-                "person_gender",
-                "person_phonenumber",
-                "person_address",
-                "person_image",
+                "parent_job",
+                "parent_relationship",
+                "is_in_association",
+                "parent_job_address",
             ])
-            .populate("account_id", ["account_username", "account_role"]);
-        res.json({ success: true, getParentInfor });
+            .populate({
+                path: "person_id",
+                model: "Person",
+                populate: [
+                    {
+                        path: "account_id",
+                        model: "Account",
+                        select: ["account_username", "account_role"],
+                    },
+                ],
+            });
+        res.json({ success: true, getParentsInfor });
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error });
     }
@@ -188,15 +192,17 @@ router.get("/:parentID", async (req, res) => {
                 "is_in_association",
                 "parent_job_address",
             ])
-            .populate("person_id", [
-                "person_fullname",
-                "person_dateofbirth",
-                "person_email",
-                "person_gender",
-                "person_phonenumber",
-                "person_address",
-                "person_image",
-            ]);
+            .populate({
+                path: "person_id",
+                model: "Person",
+                populate: [
+                    {
+                        path: "account_id",
+                        model: "Account",
+                        select: ["account_username", "account_role"],
+                    },
+                ],
+            });
         res.json({ success: true, getParentInfor });
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error });
@@ -331,15 +337,17 @@ router.put("/:parentID", upload.single("person_image"), async (req, res) => {
                 "is_in_association",
                 "parent_job_address",
             ])
-            .populate("person_id", [
-                "person_fullname",
-                "person_dateofbirth",
-                "person_email",
-                "person_gender",
-                "person_phonenumber",
-                "person_address",
-                "person_image",
-            ]);
+            .populate({
+                path: "person_id",
+                model: "Person",
+                populate: [
+                    {
+                        path: "account_id",
+                        model: "Account",
+                        select: ["account_username", "account_role"],
+                    },
+                ],
+            });
         res.json({
             success: true,
             message: "Update parent information successfully!",

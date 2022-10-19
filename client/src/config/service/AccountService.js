@@ -1,26 +1,38 @@
 import HandleApi from "../api/HandleAPI";
 
-const getAccountsAdmin = async () => {
-    return await HandleApi.APIGetWithToken("admin");
+//Principal
+
+//Parents
+
+const getAccountsParents = async () => {
+    return await HandleApi.APIGetWithToken("admin/parent");
 };
 
-const getAccountsAdminById = async (id) => {
-    return await HandleApi.APIGetWithToken(`admin/${id}`);
+const getAccountsParentsById = async (id) => {
+    return await HandleApi.APIGetWithToken(`admin/parent/${id}`);
 };
 
-const deleteAccountAdminById = async (id) => {
-    return await HandleApi.APIDelete(`admin/${id}`);
+const deleteAccountParentsById = async (id) => {
+    return await HandleApi.APIDelete(`admin/parent/${id}`);
 };
 
-const addAccountAdmin = async (params) => {
-    return await HandleApi.APIPostWithToken(`admin`, params);
+const updateAccountParents = async (params, id) => {
+    return await HandleApi.APIPutWithTokenIMG(`admin/parent/${id}`, params);
 };
+
+//Teacher
+
+//Affair
 
 const AccountService = {
-    getAccountsAdmin,
-    deleteAccountAdminById,
-    addAccountAdmin,
-    getAccountsAdminById,
+    //Principal
+    //Parents
+    getAccountsParents,
+    getAccountsParentsById,
+    updateAccountParents,
+    deleteAccountParentsById,
+    //Teacher
+    //Affair
 };
 
 export default AccountService;

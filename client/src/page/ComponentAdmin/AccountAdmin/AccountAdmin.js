@@ -5,46 +5,108 @@ import {
     faMagnifyingGlass,
     faArrowLeftLong,
     faArrowRightLong,
+    faTrash,
+    faPenToSquare,
+    faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import AccountService from "../../../config/service/AccountService";
 import ModalInput from "../../../lib/ModalInput/ModalInput";
 import AddAccount from "../../../lib/ModalInput/AddAccount/AddAccount";
 
 function AccountAdmin() {
-    const [admin, setAdmin] = useState([]);
+    const [parents, setParents] = useState([]);
+    const [teacher, setTeacher] = useState([]);
+    const [pricipal, setPrincipal] = useState([]);
+    const [affair, setAffair] = useState([]);
+    const [dropValue, setDropValue] = useState("teacher");
     const [state, setState] = useState(false);
     const [id, setId] = useState("");
     const [name, setName] = useState("");
+    const [keyword, setKeyword] = useState("");
     const [addState, setAddState] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
 
     useEffect(() => {
-        getAdmins();
+        getPrincipal();
+        getParents();
+        getTeachers();
+        getAffair();
     }, [state]);
 
-    const getAdmins = () => {
-        AccountService.getAccountsAdmin()
+    const options = [
+        { key: 1, label: "Principal", value: "principal" },
+        { key: 2, label: "Parents", value: "parents" },
+        { key: 3, label: "Teacher", value: "teacher" },
+        { key: 4, label: "Affair", value: "affair" },
+    ];
+
+    const Dropdown = ({ value, options, onChange }) => {
+        return (
+            <label>
+                Type of account
+                <select
+                    className="dropdown-account"
+                    value={value}
+                    onChange={onChange}
+                >
+                    {options.map((option) => (
+                        <option key={option.key} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+            </label>
+        );
+    };
+
+    const handleChange = (event) => {
+        setDropValue(event.target.value);
+        setKeyword("");
+    };
+
+    // Get Account
+
+    const getPrincipal = () => {};
+
+    const getParents = () => {
+        AccountService.getAccountsParents()
             .then((response) => {
-                const dataSources = response.alladmin.map((item, index) => {
-                    return {
-                        key: index + 1,
-                        id: item._id,
-                        name: item.admin_username,
-                        email: item.admin_email,
-                    };
-                });
-                setAdmin(dataSources);
+                const dataSources = response.getParentsInfor.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            name: item.person_id.person_fullname,
+                            username:
+                                item.person_id.account_id.account_username,
+                            birth: item.person_id.person_dateofbirth,
+                            email: item.person_id.person_email,
+                            gender: item.person_id.person_gender,
+                            phone: item.person_id.person_phonenumber,
+                            address: item.person_id.person_address,
+                            job: item.person_id.parent_job,
+                        };
+                    }
+                );
+                setParents(dataSources);
             })
             .catch((error) => {
                 console.log(error);
             });
     };
 
+    const getTeachers = () => {};
+
+    const getAffair = () => {};
+
+    //
+
     const TableAccounts = ({ accounts, value }) => {
         const accountItem = accounts.map((item) => (
             <tr data-key={item.id} key={item.id}>
-                <td>{item.email}</td>
+                <td>{item.username}</td>
                 <td>{item.name}</td>
+                <td>{item.email}</td>
                 <td>{value.toUpperCase()}</td>
                 <td onClick={click}>
                     <i className="fa-regular fa-pen-to-square btn-edit"></i>
@@ -67,11 +129,17 @@ function AccountAdmin() {
         }
 
         let headerAccount;
-        if (value === "parents" || value === "admin" || value === "teacher") {
+        if (
+            value === "parents" ||
+            value === "principal" ||
+            value === "teacher" ||
+            value === "affair"
+        ) {
             headerAccount = (
                 <tr>
                     <th>User name</th>
                     <th>Full name</th>
+                    <th>Email</th>
                     <th>Role</th>
                     <th>Action</th>
                 </tr>
@@ -90,7 +158,17 @@ function AccountAdmin() {
         setErrorServer(false);
     };
 
-    const handleConfirmAddAccount = (allValue) => {
+    const handleConfirmAddAccount = (allValue, type) => {
+        if (type === "principal") {
+            //todo
+        } else if (type === "parents") {
+            //todo
+        } else if (type === "teacher") {
+        }
+        //affair
+        else {
+            //todo
+        }
         AccountService.addAccountAdmin({
             admin_username: allValue.name,
             admin_password: allValue.password,
@@ -109,6 +187,7 @@ function AccountAdmin() {
             .catch((error) => console.log("error", error));
     };
 
+    //Component Add Account (Form)
     const DivAddAccount = (
         <ModalInput
             show={addState}
@@ -133,8 +212,15 @@ function AccountAdmin() {
                 <div>
                     <h3>Manage Account</h3>
                 </div>
+                <Dropdown
+                    options={options}
+                    value={dropValue}
+                    onChange={handleChange}
+                />
                 <div className="right-header">
-                    <button className="btn-account">Add account</button>
+                    <button className="btn-account" onClick={handleAddAccount}>
+                        Add account
+                    </button>
                     <div className="search-box">
                         <button className="btn-search">
                             <FontAwesomeIcon
@@ -151,10 +237,18 @@ function AccountAdmin() {
                 </div>
             </header>
             <div className="table-content">
-                <TableAccounts accounts={admin} value={"admin"} />
+                {dropValue === "parents" ? (
+                    <TableAccounts accounts={parents} value={dropValue} />
+                ) : dropValue === "principal" ? (
+                    <TableAccounts accounts={pricipal} value={dropValue} />
+                ) : dropValue === "teacher" ? (
+                    <TableAccounts accounts={teacher} value={dropValue} />
+                ) : (
+                    <TableAccounts accounts={affair} value={dropValue} />
+                )}
             </div>
             <footer>
-                {/* <hr></hr>
+                <hr></hr>
                 <div className="paging">
                     <button className="previous">
                         <FontAwesomeIcon
@@ -179,7 +273,7 @@ function AccountAdmin() {
                             icon={faArrowRightLong}
                         />
                     </button>
-                </div> */}
+                </div>
                 {addState ? DivAddAccount : null}
             </footer>
         </div>
