@@ -12,6 +12,7 @@ const teacherRouter = require("./routes/teacher.js")
 const parentRouter = require("./routes/parent.js")
 const gradeRouter = require("./routes/grade.js")
 const feeCategoryRouter = require("./routes/fee_category.js")
+const feeRouter = require("./routes/fee.js")
 const app = express()
 app.use(express.json())
 
@@ -55,6 +56,8 @@ app.use("/api/admin/grade", gradeRouter)
 app.use("/api/admin/parent", parentRouter)
 //fee category
 app.use("/api/feecategory", feeCategoryRouter)
+//fee
+app.use("/api/fee", feeRouter)
 //port
 app.listen(process.env.PORT || 8000, function () {
     console.log(

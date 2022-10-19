@@ -216,7 +216,7 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
     }
     let person_image = null
     if (req.file) {
-        person_image = req.file.path
+        person_image = req.file.publicUrl
     }
     if (person_phonenumber.length != 10) {
         return res.status(400).json({
@@ -227,7 +227,7 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
     if (!validator.validate(person_email)) {
         return res.status(400).json({
             success: false,
-            message: "Invalid Email.",
+            message: "Email must correct address form.",
         })
     }
     if (account_password.length < 6) {
@@ -238,19 +238,20 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
     }
     try {
         const person = await Person.findById(req.params.personID)
-        if (person.person_image) {
-            if (person_image === null) {
-                person_image = person.person_image
-            } else {
-                fs.unlink("./" + person.person_image, (err) => {
-                    if (err)
-                        res.status(400).json({
-                            success: false,
-                            message: "Image error: " + err,
-                        })
-                })
-            }
-        }
+        // if (person.person_image) {
+        //     if (person_image === null) {
+        //         person_image = person.person_image
+        //     }
+        // else {
+        //     fs.unlink("./" + person.person_image, (err) => {
+        //         if (err)
+        //             res.status(400).json({
+        //                 success: false,
+        //                 message: "Image error: " + err,
+        //             })
+        //     })
+        // }
+        // }
         //update Person Information
         let updatePerson = {
             person_fullname,
