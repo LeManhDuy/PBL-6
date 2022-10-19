@@ -26,6 +26,10 @@ const updateAccountParents = async (params, id) => {
 
 //Teacher
 
+const getAccountsTeacher = async () => {
+    return await HandleApi.APIGetWithToken("teacher");
+};
+
 //Affair
 
 const AccountService = {
@@ -37,6 +41,7 @@ const AccountService = {
     updateAccountParents,
     deleteAccountParentsById,
     //Teacher
+    getAccountsTeacher,
     //Affair
 };
 

@@ -119,7 +119,32 @@ function AccountAdmin() {
             });
     };
 
-    const getTeachers = () => {};
+    const getTeachers = () => {
+        AccountService.getAccountsTeacher()
+            .then((response) => {
+                const dataSources = response.getTeacherInfor.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            name: item.person_id.person_fullname,
+                            username:
+                                item.person_id.account_id.account_username,
+                            birth: item.person_id.person_dateofbirth,
+                            email: item.person_id.person_email,
+                            gender: item.person_id.person_gender,
+                            phone: item.person_id.person_phonenumber,
+                            address: item.person_id.person_address,
+                            job: item.person_id.parent_job,
+                        };
+                    }
+                );
+                setTeacher(dataSources);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     const getAffair = () => {};
 
