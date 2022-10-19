@@ -146,7 +146,31 @@ function AccountAdmin() {
             });
     };
 
-    const getAffair = () => {};
+    const getAffair = () => {
+        AccountService.getAccountsAffair()
+            .then((response) => {
+                const dataSources = response.getAffairInfor.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            name: item.person_fullname,
+                            username: item.account_id.account_username,
+                            birth: item.person_dateofbirth,
+                            email: item.person_email,
+                            gender: item.person_gender,
+                            phone: item.person_phonenumber,
+                            address: item.person_address,
+                            job: item.parent_job,
+                        };
+                    }
+                );
+                setAffair(dataSources);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     //
 

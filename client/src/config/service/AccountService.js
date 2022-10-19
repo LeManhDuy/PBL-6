@@ -32,6 +32,10 @@ const getAccountsTeacher = async () => {
 
 //Affair
 
+const getAccountsAffair = async () => {
+    return await HandleApi.APIGetWithToken("affair");
+};
+
 const AccountService = {
     //Principal
     getAccountsPrincipal,
@@ -43,6 +47,7 @@ const AccountService = {
     //Teacher
     getAccountsTeacher,
     //Affair
+    getAccountsAffair,
 };
 
 export default AccountService;
