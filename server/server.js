@@ -11,6 +11,8 @@ const teacherRouter = require("./routes/teacher.js");
 const parentRouter = require("./routes/parent.js");
 const gradeRouter = require("./routes/grade.js");
 const feeCategoryRouter = require("./routes/fee_category.js");
+const classRouter = require("./routes/class.js");
+
 const app = express();
 app.use(express.json());
 
@@ -39,16 +41,16 @@ app.use("/api/authentication", authRouter);
 //principal
 app.use("/api/principal", principalRouter);
 //affair
-app.use("/api/admin/affair", affairRouter);
+app.use("/api/affair", affairRouter);
 //subject
-
 app.use("/api/subject", subjectRouter);
 //subject
 app.use("/api/teacher", teacherRouter);
-
 app.use("/api/subject", subjectRouter);
 //grade
 app.use("/api/grade", gradeRouter);
+//class
+app.use("/api/class", classRouter);
 //parents
 app.use("/api/parent", parentRouter);
 //fee category

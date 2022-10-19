@@ -70,7 +70,7 @@ router.post("/",multer().single(), async(req,res) =>{
 // @route PUT api/admin/grade
 // @desc put grade
 // @access Private
-router.put("/:gradeID",multer().single(), async(req,res) =>{
+router.put("/:gradeID", multer().single(), async(req,res) =>{
     const {grade_name} = req.body
     if (!grade_name)
     return res.status(400).json({
