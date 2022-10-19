@@ -16,9 +16,9 @@ import AddAccount from "../../../lib/ModalInput/AddAccount/AddAccount";
 function AccountAdmin() {
     const [parents, setParents] = useState([]);
     const [teacher, setTeacher] = useState([]);
-    const [pricipal, setPrincipal] = useState([]);
+    const [principal, setPrincipal] = useState([]);
     const [affair, setAffair] = useState([]);
-    const [dropValue, setDropValue] = useState("teacher");
+    const [dropValue, setDropValue] = useState("principal");
     const [state, setState] = useState(false);
     const [id, setId] = useState("");
     const [name, setName] = useState("");
@@ -66,7 +66,31 @@ function AccountAdmin() {
 
     // Get Account
 
-    const getPrincipal = () => {};
+    const getPrincipal = () => {
+        AccountService.getAccountsPrincipal()
+            .then((response) => {
+                const dataSources = response.getPrincipleInfor.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            name: item.person_fullname,
+                            username: item.account_id.account_username,
+                            birth: item.person_dateofbirth,
+                            email: item.person_email,
+                            gender: item.person_gender,
+                            phone: item.person_phonenumber,
+                            address: item.person_address,
+                            job: item.parent_job,
+                        };
+                    }
+                );
+                setPrincipal(dataSources);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     const getParents = () => {
         AccountService.getAccountsParents()
@@ -237,10 +261,10 @@ function AccountAdmin() {
                 </div>
             </header>
             <div className="table-content">
-                {dropValue === "parents" ? (
+                {dropValue === "principal" ? (
+                    <TableAccounts accounts={principal} value={dropValue} />
+                ) : dropValue === "parents" ? (
                     <TableAccounts accounts={parents} value={dropValue} />
-                ) : dropValue === "principal" ? (
-                    <TableAccounts accounts={pricipal} value={dropValue} />
                 ) : dropValue === "teacher" ? (
                     <TableAccounts accounts={teacher} value={dropValue} />
                 ) : (

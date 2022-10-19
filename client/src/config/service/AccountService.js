@@ -2,22 +2,26 @@ import HandleApi from "../api/HandleAPI";
 
 //Principal
 
+const getAccountsPrincipal = async () => {
+    return await HandleApi.APIGetWithToken("principal");
+};
+
 //Parents
 
 const getAccountsParents = async () => {
-    return await HandleApi.APIGetWithToken("admin/parent");
+    return await HandleApi.APIGetWithToken("parent");
 };
 
 const getAccountsParentsById = async (id) => {
-    return await HandleApi.APIGetWithToken(`admin/parent/${id}`);
+    return await HandleApi.APIGetWithToken(`parent/${id}`);
 };
 
 const deleteAccountParentsById = async (id) => {
-    return await HandleApi.APIDelete(`admin/parent/${id}`);
+    return await HandleApi.APIDelete(`parent/${id}`);
 };
 
 const updateAccountParents = async (params, id) => {
-    return await HandleApi.APIPutWithTokenIMG(`admin/parent/${id}`, params);
+    return await HandleApi.APIPutWithTokenIMG(`parent/${id}`, params);
 };
 
 //Teacher
@@ -26,6 +30,7 @@ const updateAccountParents = async (params, id) => {
 
 const AccountService = {
     //Principal
+    getAccountsPrincipal,
     //Parents
     getAccountsParents,
     getAccountsParentsById,
