@@ -12,6 +12,8 @@ const teacherRouter = require("./routes/teacher.js")
 const parentRouter = require("./routes/parent.js")
 const gradeRouter = require("./routes/grade.js")
 const feeCategoryRouter = require("./routes/fee_category.js")
+const classRouter = require("./routes/class.js")
+
 const app = express()
 app.use(express.json())
 
@@ -51,6 +53,8 @@ app.use("/api/teacher", teacherRouter)
 app.use("/api/subject", subjectRouter)
 //grade
 app.use("/api/admin/grade", gradeRouter)
+//class
+app.use("/api/admin/class", classRouter)
 //parents
 app.use("/api/admin/parent", parentRouter)
 //fee category
