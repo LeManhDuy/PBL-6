@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import "./AddAccount.css";
+import "./UpdateAccount.css";
 import Logo from "../../../assets/image/Logo.png";
+import AccountService from "../../../config/service/AccountService";
 
-const AddAccount = (props) => {
+const UpdateAccount = (props) => {
     let date = new Date().toLocaleDateString();
-    const [isShowAdd, setIsShowAdd] = useState(false);
-    const [dropValue, setDropValue] = useState("admin");
 
     //properties
     const [allValuesPrincipal, setAllValuesPrincipal] = useState();
@@ -60,66 +59,62 @@ const AddAccount = (props) => {
     // Set default Avatar
     const [avatar, setAvatar] = useState(Logo);
 
-    const options = [
-        { key: 1, label: "Principal", value: "principal" },
-        { key: 2, label: "Parents", value: "parents" },
-        { key: 3, label: "Teacher", value: "teacher" },
-        { key: 4, label: "Affair", value: "affair" },
-    ];
-
-    const Dropdown = ({ value, options, onChange }) => {
-        return (
-            <label>
-                Type of account
-                <select
-                    className="dropdown-account"
-                    value={value}
-                    onChange={onChange}
-                >
-                    {options.map((option) => (
-                        <option key={option.key} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
-                </select>
-            </label>
-        );
-    };
-
-    const handleChange = (event) => {
-        setDropValue(event.target.value);
-    };
-
-    const ChooseAccount = (
-        <div className="choose-account">
-            <h5>Please select the type of account you want to add!</h5>
-            <Dropdown
-                options={options}
-                value={dropValue}
-                onChange={handleChange}
-            />
-            <button onClick={props.handleInputCustom} className="btn-cancel">
-                Cancel
-            </button>
-            <button onClick={() => setIsShowAdd(true)} className="btn-ok">
-                Ok
-            </button>
-        </div>
-    );
-
     const validateEmail = (email) => {
         const re =
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     };
 
-    const handleAddPrincipalAccount = () => {};
+    //fetch data
+    useEffect(() => {
+        if (props.dropValue === "principal") {
+            //todo
+        } else if (props.dropValue === "parents") {
+            AccountService.getAccountsParentsById(props.AccountId).then(
+                (res) => {
+                    !!res.getParentInfor[0].person_id.person_image
+                        ? setAvatar(
+                              res.getParentInfor[0].person_id.person_image
+                          )
+                        : setAvatar(Logo);
+                    setAllValuesParents({
+                        name: res.getParentInfor[0].person_id.person_fullname,
+                        username:
+                            res.getParentInfor[0].person_id.account_id
+                                .account_username,
+                        dateOfBirth:
+                            res.getParentInfor[0].person_id.person_dateofbirth.split(
+                                "T"
+                            )[0],
+                        email: res.getParentInfor[0].person_id.person_email,
+                        gender: `${res.getParentInfor[0].person_id.person_gender}`,
+                        phone: res.getParentInfor[0].person_id
+                            .person_phonenumber,
+                        address: res.getParentInfor[0].person_id.person_address,
+                        job: res.getParentInfor[0].parent_job,
+                        relationship: res.getParentInfor[0].parent_relationship,
+                        association: `${res.getParentInfor[0].is_in_association}`,
+                        jobAddress: res.getParentInfor[0].parent_job_address,
+                        password: "",
+                        confirmPassword: "",
+                    });
+                }
+            );
+        } else if (props.dropValue === "teacher") {
+            //todo
+        }
+        // Affair
+        else {
+        }
+    }, []);
 
-    const handleAddTeacherAccount = () => {};
+    const handleUpdatePrincipalAccount = () => {};
 
-    const handleAddAffairAccount = () => {};
+    const handleUpdateTeacherAccount = () => {};
 
-    const handleAddParentsAccount = () => {
+    const handleUpdateAffairAccount = () => {};
+
+    const handleUpdateParentsAccount = () => {
         let name = false;
         let username = false;
         let dateOfBirth = false;
@@ -241,24 +236,24 @@ const AddAccount = (props) => {
             confirmPassword: confirmPassword,
         });
         if (!check) {
-            props.handleConfirmAddAccount(allValuesParents, dropValue);
+            props.handleConfirmUpdateAccount(allValuesParents);
         }
     };
 
-    const clickSave = (e) => {
+    const clickUpdate = (e) => {
         e.preventDefault();
-        if (dropValue === "principal") {
+        if (props.dropValue === "principal") {
             //todo
-            handleAddPrincipalAccount();
-        } else if (dropValue === "parents") {
-            handleAddParentsAccount();
-        } else if (dropValue === "teacher") {
+            handleUpdatePrincipalAccount();
+        } else if (props.dropValue === "parents") {
+            handleUpdateParentsAccount();
+        } else if (props.dropValue === "teacher") {
             //todo
-            handleAddTeacherAccount();
+            handleUpdateTeacherAccount();
         }
         //affair
         else {
-            handleAddAffairAccount();
+            handleUpdateAffairAccount();
         }
     };
 
@@ -336,14 +331,14 @@ const AddAccount = (props) => {
 
     const FormAccountParents = (
         <div className="form-admin-content">
-            <h4>Add Parents account</h4>
+            <h4>Update Parents account</h4>
             <label
                 className={
                     "error" +
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Account already exists
+                Update failed.
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -399,6 +394,7 @@ const AddAccount = (props) => {
                             placeholder="Enter username"
                             value={allValuesParents.username}
                             onChange={changeHandlerParents}
+                            readOnly
                         />
                         <label
                             className={
@@ -462,6 +458,7 @@ const AddAccount = (props) => {
                                     value={true}
                                     name="gender"
                                     onChange={changeHandlerParents}
+                                    checked={allValuesParents.gender == "true"}
                                 />
                                 Male
                                 <input
@@ -469,6 +466,7 @@ const AddAccount = (props) => {
                                     value={false}
                                     name="gender"
                                     onChange={changeHandlerParents}
+                                    checked={allValuesParents.gender == "false"}
                                 />
                                 Female
                             </div>
@@ -493,6 +491,9 @@ const AddAccount = (props) => {
                                     value={true}
                                     name="association"
                                     onChange={changeHandlerParents}
+                                    checked={
+                                        allValuesParents.association === "true"
+                                    }
                                 />
                                 True
                                 <input
@@ -500,6 +501,9 @@ const AddAccount = (props) => {
                                     value={false}
                                     name="association"
                                     onChange={changeHandlerParents}
+                                    checked={
+                                        allValuesParents.association === "false"
+                                    }
                                 />
                                 False
                             </div>
@@ -669,29 +673,25 @@ const AddAccount = (props) => {
         </div>
     );
 
-    const FormAddAccount = (
+    const FormUpdateAccount = (
         <div className="form-add-account">
-            {dropValue === "principal"
+            {props.dropValue === "principal"
                 ? FormAccountPrincipal
-                : dropValue === "parents"
+                : props.dropValue === "parents"
                 ? FormAccountParents
-                : dropValue === "teacher"
+                : props.dropValue === "teacher"
                 ? FormAccountTeacher
                 : FormAccountAffair}
             <button onClick={props.handleInputCustom} className="btn-cancel">
                 Cancel
             </button>
-            <button type="submit" onClick={clickSave} className="btn-ok">
-                Save
+            <button type="submit" onClick={clickUpdate} className="btn-ok">
+                Update
             </button>
         </div>
     );
 
-    return (
-        <div className="add-account-form">
-            {isShowAdd ? FormAddAccount : ChooseAccount}
-        </div>
-    );
+    return <div className="add-account-form">{FormUpdateAccount}</div>;
 };
 
-export default AddAccount;
+export default UpdateAccount;

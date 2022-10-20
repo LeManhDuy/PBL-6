@@ -248,7 +248,7 @@ router.put("/:parentID", upload.single("person_image"), async (req, res) => {
     }
     let person_image = null;
     if (req.file) {
-        person_image = req.file.path;
+        person_image = req.file.publicUrl;
     }
     if (person_phonenumber.length != 10) {
         return res.status(400).json({
@@ -271,19 +271,6 @@ router.put("/:parentID", upload.single("person_image"), async (req, res) => {
     try {
         const parent = await Parent.findById(req.params.parentID);
         const person = await Person.findById(parent.person_id.toString());
-        if (person.person_image) {
-            if (person_image === null) {
-                person_image = person.person_image;
-            } else {
-                fs.unlink("./" + person.person_image, (err) => {
-                    if (err)
-                        res.status(400).json({
-                            success: false,
-                            message: "Image error: " + err,
-                        });
-                });
-            }
-        }
         //update Person Information
         let updatePerson = {
             person_fullname,
@@ -365,15 +352,6 @@ router.delete("/:parentID", async (req, res) => {
     try {
         const parent = await Parent.findById(req.params.parentID);
         const person = await Person.findById(parent.person_id.toString());
-        if (person.person_image) {
-            fs.unlink("./" + person.person_image, (err) => {
-                if (err)
-                    res.status(400).json({
-                        success: false,
-                        message: "Image error: " + err,
-                    });
-            });
-        }
         //delete Parent
         const postDeleteParent = {
             _id: req.params.parentID,

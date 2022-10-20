@@ -5,13 +5,13 @@ import {
     faMagnifyingGlass,
     faArrowLeftLong,
     faArrowRightLong,
-    faTrash,
-    faPenToSquare,
-    faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import AccountService from "../../../config/service/AccountService";
 import ModalInput from "../../../lib/ModalInput/ModalInput";
+import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
+import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
 import AddAccount from "../../../lib/ModalInput/AddAccount/AddAccount";
+import UpdateAccount from "../../../lib/ModalInput/UpdateAccount/UpdateAccount";
 
 function AccountAdmin() {
     const [parents, setParents] = useState([]);
@@ -24,6 +24,8 @@ function AccountAdmin() {
     const [name, setName] = useState("");
     const [keyword, setKeyword] = useState("");
     const [addState, setAddState] = useState(false);
+    const [updateState, setUpdateState] = useState(false);
+    const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
 
     useEffect(() => {
@@ -193,9 +195,16 @@ function AccountAdmin() {
             const id =
                 e.target.parentElement.parentElement.getAttribute("data-key");
             if (e.target.className.includes("btn-delete")) {
-                console.log("delete");
+                setIsDelete(true);
+                setId(id);
+                setName(
+                    e.target.parentElement.parentElement.querySelectorAll(
+                        "td"
+                    )[1].textContent
+                );
             } else if (e.target.className.includes("btn-edit")) {
-                console.log("edit");
+                setUpdateState(true);
+                setId(id);
             } else if (e.target.className.includes("btn-view")) {
                 console.log("view");
             }
@@ -226,38 +235,104 @@ function AccountAdmin() {
         );
     };
 
+    const handleCloseModalCustom = () => {
+        setIsDelete(false);
+    };
+
     const handleInputCustom = () => {
         setAddState(false);
+        setUpdateState(false);
         setErrorServer(false);
     };
 
+    //Add Account
     const handleConfirmAddAccount = (allValue, type) => {
         if (type === "principal") {
             //todo
         } else if (type === "parents") {
-            //todo
+            var formData = new FormData();
+            formData.append("account_username", allValue.username);
+            formData.append("account_password", allValue.password);
+            formData.append("person_fullname", allValue.name);
+            formData.append("person_dateofbirth", allValue.dateOfBirth);
+            formData.append("person_email", allValue.email);
+            formData.append("person_gender", allValue.gender);
+            formData.append("person_phonenumber", allValue.phone);
+            formData.append("person_address", allValue.address);
+            formData.append("parent_job", allValue.job);
+            formData.append("parent_relationship", allValue.relationship);
+            formData.append("is_in_association", allValue.association);
+            formData.append("parent_job_address", allValue.jobAddress);
+            if (!!allValue.img)
+                formData.append(
+                    "person_image",
+                    allValue.img,
+                    allValue.img.name
+                );
+            AccountService.addAccountParents(formData)
+                .then((res) => {
+                    if (res.success) {
+                        setState(!state);
+                        setDropValue(type);
+                        setErrorServer(false);
+                        setAddState(false);
+                    } else {
+                        setErrorServer(true);
+                        setAddState(true);
+                    }
+                })
+                .catch((error) => console.log("error", error));
         } else if (type === "teacher") {
         }
         //affair
         else {
             //todo
         }
-        AccountService.addAccountAdmin({
-            admin_username: allValue.name,
-            admin_password: allValue.password,
-            admin_email: allValue.email,
-        })
-            .then((res) => {
-                if (res.success) {
-                    setState(!state);
-                    setErrorServer(false);
-                    setAddState(false);
-                } else {
-                    setErrorServer(true);
-                    setAddState(true);
-                }
-            })
-            .catch((error) => console.log("error", error));
+    };
+
+    const handleConfirmUpdateAccount = (allValue) => {
+        if (dropValue === "principal") {
+            //todo
+        } else if (dropValue === "parents") {
+            console.log(allValue);
+            var formData = new FormData();
+            formData.append("account_username", allValue.username);
+            formData.append("account_password", allValue.password);
+            formData.append("person_fullname", allValue.name);
+            formData.append("person_dateofbirth", allValue.dateOfBirth);
+            formData.append("person_email", allValue.email);
+            formData.append("person_gender", allValue.gender);
+            formData.append("person_phonenumber", allValue.phone);
+            formData.append("person_address", allValue.address);
+            formData.append("parent_job", allValue.job);
+            formData.append("parent_relationship", allValue.relationship);
+            formData.append("is_in_association", allValue.association);
+            formData.append("parent_job_address", allValue.jobAddress);
+            if (!!allValue.img)
+                formData.append(
+                    "person_image",
+                    allValue.img,
+                    allValue.img.name
+                );
+            console.log(allValue);
+            AccountService.updateAccountParents(formData, id)
+                .then((res) => {
+                    if (res.success) {
+                        setState(!state);
+                        setErrorServer(false);
+                        setUpdateState(false);
+                    } else {
+                        setErrorServer(true);
+                        setUpdateState(true);
+                    }
+                })
+                .catch((error) => console.log("error", error));
+        } else if (dropValue === "teacher") {
+        }
+        //affair
+        else {
+            //todo
+        }
     };
 
     //Component Add Account (Form)
@@ -275,9 +350,62 @@ function AccountAdmin() {
         />
     );
 
+    //Componet Update Account
+    const DivUpdateAccount = (
+        <ModalInput
+            show={updateState}
+            handleInputCustom={handleInputCustom}
+            content={
+                <UpdateAccount
+                    AccountId={id}
+                    handleInputCustom={handleInputCustom}
+                    handleConfirmUpdateAccount={handleConfirmUpdateAccount}
+                    errorServer={errorServer}
+                    dropValue={dropValue}
+                />
+            }
+        />
+    );
+
     const handleAddAccount = () => {
         setAddState(true);
     };
+
+    // Delete
+
+    const handleDelete = () => {
+        if (dropValue === "principal")
+            //todo
+            console.log("hello");
+        else if (dropValue === "parents")
+            AccountService.deleteAccountParentsById(id).then((res) => {
+                if (res.success) {
+                    setState(!state);
+                }
+            });
+        else if (dropValue === "teacher")
+            //todo
+            console.log("Hello");
+        else {
+            //todo
+            console.log("Hello");
+        }
+        setIsDelete(false);
+    };
+
+    const ConfirmDelete = (
+        <ModalCustom
+            show={isDelete}
+            content={
+                <ConfirmAlert
+                    handleCloseModalCustom={handleCloseModalCustom}
+                    handleDelete={handleDelete}
+                    title={`Do you want to delete the ${name}?`}
+                />
+            }
+            handleCloseModalCustom={handleCloseModalCustom}
+        />
+    );
 
     return (
         <div className="main-container">
@@ -347,7 +475,9 @@ function AccountAdmin() {
                         />
                     </button>
                 </div>
+                {isDelete ? ConfirmDelete : null}
                 {addState ? DivAddAccount : null}
+                {updateState ? DivUpdateAccount : null}
             </footer>
         </div>
     );
