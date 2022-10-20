@@ -12,7 +12,6 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./assets/css/custom.css";
 import "../node_modules/font-awesome/css/font-awesome.min.css";
-import "../node_modules/font-awesome/css/font-awesome.min.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

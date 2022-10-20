@@ -23,11 +23,15 @@ const isAdmin = () => {
 };
 
 const isParents = () => {
-    return JSON.parse(localStorage.getItem("@Login")).AccountRole === "parent";
+    return JSON.parse(localStorage.getItem("@Login")).AccountRole === "Parents";
 };
 
 const isTeacher = () => {
-    return JSON.parse(localStorage.getItem("@Login")).AccountRole === "teacher";
+    return JSON.parse(localStorage.getItem("@Login")).AccountRole === "Teacher";
+};
+
+const isAffair = () => {
+    return JSON.parse(localStorage.getItem("@Login").AccountRole === "Affair");
 };
 
 const getData = () => {
@@ -42,6 +46,7 @@ const AuthenticationService = {
     isAdmin,
     isParents,
     isTeacher,
+    isAffair,
     getData,
 };
 
