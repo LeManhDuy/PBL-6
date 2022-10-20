@@ -6,44 +6,69 @@ const Account = require("../model/Account")
 const Person = require("../model/Person")
 const validator = require("email-validator")
 const multer = require("multer")
+const FirebaseStorage = require('multer-firebase-storage')
 const fs = require("fs")
 
-const storage = multer.diskStorage({
-    destination: function (req, res, cb) {
-        cb(null, "./uploads/affairs")
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + file.originalname)
-    },
-})
+// const storage = multer.diskStorage({
+//     destination: function (req, res, cb) {
+//         cb(null, "./uploads/affairs")
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, Date.now() + file.originalname)
+//     },
+// })
 
 const fileFilter = (req, file, cb) => {
     // reject a file
     if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
         cb(null, true)
     } else {
-        cb(null, false)
+        return cb(new Error('Wrong extension type.'))
     }
 }
 
-const upload = multer({ storage: storage, fileFilter: fileFilter })
+const upload = multer({
+    storage: FirebaseStorage({
+        bucketName: process.env.FB_BUCKET_NAME,
+        credentials: {
+            "client_email": process.env.FB_CLIENT_EMAIL,
+            "private_key": process.env.FB_PRIVATE_KEY,
+            "project_id": process.env.FB_PROJECT_ID
+        },
+        nameSuffix: "_hashcode_",
+        unique: true,
+        public: true
+    }),
+    fileFilter: fileFilter,
+})
 
 // @route POST api/admin/affair
 // @desc Create affairs user
 // @access Private
 router.post("/", upload.single("person_image"), async (req, res) => {
-    const { account_username, account_password, person_fullname,
-        person_dateofbirth, person_email, person_gender, person_phonenumber,
+    const { 
+        account_username, 
+        account_password, 
+        person_fullname,
+        person_dateofbirth, 
+        person_email, 
+        person_gender, 
+        person_phonenumber,
         person_address } = req.body
     // Validation
     let person_image = null
     if (req.file) {
-        person_image = req.file.path
+        person_image = req.file.publicUrl
     }
-    if (!account_username || !account_password ||
-        !person_fullname || !person_dateofbirth ||
-        !person_email || !person_gender ||
-        !person_phonenumber || !person_address)
+    if (!account_username || 
+        !account_password ||
+        !person_fullname || 
+        !person_dateofbirth ||
+        !person_email || 
+        !person_gender ||
+        !person_phonenumber || 
+        !person_address
+        )
         return res.status(400).json({
             success: false,
             message: "Please fill in complete information.",
@@ -54,10 +79,11 @@ router.post("/", upload.single("person_image"), async (req, res) => {
             message: "Phone number must have 10 numbers.",
         })
     }
-    if (!validator.validate(person_email)) {
+    const emailValidate = await Person.findOne({ person_email })
+    if (!validator.validate(person_email) || emailValidate) {
         return res.status(400).json({
             success: false,
-            message: "Invalid Email.",
+            message: "Email must be unquie and correct address form.",
         })
     }
     if (account_password.length < 6) {
@@ -184,7 +210,7 @@ router.put(
         }
         let person_image = null
         if (req.file) {
-            person_image = req.file.path
+            person_image = req.file.publicUrl
         }
         if (person_phonenumber.length != 10) {
             return res.status(400).json({
