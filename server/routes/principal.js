@@ -99,7 +99,7 @@ router.post("/", upload.single('person_image'), async (req, res) => {
         const newAccount = new Account({
             account_username,
             account_password: hashPassword,
-            account_role: process.env.ROLE_PRINCIPLE,
+            account_role: process.env.ROLE_PRINCIPAL,
         })
         await newAccount.save()
 
@@ -131,19 +131,19 @@ router.post("/", upload.single('person_image'), async (req, res) => {
     }
 })
 
-// @route GET api/admin/principle
+// @route GET api/admin/principal
 // @desc GET principal
 // @access Private Only Admin
 router.get("/", async (req, res) => {
     try {
         // Return token
-        const allPrinciple = await Account.find({ account_role: "Principal" })
-        const arrPrincipleId = []
-        allPrinciple.map((item) => {
-            arrPrincipleId.push(item._id)
+        const allPrincipal = await Account.find({ account_role: process.env.ROLE_PRINCIPAL })
+        const arrPrincipalId = []
+        allPrincipal.map((item) => {
+            arrPrincipalId.push(item._id)
         })
-        const getPrincipleInfor = await Person.find({
-            account_id: arrPrincipleId,
+        const getPrincipalInfor = await Person.find({
+            account_id: arrPrincipalId,
         })
             .select([
                 "person_fullname",
@@ -155,19 +155,19 @@ router.get("/", async (req, res) => {
                 "person_image",
             ])
             .populate("account_id", ["account_username", "account_role"])
-        res.json({ success: true, getPrincipleInfor })
+        res.json({ success: true, getPrincipalInfor })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }
 })
 
-// @route GET api/admin/principle
+// @route GET api/admin/principal
 // @desc GET principal by Id
 // @access Private Only Admin
 router.get("/:personID", async (req, res) => {
     try {
         // Return token
-        const getPrincipleInfor = await Person.find({
+        const getPrincipalInfor = await Person.find({
             _id: req.params.personID,
         })
             .select([
@@ -180,14 +180,14 @@ router.get("/:personID", async (req, res) => {
                 "person_image",
             ])
             .populate("account_id", ["account_username", "account_role"])
-        res.json({ success: true, getPrincipleInfor })
+        res.json({ success: true, getPrincipalInfor })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }
 })
 
-// @route PUT api/admin/principle
-// @desc PUT principle
+// @route PUT api/admin/principal
+// @desc PUT principal
 // @access Private Only Admin
 router.put("/:personID", upload.single("person_image"), async (req, res) => {
     const {
@@ -283,7 +283,7 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
             return res
                 .status(401)
                 .json({ success: false, message: "Person does not found." })
-        const getPrincipleInfor = await Person.find({
+        const getPrincipalInfor = await Person.find({
             _id: req.params.personID,
         })
             .select([
@@ -299,15 +299,15 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
         res.json({
             success: true,
             message: "Update person information successfully!",
-            person: getPrincipleInfor,
+            person: getPrincipalInfor,
         })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }
 })
 
-// @route PUT api/admin/principle
-// @desc DELETE principle
+// @route PUT api/admin/principal
+// @desc DELETE principal
 // @access Private Only Admin
 router.delete("/:personID", async (req, res) => {
     try {
