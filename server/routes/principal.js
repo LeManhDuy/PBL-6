@@ -61,11 +61,13 @@ router.post("/", upload.single('person_image'), async (req, res) => {
         !person_gender ||
         !person_phonenumber ||
         !person_address
-    )
+    ) {
         return res.status(400).json({
             success: false,
             message: "Please fill in complete information.",
         })
+    }
+
     if (person_phonenumber.length != 10) {
         return res.status(400).json({
             success: false,
