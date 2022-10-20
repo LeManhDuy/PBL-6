@@ -271,6 +271,11 @@ router.put("/:parentID", upload.single("person_image"), async (req, res) => {
     try {
         const parent = await Parent.findById(req.params.parentID);
         const person = await Person.findById(parent.person_id.toString());
+        if (person.person_image) {
+            if (person_image === null) {
+                person_image = person.person_image;
+            }
+        }
         //update Person Information
         let updatePerson = {
             person_fullname,
@@ -311,7 +316,7 @@ router.put("/:parentID", upload.single("person_image"), async (req, res) => {
             updateParent,
             { new: true }
         );
-        if (!updatePerson || !updateParent || updateAccount)
+        if (!updatePerson || !updateParent || !updateAccount)
             return res
                 .status(401)
                 .json({ success: false, message: "Parent does not found." });

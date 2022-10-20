@@ -205,6 +205,7 @@ function AccountAdmin() {
             } else if (e.target.className.includes("btn-edit")) {
                 setUpdateState(true);
                 setId(id);
+                console.log(id);
             } else if (e.target.className.includes("btn-view")) {
                 console.log("view");
             }
@@ -317,6 +318,7 @@ function AccountAdmin() {
             console.log(allValue);
             AccountService.updateAccountParents(formData, id)
                 .then((res) => {
+                    console.log(res);
                     if (res.success) {
                         setState(!state);
                         setErrorServer(false);
