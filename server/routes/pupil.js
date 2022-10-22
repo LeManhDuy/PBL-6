@@ -309,7 +309,7 @@ router.delete("/:pupilID", async (req, res) => {
         if (!deletedPupil)
             return res
                 .status(401)
-                .json({ success: false, message: "Pupil does not found." })
+                .json({ success: false, message: "Pupil does not found ." })
         res.json({
             success: true,
             message: "Deleted pupil successfully!",
