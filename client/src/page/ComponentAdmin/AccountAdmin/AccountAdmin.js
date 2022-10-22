@@ -71,7 +71,7 @@ function AccountAdmin() {
     const getPrincipal = () => {
         AccountService.getAccountsPrincipal()
             .then((response) => {
-                const dataSources = response.getPrincipleInfor.map(
+                const dataSources = response.getPrincipalInfor.map(
                     (item, index) => {
                         return {
                             key: index + 1,
@@ -249,7 +249,34 @@ function AccountAdmin() {
     //Add Account
     const handleConfirmAddAccount = (allValue, type) => {
         if (type === "principal") {
-            //todo
+            var formData = new FormData();
+            formData.append("account_username", allValue.username);
+            formData.append("account_password", allValue.password);
+            formData.append("person_fullname", allValue.name);
+            formData.append("person_dateofbirth", allValue.dateOfBirth);
+            formData.append("person_email", allValue.email);
+            formData.append("person_gender", allValue.gender);
+            formData.append("person_phonenumber", allValue.phone);
+            formData.append("person_address", allValue.address);
+            if (!!allValue.img)
+                formData.append(
+                    "person_image",
+                    allValue.img,
+                    allValue.img.name
+                );
+            AccountService.addAccountPrincipals(formData)
+                .then((res) => {
+                    if (res.success) {
+                        setState(!state);
+                        setDropValue(type);
+                        setErrorServer(false);
+                        setAddState(false);
+                    } else {
+                        setErrorServer(true);
+                        setAddState(true);
+                    }
+                })
+                .catch((error) => console.log("error", error));
         } else if (type === "parents") {
             var formData = new FormData();
             formData.append("account_username", allValue.username);
