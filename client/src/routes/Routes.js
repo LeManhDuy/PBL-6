@@ -7,6 +7,7 @@ import Home from "../page/Home/Home";
 import AdminRoute from "./AdminRoute/AdminRoute";
 import NotFound from "../page/NotFound/NotFound";
 import HomeAdmin from "../page/ComponentAdmin/HomeAdmin/HomeAdmin";
+import HomeAffair from "../page/ComponentAffair/HomeAffair/HomeAffair";
 import AccountAdmin from "../page/ComponentAdmin/AccountAdmin/AccountAdmin";
 import ClassAdmin from "../page/ComponentAdmin/ClassAdmin/ClassAdmin";
 import GradeAdmin from "../page/ComponentAdmin/GradeAdmin/GradeAdmin";
@@ -16,6 +17,9 @@ import StudentAdmin from "../page/ComponentAdmin/StudentAdmin/StudentAdmin";
 import FeeAdmin from "../page/ComponentAdmin/FeeAdmin/FeeAdmin";
 import FeeCategoryAdmin from "../page/ComponentAdmin/FeeCategoryAdmin/FeeCategoryAdmin";
 import StatisticAdmin from "../page/ComponentAdmin/StatisticAdmin/StatisticAdmin";
+import ParentsRoute from "./ParentsRoute/ParentsRoute";
+import Parents from "../page/Parents/Parents";
+import AffairRoute from "./AffairRoute/AffairRoute";
 
 const Routes = () => {
     return (
@@ -87,6 +91,42 @@ const Routes = () => {
                         exact
                         path={ROUTES.ADMIN_PAGE.STATISTIC_ADMIN}
                     />
+
+                    {/* Parents Route */}
+
+                    <ParentsRoute
+                        component={Parents}
+                        exact
+                        path={ROUTES.PARENTS_PAGE.PARENTS_PARENTS_PATH}
+                    />
+
+                    {/* Teacher Route */}
+
+                    {/* Affair Route */}
+
+                    <AffairRoute
+                        component={HomeAffair}
+                        exact
+                        path={ROUTES.AFFAIR_PAGE.AFFAIR_HOME}
+                    />
+
+                    {/* <AffairRoute
+                        component={FeeAdmin}
+                        exact
+                        path={ROUTES.AFFAIR_PAGE.FEE_AFFAIR}
+                    />
+
+                    <AffairRoute
+                        component={FeeCategoryAdmin}
+                        exact
+                        path={ROUTES.AFFAIR_PAGE.FEE_CATEGORY_AFFAIR}
+                    />
+
+                    <AffairRoute
+                        component={StatisticAdmin}
+                        exact
+                        path={ROUTES.AFFAIR_PAGE.STATISTIC_AFFAIR}
+                    /> */}
 
                     <PublicRoute
                         component={NotFound}

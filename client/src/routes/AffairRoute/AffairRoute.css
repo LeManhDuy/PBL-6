@@ -1,0 +1,15 @@
+@import "../../assets/css/variables.css";
+@import "../../assets/css/custom.css";
+
+.div-container {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(90deg, #8ae8dccc, #83addccc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-content {
+  display: flex;
+}
