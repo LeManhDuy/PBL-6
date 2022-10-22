@@ -18,7 +18,7 @@ const isLogin = () => {
 
 const isAdmin = () => {
     return (
-        JSON.parse(localStorage.getItem("@Login")).AccountRole === "Pricipal"
+        JSON.parse(localStorage.getItem("@Login")).AccountRole === "Principal"
     );
 };
 
