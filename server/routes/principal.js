@@ -61,11 +61,13 @@ router.post("/", upload.single('person_image'), async (req, res) => {
         !person_gender ||
         !person_phonenumber ||
         !person_address
-    )
+    ) {
         return res.status(400).json({
             success: false,
             message: "Please fill in complete information.",
         })
+    }
+
     if (person_phonenumber.length != 10) {
         return res.status(400).json({
             success: false,
@@ -99,7 +101,7 @@ router.post("/", upload.single('person_image'), async (req, res) => {
         const newAccount = new Account({
             account_username,
             account_password: hashPassword,
-            account_role: process.env.ROLE_PRINCIPLE,
+            account_role: process.env.ROLE_PRINCIPAL,
         })
         await newAccount.save()
 
@@ -131,19 +133,19 @@ router.post("/", upload.single('person_image'), async (req, res) => {
     }
 })
 
-// @route GET api/admin/principle
+// @route GET api/admin/principal
 // @desc GET principal
 // @access Private Only Admin
 router.get("/", async (req, res) => {
     try {
         // Return token
-        const allPrinciple = await Account.find({ account_role: "Principal" })
-        const arrPrincipleId = []
-        allPrinciple.map((item) => {
-            arrPrincipleId.push(item._id)
+        const allPrincipal = await Account.find({ account_role: process.env.ROLE_PRINCIPAL })
+        const arrPrincipalId = []
+        allPrincipal.map((item) => {
+            arrPrincipalId.push(item._id)
         })
-        const getPrincipleInfor = await Person.find({
-            account_id: arrPrincipleId,
+        const getPrincipalInfor = await Person.find({
+            account_id: arrPrincipalId,
         })
             .select([
                 "person_fullname",
@@ -155,19 +157,19 @@ router.get("/", async (req, res) => {
                 "person_image",
             ])
             .populate("account_id", ["account_username", "account_role"])
-        res.json({ success: true, getPrincipleInfor })
+        res.json({ success: true, getPrincipalInfor })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }
 })
 
-// @route GET api/admin/principle
+// @route GET api/admin/principal
 // @desc GET principal by Id
 // @access Private Only Admin
 router.get("/:personID", async (req, res) => {
     try {
         // Return token
-        const getPrincipleInfor = await Person.find({
+        const getPrincipalInfor = await Person.find({
             _id: req.params.personID,
         })
             .select([
@@ -180,14 +182,14 @@ router.get("/:personID", async (req, res) => {
                 "person_image",
             ])
             .populate("account_id", ["account_username", "account_role"])
-        res.json({ success: true, getPrincipleInfor })
+        res.json({ success: true, getPrincipalInfor })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }
 })
 
-// @route PUT api/admin/principle
-// @desc PUT principle
+// @route PUT api/admin/principal
+// @desc PUT principal
 // @access Private Only Admin
 router.put("/:personID", upload.single("person_image"), async (req, res) => {
     const {
@@ -216,7 +218,7 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
     }
     let person_image = null
     if (req.file) {
-        person_image = req.file.path
+        person_image = req.file.publicUrl
     }
     if (person_phonenumber.length != 10) {
         return res.status(400).json({
@@ -227,7 +229,7 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
     if (!validator.validate(person_email)) {
         return res.status(400).json({
             success: false,
-            message: "Invalid Email.",
+            message: "Email must correct address form.",
         })
     }
     if (account_password.length < 6) {
@@ -238,19 +240,20 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
     }
     try {
         const person = await Person.findById(req.params.personID)
-        if (person.person_image) {
-            if (person_image === null) {
-                person_image = person.person_image
-            } else {
-                fs.unlink("./" + person.person_image, (err) => {
-                    if (err)
-                        res.status(400).json({
-                            success: false,
-                            message: "Image error: " + err,
-                        })
-                })
-            }
-        }
+        // if (person.person_image) {
+        //     if (person_image === null) {
+        //         person_image = person.person_image
+        //     }
+        // else {
+        //     fs.unlink("./" + person.person_image, (err) => {
+        //         if (err)
+        //             res.status(400).json({
+        //                 success: false,
+        //                 message: "Image error: " + err,
+        //             })
+        //     })
+        // }
+        // }
         //update Person Information
         let updatePerson = {
             person_fullname,
@@ -282,7 +285,7 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
             return res
                 .status(401)
                 .json({ success: false, message: "Person does not found." })
-        const getPrincipleInfor = await Person.find({
+        const getPrincipalInfor = await Person.find({
             _id: req.params.personID,
         })
             .select([
@@ -298,28 +301,28 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
         res.json({
             success: true,
             message: "Update person information successfully!",
-            person: getPrincipleInfor,
+            person: getPrincipalInfor,
         })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }
 })
 
-// @route PUT api/admin/principle
-// @desc DELETE principle
+// @route PUT api/admin/principal
+// @desc DELETE principal
 // @access Private Only Admin
 router.delete("/:personID", async (req, res) => {
     try {
         const person = await Person.findById(req.params.personID)
-        if (person.person_image) {
-            fs.unlink("./" + person.person_image, (err) => {
-                if (err)
-                    res.status(400).json({
-                        success: false,
-                        message: "Image error: " + err,
-                    })
-            })
-        }
+        // if (person.person_image) {
+        //     fs.unlink("./" + person.person_image, (err) => {
+        //         if (err)
+        //             res.status(400).json({
+        //                 success: false,
+        //                 message: "Image error: " + err,
+        //             })
+        //     })
+        // }
         const postDeletePerson = {
             _id: req.params.personID,
         }
