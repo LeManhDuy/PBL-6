@@ -8,6 +8,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const StudentAdmin = () => {
+
+    
+
     const TableStudent = ({ students }) => {
         const studentItem = (
             <tr>
@@ -47,10 +50,10 @@ const StudentAdmin = () => {
         <div className="main-container">
             <header>
                 <div>
-                    <h3>Manage Student</h3>
+                    <h3>Manage Pupil</h3>
                 </div>
                 <div className="right-header">
-                    <button className="btn-account">Add class</button>
+                    <button className="btn-account">Add pupil</button>
                     <div className="search-box">
                         <button className="btn-search">
                             <FontAwesomeIcon
