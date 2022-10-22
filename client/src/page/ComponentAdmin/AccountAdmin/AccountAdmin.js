@@ -287,7 +287,35 @@ function AccountAdmin() {
         }
         //affair
         else {
-            //todo
+            var formData = new FormData();
+            formData.append("account_username", allValue.username);
+            formData.append("account_password", allValue.password);
+            formData.append("person_fullname", allValue.name);
+            formData.append("person_dateofbirth", allValue.dateOfBirth);
+            formData.append("person_email", allValue.email);
+            formData.append("person_gender", allValue.gender);
+            formData.append("person_phonenumber", allValue.phone);
+            formData.append("person_address", allValue.address);
+            if (!!allValue.img)
+                formData.append(
+                    "person_image",
+                    allValue.img,
+                    allValue.img.name
+                );
+            AccountService.addAccountAffairs(formData)
+                .then((res) => {
+                    console.log(res);
+                    if (res.success) {
+                        setState(!state);
+                        setDropValue(type);
+                        setErrorServer(false);
+                        setAddState(false);
+                    } else {
+                        setErrorServer(true);
+                        setAddState(true);
+                    }
+                })
+                .catch((error) => console.log("error", error));
         }
     };
 
@@ -295,7 +323,6 @@ function AccountAdmin() {
         if (dropValue === "principal") {
             //todo
         } else if (dropValue === "parents") {
-            console.log(allValue);
             var formData = new FormData();
             formData.append("account_username", allValue.username);
             formData.append("account_password", allValue.password);
@@ -333,7 +360,34 @@ function AccountAdmin() {
         }
         //affair
         else {
-            //todo
+            var formData = new FormData();
+            formData.append("account_username", allValue.username);
+            formData.append("account_password", allValue.password);
+            formData.append("person_fullname", allValue.name);
+            formData.append("person_dateofbirth", allValue.dateOfBirth);
+            formData.append("person_email", allValue.email);
+            formData.append("person_gender", allValue.gender);
+            formData.append("person_phonenumber", allValue.phone);
+            formData.append("person_address", allValue.address);
+            if (!!allValue.img)
+                formData.append(
+                    "person_image",
+                    allValue.img,
+                    allValue.img.name
+                );
+            AccountService.updateAccountAffairs(formData, id)
+                .then((res) => {
+                    console.log(res);
+                    if (res.success) {
+                        setState(!state);
+                        setErrorServer(false);
+                        setUpdateState(false);
+                    } else {
+                        setErrorServer(true);
+                        setUpdateState(true);
+                    }
+                })
+                .catch((error) => console.log("error", error));
         }
     };
 
@@ -389,8 +443,11 @@ function AccountAdmin() {
             //todo
             console.log("Hello");
         else {
-            //todo
-            console.log("Hello");
+            AccountService.deleteAccountAffairsById(id).then((res) => {
+                if (res.success) {
+                    setState(!state);
+                }
+            });
         }
         setIsDelete(false);
     };
