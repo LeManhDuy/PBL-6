@@ -314,15 +314,15 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
 router.delete("/:personID", async (req, res) => {
     try {
         const person = await Person.findById(req.params.personID)
-        if (person.person_image) {
-            fs.unlink("./" + person.person_image, (err) => {
-                if (err)
-                    res.status(400).json({
-                        success: false,
-                        message: "Image error: " + err,
-                    })
-            })
-        }
+        // if (person.person_image) {
+        //     fs.unlink("./" + person.person_image, (err) => {
+        //         if (err)
+        //             res.status(400).json({
+        //                 success: false,
+        //                 message: "Image error: " + err,
+        //             })
+        //     })
+        // }
         const postDeletePerson = {
             _id: req.params.personID,
         }
