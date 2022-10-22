@@ -5,17 +5,34 @@ import Logo from "../../../assets/image/Logo.png";
 const AddAccount = (props) => {
     let date = new Date().toLocaleDateString();
     const [isShowAdd, setIsShowAdd] = useState(false);
-    const [dropValue, setDropValue] = useState("admin");
+    const [dropValue, setDropValue] = useState("principal");
 
     //properties
-    const [allValuesPrincipal, setAllValuesPrincipal] = useState();
+    const [allValuesPrincipal, setAllValuesPrincipal] = useState({
+        name: "",
+        username: "",
+        dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
+            ? "0" + date.split("/")[0]
+            : date.split("/")[0]
+            }-${date.split("/")[1] < 10
+                ? "0" + date.split("/")[1]
+                : date.split("/")[1]
+            }`,
+        email: "",
+        gender: null,
+        phone: "",
+        img: null,
+        address: "",
+        password: "",
+        confirmPassword: "",
+    });
     const [allValuesTeacher, setAllValuesTeacher] = useState();
     const [allValuesAffair, setAllValuesAffair] = useState({
         name: "",
         username: "",
         dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
-                ? "0" + date.split("/")[0]
-                : date.split("/")[0]
+            ? "0" + date.split("/")[0]
+            : date.split("/")[0]
             }-${date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
@@ -34,8 +51,8 @@ const AddAccount = (props) => {
         name: "",
         username: "",
         dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
-                ? "0" + date.split("/")[0]
-                : date.split("/")[0]
+            ? "0" + date.split("/")[0]
+            : date.split("/")[0]
             }-${date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
@@ -54,7 +71,18 @@ const AddAccount = (props) => {
     });
 
     //Error for validate
-    const [principalError, setPrincipalError] = useState();
+    const [principalError, setPrincipalError] = useState({
+        name: false,
+        username: false,
+        dateOfBirth: false,
+        email: false,
+        gender: false,
+        phone: false,
+        img: false,
+        address: false,
+        password: false,
+        confirmPassword: false,
+    });
     const [teacherError, setTeacherError] = useState();
     const [affairError, setAffairError] = useState({
         name: false,
@@ -141,7 +169,108 @@ const AddAccount = (props) => {
         return re.test(String(email).toLowerCase());
     };
 
-    const handleAddPrincipalAccount = () => { };
+    const handleAddPrincipalAccount = () => {
+        let name = false;
+        let username = false;
+        let dateOfBirth = false;
+        let email = false;
+        let gender = false;
+        let phone = false;
+        let img = false;
+        let address = false;
+        let password = false;
+        let confirmPassword = false;
+
+        let check = false;
+        if (
+            allValuesPrincipal.name.length > 30 ||
+            allValuesPrincipal.name.length < 2
+        ) {
+            name = true;
+            check = true;
+        } else name = false;
+
+        if (validateEmail(allValuesPrincipal.email) === false) {
+            email = true;
+            check = true;
+        } else email = false;
+
+        if (allValuesPrincipal.password.length < 6) {
+            password = true;
+            check = true;
+        } else if (
+            allValuesPrincipal.confirmPassword !== allValuesPrincipal.password
+        ) {
+            confirmPassword = true;
+            check = true;
+        } else {
+            password = false;
+            confirmPassword = false;
+        }
+
+        let dateNow = new Date().toLocaleDateString();
+
+        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
+            ? "0" + dateNow.split("/")[0]
+            : dateNow.split("/")[0]
+            }-${dateNow.split("/")[1] < 10
+                ? "0" + dateNow.split("/")[1]
+                : dateNow.split("/")[1]
+            }`;
+
+        if (dateConvert < allValuesPrincipal.dateOfBirth) {
+            dateOfBirth = true;
+            check = true;
+        } else dateOfBirth = false;
+
+        if (!allValuesPrincipal.gender) {
+            gender = true;
+            check = true;
+        } else gender = false;
+
+        if (
+            isNaN(parseInt(allValuesPrincipal.phone)) ||
+            allValuesPrincipal.phone.length !== 10
+        ) {
+            phone = true;
+            check = true;
+        } else phone = false;
+
+        if (!!allValuesPrincipal.img) {
+            let imgList = allValuesPrincipal.img.name.split(".");
+            if (
+                imgList[imgList.length - 1] !== "png" &&
+                imgList[imgList.length - 1] !== "jpg"
+            ) {
+                img = true;
+                check = true;
+            } else img = false;
+        }
+
+        if (
+            allValuesPrincipal.address.length > 150 ||
+            allValuesPrincipal.address.length < 2
+        ) {
+            address = true;
+            check = true;
+        } else address = false;
+
+        setPrincipalError({
+            name: name,
+            username: username,
+            dateOfBirth: dateOfBirth,
+            email: email,
+            gender: gender,
+            phone: phone,
+            img: img,
+            address: address,
+            password: password,
+            confirmPassword: confirmPassword,
+        });
+        if (!check) {
+            props.handleConfirmAddAccount(allValuesPrincipal, dropValue);
+        }
+    };
 
     const handleAddTeacherAccount = () => { };
 
@@ -195,8 +324,8 @@ const AddAccount = (props) => {
         let dateNow = new Date().toLocaleDateString();
 
         let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
-                ? "0" + dateNow.split("/")[0]
-                : dateNow.split("/")[0]
+            ? "0" + dateNow.split("/")[0]
+            : dateNow.split("/")[0]
             }-${dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
@@ -334,8 +463,8 @@ const AddAccount = (props) => {
         let dateNow = new Date().toLocaleDateString();
 
         let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
-                ? "0" + dateNow.split("/")[0]
-                : dateNow.split("/")[0]
+            ? "0" + dateNow.split("/")[0]
+            : dateNow.split("/")[0]
             }-${dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
@@ -437,10 +566,265 @@ const AddAccount = (props) => {
     };
 
     const changeHandlerPrincipalIMG = (e) => {
-        //todo
+        setAllValuesPrincipal({
+            name: allValuesPrincipal.name,
+            username: allValuesPrincipal.username,
+            dateOfBirth: allValuesPrincipal.dateOfBirth,
+            email: allValuesPrincipal.email,
+            gender: allValuesPrincipal.gender,
+            phone: allValuesPrincipal.phone,
+            img: e.target.files[0],
+            address: allValuesPrincipal.address,
+            password: allValuesPrincipal.password,
+            confirmPassword: allValuesPrincipal.confirmPassword,
+        });
+        try {
+            setAvatar(URL.createObjectURL(e.target.files[0]));
+        } catch (err) {
+            console.log(err);
+        }
     };
 
-    const FormAccountPrincipal = null;
+    const FormAccountPrincipal = (
+        <div className="form-admin-content">
+            <h4>Add Principals account</h4>
+            <label
+                className={
+                    "error" +
+                    (props.errorServer ? " error-show" : " error-hidden")
+                }
+            >
+                Account or email already exists
+            </label>
+            <div className="form-teacher-content">
+                <div className="teacher-content-left">
+                    <div className="avatar-teacher">
+                        <img src={avatar} alt="avatar" />
+                        <label className="choose-file" htmlFor="upload-photo">
+                            Choose image
+                        </label>
+                        <input
+                            id="upload-photo"
+                            type="file"
+                            name="img"
+                            onChange={changeHandlerPrincipalIMG}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.img
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            The selected file is not valid
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Name</h4>
+                        <input
+                            className="input-content"
+                            type="text"
+                            name="name"
+                            placeholder="Enter name"
+                            value={allValuesPrincipal.name}
+                            onChange={changeHandlerPrincipal}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.name
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Name must be less than 30 chars
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Username</h4>
+                        <input
+                            className="input-content"
+                            type="text"
+                            name="username"
+                            placeholder="Enter username"
+                            value={allValuesPrincipal.username}
+                            onChange={changeHandlerPrincipal}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.username
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            This username is not avaiable.
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Date of Birth</h4>
+                        <input
+                            className="input-content"
+                            type="date"
+                            name="dateOfBirth"
+                            placeholder="Enter Date Of Birth"
+                            value={allValuesPrincipal.dateOfBirth}
+                            onChange={changeHandlerPrincipal}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.dateOfBirth
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid birthday
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Gender</h4>
+                        <div className="radio-btn">
+                            <div className="radio">
+                                <input
+                                    type="radio"
+                                    value={true}
+                                    name="gender"
+                                    onChange={changeHandlerPrincipal}
+                                />
+                                Male
+                                <input
+                                    type="radio"
+                                    value={false}
+                                    name="gender"
+                                    onChange={changeHandlerPrincipal}
+                                />
+                                Female
+                            </div>
+                            <label
+                                className={
+                                    "error" +
+                                    (principalError.gender
+                                        ? " error-show"
+                                        : " error-hidden")
+                                }
+                            >
+                                No gender selected
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div className="teacher-content-right">
+                    <div className="type-input">
+                        <h4>Phone Number</h4>
+                        <input
+                            className="input-content"
+                            type="text"
+                            name="phone"
+                            placeholder="Enter phone"
+                            value={allValuesPrincipal.phone}
+                            onChange={changeHandlerPrincipal}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.phone
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Phone must be 10 numeric characters
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Email</h4>
+                        <input
+                            className="input-content"
+                            type="email"
+                            name="email"
+                            placeholder="Enter email"
+                            value={allValuesPrincipal.email}
+                            onChange={changeHandlerPrincipal}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.email
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid Email
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Address</h4>
+                        <input
+                            className="input-content"
+                            type="text"
+                            name="address"
+                            placeholder="Enter home address"
+                            value={allValuesPrincipal.address}
+                            onChange={changeHandlerPrincipal}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.address
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Home Address must be less than 150 chars
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Password</h4>
+                        <input
+                            className="input-content"
+                            type="password"
+                            name="password"
+                            placeholder="Enter password "
+                            value={allValuesPrincipal.password}
+                            onChange={changeHandlerPrincipal}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.password
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Password must be at least 6 chars long
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Confirm Password</h4>
+                        <input
+                            className="input-content"
+                            type="password"
+                            name="confirmPassword"
+                            placeholder="Enter password "
+                            value={allValuesPrincipal.confirmPassword}
+                            onChange={changeHandlerPrincipal}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.confirmPassword
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Password incorrect
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 
     const changeHandlerTeacher = (e) => {
         setAllValuesTeacher({
@@ -491,7 +875,7 @@ const AddAccount = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Account already exists
+                Account or email already exists
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
