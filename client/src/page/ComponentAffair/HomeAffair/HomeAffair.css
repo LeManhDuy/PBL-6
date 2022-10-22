@@ -1,0 +1,101 @@
+@import "../../../assets/css/variables.css";
+@import "../../../assets/css/custom.css";
+* {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+.common {
+    position: relative;
+}
+.home-message {
+    width: 20vw;
+    height: auto;
+    margin-left: 7vw;
+    height: auto;
+    text-align: left;
+}
+
+.home-message .fa.fa-circle.one {
+    color: rgb(231, 181, 87);
+    font-size: 10vw;
+    top: 3vh;
+    position: absolute;
+    left: 6vw;
+}
+
+.home-message .fa.fa-circle.two {
+    color: rgb(231, 181, 87);
+    font-size: 10vw;
+    top: 5vw;
+    right:4vw;
+    position: absolute;
+    
+}
+
+.home-message .fa.fa-circle.three {
+    color: rgb(231, 181, 87);
+    font-size: 10vw;
+    bottom: 2vw;
+    right: 23vw;
+    position: absolute;
+    
+}
+
+.home-message .fa.fa-circle.four {
+    color: var(--text-color);
+    font-size: 3.5vw;
+    top: 2vw;
+    left: 17vw;
+    position: absolute;
+    
+}
+
+.home-message .fa.fa-circle.five {
+    color: var(--text-color);
+    font-size: 3.5vw;
+    bottom: 10vw;
+    right: 15vw;
+    position: absolute;
+    
+}
+
+.home-message .fa.fa-circle.six {
+    color: var(--primary-color);
+    font-size: 1vw;
+    top: 13vw;
+    right: 37vw;
+    position: absolute;
+    
+}
+
+.home-message .fa.fa-circle.seven {
+    color: var(--primary-color);
+    font-size: 1vw;
+    bottom: 27vw;
+    right: 3vw;
+    position: absolute;
+    
+}
+
+.home-message .fa.fa-circle.eight {
+    color: var(--primary-color);
+    font-size: 1vw;
+    bottom: 7vw;
+    right: 6vw;
+    position: absolute;
+    
+}
+.home-message h1 {
+    font-size: 5vw; 
+    height: auto;
+    color: #002E64;
+}
+
+.home-message h3 {
+    color: #83ACDC;
+}
+
+.home-image img{
+    width: 40vw;
+    height: auto;
+}
+

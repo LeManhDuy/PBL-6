@@ -1,0 +1,22 @@
+@import "../../assets/css/variables.css";
+@import "../../assets/css/custom.css";
+
+.div-container {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(90deg, #8ae8dccc, #83addccc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-content {
+  width: 95%;
+  height: 95%;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+}

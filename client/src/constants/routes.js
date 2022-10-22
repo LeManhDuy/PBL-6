@@ -16,6 +16,19 @@ const ROUTES = {
         STUDENT_ADMIN: "/admin/student",
     },
 
+    PARENTS_PAGE: {
+        PARENTS_PARENTS_PATH: "/parents/parents",
+    },
+
+    TEACHER_PAGE: {},
+
+    AFFAIR_PAGE: {
+        AFFAIR_HOME: "/affair",
+        FEE_AFFAIR: "/affair/fee",
+        FEE_CATEGORY_AFFAIR: "/affair/feecategory",
+        STATISTIC_AFFAIR: "/affair/statistic",
+    },
+
     NOT_FOUND_PAGE: {
         path: "*",
     },
