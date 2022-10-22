@@ -235,15 +235,7 @@ router.put(
             if (person.person_image) {
                 if (person_image === null) {
                     person_image = person.person_image
-                } else {
-                    fs.unlink("./" + person.person_image, (err) => {
-                        if (err)
-                            res.status(400).json({
-                                success: false,
-                                message: "Image error: " + err,
-                            })
-                    })
-                }
+                } 
             }
             //update Person Information
             let updatePerson = {
@@ -307,15 +299,6 @@ router.put(
 router.delete("/:personID", async (req, res) => {
     try {
         const person = await Person.findById(req.params.personID)
-        if (person.person_image) {
-            fs.unlink("./" + person.person_image, (err) => {
-                if (err)
-                    res.status(400).json({
-                        success: false,
-                        message: "Image error: " + err,
-                    })
-            })
-        }
         const postDeletePerson = {
             _id: req.params.personID,
         }

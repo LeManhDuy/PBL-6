@@ -27,7 +27,26 @@ const AddAccount = (props) => {
         confirmPassword: "",
     });
     const [allValuesTeacher, setAllValuesTeacher] = useState();
-    const [allValuesAffair, setAllValuesAffair] = useState();
+    const [allValuesAffair, setAllValuesAffair] = useState({
+        name: "",
+        username: "",
+        dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
+            ? "0" + date.split("/")[0]
+            : date.split("/")[0]
+            }-${date.split("/")[1] < 10
+                ? "0" + date.split("/")[1]
+                : date.split("/")[1]
+            }`,
+        email: "",
+        gender: null,
+        phone: "",
+        img: null,
+        address: "",
+        password: "",
+        confirmPassword: "",
+
+    });
+
     const [allValuesParents, setAllValuesParents] = useState({
         name: "",
         username: "",
@@ -65,7 +84,18 @@ const AddAccount = (props) => {
         confirmPassword: false,
     });
     const [teacherError, setTeacherError] = useState();
-    const [affairError, setAffairError] = useState();
+    const [affairError, setAffairError] = useState({
+        name: false,
+        username: false,
+        dateOfBirth: false,
+        email: false,
+        gender: false,
+        phone: false,
+        img: null,
+        address: false,
+        password: false,
+        confirmPassword: false,
+    });
     const [parentsError, setParentsError] = useState({
         name: false,
         username: false,
@@ -244,7 +274,124 @@ const AddAccount = (props) => {
 
     const handleAddTeacherAccount = () => { };
 
-    const handleAddAffairAccount = () => { };
+    const handleAddAffairAccount = () => {
+        let name = false;
+        let username = false;
+        let dateOfBirth = false;
+        let email = false;
+        let gender = false;
+        let phone = false;
+        let img = null;
+        let address = false;
+        let password = false;
+        let confirmPassword = false;
+
+        let check = false;
+        if (
+            allValuesAffair.name.length > 30 ||
+            allValuesAffair.name.length < 2
+        ) {
+            name = true;
+            check = true;
+        } else name = false;
+
+        if (
+            allValuesAffair.username.length > 30 ||
+            allValuesAffair.username.length < 2
+        ) {
+            username = true;
+            check = true;
+        } else username = false;
+
+        if (validateEmail(allValuesAffair.email) === false) {
+            email = true;
+            check = true;
+        } else email = false;
+
+        if (allValuesAffair.password.length < 6) {
+            password = true;
+            check = true;
+        } else if (
+            allValuesAffair.confirmPassword !== allValuesAffair.password
+        ) {
+            confirmPassword = true;
+            check = true;
+        } else {
+            password = false;
+            confirmPassword = false;
+        }
+
+        let dateNow = new Date().toLocaleDateString();
+
+        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
+            ? "0" + dateNow.split("/")[0]
+            : dateNow.split("/")[0]
+            }-${dateNow.split("/")[1] < 10
+                ? "0" + dateNow.split("/")[1]
+                : dateNow.split("/")[1]
+            }`;
+
+        if (dateConvert < allValuesAffair.dateOfBirth) {
+            dateOfBirth = true;
+            check = true;
+        } else dateOfBirth = false;
+
+        if (!allValuesAffair.gender) {
+            gender = true;
+            check = true;
+        } else gender = false;
+
+        if (
+            isNaN(parseInt(allValuesAffair.phone)) ||
+            allValuesAffair.phone.length !== 10
+        ) {
+            phone = true;
+            check = true;
+        } else phone = false;
+
+        if (
+            allValuesAffair.address.length > 100 ||
+            allValuesAffair.address.length < 2
+        ) {
+            address = true;
+            check = true;
+        } else address = false;
+
+        if (!!allValuesAffair.img) {
+            let imgList = allValuesAffair.img.name.split(".");
+            if (
+                imgList[imgList.length - 1] !== "png" &&
+                imgList[imgList.length - 1] !== "jpg"
+            ) {
+                img = true;
+                check = true;
+            } else img = false;
+        }
+
+        if (
+            allValuesAffair.address.length > 150 ||
+            allValuesAffair.address.length < 2
+        ) {
+            address = true;
+            check = true;
+        } else address = false;
+
+        setAffairError({
+            name: name,
+            username: username,
+            dateOfBirth: dateOfBirth,
+            email: email,
+            gender: gender,
+            phone: phone,
+            img: img,
+            address: address,
+            password: password,
+            confirmPassword: confirmPassword,
+        });
+        if (!check) {
+            props.handleConfirmAddAccount(allValuesAffair, dropValue);
+        }
+    };
 
     const handleAddParentsAccount = () => {
         let name = false;
@@ -270,6 +417,30 @@ const AddAccount = (props) => {
             name = true;
             check = true;
         } else name = false;
+
+        if (
+            allValuesParents.username.length > 30 ||
+            allValuesParents.username.length < 2
+        ) {
+            username = true;
+            check = true;
+        } else username = false;
+
+        if (
+            allValuesParents.relationship.length > 50 ||
+            allValuesParents.relationship.length < 2
+        ) {
+            relationship = true;
+            check = true;
+        } else relationship = false;
+
+        if (
+            allValuesParents.jobAddress.length > 50 ||
+            allValuesParents.jobAddress.length < 2
+        ) {
+            jobAddress = true;
+            check = true;
+        } else jobAddress = false;
 
         if (validateEmail(allValuesParents.email) === false) {
             email = true;
@@ -676,10 +847,265 @@ const AddAccount = (props) => {
     };
 
     const changeHandlerAffairIMG = (e) => {
-        //todo
+        setAllValuesAffair({
+            name: allValuesAffair.name,
+            username: allValuesAffair.username,
+            dateOfBirth: allValuesAffair.dateOfBirth,
+            email: allValuesAffair.email,
+            gender: allValuesAffair.gender,
+            phone: allValuesAffair.phone,
+            img: e.target.files[0],
+            address: allValuesAffair.address,
+            password: allValuesAffair.password,
+            confirmPassword: allValuesAffair.confirmPassword,
+        })
+        try {
+            setAvatar(URL.createObjectURL(e.target.files[0]));
+        } catch (err) {
+            console.log(err);
+        }
     };
 
-    const FormAccountAffair = null;
+    const FormAccountAffair = (
+        <div className="form-admin-content">
+            <h4>Add Affair Account</h4>
+            <label
+                className={
+                    "error" +
+                    (props.errorServer ? " error-show" : " error-hidden")
+                }
+            >
+                Account already exists
+            </label>
+            <div className="form-teacher-content">
+                <div className="teacher-content-left">
+                    <div className="avatar-teacher">
+                        <img src={avatar} alt="avatar" />
+                        <label className="choose-file" htmlFor="upload-photo">
+                            Choose image
+                        </label>
+                        <input
+                            id="upload-photo"
+                            type="file"
+                            name="img"
+                            onChange={changeHandlerAffairIMG}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (affairError.img
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            The selected file is not valid
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Name</h4>
+                        <input
+                            className="input-content"
+                            type="text"
+                            name="name"
+                            placeholder="Enter name"
+                            value={allValuesAffair.name}
+                            onChange={changeHandlerAffair}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (affairError.name
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Name must be less than 30 chars
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Username</h4>
+                        <input
+                            className="input-content"
+                            type="text"
+                            name="username"
+                            placeholder="Enter username"
+                            value={allValuesAffair.username}
+                            onChange={changeHandlerAffair}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (affairError.username
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            This username is required   .
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Date of Birth</h4>
+                        <input
+                            className="input-content"
+                            type="date"
+                            name="dateOfBirth"
+                            placeholder="Enter Date Of Birth"
+                            value={allValuesAffair.dateOfBirth}
+                            onChange={changeHandlerAffair}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (affairError.dateOfBirth
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid birthday
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Gender</h4>
+                        <div className="radio-btn">
+                            <div className="radio">
+                                <input
+                                    type="radio"
+                                    value={true}
+                                    name="gender"
+                                    onChange={changeHandlerAffair}
+                                />
+                                Male
+                                <input
+                                    type="radio"
+                                    value={false}
+                                    name="gender"
+                                    onChange={changeHandlerAffair}
+                                />
+                                Female
+                            </div>
+                            <label
+                                className={
+                                    "error" +
+                                    (affairError.gender
+                                        ? " error-show"
+                                        : " error-hidden")
+                                }
+                            >
+                                No gender selected
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div className="teacher-content-right">
+                    <div className="type-input">
+                        <h4>Phone Number</h4>
+                        <input
+                            className="input-content"
+                            type="text"
+                            name="phone"
+                            placeholder="Enter phone"
+                            value={allValuesAffair.phone}
+                            onChange={changeHandlerAffair}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (affairError.phone
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Phone must be 10 numeric characters
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Email</h4>
+                        <input
+                            className="input-content"
+                            type="email"
+                            name="email"
+                            placeholder="Enter email"
+                            value={allValuesAffair.email}
+                            onChange={changeHandlerAffair}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (affairError.email
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid Email
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Address</h4>
+                        <input
+                            className="input-content"
+                            type="text"
+                            name="address"
+                            placeholder="Enter home address"
+                            value={allValuesAffair.address}
+                            onChange={changeHandlerAffair}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (affairError.address
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Address is required.
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Password</h4>
+                        <input
+                            className="input-content"
+                            type="password"
+                            name="password"
+                            placeholder="Enter password "
+                            value={allValuesAffair.password}
+                            onChange={changeHandlerAffair}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (affairError.password
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Password must be at least 6 chars long
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Confirm Password</h4>
+                        <input
+                            className="input-content"
+                            type="password"
+                            name="confirmPassword"
+                            placeholder="Enter password "
+                            value={allValuesAffair.confirmPassword}
+                            onChange={changeHandlerAffair}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (affairError.confirmPassword
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Password incorrect
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 
     //Handle data input
 
