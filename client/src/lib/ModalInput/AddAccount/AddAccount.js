@@ -594,7 +594,7 @@ const AddAccount = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Account already exists
+                Account or email already exists
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -875,7 +875,7 @@ const AddAccount = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Account already exists
+                Account or email already exists
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">

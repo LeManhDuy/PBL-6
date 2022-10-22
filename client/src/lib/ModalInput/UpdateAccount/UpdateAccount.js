@@ -7,14 +7,31 @@ const UpdateAccount = (props) => {
     let date = new Date().toLocaleDateString();
 
     //properties
-    const [allValuesPrincipal, setAllValuesPrincipal] = useState();
+    const [allValuesPrincipal, setAllValuesPrincipal] = useState({
+        name: "",
+        username: "",
+        dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
+            ? "0" + date.split("/")[0]
+            : date.split("/")[0]
+            }-${date.split("/")[1] < 10
+                ? "0" + date.split("/")[1]
+                : date.split("/")[1]
+            }`,
+        email: "",
+        gender: null,
+        phone: "",
+        img: null,
+        address: "",
+        password: "",
+        confirmPassword: "",
+    });
     const [allValuesTeacher, setAllValuesTeacher] = useState();
     const [allValuesAffair, setAllValuesAffair] = useState({
         name: "",
         username: "",
         dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
-                ? "0" + date.split("/")[0]
-                : date.split("/")[0]
+            ? "0" + date.split("/")[0]
+            : date.split("/")[0]
             }-${date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
@@ -30,15 +47,13 @@ const UpdateAccount = (props) => {
     const [allValuesParents, setAllValuesParents] = useState({
         name: "",
         username: "",
-        dateOfBirth: `${date.split("/")[2]}-${
-            date.split("/")[0] < 10
-                ? "0" + date.split("/")[0]
-                : date.split("/")[0]
-        }-${
-            date.split("/")[1] < 10
+        dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
+            ? "0" + date.split("/")[0]
+            : date.split("/")[0]
+            }-${date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-        }`,
+            }`,
         email: "",
         gender: null,
         phone: "",
@@ -53,7 +68,18 @@ const UpdateAccount = (props) => {
     });
 
     //Error for validate
-    const [principalError, setPrincipalError] = useState();
+    const [principalError, setPrincipalError] = useState({
+        name: false,
+        username: false,
+        dateOfBirth: false,
+        email: false,
+        gender: false,
+        phone: false,
+        img: null,
+        address: false,
+        password: false,
+        confirmPassword: false,
+    });
     const [teacherError, setTeacherError] = useState();
     const [affairError, setAffairError] = useState({
         name: false,
@@ -96,14 +122,39 @@ const UpdateAccount = (props) => {
     //fetch data
     useEffect(() => {
         if (props.dropValue === "principal") {
-            //todo
+            AccountService.getAccountsPrincipalsById(props.AccountId).then(
+                (res) => {
+                    !!res.getPrincipalInfor[0].person_image
+                        ? setAvatar(
+                            res.getPrincipalInfor[0].person_image
+                        )
+                        : setAvatar(Logo);
+                    setAllValuesPrincipal({
+                        name: res.getPrincipalInfor[0].person_fullname,
+                        username:
+                            res.getPrincipalInfor[0].account_id
+                                .account_username,
+                        dateOfBirth:
+                            res.getPrincipalInfor[0].person_dateofbirth.split(
+                                "T"
+                            )[0],
+                        email: res.getPrincipalInfor[0].person_email,
+                        gender: `${res.getPrincipalInfor[0].person_gender}`,
+                        phone: res.getPrincipalInfor[0]
+                            .person_phonenumber,
+                        address: res.getPrincipalInfor[0].person_address,
+                        password: "",
+                        confirmPassword: "",
+                    });
+                }
+            );
         } else if (props.dropValue === "parents") {
             AccountService.getAccountsParentsById(props.AccountId).then(
                 (res) => {
                     !!res.getParentInfor[0].person_id.person_image
                         ? setAvatar(
-                              res.getParentInfor[0].person_id.person_image
-                          )
+                            res.getParentInfor[0].person_id.person_image
+                        )
                         : setAvatar(Logo);
                     setAllValuesParents({
                         name: res.getParentInfor[0].person_id.person_fullname,
@@ -137,8 +188,8 @@ const UpdateAccount = (props) => {
                 (res) => {
                     !!res.getAffairInfor[0].person_image
                         ? setAvatar(
-                              res.getAffairInfor[0].person_image
-                          )
+                            res.getAffairInfor[0].person_image
+                        )
                         : setAvatar(Logo);
                     setAllValuesAffair({
                         name: res.getAffairInfor[0].person_fullname,
@@ -162,9 +213,126 @@ const UpdateAccount = (props) => {
         }
     }, []);
 
-    const handleUpdatePrincipalAccount = () => {};
+    const handleUpdatePrincipalAccount = () => {
+        let name = false;
+        let username = false;
+        let dateOfBirth = false;
+        let email = false;
+        let gender = false;
+        let phone = false;
+        let img = null;
+        let address = false;
+        let password = false;
+        let confirmPassword = false;
 
-    const handleUpdateTeacherAccount = () => {};
+        let check = false;
+        if (
+            allValuesPrincipal.name.length > 30 ||
+            allValuesPrincipal.name.length < 2
+        ) {
+            name = true;
+            check = true;
+        } else name = false;
+
+        if (
+            allValuesPrincipal.username.length > 30 ||
+            allValuesPrincipal.username.length < 2
+        ) {
+            username = true;
+            check = true;
+        } else username = false;
+
+        if (validateEmail(allValuesPrincipal.email) === false) {
+            email = true;
+            check = true;
+        } else email = false;
+
+        if (allValuesPrincipal.password.length < 6) {
+            password = true;
+            check = true;
+        } else if (
+            allValuesPrincipal.confirmPassword !== allValuesPrincipal.password
+        ) {
+            confirmPassword = true;
+            check = true;
+        } else {
+            password = false;
+            confirmPassword = false;
+        }
+
+        let dateNow = new Date().toLocaleDateString();
+
+        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
+            ? "0" + dateNow.split("/")[0]
+            : dateNow.split("/")[0]
+            }-${dateNow.split("/")[1] < 10
+                ? "0" + dateNow.split("/")[1]
+                : dateNow.split("/")[1]
+            }`;
+
+        if (dateConvert < allValuesPrincipal.dateOfBirth) {
+            dateOfBirth = true;
+            check = true;
+        } else dateOfBirth = false;
+
+        if (!allValuesPrincipal.gender) {
+            gender = true;
+            check = true;
+        } else gender = false;
+
+        if (
+            isNaN(parseInt(allValuesPrincipal.phone)) ||
+            allValuesPrincipal.phone.length !== 10
+        ) {
+            phone = true;
+            check = true;
+        } else phone = false;
+
+        if (
+            allValuesPrincipal.address.length > 100 ||
+            allValuesPrincipal.address.length < 2
+        ) {
+            address = true;
+            check = true;
+        } else address = false;
+
+        if (!!allValuesPrincipal.img) {
+            let imgList = allValuesPrincipal.img.name.split(".");
+            if (
+                imgList[imgList.length - 1] !== "png" &&
+                imgList[imgList.length - 1] !== "jpg"
+            ) {
+                img = true;
+                check = true;
+            } else img = false;
+        }
+
+        if (
+            allValuesPrincipal.address.length > 150 ||
+            allValuesPrincipal.address.length < 2
+        ) {
+            address = true;
+            check = true;
+        } else address = false;
+
+        setPrincipalError({
+            name: name,
+            username: username,
+            dateOfBirth: dateOfBirth,
+            email: email,
+            gender: gender,
+            phone: phone,
+            img: img,
+            address: address,
+            password: password,
+            confirmPassword: confirmPassword,
+        });
+        if (!check) {
+            props.handleConfirmUpdateAccount(allValuesPrincipal);
+        }
+    };
+
+    const handleUpdateTeacherAccount = () => { };
 
     const handleUpdateAffairAccount = () => {
         let name = false;
@@ -216,8 +384,8 @@ const UpdateAccount = (props) => {
         let dateNow = new Date().toLocaleDateString();
 
         let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
-                ? "0" + dateNow.split("/")[0]
-                : dateNow.split("/")[0]
+            ? "0" + dateNow.split("/")[0]
+            : dateNow.split("/")[0]
             }-${dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
@@ -330,15 +498,13 @@ const UpdateAccount = (props) => {
 
         let dateNow = new Date().toLocaleDateString();
 
-        let dateConvert = `${dateNow.split("/")[2]}-${
-            dateNow.split("/")[0] < 10
-                ? "0" + dateNow.split("/")[0]
-                : dateNow.split("/")[0]
-        }-${
-            dateNow.split("/")[1] < 10
+        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
+            ? "0" + dateNow.split("/")[0]
+            : dateNow.split("/")[0]
+            }-${dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
-        }`;
+            }`;
 
         if (dateConvert < allValuesParents.dateOfBirth) {
             dateOfBirth = true;
@@ -436,10 +602,268 @@ const UpdateAccount = (props) => {
     };
 
     const changeHandlerPrincipalIMG = (e) => {
-        //todo
+        setAllValuesPrincipal({
+            name: allValuesPrincipal.name,
+            username: allValuesPrincipal.username,
+            dateOfBirth: allValuesPrincipal.dateOfBirth,
+            email: allValuesPrincipal.email,
+            gender: allValuesPrincipal.gender,
+            phone: allValuesPrincipal.phone,
+            img: e.target.files[0],
+            address: allValuesPrincipal.address,
+            password: allValuesPrincipal.password,
+            confirmPassword: allValuesPrincipal.confirmPassword,
+        })
+        try {
+            setAvatar(URL.createObjectURL(e.target.files[0]));
+        } catch (err) {
+            console.log(err);
+        }
     };
 
-    const FormAccountPrincipal = null;
+    const FormAccountPrincipal = (
+        <div className="form-admin-content">
+            <h4>Update Principal Account</h4>
+            <label
+                className={
+                    "error" +
+                    (props.errorServer ? " error-show" : " error-hidden")
+                }
+            >
+                Update failed.
+            </label>
+            <div className="form-teacher-content">
+                <div className="teacher-content-left">
+                    <div className="avatar-teacher">
+                        <img src={avatar} alt="avatar" />
+                        <label className="choose-file" htmlFor="upload-photo">
+                            Choose image
+                        </label>
+                        <input
+                            id="upload-photo"
+                            type="file"
+                            name="img"
+                            onChange={changeHandlerPrincipalIMG}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.img
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            The selected file is not valid
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Name</h4>
+                        <input
+                            className="input-content"
+                            type="text"
+                            name="name"
+                            placeholder="Enter name"
+                            value={allValuesPrincipal.name}
+                            onChange={changeHandlerPrincipal}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.name
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Name must be less than 30 chars
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Username</h4>
+                        <input
+                            className="input-content"
+                            type="text"
+                            name="username"
+                            placeholder="Enter username"
+                            value={allValuesPrincipal.username}
+                            onChange={changeHandlerPrincipal}
+                            readOnly
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.username
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            This username is required   .
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Date of Birth</h4>
+                        <input
+                            className="input-content"
+                            type="date"
+                            name="dateOfBirth"
+                            placeholder="Enter Date Of Birth"
+                            value={allValuesPrincipal.dateOfBirth}
+                            onChange={changeHandlerPrincipal}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.dateOfBirth
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid birthday
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Gender</h4>
+                        <div className="radio-btn">
+                            <div className="radio">
+                                <input
+                                    type="radio"
+                                    value={true}
+                                    name="gender"
+                                    onChange={changeHandlerPrincipal}
+                                    checked={allValuesPrincipal.gender == "true"}
+                                />
+                                Male
+                                <input
+                                    type="radio"
+                                    value={false}
+                                    name="gender"
+                                    onChange={changeHandlerPrincipal}
+                                    checked={allValuesPrincipal.gender == "false"}
+                                />
+                                Female
+                            </div>
+                            <label
+                                className={
+                                    "error" +
+                                    (principalError.gender
+                                        ? " error-show"
+                                        : " error-hidden")
+                                }
+                            >
+                                No gender selected
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div className="teacher-content-right">
+                    <div className="type-input">
+                        <h4>Phone Number</h4>
+                        <input
+                            className="input-content"
+                            type="text"
+                            name="phone"
+                            placeholder="Enter phone"
+                            value={allValuesPrincipal.phone}
+                            onChange={changeHandlerPrincipal}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.phone
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Phone must be 10 numeric characters
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Email</h4>
+                        <input
+                            className="input-content"
+                            type="email"
+                            name="email"
+                            placeholder="Enter email"
+                            value={allValuesPrincipal.email}
+                            onChange={changeHandlerPrincipal}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.email
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid Email
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Address</h4>
+                        <input
+                            className="input-content"
+                            type="text"
+                            name="address"
+                            placeholder="Enter home address"
+                            value={allValuesPrincipal.address}
+                            onChange={changeHandlerPrincipal}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.address
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Address is required.
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Password</h4>
+                        <input
+                            className="input-content"
+                            type="password"
+                            name="password"
+                            placeholder="Enter password "
+                            value={allValuesPrincipal.password}
+                            onChange={changeHandlerPrincipal}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.password
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Password must be at least 6 chars long
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Confirm Password</h4>
+                        <input
+                            className="input-content"
+                            type="password"
+                            name="confirmPassword"
+                            placeholder="Enter password "
+                            value={allValuesPrincipal.confirmPassword}
+                            onChange={changeHandlerPrincipal}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (principalError.confirmPassword
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Password incorrect
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 
     const changeHandlerTeacher = (e) => {
         setAllValuesTeacher({
@@ -483,14 +907,14 @@ const UpdateAccount = (props) => {
 
     const FormAccountAffair = (
         <div className="form-admin-content">
-            <h4>Add Affair Account</h4>
+            <h4>Update Affair Account</h4>
             <label
                 className={
                     "error" +
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Account already exists
+                Update failed.
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -546,6 +970,7 @@ const UpdateAccount = (props) => {
                             placeholder="Enter username"
                             value={allValuesAffair.username}
                             onChange={changeHandlerAffair}
+                            readOnly
                         />
                         <label
                             className={
@@ -1106,10 +1531,10 @@ const UpdateAccount = (props) => {
             {props.dropValue === "principal"
                 ? FormAccountPrincipal
                 : props.dropValue === "parents"
-                ? FormAccountParents
-                : props.dropValue === "teacher"
-                ? FormAccountTeacher
-                : FormAccountAffair}
+                    ? FormAccountParents
+                    : props.dropValue === "teacher"
+                        ? FormAccountTeacher
+                        : FormAccountAffair}
             <button onClick={props.handleInputCustom} className="btn-cancel">
                 Cancel
             </button>

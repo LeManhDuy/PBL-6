@@ -348,7 +348,34 @@ function AccountAdmin() {
 
     const handleConfirmUpdateAccount = (allValue) => {
         if (dropValue === "principal") {
-            //todo
+            var formData = new FormData();
+            formData.append("account_username", allValue.username);
+            formData.append("account_password", allValue.password);
+            formData.append("person_fullname", allValue.name);
+            formData.append("person_dateofbirth", allValue.dateOfBirth);
+            formData.append("person_email", allValue.email);
+            formData.append("person_gender", allValue.gender);
+            formData.append("person_phonenumber", allValue.phone);
+            formData.append("person_address", allValue.address);
+            if (!!allValue.img)
+                formData.append(
+                    "person_image",
+                    allValue.img,
+                    allValue.img.name
+                );
+            AccountService.updateAccountPrincipals(formData, id)
+                .then((res) => {
+                    console.log(res);
+                    if (res.success) {
+                        setState(!state);
+                        setErrorServer(false);
+                        setUpdateState(false);
+                    } else {
+                        setErrorServer(true);
+                        setUpdateState(true);
+                    }
+                })
+                .catch((error) => console.log("error", error));
         } else if (dropValue === "parents") {
             var formData = new FormData();
             formData.append("account_username", allValue.username);
@@ -458,8 +485,11 @@ function AccountAdmin() {
 
     const handleDelete = () => {
         if (dropValue === "principal")
-            //todo
-            console.log("hello");
+            AccountService.deleteAccountPrincipalsById(id).then((res) => {
+                if (res.success) {
+                    setState(!state);
+                }
+            });
         else if (dropValue === "parents")
             AccountService.deleteAccountParentsById(id).then((res) => {
                 if (res.success) {
