@@ -11,13 +11,15 @@ const AddAccount = (props) => {
     const [allValuesPrincipal, setAllValuesPrincipal] = useState({
         name: "",
         username: "",
-        dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
-            ? "0" + date.split("/")[0]
-            : date.split("/")[0]
-            }-${date.split("/")[1] < 10
+        dateOfBirth: `${date.split("/")[2]}-${
+            date.split("/")[0] < 10
+                ? "0" + date.split("/")[0]
+                : date.split("/")[0]
+        }-${
+            date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-            }`,
+        }`,
         email: "",
         gender: null,
         phone: "",
@@ -30,13 +32,15 @@ const AddAccount = (props) => {
     const [allValuesAffair, setAllValuesAffair] = useState({
         name: "",
         username: "",
-        dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
-            ? "0" + date.split("/")[0]
-            : date.split("/")[0]
-            }-${date.split("/")[1] < 10
+        dateOfBirth: `${date.split("/")[2]}-${
+            date.split("/")[0] < 10
+                ? "0" + date.split("/")[0]
+                : date.split("/")[0]
+        }-${
+            date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-            }`,
+        }`,
         email: "",
         gender: null,
         phone: "",
@@ -44,19 +48,20 @@ const AddAccount = (props) => {
         address: "",
         password: "",
         confirmPassword: "",
-
     });
 
     const [allValuesParents, setAllValuesParents] = useState({
         name: "",
         username: "",
-        dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
-            ? "0" + date.split("/")[0]
-            : date.split("/")[0]
-            }-${date.split("/")[1] < 10
+        dateOfBirth: `${date.split("/")[2]}-${
+            date.split("/")[0] < 10
+                ? "0" + date.split("/")[0]
+                : date.split("/")[0]
+        }-${
+            date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-            }`,
+        }`,
         email: "",
         gender: null,
         phone: "",
@@ -210,13 +215,15 @@ const AddAccount = (props) => {
 
         let dateNow = new Date().toLocaleDateString();
 
-        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
-            ? "0" + dateNow.split("/")[0]
-            : dateNow.split("/")[0]
-            }-${dateNow.split("/")[1] < 10
+        let dateConvert = `${dateNow.split("/")[2]}-${
+            dateNow.split("/")[0] < 10
+                ? "0" + dateNow.split("/")[0]
+                : dateNow.split("/")[0]
+        }-${
+            dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
-            }`;
+        }`;
 
         if (dateConvert < allValuesPrincipal.dateOfBirth) {
             dateOfBirth = true;
@@ -272,7 +279,7 @@ const AddAccount = (props) => {
         }
     };
 
-    const handleAddTeacherAccount = () => { };
+    const handleAddTeacherAccount = () => {};
 
     const handleAddAffairAccount = () => {
         let name = false;
@@ -323,13 +330,15 @@ const AddAccount = (props) => {
 
         let dateNow = new Date().toLocaleDateString();
 
-        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
-            ? "0" + dateNow.split("/")[0]
-            : dateNow.split("/")[0]
-            }-${dateNow.split("/")[1] < 10
+        let dateConvert = `${dateNow.split("/")[2]}-${
+            dateNow.split("/")[0] < 10
+                ? "0" + dateNow.split("/")[0]
+                : dateNow.split("/")[0]
+        }-${
+            dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
-            }`;
+        }`;
 
         if (dateConvert < allValuesAffair.dateOfBirth) {
             dateOfBirth = true;
@@ -462,13 +471,15 @@ const AddAccount = (props) => {
 
         let dateNow = new Date().toLocaleDateString();
 
-        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
-            ? "0" + dateNow.split("/")[0]
-            : dateNow.split("/")[0]
-            }-${dateNow.split("/")[1] < 10
+        let dateConvert = `${dateNow.split("/")[2]}-${
+            dateNow.split("/")[0] < 10
+                ? "0" + dateNow.split("/")[0]
+                : dateNow.split("/")[0]
+        }-${
+            dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
-            }`;
+        }`;
 
         if (dateConvert < allValuesParents.dateOfBirth) {
             dateOfBirth = true;
@@ -858,7 +869,7 @@ const AddAccount = (props) => {
             address: allValuesAffair.address,
             password: allValuesAffair.password,
             confirmPassword: allValuesAffair.confirmPassword,
-        })
+        });
         try {
             setAvatar(URL.createObjectURL(e.target.files[0]));
         } catch (err) {
@@ -940,7 +951,7 @@ const AddAccount = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            This username is required   .
+                            This username is required .
                         </label>
                     </div>
                     <div className="type-input">
@@ -1480,10 +1491,10 @@ const AddAccount = (props) => {
             {dropValue === "principal"
                 ? FormAccountPrincipal
                 : dropValue === "parents"
-                    ? FormAccountParents
-                    : dropValue === "teacher"
-                        ? FormAccountTeacher
-                        : FormAccountAffair}
+                ? FormAccountParents
+                : dropValue === "teacher"
+                ? FormAccountTeacher
+                : FormAccountAffair}
             <button onClick={props.handleInputCustom} className="btn-cancel">
                 Cancel
             </button>
