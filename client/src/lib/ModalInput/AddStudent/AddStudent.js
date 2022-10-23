@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./AddStudent.css";
 import Logo from "../../../assets/image/Logo.png";
-//import ClassService from "../../../config/service/ClassService";
+import ClassService from "../../../config/service/ClassService";
 import AccountService from "../../../config/service/AccountService";
 
 const AddStudent = (props) => {
@@ -37,7 +37,7 @@ const AddStudent = (props) => {
     const [avatar, setAvatar] = useState(Logo);
 
     useEffect(() => {
-        //getClasses();
+        getClasses();
         getParents();
     }, []);
 
@@ -98,6 +98,7 @@ const AddStudent = (props) => {
                 ].getAttribute("data-key"),
             });
         }
+        console.log(parent);
     };
 
     const handleClassChange = (event) => {
@@ -138,24 +139,24 @@ const AddStudent = (props) => {
             });
     };
 
-    // const getClasses = () => {
-    //     ClassService.getClass()
-    //         .then((response) => {
-    //             const dataSources = response.allClasses.map((item, index) => {
-    //                 return {
-    //                     key: index + 1,
-    //                     id: item._id,
-    //                     name: item.class_name,
-    //                     grade: item.grade_name,
-    //                     teacher: item.teacher_name,
-    //                 };
-    //             });
-    //             setClassroom(dataSources);
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // };
+    const getClasses = () => {
+        ClassService.getClass()
+            .then((response) => {
+                const dataSources = response.allClass.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
+                        name: item.class_name,
+                        grade: item.grade_id.grade_name,
+                        teacher: item.homeroom_teacher_id.person_id.person_fullname,
+                    };
+                });
+                setClassroom(dataSources);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     const handleAddStudentsAccount = () => {
         let name = false;

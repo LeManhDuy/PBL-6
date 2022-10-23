@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./UpdateStudent.css";
 import Logo from "../../../assets/image/Logo.png";
-//import ClassService from "../../../config/service/ClassService";
+import ClassService from "../../../config/service/ClassService";
 import AccountService from "../../../config/service/AccountService";
 import StudentService from "../../../config/service/StudentService";
 
@@ -16,8 +16,8 @@ const UpdateStudent = (props) => {
     const [allValuesStudent, setAllValuesStudent] = useState({
         name: "",
         dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
-                ? "0" + date.split("/")[0]
-                : date.split("/")[0]
+            ? "0" + date.split("/")[0]
+            : date.split("/")[0]
             }-${date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
@@ -39,22 +39,22 @@ const UpdateStudent = (props) => {
     const [avatar, setAvatar] = useState(Logo);
 
     useEffect(() => {
-        //getClasses();
+        getClasses();
         getParents();
-        StudentService.getStudentById(props.studentID).then((res) => {
-            !!res.student.student_image
+        StudentService.getPupilById(props.studentID).then((res) => {
+            !!res.getPupilInfor[0].pupil_image
                 ? setAvatar(
-                    `${REACT_APP_API_ENDPOINT}${res.student.student_image}`
+                    res.getPupilInfor[0].pupil_image
                 )
                 : setAvatar(Logo);
-            setTeacher(res.student.class_id.teacher_name);
+            setTeacher(res.getPupilInfor[0].class_id.homeroom_teacher_id.person_id.person_fullname);
+            console.log(res.getPupilInfor[0]);
             setAllValuesStudent({
-                name: res.student.student_fullname,
-                dateOfBirth: res.student.student_dateofbirth.split("T")[0],
-                gender: `${res.student.student_gender}`,
-                img: null,
-                parent: res.student.parent_id,
-                classroom: res.student.class_id._id,
+                name: res.getPupilInfor[0].pupil_name,
+                dateOfBirth: res.getPupilInfor[0].pupil_dateofbirth.split("T")[0],
+                gender: `${res.getPupilInfor[0].pupil_gender}`,
+                parent: res.getPupilInfor[0].parent_id._id,
+                classroom: res.getPupilInfor[0].class_id._id,
             });
         });
     }, []);
@@ -150,11 +150,6 @@ const UpdateStudent = (props) => {
     };
 
     const handleParentChange = (event) => {
-        console.log(
-            event.target.options[event.target.selectedIndex].getAttribute(
-                "data-key"
-            )
-        );
         setParentDropValue(event.target.value);
         if (event.target.value !== "Pick") {
             setAllValuesStudent({
@@ -167,11 +162,6 @@ const UpdateStudent = (props) => {
     };
 
     const handleClassChange = (event) => {
-        console.log(
-            event.target.options[event.target.selectedIndex].getAttribute(
-                "data-key"
-            )
-        );
         setClassDropValue(event.target.value);
         if (event.target.value !== "Pick") {
             setAllValuesStudent({
@@ -194,13 +184,14 @@ const UpdateStudent = (props) => {
     const getParents = () => {
         AccountService.getAccountsParents()
             .then((response) => {
-                const dataSources = response.allParents.map((item, index) => {
-                    return {
-                        key: index + 1,
-                        id: item._id,
-                        name: item.parent_name,
-                    };
-                });
+                const dataSources = response.getParentsInfor
+                    .map((item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            name: item.person_id.person_fullname,
+                        };
+                    });
                 setParent(dataSources);
             })
             .catch((error) => {
@@ -208,24 +199,24 @@ const UpdateStudent = (props) => {
             });
     };
 
-    // const getClasses = () => {
-    //     ClassService.getClass()
-    //         .then((response) => {
-    //             const dataSources = response.allClasses.map((item, index) => {
-    //                 return {
-    //                     key: index + 1,
-    //                     id: item._id,
-    //                     name: item.class_name,
-    //                     grade: item.grade_name,
-    //                     teacher: item.teacher_name,
-    //                 };
-    //             });
-    //             setClassroom(dataSources);
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // };
+    const getClasses = () => {
+        ClassService.getClass()
+            .then((response) => {
+                const dataSources = response.allClass.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
+                        name: item.class_name,
+                        grade: item.grade_id.grade_name,
+                        teacher: item.homeroom_teacher_id.person_id.person_fullname,
+                    };
+                });
+                setClassroom(dataSources);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     const handleUpdateStudent = () => {
         let name = false;
@@ -246,8 +237,8 @@ const UpdateStudent = (props) => {
         let dateNow = new Date().toLocaleDateString();
 
         let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
-                ? "0" + dateNow.split("/")[0]
-                : dateNow.split("/")[0]
+            ? "0" + dateNow.split("/")[0]
+            : dateNow.split("/")[0]
             }-${dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]

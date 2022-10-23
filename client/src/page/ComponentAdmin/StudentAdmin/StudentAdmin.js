@@ -16,6 +16,7 @@ import UpdateStudent from "../../../lib/ModalInput/UpdateStudent/UpdateStudent";
 const StudentAdmin = () => {
     const [student, setStudent] = useState([]);
     const [isChange, setIsChange] = useState(false);
+    const [name, setName] = useState("");
     const [state, setState] = useState(false);
     const [id, setId] = useState("");
     const [addState, setAddState] = useState(false);
@@ -69,10 +70,16 @@ const StudentAdmin = () => {
             const id =
                 e.target.parentElement.parentElement.getAttribute("data-key");
             if (e.target.className.includes("btn-delete")) {
-                console.log("hello");
+                setIsDelete(true);
+                setId(id);
+                setName(
+                    e.target.parentElement.parentElement.querySelectorAll(
+                        "td"
+                    )[0].textContent
+                );
             } else if (e.target.className.includes("btn-edit")) {
-                //TODO edited
-                console.log("hello");
+                setUpdateState(true);
+                setId(id);
             }
         }
 
@@ -101,6 +108,13 @@ const StudentAdmin = () => {
         setIsDelete(false);
     };
 
+    const handleDelete = () => {
+        StudentService.deletePupilById(id).then((res) =>
+            res.success ? setIsChange(!isChange) : null
+        );
+        setIsDelete(false);
+    };
+
     const handleInputCustom = () => {
         setAddState(false);
         setUpdateState(false);
@@ -124,7 +138,6 @@ const StudentAdmin = () => {
                 setErrorServer(false);
                 setAddState(false);
             } else {
-                console.log(res.message);
                 setAddState(true);
                 setErrorServer(true);
             }
@@ -133,15 +146,15 @@ const StudentAdmin = () => {
 
     const handleConfirmUpdateStudent = (allValue) => {
         var formData = new FormData();
-        formData.append("student_fullname", allValue.name);
-        formData.append("student_dateofbirth", allValue.dateOfBirth);
-        formData.append("student_gender", allValue.gender);
-        formData.append("student_image", allValue.img);
+        formData.append("pupil_name", allValue.name);
+        formData.append("pupil_dateofbirth", allValue.dateOfBirth);
+        formData.append("pupil_gender", allValue.gender);
+        formData.append("pupil_image", allValue.img);
+        formData.append("parent_id", allValue.parent);
+        formData.append("class_id", allValue.classroom);
 
-        StudentService.updateStudent(
+        StudentService.updatePupil(
             id,
-            allValue.parent,
-            allValue.classroom,
             formData
         ).then((res) => {
             if (res.success) {
@@ -149,7 +162,6 @@ const StudentAdmin = () => {
                 setUpdateState(false);
                 setErrorServer(false);
             } else {
-                console.log(res.message);
                 setUpdateState(true);
                 setErrorServer(true);
             }
@@ -185,7 +197,19 @@ const StudentAdmin = () => {
         />
     );
 
-    const ConfirmDelete = null;
+    const ConfirmDelete = (
+        <ModalCustom
+            show={isDelete}
+            content={
+                <ConfirmAlert
+                    handleCloseModalCustom={handleCloseModalCustom}
+                    handleDelete={handleDelete}
+                    title={`Do you want to delete the ${name}?`}
+                />
+            }
+            handleCloseModalCustom={handleCloseModalCustom}
+        />
+    );
 
     const handleAddStudent = () => {
         setAddState(true);

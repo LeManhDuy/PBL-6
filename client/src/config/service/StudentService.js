@@ -11,10 +11,27 @@ const addPupil = async (classID, parentID, params) => {
     );
 };
 
-
-const StudentService = {
-    getPupils,
-    addPupil,
+const deletePupilById = async (id) => {
+    return await HandleApi.APIDelete(`pupil/${id}`);
 };
 
-export default StudentService;
+const getPupilById = async (id) => {
+    return await HandleApi.APIGetWithToken(`pupil/${id}`);
+};
+
+const updatePupil = async (pupilID, params) => {
+    return await HandleApi.APIPutWithTokenIMG(
+        `pupil/${pupilID}`,
+        params
+    );
+};
+
+const PupilService = {
+    getPupils,
+    addPupil,
+    deletePupilById,
+    getPupilById,
+    updatePupil
+};
+
+export default PupilService;
