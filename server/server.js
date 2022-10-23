@@ -11,6 +11,7 @@ const teacherRouter = require("./routes/teacher.js")
 const parentRouter = require("./routes/parent.js")
 const gradeRouter = require("./routes/grade.js")
 const feeCategoryRouter = require("./routes/fee_category.js")
+const feeRouter = require("./routes/fee")
 const classRouter = require("./routes/class.js")
 const pupilRouter = require("./routes/pupil.js")
 
@@ -55,6 +56,8 @@ app.use("/api/class", classRouter)
 app.use("/api/parent", parentRouter)
 //fee category
 app.use("/api/feecategory", feeCategoryRouter)
+//fee
+app.use("/api/fee", feeRouter)
 //pupil
 app.use("/api/pupil", pupilRouter)
 
