@@ -55,17 +55,17 @@ const GradeAdmin = () => {
         GradeService.addGrade({
             grade_name: allValue.name
         })
-        .then((res) => {
-            if (res.success) {
-                setState(!state);
-                setErrorServer(false);
-                setAddGradeState(false);
-            } else {
-                setErrorServer(true);
-                setAddGradeState(true);
-            }
-        })
-        .catch((error) => console.log("error", error));
+            .then((res) => {
+                if (res.success) {
+                    setState(!state);
+                    setErrorServer(false);
+                    setAddGradeState(false);
+                } else {
+                    setErrorServer(true);
+                    setAddGradeState(true);
+                }
+            })
+            .catch((error) => console.log("error", error));
     }
 
     const handleInputCustom = () => {
@@ -90,9 +90,8 @@ const GradeAdmin = () => {
 
     const handleConfirmUpdateGrade = (allValue) => {
         GradeService.updateGrade(Id, {
-            grade_name:  allValue.name
+            grade_name: allValue.name
         }).then((res) => {
-            console.log(res);
             if (res.success) {
                 setState(!state);
                 setErrorServer(false);
@@ -102,7 +101,7 @@ const GradeAdmin = () => {
                 setUpdateGradeState(true);
             }
         })
-        .catch((error) => console.log("error", error));
+            .catch((error) => console.log("error", error));
     }
 
     //Component Add Grade (Form)
@@ -148,13 +147,13 @@ const GradeAdmin = () => {
         />
     );
 
-   
+
     const handleAddGrade = () => {
         setAddGradeState(true);
         setErrorServer(false);
     }
-    
-    const TableGrade = ({grades}) => {
+
+    const TableGrade = ({ grades }) => {
         const gradeItem = grades.map((item) => (
             <tr data-key={item.id} key={item.id}>
                 <td>{item.name}</td>
@@ -166,7 +165,7 @@ const GradeAdmin = () => {
         ));
 
         function click(e) {
-            const id =  e.target.parentElement.parentElement.getAttribute("data-key");
+            const id = e.target.parentElement.parentElement.getAttribute("data-key");
             if (e.target.className.includes("btn-delete")) {
                 setIsDelete(true);
                 setId(id);
@@ -201,7 +200,7 @@ const GradeAdmin = () => {
                     <h3>Manage Grade</h3>
                 </div>
                 <div className="right-header">
-                    <button className="btn-account" onClick={handleAddGrade}>Add grade</button>
+                    <button className="btn-account" onClick={handleAddGrade}>Add Grade</button>
                     <div className="search-box">
                         <button className="btn-search">
                             <FontAwesomeIcon
@@ -218,7 +217,7 @@ const GradeAdmin = () => {
                 </div>
             </header>
             <div className="table-content">
-                <TableGrade  grades={grades}/>
+                <TableGrade grades={grades} />
             </div>
             <footer>
                 <hr></hr>

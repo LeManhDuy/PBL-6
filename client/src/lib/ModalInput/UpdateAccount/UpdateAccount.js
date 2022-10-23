@@ -817,7 +817,7 @@ const UpdateAccount = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Update failed.
+                Update Principal Account Failed.
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -1425,7 +1425,7 @@ const UpdateAccount = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Update failed.
+                Update Affair Account Failed.
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -1695,14 +1695,14 @@ const UpdateAccount = (props) => {
 
     const FormAccountParents = (
         <div className="form-admin-content">
-            <h4>Update Parents account</h4>
+            <h4>Update Parents Account</h4>
             <label
                 className={
                     "error" +
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Update failed.
+                Update Parents Account Failed.
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
