@@ -1,5 +1,5 @@
 const Class = require("../model/class")
-
+const Pupil = require("../model/Pupil")
 
 const createClass = async (req, res) => {
     const {
@@ -83,7 +83,47 @@ const getClassByID = async (req, res) => {
                 "grade_id",
                 "homeroom_teacher_id"
             ])
+            .populate({
+                path: "grade_id",
+                model: "Grade",
+                select: ["grade_name"],
+            })
+            .populate({
+                path: "homeroom_teacher_id",
+                model: "Teacher",
+                //select: ["graduated_school"]
+                populate: [{
+                    path: "person_id",
+                    model: "Person",
+                    select: ["person_fullname"],
+                }]
+            })
         res.json({ success: true, getClassInfor })
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+}
+
+const getStudentByClassID = async (req, res) => {
+    try {
+        console.log(req.params.classID);
+        const studentsInfor = await Pupil.find({ class_id: req.params.classID})
+            .select([
+                "pupil_name",
+                "pupil_gender",
+                "pupil_dateofbirth",
+                "parent_id",
+            ])
+            .populate({
+                path: "parent_id",
+                model: "Parent",
+                populate: [{
+                    path: "person_id",
+                    model: "Person",
+                    select: ["person_fullname"],
+                }]
+            })
+            res.json({ success: true, studentsInfor })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }
@@ -109,15 +149,20 @@ const updateClassByID = async (req, res) => {
 
     try {
         const classItem = await Class.findById(req.params.classID)
+        
         if (!classItem)
             return res
                 .status(400)
                 .json({ success: false, message: "Class is not existed." })
         const classValidate = await Class.findOne({ class_name })
-        if (classValidate)
+
+        if(class_name != classItem.class_name){
+            if (classValidate)
             return res
                 .status(400)
                 .json({ success: false, message: "Class is already existed." })
+        }
+        
         let updateClass = {
             class_name,
             grade_id,
@@ -157,4 +202,4 @@ const deleteClass = async (req, res) => {
     }
 }
 
-module.exports = { createClass, getClass, getClassByID, updateClassByID, deleteClass };
+module.exports = { createClass, getClass, getClassByID, updateClassByID, deleteClass, getStudentByClassID };
