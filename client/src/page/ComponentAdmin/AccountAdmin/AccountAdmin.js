@@ -311,8 +311,40 @@ function AccountAdmin() {
                 })
                 .catch((error) => console.log("error", error));
         } else if (type === "teacher") {
+            var formData = new FormData();
+            formData.append("account_username", allValue.username);
+            formData.append("account_password", allValue.password);
+            formData.append("person_fullname", allValue.name);
+            formData.append("person_dateofbirth", allValue.dateOfBirth);
+            formData.append("person_email", allValue.email);
+            formData.append("person_gender", allValue.gender);
+            formData.append("person_phonenumber", allValue.phone);
+            formData.append("person_address", allValue.address);
+            formData.append("graduated_school", allValue.graduated);
+            formData.append("working_since", allValue.working);
+            formData.append("certificate", allValue.certificate);
+            if (!!allValue.img)
+                formData.append(
+                    "person_image",
+                    allValue.img,
+                    allValue.img.name
+                );
+            console.log('this',allValue.username)
+            AccountService.addAccountTeachers(formData)
+                .then((res) => {
+                    if (res.success) {
+                        setState(!state);
+                        setDropValue(type);
+                        setErrorServer(false);
+                        setAddState(false);
+                    } else {
+                        setErrorServer(true);
+                        setAddState(true);
+                    }
+                })
+                .catch((error) => console.log("error", error));
         }
-        //affair
+
         else {
             var formData = new FormData();
             formData.append("account_username", allValue.username);
@@ -410,6 +442,37 @@ function AccountAdmin() {
                 })
                 .catch((error) => console.log("error", error));
         } else if (dropValue === "teacher") {
+            var formData = new FormData();
+            formData.append("account_username", allValue.username);
+            formData.append("account_password", allValue.password);
+            formData.append("person_fullname", allValue.name);
+            formData.append("person_dateofbirth", allValue.dateOfBirth);
+            formData.append("person_email", allValue.email);
+            formData.append("person_gender", allValue.gender);
+            formData.append("person_phonenumber", allValue.phone);
+            formData.append("person_address", allValue.address);
+            formData.append("graduated_school", allValue.graduated);
+            formData.append("working_since", allValue.working);
+            formData.append("certificate", allValue.certificate);
+            if (!!allValue.img)
+                formData.append(
+                    "person_image",
+                    allValue.img,
+                    allValue.img.name
+                );
+            console.log('this',allValue.username)
+            AccountService.updateAccountTeachers(formData, id)
+                .then((res) => {
+                    if (res.success) {
+                        setState(!state);
+                        setErrorServer(false);
+                        setAddState(false);
+                    } else {
+                        setErrorServer(true);
+                        setAddState(true);
+                    }
+                })
+                .catch((error) => console.log("error", error));
         }
         //affair
         else {
@@ -496,8 +559,12 @@ function AccountAdmin() {
                 }
             });
         else if (dropValue === "teacher")
-            //todo
-            console.log("Hello");
+            AccountService.deleteAccountTeachersById(id).then((res) => {
+                if (res.success) {
+                    setState(!state);
+                }
+            });
+            // console.log("Hello");
         else {
             AccountService.deleteAccountAffairsById(id).then((res) => {
                 if (res.success) {
