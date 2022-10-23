@@ -43,7 +43,7 @@ const createClass = async (req, res) => {
 }
 
 const getClass = async (req, res) => {
-    try{
+    try {
         const allClass = await Class.find()
             .select([
                 "class_id",
@@ -51,6 +51,21 @@ const getClass = async (req, res) => {
                 "grade_id",
                 "homeroom_teacher_id"
             ])
+            .populate({
+                path: "grade_id",
+                model: "Grade",
+                select: ["grade_name"],
+            })
+            .populate({
+                path: "homeroom_teacher_id",
+                model: "Teacher",
+                //select: ["graduated_school"]
+                populate: [{
+                    path: "person_id",
+                    model: "Person",
+                    select: ["person_fullname"],
+                }]
+            })
         res.json({ success: true, allClass })
     }
     catch (error) {
@@ -118,7 +133,7 @@ const updateClassByID = async (req, res) => {
             "class_name",
             "grade_id",
             "homeroom_teacher_id"
-        ])      
+        ])
         res.json({
             success: true,
             message: "Update Class successfully.",
@@ -133,7 +148,7 @@ const updateClassByID = async (req, res) => {
 const deleteClass = async (req, res) => {
     try {
         const deletedClass = await Class.findOneAndDelete(
-            {_id: req.params.classID}
+            { _id: req.params.classID }
         )
 
         res.json({ success: true, message: "Deleted class successfully!", grade: deletedClass })
@@ -142,4 +157,4 @@ const deleteClass = async (req, res) => {
     }
 }
 
-module.exports = {createClass, getClass, getClassByID, updateClassByID, deleteClass};
+module.exports = { createClass, getClass, getClassByID, updateClassByID, deleteClass };
