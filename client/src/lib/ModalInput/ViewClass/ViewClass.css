@@ -1,0 +1,16 @@
+@import "../../../assets/css/variables.css";
+@import "../../../assets/css/custom.css";
+
+.show-student-form {
+    width: 80%;
+    background-color: white;
+    border-radius: 8px;
+    padding: 30px;
+}
+
+.show-student-form header h3 {
+    width: 30%;
+    display: inline;
+    color: var(--text-color);
+    text-align: center;
+}

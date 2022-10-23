@@ -48,7 +48,6 @@ const UpdateStudent = (props) => {
                 )
                 : setAvatar(Logo);
             setTeacher(res.getPupilInfor[0].class_id.homeroom_teacher_id.person_id.person_fullname);
-            console.log(res.getPupilInfor[0]);
             setAllValuesStudent({
                 name: res.getPupilInfor[0].pupil_name,
                 dateOfBirth: res.getPupilInfor[0].pupil_dateofbirth.split("T")[0],

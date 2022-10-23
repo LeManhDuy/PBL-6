@@ -205,6 +205,20 @@ const AddStudent = (props) => {
             } else img = false;
         }
 
+        if (!allValuesStudent.classroom) {
+            classroom = true;
+            check = true;
+        } else {
+            classroom = false;
+        }
+
+        if (!allValuesStudent.parent) {
+            parent = true;
+            check = true;
+        } else {
+            parent = false;
+        }
+
         setStudentsError({
             name: name,
             dateOfBirth: dateOfBirth,
@@ -364,7 +378,7 @@ const AddStudent = (props) => {
                         <label
                             className={
                                 "error" +
-                                (studentsError.job
+                                (studentsError.parent
                                     ? " error-show"
                                     : " error-hidden")
                             }
@@ -382,7 +396,7 @@ const AddStudent = (props) => {
                         <label
                             className={
                                 "error" +
-                                (studentsError.email
+                                (studentsError.classroom
                                     ? " error-show"
                                     : " error-hidden")
                             }
