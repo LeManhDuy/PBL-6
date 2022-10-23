@@ -1,4 +1,5 @@
 const express = require("express")
+const Fee = require("../model/Fee")
 const router = express.Router()
 const FeeCategory = require("../model/FeeCategory")
 
@@ -110,7 +111,13 @@ router.delete("/:feeCategoryId", async (req, res) => {
         const deletedFeeCategory = await FeeCategory.findOneAndDelete(
             { _id: req.params.feeCategoryId }
         )
-
+        const feeValidate = await Fee.find({ fee_category_id: req.params.feeCategoryId })
+        if (feeValidate) {
+            feeValidate.map((item) => {
+                item.fee_category_id = undefined;
+                item.save()
+            })
+        }
         res.json({ success: true, message: "Deleted Fee Category successfully!", feeCategory: deletedFeeCategory })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })

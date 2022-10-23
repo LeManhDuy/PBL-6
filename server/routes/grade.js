@@ -1,13 +1,14 @@
 const express = require("express")
 const router = express.Router()
 const Grade = require("../model/Grade")
+const Class = require("../model/class")
 const multer = require("multer")
 
 // @route GET api/admin/grade
 // @desc Get subject
 // @access Private
-router.get("/", async(req,res) => {
-    try{
+router.get("/", async (req, res) => {
+    try {
         const allGrade = await Grade.find()
             .select([
                 "grade_id",
@@ -39,13 +40,13 @@ router.get("/:gradeID", async (req, res) => {
 // @route POST api/admin/grade
 // @desc post subject
 // @access Private
-router.post("/",multer().single(), async(req,res) =>{
-    const {grade_name} = req.body
+router.post("/", multer().single(), async (req, res) => {
+    const { grade_name } = req.body
     if (!grade_name)
-    return res.status(400).json({
-        success: false,
-        message: "Please fill in complete information.",
-    })
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information.",
+        })
     try {
         const gradeValidate = await Grade.findOne({ grade_name })
         if (gradeValidate)
@@ -70,8 +71,8 @@ router.post("/",multer().single(), async(req,res) =>{
 // @route PUT api/admin/grade
 // @desc put grade
 // @access Private
-router.put("/:gradeID", multer().single(), async(req,res) =>{
-    const {grade_name} = req.body
+router.put("/:gradeID", multer().single(), async (req, res) => {
+    const { grade_name } = req.body
     if (!grade_name) {
         return res.status(400).json({
             success: false,
@@ -97,7 +98,7 @@ router.put("/:gradeID", multer().single(), async(req,res) =>{
             postUpdateGrade,
             updateGrade,
             { new: true }
-        )      
+        )
         res.json({
             success: true,
             message: "Update grade successfully.",
@@ -115,9 +116,15 @@ router.put("/:gradeID", multer().single(), async(req,res) =>{
 router.delete("/:gradeID", async (req, res) => {
     try {
         const deletedGrade = await Grade.findOneAndDelete(
-            {_id: req.params.gradeID}
+            { _id: req.params.gradeID }
         )
-
+        const classValidate = await Class.find({ grade_id: req.params.gradeID })
+        if (classValidate) {
+            classValidate.map((item) => {
+                item.gradeID = undefined;
+                item.save()
+            })
+        }
         res.json({ success: true, message: "Deleted grade successfully!", grade: deletedGrade })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })

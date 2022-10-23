@@ -123,7 +123,7 @@ router.get("/", async (req, res) => {
                     {
                         path: "homeroom_teacher_id",
                         model: "Teacher",
-                        //select: ["graduated_school"]
+                        select: ["_id"],
                         populate: [{
                             path: "person_id",
                             model: "Person",
@@ -182,7 +182,7 @@ router.get("/:pupilID", async (req, res) => {
                     {
                         path: "homeroom_teacher_id",
                         model: "Teacher",
-                        //select: ["graduated_school"]
+                        select: ["_id"],
                         populate: [{
                             path: "person_id",
                             model: "Person",
@@ -276,7 +276,7 @@ router.put("/:pupilID", upload.single("pupil_image"), async (req, res) => {
                     {
                         path: "homeroom_teacher_id",
                         model: "Teacher",
-                        //select: ["graduated_school"]
+                        select: ["_id"],
                         populate: [{
                             path: "person_id",
                             model: "Person",

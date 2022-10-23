@@ -79,7 +79,6 @@ const ClassAdmin = () => {
     }
 
     const handleConfirmUpdateClass = (allValue) => {
-        console.log(allValue);
         ClassService.updateClass(id, {
             class_name: allValue.name,
             grade_id: allValue.grade,
@@ -232,7 +231,7 @@ const ClassAdmin = () => {
                     <h3>Manage Class</h3>
                 </div>
                 <div className="right-header">
-                    <button className="btn-account" onClick={handleAddClass}>Add class</button>
+                    <button className="btn-account" onClick={handleAddClass}>Add Class</button>
                     <div className="search-box">
                         <button className="btn-search">
                             <FontAwesomeIcon
