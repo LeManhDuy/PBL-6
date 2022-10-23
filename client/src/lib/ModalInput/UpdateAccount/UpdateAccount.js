@@ -398,7 +398,6 @@ const UpdateAccount = (props) => {
     };
 
     const handleUpdateTeacherAccount = () => {
-        const handleUpdateTeacherAccount = () => {
         let name = false;
         let username = false;
         let dateOfBirth = false;
@@ -917,7 +916,7 @@ const UpdateAccount = (props) => {
                                     value={true}
                                     name="gender"
                                     onChange={changeHandlerPrincipal}
-                                    checked={allValuesPrincipal.gender == "true"}
+                                    checked={allValuesPrincipal.gender === "true"}
                                 />
                                 Male
                                 <input
@@ -925,7 +924,7 @@ const UpdateAccount = (props) => {
                                     value={false}
                                     name="gender"
                                     onChange={changeHandlerPrincipal}
-                                    checked={allValuesPrincipal.gender == "false"}
+                                    checked={allValuesPrincipal.gender === "false"}
                                 />
                                 Female
                             </div>
@@ -1148,6 +1147,7 @@ const UpdateAccount = (props) => {
                             placeholder="Enter username"
                             value={allValuesTeacher.username}
                             onChange={changeHandlerTeacher}
+                            readOnly
                         />
                         <label
                             className={
@@ -1211,6 +1211,7 @@ const UpdateAccount = (props) => {
                                     value={true}
                                     name="gender"
                                     onChange={changeHandlerTeacher}
+                                    checked={allValuesTeacher.gender === "true"}
                                 />
                                 Male
                                 <input
@@ -1218,6 +1219,7 @@ const UpdateAccount = (props) => {
                                     value={false}
                                     name="gender"
                                     onChange={changeHandlerTeacher}
+                                    checked={allValuesTeacher.gender === "false"}
                                 />
                                 Female
                             </div>
@@ -1522,7 +1524,7 @@ const UpdateAccount = (props) => {
                                     value={true}
                                     name="gender"
                                     onChange={changeHandlerAffair}
-                                    checked={allValuesAffair.gender == "true"}
+                                    checked={allValuesAffair.gender === "true"}
                                 />
                                 Male
                                 <input
@@ -1530,7 +1532,7 @@ const UpdateAccount = (props) => {
                                     value={false}
                                     name="gender"
                                     onChange={changeHandlerAffair}
-                                    checked={allValuesAffair.gender == "false"}
+                                    checked={allValuesAffair.gender === "false"}
                                 />
                                 Female
                             </div>
@@ -1820,7 +1822,7 @@ const UpdateAccount = (props) => {
                                     value={true}
                                     name="gender"
                                     onChange={changeHandlerParents}
-                                    checked={allValuesParents.gender == "true"}
+                                    checked={allValuesParents.gender === "true"}
                                 />
                                 Male
                                 <input
@@ -1828,7 +1830,7 @@ const UpdateAccount = (props) => {
                                     value={false}
                                     name="gender"
                                     onChange={changeHandlerParents}
-                                    checked={allValuesParents.gender == "false"}
+                                    checked={allValuesParents.gender === "false"}
                                 />
                                 Female
                             </div>

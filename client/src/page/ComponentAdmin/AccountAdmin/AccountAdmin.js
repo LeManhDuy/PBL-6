@@ -461,7 +461,7 @@ function AccountAdmin() {
                     allValue.img.name
                 );
             console.log('this',allValue.username)
-            AccountService.addAccountTeachers(formData)
+            AccountService.updateAccountTeachers(formData, id)
                 .then((res) => {
                     if (res.success) {
                         setState(!state);
