@@ -1,25 +1,179 @@
-import React, { useEffect, useState } from "react";
-import "./FeeCategoryAdmin.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect, useState } from "react"
+import "./FeeCategoryAdmin.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
     faMagnifyingGlass,
     faArrowLeftLong,
     faArrowRightLong,
-} from "@fortawesome/free-solid-svg-icons";
+} from "@fortawesome/free-solid-svg-icons"
+import ModalInput from "../../../lib/ModalInput/ModalInput"
+import FeeCategoryService from "../../../config/service/FeeCategoryService"
+import AddFeeCategory from "../../../lib/ModalInput/AddFeeCategory/AddFeeCategory"
+import UpdateFeeCategory from "../../../lib/ModalInput/UpdateFeeCategory/UpdateFeeCategory"
+import ModalCustom from "../../../lib/ModalCustom/ModalCustom"
+import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert"
 
 const FeeCategoryAdmin = () => {
-    const TableFeeCategory = () => {
-        const feecategoryItem = (
-            <tr>
-                <td>BHYT</td>
-                <td>500.000VND</td>
-                <td>
+    const [addFeeCategoryState, setAddFeeCategoryState] = useState(false)
+    const [updateFeeCategoryState, setUpdateFeeCategoryState] = useState(false)
+    const [Id, setId] = useState()
+    const [state, setState] = useState(false)
+    const [feecategories, setFeeCategory] = useState([])
+    const [isDelete, setIsDelete] = useState(false)
+    const [errorServer, setErrorServer] = useState(false)
+    const [name, setName] = useState()
+
+    useEffect(() => {
+        getFeeCategory()
+    }, [state])
+
+    const getFeeCategory = () => {
+        FeeCategoryService.getFeeCategory()
+            .then((response) => {
+                const dataSources = response.allFeeCategory.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            name: item.fee_name,
+                            ammount: item.fee_amount
+                        }
+                    }
+                )
+                setFeeCategory(dataSources)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
+    const handleConfirmAddFeeCategory = (allValue) => {
+        FeeCategoryService.addFeeCategory({
+            fee_name: allValue.name,
+            fee_amount: allValue.ammount
+        })
+            .then((res) => {
+                if (res.success) {
+                    setState(!state)
+                    setErrorServer(false)
+                    setAddFeeCategoryState(false)
+                } else {
+                    setErrorServer(true)
+                    setAddFeeCategoryState(true)
+                }
+            })
+            .catch((error) => console.log("error", error))
+    }
+    const handleInputCustom = () => {
+        setAddFeeCategoryState(false)
+        setErrorServer(false)
+        setUpdateFeeCategoryState(false)
+    }
+    const DivAddFeeCategory = (
+        <ModalInput
+            show={addFeeCategoryState}
+            handleInputCustom={handleInputCustom}
+            content={
+                <AddFeeCategory
+                    handleInputCustom={handleInputCustom}
+                    handleConfirmAddFeeCategory={handleConfirmAddFeeCategory}
+                    errorServer={errorServer}
+                />
+            }
+        />
+    )
+
+    const handleConfirmUpdateFeeCategory = (allValue) => {
+        FeeCategoryService.updateFeeCategory(Id, {
+            fee_name: allValue.name,
+            fee_amount: allValue.ammount
+        }).then((res) => {
+            if (res.success) {
+                setState(!state);
+                setErrorServer(false);
+                setUpdateFeeCategoryState(false);
+            } else {
+                setErrorServer(true);
+                setUpdateFeeCategoryState(true);
+            }
+        })
+            .catch((error) => console.log("error", error));
+    }
+
+    const DivUpdateFeeCategory = (
+        <ModalInput
+            show={updateFeeCategoryState}
+            handleInputCustom={handleInputCustom}
+            content={
+                <UpdateFeeCategory
+                    handleInputCustom={handleInputCustom}
+                    handleConfirmUpdateFeeCategory={handleConfirmUpdateFeeCategory}
+                    errorServer={errorServer}
+                    FeeCategoryId={Id}
+                />
+            }
+        />
+    );
+
+    const handleCloseModalCustom = () => {
+        setIsDelete(false);
+    };
+
+    const handleDelete = () => {
+        FeeCategoryService.deleteFeeCategoryById(Id).then((res) => {
+            if (res.success) {
+                setState(!state);
+            }
+        });
+        setIsDelete(false);
+    }
+
+    const ConfirmDelete = (
+        <ModalCustom
+            show={isDelete}
+            content={
+                <ConfirmAlert
+                    handleCloseModalCustom={handleCloseModalCustom}
+                    handleDelete={handleDelete}
+                    title={`Do you want to delete the ${name}?`}
+                />
+            }
+            handleCloseModalCustom={handleCloseModalCustom}
+        />
+    );
+
+    const handleAddFeeCategory = () => {
+        setAddFeeCategoryState(true);
+        setErrorServer(false);
+    }
+
+    const TableFeeCategory = ({ feecategories }) => {
+        const feecategoryItem = feecategories.map((item) => (
+            <tr data-key={item.id} key={item.id}>
+                <td>{item.name}</td>
+                <td>{item.ammount}</td>
+                <td onClick={click}>
                     <i className="fa-regular fa-pen-to-square btn-edit"></i>
                     <i className="fa-regular fa-trash-can btn-delete"></i>
-                    <i className="fa-regular fa-eye btn-view"></i>
                 </td>
             </tr>
-        );
+        ))
+
+        function click(e) {
+            const id = e.target.parentElement.parentElement.getAttribute("data-key")
+            if (e.target.className.includes("btn-delete")) {
+                setIsDelete(true)
+                setId(id)
+                setName(
+                    e.target.parentElement.parentElement.querySelectorAll(
+                        "td"
+                    )[1].textContent
+                )
+            } else if (e.target.className.includes("btn-edit")) {
+                setUpdateFeeCategoryState(true)
+                setId(id)
+            }
+        }
 
         const headerFee = (
             <tr>
@@ -27,22 +181,22 @@ const FeeCategoryAdmin = () => {
                 <th>Amount</th>
                 <th>Action</th>
             </tr>
-        );
+        )
         return (
             <table id="table">
-                <thead>{headerFee}</thead>
-                <tbody>{feecategoryItem}</tbody>
+                <thead className="table-head-row">{headerFee}</thead>
+                <tbody className="table-row">{feecategoryItem}</tbody>
             </table>
-        );
-    };
+        )
+    }
     return (
         <div className="main-container">
             <header>
                 <div>
-                    <h3>Manage Class</h3>
+                    <h3>Manage Fee Category</h3>
                 </div>
                 <div className="right-header">
-                    <button className="btn-account">Add class</button>
+                    <button className="btn-account" onClick={handleAddFeeCategory}>Add Fee Category</button>
                     <div className="search-box">
                         <button className="btn-search">
                             <FontAwesomeIcon
@@ -59,7 +213,7 @@ const FeeCategoryAdmin = () => {
                 </div>
             </header>
             <div className="table-content">
-                <TableFeeCategory />
+                <TableFeeCategory feecategories={feecategories} />
             </div>
             <footer>
                 <hr></hr>
@@ -88,9 +242,12 @@ const FeeCategoryAdmin = () => {
                         />
                     </button>
                 </div>
+                {addFeeCategoryState ? DivAddFeeCategory : null}
+                {updateFeeCategoryState ? DivUpdateFeeCategory : null}
+                {isDelete ? ConfirmDelete : null}
             </footer>
         </div>
-    );
-};
+    )
+}
 
-export default FeeCategoryAdmin;
+export default FeeCategoryAdmin

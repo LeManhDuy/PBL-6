@@ -309,7 +309,7 @@ const UpdateStudent = (props) => {
 
     const FormAccountStudents = (
         <div className="form-admin-content">
-            <h4>Update Student</h4>
+            <h4>Update Pupil</h4>
             <label
                 className={
                     "error" +

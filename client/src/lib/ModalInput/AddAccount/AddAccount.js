@@ -598,7 +598,7 @@ const AddAccount = (props) => {
 
     const FormAccountPrincipal = (
         <div className="form-admin-content">
-            <h4>Add Principals account</h4>
+            <h4>Add Principals Account</h4>
             <label
                 className={
                     "error" +
@@ -1153,7 +1153,7 @@ const AddAccount = (props) => {
 
     const FormAccountParents = (
         <div className="form-admin-content">
-            <h4>Add Parents account</h4>
+            <h4>Add Parents Account</h4>
             <label
                 className={
                     "error" +

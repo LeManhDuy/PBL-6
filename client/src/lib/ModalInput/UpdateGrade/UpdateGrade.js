@@ -53,7 +53,7 @@ const UpdateGrade = (props) => {
 
     const FormAddGrade = (
         <div className="form-admin-content">
-            <h4>Add Grade</h4>
+            <h4>Update Grade</h4>
             <label
                 className={
                     "error" +
