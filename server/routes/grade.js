@@ -72,11 +72,12 @@ router.post("/",multer().single(), async(req,res) =>{
 // @access Private
 router.put("/:gradeID", multer().single(), async(req,res) =>{
     const {grade_name} = req.body
-    if (!grade_name)
-    return res.status(400).json({
-        success: false,
-        message: "Please fill in complete information.",
-    })
+    if (!grade_name) {
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information.",
+        })
+    }
     try {
         const grade = await Grade.findById(req.params.gradeID)
         if (!grade)

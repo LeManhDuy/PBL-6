@@ -365,7 +365,6 @@ function AccountAdmin() {
                 );
             AccountService.updateAccountPrincipals(formData, id)
                 .then((res) => {
-                    console.log(res);
                     if (res.success) {
                         setState(!state);
                         setErrorServer(false);
