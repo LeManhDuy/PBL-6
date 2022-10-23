@@ -7,6 +7,7 @@ const authRouter = require("./routes/auth.js")
 const principalRouter = require("./routes/principal.js")
 const affairRouter = require("./routes/affair.js")
 const subjectRouter = require("./routes/subject.js")
+const subjectTeacherRouter = require("./routes/subject_teacher.js")
 const teacherRouter = require("./routes/teacher.js")
 const parentRouter = require("./routes/parent.js")
 const gradeRouter = require("./routes/grade.js")
@@ -47,7 +48,8 @@ app.use("/api/affair", affairRouter)
 app.use("/api/subject", subjectRouter)
 //subject
 app.use("/api/teacher", teacherRouter)
-app.use("/api/subject", subjectRouter)
+//subject teacher
+app.use("/api/subject_teacher", subjectTeacherRouter)
 //grade
 app.use("/api/grade", gradeRouter)
 //class
