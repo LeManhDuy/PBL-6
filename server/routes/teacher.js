@@ -1,3 +1,4 @@
+require("dotenv").config()
 const express = require("express")
 const router = express.Router()
 const jwt = require("jsonwebtoken")
@@ -7,27 +8,31 @@ const Teacher = require("../model/Teacher")
 const argon2 = require("argon2")
 const validator = require("email-validator")
 const multer = require("multer")
+const FirebaseStorage = require('multer-firebase-storage')
 const fs = require("fs")
-
-const storage = multer.diskStorage({
-    destination: function (req, res, cb) {
-        cb(null, "./uploads/teachers")
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + file.originalname)
-    },
-})
 
 const fileFilter = (req, file, cb) => {
     // reject a file
     if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
         cb(null, true)
     } else {
-        cb(null, false)
+        return cb(new Error('Wrong extension type.'))
     }
 }
-
-const upload = multer({ storage: storage, fileFilter: fileFilter })
+const upload = multer({
+    storage: FirebaseStorage({
+        bucketName: process.env.FB_BUCKET_NAME,
+        credentials: {
+            "client_email": process.env.FB_CLIENT_EMAIL,
+            "private_key": process.env.FB_PRIVATE_KEY,
+            "project_id": process.env.FB_PROJECT_ID
+        },
+        nameSuffix: "_hashcode_",
+        unique: true,
+        public: true
+    }),
+    fileFilter: fileFilter,
+})
 
 // @route POST api/teacher
 // @desc Create teacher user
@@ -39,7 +44,7 @@ router.post("/", upload.single("person_image"), async (req, res) => {
     // Validation
     let person_image = null
     if (req.file) {
-        person_image = req.file.path
+        person_image = req.file.publicUrl
     }
     if (!account_username || !account_password ||
         !person_fullname || !person_dateofbirth ||
@@ -229,19 +234,19 @@ router.put(
         try {
             const teacher = await Teacher.findById(req.params.teacherID)
             const person = await Person.findById(teacher.person_id)
-            if (person.person_image) {
-                if (person_image === null) {
-                    person_image = person.person_image
-                } else {
-                    fs.unlink("./" + person.person_image, (err) => {
-                        if (err)
-                            res.status(400).json({
-                                success: false,
-                                message: "Image error: " + err,
-                            })
-                    })
-                }
-            }
+            // if (person.person_image) {
+            //     if (person_image === null) {
+            //         person_image = person.person_image
+            //     } else {
+            //         fs.unlink("./" + person.person_image, (err) => {
+            //             if (err)
+            //                 res.status(400).json({
+            //                     success: false,
+            //                     message: "Image error: " + err,
+            //                 })
+            //         })
+            //     }
+            // }
             //update Teacher Information
             let updateTeacher = {
                 graduated_school,
@@ -311,15 +316,15 @@ router.delete("/:teacherID", async (req, res) => {
     try {
         const teacher = await Teacher.findById(req.params.teacherID)
         const person = await Person.findById(teacher.person_id)
-        if (person.person_image) {
-            fs.unlink("./" + person.person_image, (err) => {
-                if (err)
-                    res.status(400).json({
-                        success: false,
-                        message: "Image error: " + err,
-                    })
-            })
-        }
+        // if (person.person_image) {
+        //     fs.unlink("./" + person.person_image, (err) => {
+        //         if (err)
+        //             res.status(400).json({
+        //                 success: false,
+        //                 message: "Image error: " + err,
+        //             })
+        //     })
+        // }
         const deletedTeacher = await Teacher.findByIdAndDelete(
             {_id: teacher._id}
         )
