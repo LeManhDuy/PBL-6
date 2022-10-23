@@ -1,3 +1,10 @@
 .table-content table .btn-add-subject {
     color: rgb(224, 175, 0)
 }
+.table-head-row {
+    text-align: center;
+}
+
+.table-row {
+    text-align: center;
+}

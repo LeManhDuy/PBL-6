@@ -21,6 +21,19 @@ router.get("/", async(req,res) => {
     }
 })
 
+router.get("/:subjectID", async (req, res) => {
+    try {
+        // Return token
+        const getSubjectInfor = await Subject.find({ _id: req.params.subjectID })
+            .select([
+                "subject_name",
+            ])
+        res.json({ success: true, getSubjectInfor })
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
 // @route POST api/subject
 // @desc post subject
 // @access Private
