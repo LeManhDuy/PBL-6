@@ -61,17 +61,19 @@ const FeeAdmin = () => {
     };
 
     const handleConfirmAddFee = (allValue) => {
-        console.log(allValue);
+        if (!allValue.fee_status) {
+            allValue.paid_date = null
+
+        }
         FeeService.addFee({
-            fee_status: allValue.fee_status,
             start_date: allValue.start_date,
             end_date: allValue.end_date,
             paid_date: allValue.paid_date,
-            fee_category: allValue.fee_category,
-            pupil: allValue.pupil
+            fee_status: allValue.fee_status,
+            fee_category_id: allValue.fee_category,
+            pupil_id: allValue.pupil
         })
             .then((res) => {
-                console.log(res)
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
@@ -101,6 +103,56 @@ const FeeAdmin = () => {
         setErrorServer(false);
     }
 
+    const handleConfirmUpdateFee = (allValue) => {
+        console.log("true", allValue);
+        FeeService.updateFee(id, {
+            start_date: allValue.start_date,
+            end_date: allValue.end_date,
+            paid_date: allValue.paid_date,
+            fee_status: allValue.fee_status,
+            fee_category_id: allValue.fee_category,
+            pupil_id: allValue.pupil
+        })
+            .then((res) => {
+                console.log(res);
+                if (res.success) {
+                    setState(!state);
+                    setErrorServer(false);
+                    setUpdateFeeState(false);
+                } else {
+                    setErrorServer(true);
+                    setUpdateFeeState(true);
+                }
+            })
+            .catch((error) => console.log("error", error));
+    }
+
+    const DivUpdateFee = (
+        <ModalInput
+            show={updateFeeState}
+            handleInputCustom={handleInputCustom}
+            content={
+                <UpdateFee
+                    feeID={id}
+                    handleInputCustom={handleInputCustom}
+                    handleConfirmUpdateFee={handleConfirmUpdateFee}
+                    errorServer={errorServer}
+                />
+            }
+        />
+    );
+
+
+    const handleCloseModalCustom = () => {
+        setIsDelete(false);
+    };
+
+    const handleDelete = () => {
+        FeeService.deleteFeeById(id).then((res) =>
+            res.success ? setState(!state) : null
+        );
+        setIsDelete(false);
+    };
     const TableFee = ({ fees }) => {
         const feeItem = fees.map((item) => (
             <tr data-key={item.id} key={item.id}>
@@ -113,7 +165,6 @@ const FeeAdmin = () => {
                 <td onClick={click}>
                     <i className="fa-regular fa-pen-to-square btn-edit"></i>
                     <i className="fa-regular fa-trash-can btn-delete"></i>
-                    <i className="fa-regular fa-eye btn-view"></i>
                 </td>
             </tr>
         ));
@@ -122,22 +173,19 @@ const FeeAdmin = () => {
             const id =
                 e.target.parentElement.parentElement.getAttribute("data-key");
             if (e.target.className.includes("btn-delete")) {
-                // setIsDelete(true);
-                // setId(id);
-                // setName(
-                //     e.target.parentElement.parentElement.querySelectorAll(
-                //         "td"
-                //     )[0].textContent
-                // );
+                setIsDelete(true);
+                setId(id);
+                setName(
+                    e.target.parentElement.parentElement.querySelectorAll(
+                        "td"
+                    )[0].textContent
+                );
             } else if (e.target.className.includes("btn-edit")) {
-                // setUpdateClassState(true);
-                // setId(id);
+                setUpdateFeeState(true);
+                setId(id);
             }
         }
 
-        const handleCloseModalCustom = () => {
-            setIsDelete(false);
-        };
 
         const headerFee = (
             <tr>
@@ -157,6 +205,24 @@ const FeeAdmin = () => {
             </table>
         );
     };
+
+    const ConfirmDelete = (
+        <ModalCustom
+            show={isDelete}
+            content={
+                <ConfirmAlert
+                    handleCloseModalCustom={handleCloseModalCustom}
+                    handleDelete={handleDelete}
+                    title={`Do you want to delete the ${name}?`}
+                />
+            }
+            handleCloseModalCustom={handleCloseModalCustom}
+        />
+    );
+
+
+
+
 
     return (
         <div className="main-container">
@@ -210,6 +276,8 @@ const FeeAdmin = () => {
                             icon={faArrowRightLong}
                         />
                     </button>
+                    {updateFeeState ? DivUpdateFee : null}
+                    {isDelete ? ConfirmDelete : null}
                     {addFeeState ? DivAddFee : null}
                 </div>
             </footer>

@@ -79,7 +79,6 @@ const ClassAdmin = () => {
     }
 
     const handleConfirmUpdateClass = (allValue) => {
-        console.log(allValue);
         ClassService.updateClass(id, {
             class_name: allValue.name,
             grade_id: allValue.grade,

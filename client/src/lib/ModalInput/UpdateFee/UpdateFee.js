@@ -1,66 +1,101 @@
 import React, { useState, useEffect } from "react";
+import FeeCategoryService from "../../../config/service/FeeCategoryService";
 import FeeService from "../../../config/service/FeeService";
-import GradeService from "../../../config/service/GradeService";
+import PupilService from "../../../config/service/StudentService";
 import "./UpdateFee.css";
 
-
 const UpdateFee = (props) => {
-    const [teacher, setTeacher] = useState([]);
-    const [grade, setGrade] = useState([]);
-    const [teacherDropValue, setTeacherDropValue] = useState();
-    const [gradeDropValue, setGradeDropValue] = useState();
+    let date = new Date().toLocaleDateString();
+    const [feeCategory, setFeeCategory] = useState([]);
+    const [pupil, setPupil] = useState([]);
+    const [feeCategoryDropValue, setFeeCategoryDropValue] = useState();
+    const [pupilDropValue, setPupilDropValue] = useState();
     const [allValuesFee, setAllValuesFee] = useState({
-        name: "",
-        teacher: "",
-        grade: "",
+        fee_status: "",
+        start_date: `${date.split("/")[2]}-${date.split("/")[0] < 10
+            ? "0" + date.split("/")[0]
+            : date.split("/")[0]
+            }-${date.split("/")[1] < 10
+                ? "0" + date.split("/")[1]
+                : date.split("/")[1]
+            }`,
+        end_date: `${date.split("/")[2]}-${date.split("/")[0] < 10
+            ? "0" + date.split("/")[0]
+            : date.split("/")[0]
+            }-${date.split("/")[1] < 10
+                ? "0" + date.split("/")[1]
+                : date.split("/")[1]
+            }`,
+        paid_date: `${date.split("/")[2]}-${date.split("/")[0] < 10
+            ? "0" + date.split("/")[0]
+            : date.split("/")[0]
+            }-${date.split("/")[1] < 10
+                ? "0" + date.split("/")[1]
+                : date.split("/")[1]
+            }`,
+        fee_category: "",
+        pupil: "",
     });
     const [FeeError, setFeeError] = useState({
-        name: false,
-        teacher: false,
-        grade: false,
+        fee_status: false,
+        start_date: false,
+        end_date: false,
+        paid_date: false,
+        fee_category: false,
+        pupil: false,
     });
 
-    useEffect(()=>{
-        getTeachers();
-        getGrades();
-        FeeService.getFeeById(props.FeeID).then((res)=>{
+    useEffect(() => {
+        getFeeCategory();
+        getPupil();
+        FeeService.getFeeById(props.feeID).then((res) => {
             setAllValuesFee({
-                name: res.getFeeInfor[0].Fee_name,
-                teacher: res.getFeeInfor[0].homeroom_teacher_id._id,
-                grade: res.getFeeInfor[0].grade_id._id
-
+                start_date:
+                    res.getfeeInfor[0].start_date.split(
+                        "T"
+                    )[0],
+                end_date:
+                    res.getfeeInfor[0].end_date.split(
+                        "T"
+                    )[0],
+                paid_date:
+                    res.getfeeInfor[0].paid_date.split(
+                        "T"
+                    )[0],
+                fee_category_id: res.getfeeInfor[0].fee_category_id._id,
+                pupil_id: res.getfeeInfor[0].pupil_id._id
             })
         })
     }, []);
 
-    const getTeachers = () => {
-        FeeService.getTeachers()
+    const getFeeCategory = () => {
+        FeeCategoryService.getFeeCategory()
             .then((response) => {
-                const dataSources = response.getTeacherInfor.map((item, index) => {
+                const dataSources = response.allFeeCategory.map((item, index) => {
                     return {
                         key: index + 1,
                         id: item._id,
-                        teacher: item.person_id.person_fullname,
+                        fee_category: item.fee_name,
                     };
                 });
-                setTeacher(dataSources);
+                setFeeCategory(dataSources);
             })
             .catch((error) => {
                 console.log(error);
             });
     };
 
-    const getGrades= () => {
-        GradeService.getGrades()
+    const getPupil = () => {
+        PupilService.getPupils()
             .then((response) => {
-                const dataSources = response.allGrade.map((item, index) => {
+                const dataSources = response.getPuilInfor.map((item, index) => {
                     return {
                         key: index + 1,
                         id: item._id,
-                        grade: item.grade_name,
+                        pupil: item.pupil_name,
                     };
                 });
-                setGrade(dataSources);
+                setPupil(dataSources);
             })
             .catch((error) => {
                 console.log(error);
@@ -72,63 +107,68 @@ const UpdateFee = (props) => {
             ...allValuesFee,
             [e.target.name]: e.target.value,
         });
-
+        if (e.target.value == "true") {
+            document.getElementById("paiddate").classList.remove("hidden");
+        }
+        if (e.target.value == "false") {
+            document.getElementById("paiddate").classList.add("hidden");
+        }
     };
 
-    const TeacherDropDown = ({ value, options, onChange, teacherValue }) => {
+    const FeeCategoryDropDown = ({ value, options, onChange, feecategoryValue }) => {
         return (
             <select
-                FeeName="dropdown-Fee"
+                className="dropdown-Fee"
                 value={value}
                 onChange={onChange}
             >
                 <option key={10000} value="Pick">
-                    Teachers
+                    FeeCategory
                 </option>
                 {options.map((option) => (
                     <option
                         key={option.key}
-                        value={option.teacher}
+                        value={option.fee_category}
                         data-key={option.id}
-                        selected={teacherValue === option.id}
+                        selected={feecategoryValue === option.id}
                     >
-                        {option.teacher}
+                        {option.fee_category}
                     </option>
                 ))}
             </select>
         );
     };
 
-    const GradeDropDown = ({ value, options, onChange, gradeValue }) => {
+    const PupilDropDown = ({ value, options, onChange, pupilValue }) => {
         return (
             <select
-                FeeName="dropdown-Fee"
+                className="dropdown-Fee"
                 value={value}
                 onChange={onChange}
             >
                 <option key={10000} value="Pick">
-                    Grades
+                    Pupils
                 </option>
                 {options.map((option) => (
                     <option
                         key={option.key}
-                        value={option.grade}
+                        value={option.pupil}
                         data-key={option.id}
-                        selected={gradeValue === option.id}
+                        selected={pupilValue === option.id}
                     >
-                        {option.grade}
+                        {option.pupil}
                     </option>
                 ))}
             </select>
         );
     };
 
-    const handleTeacherChange = (event) => {
-        setTeacherDropValue(event.target.value);
+    const handleFeeCategoryChange = (event) => {
+        setFeeCategoryDropValue(event.target.value);
         if (event.target.value !== "Pick") {
             setAllValuesFee({
                 ...allValuesFee,
-                teacher: event.target.options[
+                fee_category: event.target.options[
                     event.target.selectedIndex
                 ].getAttribute("data-key"),
             });
@@ -140,12 +180,12 @@ const UpdateFee = (props) => {
         }
     };
 
-    const handleGradeChange = (event) => {
-        setGradeDropValue(event.target.value);
+    const handlePupilChange = (event) => {
+        setPupilDropValue(event.target.value);
         if (event.target.value !== "Pick") {
             setAllValuesFee({
                 ...allValuesFee,
-                grade: event.target.options[
+                pupil: event.target.options[
                     event.target.selectedIndex
                 ].getAttribute("data-key"),
             });
@@ -159,126 +199,229 @@ const UpdateFee = (props) => {
 
 
     const FormFee = (
-        <div FeeName="form-admin-content">
+        <div className="form-admin-content">
             <h4>Add Fee</h4>
             <label
-                FeeName={
+                className={
                     "error" +
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Add Failed.
+                Update Failed.
             </label>
-            <div FeeName="form-teacher-content">
-                <div FeeName="teacher-content-left">
-                    <div FeeName="type-input">
-                        <h4>Fee Name</h4>
+            <div className="form-teacher-content">
+                <div className="teacher-content-left">
+                    <div className="type-input">
+                        <h4>Start Date</h4>
                         <input
-                            FeeName="input-content"
-                            type="text"
-                            name="name"
-                            placeholder="Enter Fee name"
-                            value={allValuesFee.name}
+                            className="input-content"
+                            type="date"
+                            name="start_date"
+                            placeholder="Enter Start Date"
+                            value={allValuesFee.start_date}
                             onChange={changeHandlerFee}
                         />
                         <label
-                            FeeName={
+                            className={
                                 "error" +
-                                (FeeError.name
+                                (FeeError.start_date
                                     ? " error-show"
                                     : " error-hidden")
                             }
                         >
-                            Name must be less than 30 chars
+                            Invalid Start Date
                         </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>End Date</h4>
+                        <input
+                            className="input-content"
+                            type="date"
+                            name="end_date"
+                            placeholder="Enter End Date"
+                            value={allValuesFee.end_date}
+                            onChange={changeHandlerFee}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (FeeError.end_date
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid End Date
+                        </label>
+                    </div>
+                    {/* show type-input */}
+                    <div className="type-input hidden" id="paiddate">
+                        <h4>Paid Date</h4>
+                        <input
+                            className="input-content"
+                            type="date"
+                            name="paid_date"
+                            placeholder="Enter Paid Date"
+                            value={allValuesFee.paid_date}
+                            onChange={changeHandlerFee}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (FeeError.paid_date
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid End Date
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Status</h4>
+                        <div className="radio-btn">
+                            <div className="radio">
+                                <input
+                                    type="radio"
+                                    value={true}
+                                    name="status"
+                                    onChange={changeHandlerFee}
+                                />
+                                Paid
+                                <input
+                                    type="radio"
+                                    value={false}
+                                    name="status"
+                                    onChange={changeHandlerFee}
+                                />
+                                UnPaid
+                            </div>
+                            <label
+                                className={
+                                    "error" +
+                                    (FeeError.gender
+                                        ? " error-show"
+                                        : " error-hidden")
+                                }
+                            >
+                                No status is selected
+                            </label>
+                        </div>
                     </div>
                 </div>
-                <div FeeName="teacher-content-right">
-                    <div FeeName="type-input">
-                        <h4>Teacher</h4>
-                        <TeacherDropDown
-                            options={teacher}
-                            value={teacherDropValue}
-                            onChange={handleTeacherChange}
-                            teacherValue={allValuesFee.teacher}
+                <div className="teacher-content-right">
+                    <div className="type-input">
+                        <h4>Fee Category</h4>
+                        <FeeCategoryDropDown
+                            options={feeCategory}
+                            value={feeCategoryDropValue}
+                            onChange={handleFeeCategoryChange}
+                            feecategoryValue={allValuesFee.fee_category_id}
                         />
                         <label
-                            FeeName={
+                            className={
                                 "error" +
-                                (FeeError.teacher
+                                (FeeError.fee_category
                                     ? " error-show"
                                     : " error-hidden")
                             }
                         >
-                            Invalid Teacher
+                            Invalid Fee Category
                         </label>
                     </div>
-                    <div FeeName="type-input">
-                        <h4>Grade</h4>
-                        <GradeDropDown
-                            options={grade}
-                            value={gradeDropValue}
-                            onChange={handleGradeChange}
-                            gradeValue={allValuesFee.grade}
+                    <div className="type-input">
+                        <h4>Pupil</h4>
+                        <PupilDropDown
+                            options={pupil}
+                            value={pupilDropValue}
+                            onChange={handlePupilChange}
+                            pupilValue={allValuesFee.pupil_id}
                         />
                         <label
-                            FeeName={
+                            className={
                                 "error" +
-                                (FeeError.grade
+                                (FeeError.pupil
                                     ? " error-show"
                                     : " error-hidden")
                             }
                         >
-                            Invalid Fee
+                            Invalid Pupil
                         </label>
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 
     const handleUpdateFee = () => {
-        let name = false;
-        let teacher = false;
-        let grade = false;
         let check = false;
+        let fee_status = false
+        let start_date = false
+        let end_date = false
+        let paid_date = false
+        let fee_category = false
+        let pupil = false
 
-        if (
-            allValuesFee.name.length > 30 ||
-            allValuesFee.name.length < 2
-        ) {
-            name = true;
-            check = true;
-        } else name = false;
+        // let dateNow = new Date().toLocaleDateString()
+        // let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
+        //     ? "0" + dateNow.split("/")[0]
+        //     : dateNow.split("/")[0]
+        //     }-${dateNow.split("/")[1] < 10
+        //         ? "0" + dateNow.split("/")[1]
+        //         : dateNow.split("/")[1]
+        //     }`;
+        // if (!allValuesFee.fee_status) {
+        //     fee_status = true;
+        //     check = true;
+        // } else fee_status = false;
+        // console.log("Hello fee_status", check);
+        // if (dateConvert < allValuesFee.start_date) {
+        //     start_date = true;
+        //     check = true;
+        // } else start_date = false;
+        // console.log("hello start_date", start_date);
+        // if (dateConvert < allValuesFee.end_date) {
+        //     end_date = true;
+        //     check = true;
+        // } else end_date = false;
+        // console.log("hello end_date", end_date);
 
-        if (!allValuesFee.teacher) {
-            teacher = true;
-            check = true
-        }else  {
-            grade = false
-        }
+        // if (dateConvert < allValuesFee.paid_date) {
+        //     paid_date = true;
+        //     check = true;
+        // } else paid_date = false;
+        // console.log("hello paid_date", paid_date);
 
-        if (!allValuesFee.grade) {
-            grade = true;
+        if (!allValuesFee.fee_category) {
+            fee_category = true;
             check = true
         } else {
-            grade = false
+            fee_category = false
         }
+        console.log("hello fee_category", fee_category);
 
+        if (!allValuesFee.pupil) {
+            pupil = true;
+            check = true
+        } else {
+            pupil = false
+        }
+        console.log("hello pupil", pupil);
+
+        // if (allValuesFee.fee_status == "false") {
+        //     allValuesFee.paid_date = null;
+        //     paid_date = false
+        // }
 
         setFeeError({
-            name: name,
-            grade: grade,
-            teacher: teacher
+            fee_status: fee_status,
+            start_date: start_date,
+            end_date: end_date,
+            paid_date: paid_date,
+            fee_category: fee_category,
+            pupil: pupil
         })
-
         if (!check) {
             props.handleConfirmUpdateFee(allValuesFee);
         }
-
-
-
-
     }
 
     const clickSave = (e) => {
@@ -286,20 +429,20 @@ const UpdateFee = (props) => {
         handleUpdateFee();
     };
 
-    const FormAddFee = (
-        <div FeeName="form-add-account">
+    const FormUpdateFee = (
+        <div className="form-add-account">
             {FormFee}
-            <button onClick={props.handleInputCustom} FeeName="btn-cancel">
+            <button onClick={props.handleInputCustom} className="btn-cancel">
                 Cancel
             </button>
-            <button type="submit" onClick={clickSave} FeeName="btn-ok">
+            <button type="submit" onClick={clickSave} className="btn-ok">
                 Save
             </button>
         </div>
     );
 
-    return(
-        <div FeeName="add-account-form">{FormAddFee}</div>
+    return (
+        <div className="add-account-form">{FormUpdateFee}</div>
     );
 
 }

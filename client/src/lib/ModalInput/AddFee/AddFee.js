@@ -388,10 +388,7 @@ const AddFee = (props) => {
             pupil: pupil
         })
         if (!check) {
-            console.log(allValuesFee);
             props.handleConfirmAddFee(allValuesFee);
-        } else {
-            console.log("Hello");
         }
     }
 

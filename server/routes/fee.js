@@ -80,7 +80,7 @@ router.post("/", async (req, res) => {
         res.json({
             success: true,
             message: "Create Fee Successfully.",
-            newfee,
+            newFee,
         })
     }
     catch (error) {
