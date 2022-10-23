@@ -466,7 +466,7 @@ function AccountAdmin() {
                     if (res.success) {
                         setState(!state);
                         setErrorServer(false);
-                        setAddState(false);
+                        setUpdateState(false);
                     } else {
                         setErrorServer(true);
                         setAddState(true);
