@@ -232,7 +232,7 @@ const ClassAdmin = () => {
                     <h3>Manage Class</h3>
                 </div>
                 <div className="right-header">
-                    <button className="btn-account" onClick={handleAddClass}>Add class</button>
+                    <button className="btn-account" onClick={handleAddClass}>Add Class</button>
                     <div className="search-box">
                         <button className="btn-search">
                             <FontAwesomeIcon

@@ -9,6 +9,16 @@ const FeeCategory = require("../model/FeeCategory")
 router.get("/", async (req, res) => {
     try {
         const allFee = await Fee.find()
+            .populate({
+                path: "fee_category_id",
+                model: "FeeCategory",
+                select: ["fee_name", "fee_amount"],
+            })
+            .populate({
+                path: "pupil_id",
+                model: "Pupil",
+                select: ["pupil_name"],
+            })
         res.json({ success: true, allFee })
     }
     catch (error) {
@@ -23,6 +33,16 @@ router.get("/:feeID", async (req, res) => {
     try {
         // Return token
         const getfeeInfor = await Fee.find({ _id: req.params.feeID })
+            .populate({
+                path: "fee_category_id",
+                model: "FeeCategory",
+                select: ["fee_name", "fee_amount"],
+            })
+            .populate({
+                path: "pupil_id",
+                model: "Pupil",
+                select: ["pupil_name"],
+            })
         res.json({ success: true, getfeeInfor })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
@@ -33,8 +53,8 @@ router.get("/:feeID", async (req, res) => {
 // // @desc post fee
 // // @access Private
 router.post("/", async (req, res) => {
-    const { state_date, end_date, paid_date, fee_category_id, pupil_id } = req.body
-    if (!state_date || !end_date || !fee_category_id || !pupil_id)
+    const { start_date, end_date, paid_date, fee_category_id, pupil_id } = req.body
+    if (!start_date || !end_date || !fee_category_id || !pupil_id)
         return res.status(400).json({
             success: false,
             message: "Please fill in complete information.",
@@ -50,7 +70,7 @@ router.post("/", async (req, res) => {
             checkStatus = true
         const newFee = new Fee({
             fee_status: checkStatus,
-            state_date,
+            start_date,
             end_date,
             paid_date,
             fee_category_id,
@@ -72,8 +92,8 @@ router.post("/", async (req, res) => {
 // // @desc put grade
 // // @access Private
 router.put("/:feeId", async (req, res) => {
-    const { state_date, end_date, paid_date, fee_category_id, pupil_id } = req.body
-    if (!state_date || !end_date || !fee_category_id || !pupil_id)
+    const { start_date, end_date, paid_date, fee_category_id, pupil_id } = req.body
+    if (!start_date || !end_date || !fee_category_id || !pupil_id)
         return res.status(400).json({
             success: false,
             message: "Please fill in complete information.",
@@ -89,7 +109,7 @@ router.put("/:feeId", async (req, res) => {
             checkStatus = true
         let updateFee = {
             fee_status: checkStatus,
-            state_date,
+            start_date,
             end_date,
             paid_date,
             fee_category_id,
