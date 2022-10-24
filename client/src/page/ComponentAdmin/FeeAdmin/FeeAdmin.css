@@ -1,2 +1,4 @@
-@import "../../../assets/css/variables.css";
-@import "../../../assets/css/custom.css";
+.td-content,
+.th-content {
+    text-align: center;
+}

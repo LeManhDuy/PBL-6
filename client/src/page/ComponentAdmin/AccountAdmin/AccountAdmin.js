@@ -186,7 +186,6 @@ function AccountAdmin() {
                 <td onClick={click}>
                     <i className="fa-regular fa-pen-to-square btn-edit"></i>
                     <i className="fa-regular fa-trash-can btn-delete"></i>
-                    <i className="fa-regular fa-eye btn-view"></i>
                 </td>
             </tr>
         ));
@@ -329,7 +328,7 @@ function AccountAdmin() {
                     allValue.img,
                     allValue.img.name
                 );
-            console.log('this',allValue.username)
+            console.log('this', allValue.username)
             AccountService.addAccountTeachers(formData)
                 .then((res) => {
                     if (res.success) {
@@ -460,7 +459,7 @@ function AccountAdmin() {
                     allValue.img,
                     allValue.img.name
                 );
-            console.log('this',allValue.username)
+            console.log('this', allValue.username)
             AccountService.updateAccountTeachers(formData, id)
                 .then((res) => {
                     if (res.success) {
@@ -564,7 +563,7 @@ function AccountAdmin() {
                     setState(!state);
                 }
             });
-            // console.log("Hello");
+        // console.log("Hello");
         else {
             AccountService.deleteAccountAffairsById(id).then((res) => {
                 if (res.success) {
@@ -602,7 +601,7 @@ function AccountAdmin() {
                 />
                 <div className="right-header">
                     <button className="btn-account" onClick={handleAddAccount}>
-                        Add account
+                        Add Account
                     </button>
                     <div className="search-box">
                         <button className="btn-search">

@@ -98,17 +98,17 @@
   color: #fff;
 }
 
-.paging button{
+/* .paging button{
   color: var(--text-color);
   border: 2px solid var(--primary-color);
   background: #fff;
   margin: 0 2px;
-}
+} */
 
-.paging button:hover{
+/* .paging button:hover{
   color: #fff;
   background: var(--primary-color);
-}
+} */
 
 .table-content {
   text-align: left;

@@ -14,8 +14,7 @@ const AddGrade = (props) => {
         let name = false;
         let check = false;
         if (
-            allValuesGrade.name.length > 30 ||
-            allValuesGrade.name.length < 2
+            allValuesGrade.name.length > 30
         ) {
             name = true;
             check = true;
@@ -58,8 +57,8 @@ const AddGrade = (props) => {
                             type="text"
                             name="name"
                             placeholder="Enter name"
-                        value={allValuesGrade.name}
-                        onChange={changeHandlerGrade}
+                            value={allValuesGrade.name}
+                            onChange={changeHandlerGrade}
                         />
                         <label
                             className={
@@ -90,7 +89,7 @@ const AddGrade = (props) => {
                     Cancel
                 </button>
                 <button type="submit"
-                    onClick={clickSave} 
+                    onClick={clickSave}
                     className="btn-ok">
                     Save
                 </button>

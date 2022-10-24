@@ -37,11 +37,11 @@ const StudentAdmin = () => {
                         id: item._id,
                         name: item.pupil_name,
                         gender: item.pupil_gender,
-                        parent: item.parent_id.person_id.person_fullname,
-                        class: item.class_id.class_name,
+                        parent: item.parent_id ? item.parent_id.person_id.person_fullname : "Empty",
+                        class: item.class_id ? item.class_id.class_name : "Empty",
                         teacher:
-                            item.class_id.homeroom_teacher_id.person_id.person_fullname,
-                        grade: item.class_id.grade_id.grade_name,
+                            item.class_id ? item.class_id.homeroom_teacher_id.person_id.person_fullname : "Empty",
+                        grade: item.class_id ? item.class_id.grade_id.grade_name : "Empty",
                     };
                 });
                 setStudent(dataSources);
@@ -89,7 +89,7 @@ const StudentAdmin = () => {
                 <tr>
                     <th>Name</th>
                     <th>Gender</th>
-                    <th>Class</th>
+                    <th>Class-Grade</th>
                     <th>Parent</th>
                     <th>Teacher</th>
                     <th>Action</th>

@@ -20,10 +20,10 @@ const UpdateClass = (props) => {
         grade: false,
     });
 
-    useEffect(()=>{
+    useEffect(() => {
         getTeachers();
         getGrades();
-        ClassService.getClassById(props.classID).then((res)=>{
+        ClassService.getClassById(props.classID).then((res) => {
             setAllValuesClass({
                 name: res.getClassInfor[0].class_name,
                 teacher: res.getClassInfor[0].homeroom_teacher_id._id,
@@ -50,7 +50,7 @@ const UpdateClass = (props) => {
             });
     };
 
-    const getGrades= () => {
+    const getGrades = () => {
         GradeService.getGrades()
             .then((response) => {
                 const dataSources = response.allGrade.map((item, index) => {
@@ -244,8 +244,7 @@ const UpdateClass = (props) => {
         let check = false;
 
         if (
-            allValuesClass.name.length > 30 ||
-            allValuesClass.name.length < 2
+            allValuesClass.name.length > 30
         ) {
             name = true;
             check = true;
@@ -254,7 +253,7 @@ const UpdateClass = (props) => {
         if (!allValuesClass.teacher) {
             teacher = true;
             check = true
-        }else  {
+        } else {
             grade = false
         }
 
@@ -298,7 +297,7 @@ const UpdateClass = (props) => {
         </div>
     );
 
-    return(
+    return (
         <div className="add-account-form">{FormAddClass}</div>
     );
 
