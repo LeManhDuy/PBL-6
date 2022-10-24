@@ -12,6 +12,7 @@ import AccountAdmin from "../page/ComponentAdmin/AccountAdmin/AccountAdmin";
 import ClassAdmin from "../page/ComponentAdmin/ClassAdmin/ClassAdmin";
 import GradeAdmin from "../page/ComponentAdmin/GradeAdmin/GradeAdmin";
 import SubjectAdmin from "../page/ComponentAdmin/SubjectAdmin/SubjectAdmin.js";
+import SubjectTeacherAdmin from "../page/ComponentAdmin/SubjectTeacherAdmin/SubjectTeacherAdmin.js";
 import ScheduleAdmin from "../page/ComponentAdmin/ScheduleAdmin/ScheduleAdmin";
 import StudentAdmin from "../page/ComponentAdmin/StudentAdmin/StudentAdmin";
 import FeeAdmin from "../page/ComponentAdmin/FeeAdmin/FeeAdmin";
@@ -66,6 +67,12 @@ const Routes = () => {
                         component={SubjectAdmin}
                         exact
                         path={ROUTES.ADMIN_PAGE.SUBJECT_ADMIN}
+                    />
+
+                    <AdminRoute
+                        component={SubjectTeacherAdmin}
+                        exact
+                        path={ROUTES.ADMIN_PAGE.SUBJECT_TEACHER_ADMIN}
                     />
 
                     <AdminRoute

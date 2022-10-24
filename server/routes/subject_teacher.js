@@ -63,7 +63,7 @@ router.get("/search", async (req, res) => {
         if (req.query.subject_id) match['subject_id'] = req.query.subject_id
         if (req.query.teacher_id) match['teacher_id'] = req.query.teacher_id
         // res.json({ success: true, match })
-        const getSubjectTeacherInfor = await Subject_Teacher.find(match)
+        const allSubjectTeacher = await Subject_Teacher.find(match)
             .select()
             .populate({
                 path: "subject_id",
@@ -77,7 +77,7 @@ router.get("/search", async (req, res) => {
                     model: "Person",
                 }]
             })
-        res.json({ success: true, getSubjectTeacherInfor })
+        res.json({ success: true, allSubjectTeacher })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }

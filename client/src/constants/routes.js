@@ -14,6 +14,7 @@ const ROUTES = {
         FEE_CATEGORY_ADMIN: "/admin/feecategory",
         STATISTIC_ADMIN: "/admin/statistic",
         STUDENT_ADMIN: "/admin/student",
+        SUBJECT_TEACHER_ADMIN: "/admin/subject_teacher",
     },
 
     PARENTS_PAGE: {
