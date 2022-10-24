@@ -1,13 +1,13 @@
 import React from "react";
 import "./AffairLayout.css";
-import SideBar from "../../common/SideBar/SideBar";
+import AffairSideBar from "../../common/AffairSideBar/AffairSideBar";
 
 const AffairLayout = (props) => {
     return (
         <div>
             <div className="div-container">
                 <div className="main-content">
-                    <SideBar />
+                    <AffairSideBar />
                     {props.component}
                 </div>
             </div>

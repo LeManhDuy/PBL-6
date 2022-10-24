@@ -31,7 +31,9 @@ const isTeacher = () => {
 };
 
 const isAffair = () => {
-    return JSON.parse(localStorage.getItem("@Login").AccountRole === "Affair");
+    return JSON.parse(
+        localStorage.getItem("@Login").AccountRole === "Academic Affair"
+    );
 };
 
 const getData = () => {
