@@ -205,8 +205,6 @@ function AccountAdmin() {
                 setUpdateState(true);
                 setId(id);
                 console.log(id);
-            } else if (e.target.className.includes("btn-view")) {
-                console.log("view");
             }
         }
 
@@ -328,7 +326,6 @@ function AccountAdmin() {
                     allValue.img,
                     allValue.img.name
                 );
-            console.log('this', allValue.username)
             AccountService.addAccountTeachers(formData)
                 .then((res) => {
                     if (res.success) {
@@ -342,9 +339,7 @@ function AccountAdmin() {
                     }
                 })
                 .catch((error) => console.log("error", error));
-        }
-
-        else {
+        } else {
             var formData = new FormData();
             formData.append("account_username", allValue.username);
             formData.append("account_password", allValue.password);
@@ -459,7 +454,6 @@ function AccountAdmin() {
                     allValue.img,
                     allValue.img.name
                 );
-            console.log('this', allValue.username)
             AccountService.updateAccountTeachers(formData, id)
                 .then((res) => {
                     if (res.success) {

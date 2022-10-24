@@ -37,11 +37,17 @@ const StudentAdmin = () => {
                         id: item._id,
                         name: item.pupil_name,
                         gender: item.pupil_gender,
-                        parent: item.parent_id ? item.parent_id.person_id.person_fullname : "Empty",
-                        class: item.class_id ? item.class_id.class_name : "Empty",
-                        teacher:
-                            item.class_id ? item.class_id.homeroom_teacher_id.person_id.person_fullname : "Empty",
-                        grade: item.class_id ? item.class_id.grade_id.grade_name : "Empty",
+                        parent: item.parent_id
+                            ? item.parent_id.person_id.person_fullname
+                            : "null",
+                        class: item.class_id
+                            ? item.class_id.class_name
+                            : "null",
+                        teacher: item.class_id
+                            ? item.class_id.homeroom_teacher_id.person_id
+                                  .person_fullname
+                            : "null",
+                        grade: item.class_id.grade_id.grade_name,
                     };
                 });
                 setStudent(dataSources);
@@ -153,10 +159,7 @@ const StudentAdmin = () => {
         formData.append("parent_id", allValue.parent);
         formData.append("class_id", allValue.classroom);
 
-        StudentService.updatePupil(
-            id,
-            formData
-        ).then((res) => {
+        StudentService.updatePupil(id, formData).then((res) => {
             if (res.success) {
                 setIsChange(!isChange);
                 setUpdateState(false);
