@@ -34,31 +34,31 @@ function UserHeader() {
         setOpen(false);
     });
 
-    useEffect(() => {
-        if (AuthenticationService.isTeacher()) {
-            if (
-                !!JSON.parse(localStorage.getItem("@Login")).teacher.teacher_img
-            ) {
-                setAvatar(
-                    `${REACT_APP_API_ENDPOINT}${
-                        JSON.parse(localStorage.getItem("@Login")).teacher
-                            .teacher_img
-                    }`
-                );
-            }
-        } else if (AuthenticationService.isParents()) {
-            if (
-                !!JSON.parse(localStorage.getItem("@Login")).parent.parent_img
-            ) {
-                setAvatar(
-                    `${REACT_APP_API_ENDPOINT}${
-                        JSON.parse(localStorage.getItem("@Login")).parent
-                            .parent_img
-                    }`
-                );
-            }
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (AuthenticationService.isTeacher()) {
+    //         if (
+    //             !!JSON.parse(localStorage.getItem("@Login")).teacher.teacher_img
+    //         ) {
+    //             setAvatar(
+    //                 `${REACT_APP_API_ENDPOINT}${
+    //                     JSON.parse(localStorage.getItem("@Login")).teacher
+    //                         .teacher_img
+    //                 }`
+    //             );
+    //         }
+    //     } else if (AuthenticationService.isParents()) {
+    //         if (
+    //             !!JSON.parse(localStorage.getItem("@Login")).parent.parent_img
+    //         ) {
+    //             setAvatar(
+    //                 `${REACT_APP_API_ENDPOINT}${
+    //                     JSON.parse(localStorage.getItem("@Login")).parent
+    //                         .parent_img
+    //                 }`
+    //             );
+    //         }
+    //     }
+    // }, []);
 
     const optionsParents = [
         { key: 1, label: "Home", link: ROUTES.HOME_PAGE.HOME_PATH },
