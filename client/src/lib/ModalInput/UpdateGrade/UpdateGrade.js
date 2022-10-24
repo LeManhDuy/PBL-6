@@ -27,8 +27,7 @@ const UpdateGrade = (props) => {
         let name = false;
         let check = false;
         if (
-            allValuesGrade.name.length > 30 ||
-            allValuesGrade.name.length < 2
+            allValuesGrade.name.length > 30
         ) {
             name = true;
             check = true;

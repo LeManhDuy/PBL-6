@@ -22,7 +22,6 @@ const FeeAdmin = () => {
     const [fees, setFee] = useState([])
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
-    const [viewState, setViewState] = useState(false);
     useEffect(() => {
         getFee();
     }, [state]);
@@ -35,7 +34,7 @@ const FeeAdmin = () => {
                         return {
                             key: index + 1,
                             id: item._id,
-                            fee_name: item.fee_category_id ? item.fee_category_id.fee_name : "NULL",
+                            fee_name: item.fee_category_id ? item.fee_category_id.fee_name : "Empty",
                             //fee_amount: item.allFee[0].fee_category_id.fee_amount,
                             pupil_name: item.pupil_id.pupil_name,
                             // person_fullname: item.allFee[0].pupil_id.parent_id.person_id.pupil_name,
@@ -61,9 +60,8 @@ const FeeAdmin = () => {
     };
 
     const handleConfirmAddFee = (allValue) => {
-        if (!allValue.fee_status) {
+        if (allValue.fee_status === "false") {
             allValue.paid_date = null
-
         }
         FeeService.addFee({
             start_date: allValue.start_date,
@@ -114,7 +112,6 @@ const FeeAdmin = () => {
             pupil_id: allValue.pupil
         })
             .then((res) => {
-                console.log(res);
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);

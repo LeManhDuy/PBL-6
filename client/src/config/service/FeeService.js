@@ -20,22 +20,12 @@ const updateFee = async (id, params) => {
     return await HandleApi.APIPutWithToken(`fee/${id}`, params);
 };
 
-// const getTeachers = async () => {
-//     return await HandleApi.APIGetWithToken("teacher/")
-// }
-
-// const getStudentByFeeID = async (id) => {
-//     return await HandleApi.APIGetWithToken(`Fee/get-pupil-by-Fee/${id}`)
-// }
-
 const FeeService = {
     getFee,
     addFee,
     getFeeById,
     deleteFeeById,
     updateFee,
-    // getTeachers,
-    // getStudentByFeeID
 };
 
 export default FeeService;

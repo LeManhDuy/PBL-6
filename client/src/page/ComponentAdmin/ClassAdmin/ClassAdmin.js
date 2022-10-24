@@ -26,7 +26,7 @@ const ClassAdmin = () => {
     const [errorServer, setErrorServer] = useState(false);
     const [viewState, setViewState] = useState(false);
 
-    useEffect(()=>{
+    useEffect(() => {
         getClass();
     }, [state]);
 
@@ -36,11 +36,11 @@ const ClassAdmin = () => {
                 const dataSources = response.allClass.map(
                     (item, index) => {
                         return {
-                            key: index +1,
+                            key: index + 1,
                             id: item._id,
                             class_name: item.class_name,
-                            homeroomteacher_name: item.homeroom_teacher_id.person_id.person_fullname,
-                            grade_name: item.grade_id.grade_name
+                            homeroomteacher_name: item.homeroom_teacher_id ? item.homeroom_teacher_id.person_id.person_fullname : "Empty",
+                            grade_name: item.grade_id ? item.grade_id.grade_name : "Empty"
                         }
                     }
                 );
@@ -65,17 +65,17 @@ const ClassAdmin = () => {
             grade_id: allValue.grade,
             homeroom_teacher_id: allValue.teacher
         })
-        .then((res) => {
-            if (res.success) {
-                setState(!state);
-                setErrorServer(false);
-                setAddClassState(false);
-            } else {
-                setErrorServer(true);
-                setAddClassState(true);
-            }
-        })
-        .catch((error) => console.log("error", error));
+            .then((res) => {
+                if (res.success) {
+                    setState(!state);
+                    setErrorServer(false);
+                    setAddClassState(false);
+                } else {
+                    setErrorServer(true);
+                    setAddClassState(true);
+                }
+            })
+            .catch((error) => console.log("error", error));
     }
 
     const handleConfirmUpdateClass = (allValue) => {
@@ -84,18 +84,18 @@ const ClassAdmin = () => {
             grade_id: allValue.grade,
             homeroom_teacher_id: allValue.teacher
         })
-        .then((res) => {
-            console.log(res);
-            if (res.success) {
-                setState(!state);
-                setErrorServer(false);
-                setUpdateClassState(false);
-            } else {
-                setErrorServer(true);
-                setUpdateClassState(true);
-            }
-        })
-        .catch((error) => console.log("error", error));
+            .then((res) => {
+                console.log(res);
+                if (res.success) {
+                    setState(!state);
+                    setErrorServer(false);
+                    setUpdateClassState(false);
+                } else {
+                    setErrorServer(true);
+                    setUpdateClassState(true);
+                }
+            })
+            .catch((error) => console.log("error", error));
     }
 
     //Component Add Class (Form)
@@ -148,7 +148,7 @@ const ClassAdmin = () => {
 
 
 
-    const TableClasses = ({classRooms}) => {
+    const TableClasses = ({ classRooms }) => {
         const classItem = classRooms.map((item) => (
             <tr data-key={item.id} key={item.id}>
                 <td>{item.class_name}</td>
@@ -248,7 +248,7 @@ const ClassAdmin = () => {
                 </div>
             </header>
             <div className="table-content">
-                <TableClasses classRooms={classRooms}/>
+                <TableClasses classRooms={classRooms} />
             </div>
             <footer>
                 <hr></hr>
@@ -279,8 +279,8 @@ const ClassAdmin = () => {
                 </div>
                 {addClassState ? DivAddClass : null}
                 {updateClassState ? DivUpdateClass : null}
-                {isDelete ? ConfirmDelete: null}
-                {viewState ? DivViewClass: null}
+                {isDelete ? ConfirmDelete : null}
+                {viewState ? DivViewClass : null}
             </footer>
         </div>
     );

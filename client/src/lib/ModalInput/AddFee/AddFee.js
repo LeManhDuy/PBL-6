@@ -88,10 +88,10 @@ const AddFee = (props) => {
             ...allValuesFee,
             [e.target.name]: e.target.value,
         });
-        if (e.target.value == "true") {
+        if (e.target.value === "true") {
             document.getElementById("paiddate").classList.remove("hidden");
         }
-        if (e.target.value == "false") {
+        if (e.target.value === "false") {
             document.getElementById("paiddate").classList.add("hidden");
         }
     };
@@ -261,14 +261,14 @@ const AddFee = (props) => {
                                 <input
                                     type="radio"
                                     value={true}
-                                    name="status"
+                                    name="fee_status"
                                     onChange={changeHandlerFee}
                                 />
                                 Paid
                                 <input
                                     type="radio"
                                     value={false}
-                                    name="status"
+                                    name="fee_status"
                                     onChange={changeHandlerFee}
                                 />
                                 UnPaid

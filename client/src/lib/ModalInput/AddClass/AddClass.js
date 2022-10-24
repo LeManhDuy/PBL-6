@@ -19,7 +19,7 @@ const AddClass = (props) => {
         grade: false,
     });
 
-    useEffect(()=>{
+    useEffect(() => {
         getTeachers();
         getGrades();
     }, []);
@@ -41,7 +41,7 @@ const AddClass = (props) => {
             });
     };
 
-    const getGrades= () => {
+    const getGrades = () => {
         GradeService.getGrades()
             .then((response) => {
                 const dataSources = response.allGrade.map((item, index) => {
@@ -231,8 +231,7 @@ const AddClass = (props) => {
         let check = false;
 
         if (
-            allValuesClass.name.length > 30 ||
-            allValuesClass.name.length < 2
+            allValuesClass.name.length > 30
         ) {
             name = true;
             check = true;
@@ -241,7 +240,7 @@ const AddClass = (props) => {
         if (!allValuesClass.teacher) {
             teacher = true;
             check = true
-        }else  {
+        } else {
             grade = false
         }
 
@@ -285,7 +284,7 @@ const AddClass = (props) => {
         </div>
     );
 
-    return(
+    return (
         <div className="add-account-form">{FormAddClass}</div>
     );
 
