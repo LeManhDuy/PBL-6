@@ -11,10 +11,13 @@ function Admin() {
         if (
             (AuthenticationService.isLogin() &&
                 JSON.parse(localStorage.getItem("@Login")).AccountRole ===
-                    "parent") ||
+                    "Parents") ||
             (AuthenticationService.isLogin() &&
                 JSON.parse(localStorage.getItem("@Login")).AccountRole ===
-                    "teacher")
+                    "Teacher") ||
+            (AuthenticationService.isLogin() &&
+                JSON.parse(localStorage.getItem("@Login")).AccountRole ===
+                    "Academic Affair")
         ) {
             history.push(ROUTES.HOME_PAGE.path);
         }

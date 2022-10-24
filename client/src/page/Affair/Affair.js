@@ -5,16 +5,19 @@ import ROUTES from "../../constants/routes";
 import AuthenticationService from "../../config/service/AuthenticationService";
 import AffairLayout from "../../layout/AffairLayout/AffairLayout";
 
-function Admin() {
+function Affair() {
     const history = useHistory();
     useEffect(() => {
         if (
             (AuthenticationService.isLogin() &&
                 JSON.parse(localStorage.getItem("@Login")).AccountRole ===
-                    "parent") ||
+                    "Parents") ||
             (AuthenticationService.isLogin() &&
                 JSON.parse(localStorage.getItem("@Login")).AccountRole ===
-                    "teacher")
+                    "Teacher") ||
+            (AuthenticationService.isLogin() &&
+                JSON.parse(localStorage.getItem("@Login")).AccountRole ===
+                    "Principal")
         ) {
             history.push(ROUTES.HOME_PAGE.path);
         }
@@ -26,4 +29,4 @@ function Admin() {
     );
 }
 
-export default Admin;
+export default Affair;

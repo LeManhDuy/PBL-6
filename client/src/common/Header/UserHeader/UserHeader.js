@@ -59,53 +59,54 @@ function UserHeader() {
             }
         }
     }, []);
-    // const optionsParents = [
-    //     { key: 1, label: "Home", link: ROUTES.HOME_PAGE.HOME_PATH },
-    //     {
-    //         key: 2,
-    //         label: "Student",
-    //         link: ROUTES.PARENTS_PAGE.PARENTS_STUDENT_PATH,
-    //     },
-    //     {
-    //         key: 3,
-    //         label: "Parents",
-    //         link: ROUTES.PARENTS_PAGE.PARENTS_PARENTS_PATH,
-    //     },
-    //     {
-    //         key: 4,
-    //         label: "Score",
-    //         link: ROUTES.PARENTS_PAGE.PARENTS_SCORE_PATH,
-    //     },
-    //     {
-    //         key: 5,
-    //         label: "Notification",
-    //         link: ROUTES.PARENTS_PAGE.PARENTS_NOTIFICATION_PATH,
-    //     },
-    // ];
 
-    // const optionsTeacher = [
-    //     { key: 1, label: "Home", link: ROUTES.HOME_PAGE.HOME_PATH },
-    //     {
-    //         key: 2,
-    //         label: "Class",
-    //         link: ROUTES.TEACHER_PAGE.TEACHER_CLASS_PATH,
-    //     },
-    //     {
-    //         key: 3,
-    //         label: "Score",
-    //         link: ROUTES.TEACHER_PAGE.TEACHER_SCORE_PATH,
-    //     },
-    //     {
-    //         key: 4,
-    //         label: "Schedule",
-    //         link: ROUTES.TEACHER_PAGE.TEACHER_SCHEDULE_PATH,
-    //     },
-    //     {
-    //         key: 5,
-    //         label: "Notification",
-    //         link: ROUTES.TEACHER_PAGE.TEACHER_NOTIFICATION_PATH,
-    //     },
-    // ];
+    const optionsParents = [
+        { key: 1, label: "Home", link: ROUTES.HOME_PAGE.HOME_PATH },
+        {
+            key: 2,
+            label: "Student",
+            link: ROUTES.PARENTS_PAGE.PARENTS_STUDENT_PATH,
+        },
+        {
+            key: 3,
+            label: "Parents",
+            link: ROUTES.PARENTS_PAGE.PARENTS_PARENTS_PATH,
+        },
+        {
+            key: 4,
+            label: "Score",
+            link: ROUTES.PARENTS_PAGE.PARENTS_SCORE_PATH,
+        },
+        {
+            key: 5,
+            label: "Notification",
+            link: ROUTES.PARENTS_PAGE.PARENTS_NOTIFICATION_PATH,
+        },
+    ];
+
+    const optionsTeacher = [
+        { key: 1, label: "Home", link: ROUTES.HOME_PAGE.HOME_PATH },
+        {
+            key: 2,
+            label: "Class",
+            link: ROUTES.TEACHER_PAGE.TEACHER_CLASS_PATH,
+        },
+        {
+            key: 3,
+            label: "Score",
+            link: ROUTES.TEACHER_PAGE.TEACHER_SCORE_PATH,
+        },
+        {
+            key: 4,
+            label: "Schedule",
+            link: ROUTES.TEACHER_PAGE.TEACHER_SCHEDULE_PATH,
+        },
+        {
+            key: 5,
+            label: "Notification",
+            link: ROUTES.TEACHER_PAGE.TEACHER_NOTIFICATION_PATH,
+        },
+    ];
 
     const optionsAdmin = [
         {
@@ -118,31 +119,54 @@ function UserHeader() {
             label: "Accounts",
             link: ROUTES.ADMIN_PAGE.ACCOUNT_ADMIN,
         },
-        // {
-        //     key: 4,
-        //     label: "Class",
-        //     link: ROUTES.ADMIN_PAGE.CLASS_ADMIN,
-        // },
-        // {
-        //     key: 5,
-        //     label: "Grade",
-        //     link: ROUTES.ADMIN_PAGE.GRADE_ADMIN,
-        // },
-        // {
-        //     key: 6,
-        //     label: "Subject",
-        //     link: ROUTES.ADMIN_PAGE.SUBJECT_ADMIN,
-        // },
-        // {
-        //     key: 7,
-        //     label: "Student",
-        //     link: ROUTES.ADMIN_PAGE.STUDENT_ADMIN,
-        // },
-        // {
-        //     key: 8,
-        //     label: "Schedule",
-        //     link: ROUTES.ADMIN_PAGE.SCHEDULE_ADMIN,
-        // },
+        {
+            key: 4,
+            label: "Class",
+            link: ROUTES.ADMIN_PAGE.CLASS_ADMIN,
+        },
+        {
+            key: 5,
+            label: "Grade",
+            link: ROUTES.ADMIN_PAGE.GRADE_ADMIN,
+        },
+        {
+            key: 6,
+            label: "Subject",
+            link: ROUTES.ADMIN_PAGE.SUBJECT_ADMIN,
+        },
+        {
+            key: 7,
+            label: "Student",
+            link: ROUTES.ADMIN_PAGE.STUDENT_ADMIN,
+        },
+        {
+            key: 8,
+            label: "Schedule",
+            link: ROUTES.ADMIN_PAGE.SCHEDULE_ADMIN,
+        },
+    ];
+
+    const optionsAffair = [
+        {
+            key: 2,
+            label: "Manage",
+            link: ROUTES.AFFAIR_PAGE.AFFAIR_HOME,
+        },
+        {
+            key: 3,
+            label: "Fee",
+            link: ROUTES.AFFAIR_PAGE.FEE_AFFAIR,
+        },
+        {
+            key: 4,
+            label: "Fee Category",
+            link: ROUTES.AFFAIR_PAGE.FEE_CATEGORY_AFFAIR,
+        },
+        {
+            key: 5,
+            label: "Statistics",
+            link: ROUTES.AFFAIR_PAGE.STATISTIC_AFFAIR,
+        },
     ];
 
     const ItemHeader = ({ options }) => {
@@ -172,21 +196,28 @@ function UserHeader() {
 
     return (
         <div className="user-header">
-            <ItemHeader options={optionsAdmin} />
+            <ItemHeader
+                options={
+                    AuthenticationService.isAdmin()
+                        ? optionsAdmin
+                        : AuthenticationService.isParents()
+                        ? optionsParents
+                        : AuthenticationService.isTeacher()
+                        ? optionsTeacher
+                        : optionsAffair
+                }
+            />
             <div className="info-header">
                 <h5>
-                    {
-                        AuthenticationService.isAdmin()
-                            ? AuthenticationService.getData().AccountUserName.toString()
-                            : null
-                        // : AuthenticationService.isParents()
-                        // ? AuthenticationService.getData().parent.parent_name
-                        // : AuthenticationService.getData().teacher.teacher_name
-                    }
+                    {AuthenticationService.isAdmin()
+                        ? AuthenticationService.getData().AccountUserName.toString()
+                        : AuthenticationService.isParents()
+                        ? AuthenticationService.getData().AccountUserName.toString()
+                        : AuthenticationService.getData().AccountUserName.toString()}
                 </h5>
-                {/* <h6>
-                    {AuthenticationService.getData().account_role.toUpperCase()}
-                </h6> */}
+                <h6>
+                    {AuthenticationService.getData().AccountRole.toUpperCase()}
+                </h6>
             </div>
             <div className="avatar" ref={wrapperRef}>
                 <img src={avatar} alt="avatar" onClick={() => setOpen(!open)} />
