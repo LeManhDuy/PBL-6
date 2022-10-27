@@ -7,7 +7,6 @@ import StudentService from "../../../config/service/StudentService";
 
 const UpdateStudent = (props) => {
     let date = new Date().toLocaleDateString();
-    const REACT_APP_API_ENDPOINT = "http://localhost:8000/";
     const [classroom, setClassroom] = useState([]);
     const [parent, setParent] = useState([]);
     const [teacher, setTeacher] = useState();
@@ -47,13 +46,14 @@ const UpdateStudent = (props) => {
                     res.getPupilInfor[0].pupil_image
                 )
                 : setAvatar(Logo);
-            setTeacher(res.getPupilInfor[0].class_id.homeroom_teacher_id.person_id.person_fullname);
+            if (res.getPupilInfor[0].class_id)
+                setTeacher(res.getPupilInfor[0].class_id.homeroom_teacher_id.person_id.person_fullname);
             setAllValuesStudent({
                 name: res.getPupilInfor[0].pupil_name,
                 dateOfBirth: res.getPupilInfor[0].pupil_dateofbirth.split("T")[0],
                 gender: `${res.getPupilInfor[0].pupil_gender}`,
-                parent: res.getPupilInfor[0].parent_id._id,
-                classroom: res.getPupilInfor[0].class_id._id,
+                parent: res.getPupilInfor[0].parent_id ? res.getPupilInfor[0].parent_id._id : " ",
+                classroom: res.getPupilInfor[0].class_id ? res.getPupilInfor[0].class_id._id : " ",
             });
         });
     }, []);
@@ -71,7 +71,7 @@ const UpdateStudent = (props) => {
                             key={option.key}
                             value={option.name}
                             data-key={option.id}
-                            selected={parentValue === option.id}
+                            defaultValue={parentValue === option.id}
                         >
                             {option.name}
                         </option>
@@ -113,12 +113,12 @@ const UpdateStudent = (props) => {
                     {options.map((option) => (
                         <option
                             key={option.key}
-                            value={option.name + " - " + option.grade}
+                            value={option.grade + " - " + option.name}
                             data-key={option.id}
                             data-teacher={option.teacher}
-                            selected={classValue === option.id}
+                            defaultValue={classValue === option.id}
                         >
-                            {option.name} - {option.grade}
+                            {option.grade}-{option.name}
                         </option>
                     ))}
                 </select>
@@ -136,11 +136,11 @@ const UpdateStudent = (props) => {
                     {options.map((option) => (
                         <option
                             key={option.key}
-                            value={option.name + " - " + option.grade}
+                            value={option.grade + " - " + option.name}
                             data-key={option.id}
                             data-teacher={option.teacher}
                         >
-                            {option.name} - {option.grade}
+                            {option.grade}-{option.name}
                         </option>
                     ))}
                 </select>
@@ -206,7 +206,8 @@ const UpdateStudent = (props) => {
                         key: index + 1,
                         id: item._id,
                         name: item.class_name,
-                        grade: item.grade_id.grade_name,
+                        // grade: item.grade_id.grade_name,
+                        grade: item.grade_id ? item.grade_id.grade_name : "Empty",
                         teacher: item.homeroom_teacher_id.person_id.person_fullname,
                     };
                 });
@@ -315,7 +316,7 @@ const UpdateStudent = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Student already exists
+                Update Failed.
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -430,7 +431,7 @@ const UpdateStudent = (props) => {
                         />
                     </div>
                     <div className="type-input">
-                        <h4>Class</h4>
+                        <h4>Grade-Class</h4>
                         <ClassDropDown
                             options={classroom}
                             value={classDropValue}

@@ -141,15 +141,11 @@ const SubjectTeacherAdmin = () => {
     };
 
     const handleChangeSubject = (event) => {
-        console.log(event.target.value)
         setDropValueSubject(event.target.value);
-        console.log(dropValueSubject)
         // handleFilter();
       };
     const handleChangeTeacher = (event) => {
         setDropValueTeacher(event.target.value);
-        console.log(event.target.value)
-        console.log(dropValueTeacher)
         // teacher_id = event.target.selectedValue
         // handleFilter();
       };
@@ -158,11 +154,9 @@ const SubjectTeacherAdmin = () => {
         let f = {subject_teacher_id:"",subject_id:"",teacher_id:""}
         if (dropValueSubject !== "All"){
             f.subject_id = dropValueSubject
-            console.log(f)
         }
         if (dropValueTeacher !== "All"){
             f.teacher_id = dropValueTeacher
-            console.log(f)
         }
         // setFilter()
         getSubjectTeacherWithFilter(f)
@@ -215,7 +209,6 @@ const SubjectTeacherAdmin = () => {
             subject_id:  allValue.subject_id,
             teacher_id: allValue.teacher_id
         }).then((res) => {
-            console.log(res);
             if (res.success) {
                 setState(!state);
                 setErrorServer(false);
