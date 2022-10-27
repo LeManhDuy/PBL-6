@@ -19,17 +19,17 @@ const createClass = async (req, res) => {
             message: "Please fill in complete information.",
         })
     }
-    const classValidate = await Class.findOne({ grade_id: grade_id, homeroom_teacher_id: homeroom_teacher_id })
+    const classValidate = await Class.findOne({ class_name, grade_id: grade_id })
     if (classValidate)
         return res
             .status(400)
             .json({ success: false, message: "Class is already existed." })
 
-    const teacherValidate = await Class.findOne({ class_name, grade_id: grade_id });
+    const teacherValidate = await Class.findOne({ homeroom_teacher_id: homeroom_teacher_id });
     if (teacherValidate)
         return res
             .status(400)
-            .json({ success: false, message: "Class is owning." })
+            .json({ success: false, message: "Teacher has class." })
 
     try {
         const newclass = new Class({
@@ -184,21 +184,22 @@ const updateClassByID = async (req, res) => {
     if (!classItem)
         return res
             .status(400)
-            .json({ success: false, message: "Class is not existed." })
+            .json({ success: false, message: "This class does not existed." })
 
-    const teacherValidateInDB = await Teacher.findById(homeroom_teacher_id);
-    if (!teacherValidateInDB)
-        return res.status(404).json({
-            success: false,
-            message: "Teacher is not existing!",
-        });
-
-    const classValidate = await Class.findOne({ homeroom_teacher_id: homeroom_teacher_id })
-    if (classValidate)
-        if (classValidate._id.toString() !== req.params.classID) {
+    const classAndGradeValidate = await Class.findOne({ class_name: class_name, grade_id: grade_id })
+    if (classAndGradeValidate)
+        if (classAndGradeValidate._id.toString() !== req.params.classID) {
             return res.status(400).json({
                 success: false,
-                message: "This teacher already have a class",
+                message: "This class and grade already existed.",
+            });
+        }
+    const teacherCheckValidate = await Class.findOne({ homeroom_teacher_id: homeroom_teacher_id })
+    if (teacherCheckValidate)
+        if (teacherCheckValidate._id.toString() !== req.params.classID) {
+            return res.status(400).json({
+                success: false,
+                message: "This teacher already have a class.",
             });
         }
 
