@@ -251,7 +251,7 @@ const AddFee = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Invalid End Date
+                            Invalid Paid Date
                         </label>
                     </div>
                     <div className="type-input">
@@ -350,18 +350,21 @@ const AddFee = (props) => {
         //     check = true;
         // } else fee_status = false;
         // console.log("Hello fee_status", check);
-        if (dateConvert < allValuesFee.start_date) {
+        if (allValuesFee.start_date > allValuesFee.end_date) {
             start_date = true;
             check = true;
         } else start_date = false;
-        if (dateConvert < allValuesFee.end_date) {
+
+        if (allValuesFee.end_date < allValuesFee.start_date) {
             end_date = true;
             check = true;
         } else end_date = false;
-        if (dateConvert < allValuesFee.paid_date) {
+
+        if (allValuesFee.paid_date < allValuesFee.start_date) {
             paid_date = true;
             check = true;
         } else paid_date = false;
+
         if (!allValuesFee.fee_category) {
             fee_category = true;
             check = true
