@@ -50,6 +50,7 @@ const UpdateFee = (props) => {
         getPupil();
         FeeService.getFeeById(props.feeID).then((res) => {
             setAllValuesFee({
+                fee_status: `${res.getfeeInfor[0].fee_status}`,
                 start_date:
                     res.getfeeInfor[0].start_date.split(
                         "T"
@@ -58,12 +59,9 @@ const UpdateFee = (props) => {
                     res.getfeeInfor[0].end_date.split(
                         "T"
                     )[0],
-                paid_date:
-                    res.getfeeInfor[0].paid_date.split(
-                        "T"
-                    )[0],
-                fee_category_id: res.getfeeInfor[0].fee_category_id._id,
-                pupil_id: res.getfeeInfor[0].pupil_id._id
+                paid_date: res.getfeeInfor[0].paid_date ? res.getfeeInfor[0].paid_date.split("T")[0] : null,
+                fee_category: res.getfeeInfor[0].fee_category_id._id,
+                pupil: res.getfeeInfor[0].pupil_id._id
             })
         })
     }, []);
@@ -107,6 +105,7 @@ const UpdateFee = (props) => {
             ...allValuesFee,
             [e.target.name]: e.target.value,
         });
+        // console.log(allValuesFee.fee_status);
         if (e.target.value == "true") {
             document.getElementById("paiddate").classList.remove("hidden");
         }
@@ -175,7 +174,7 @@ const UpdateFee = (props) => {
         } else {
             setAllValuesFee({
                 ...allValuesFee,
-                teacher: null,
+                fee_category: null,
             })
         }
     };
@@ -192,7 +191,7 @@ const UpdateFee = (props) => {
         } else {
             setAllValuesFee({
                 ...allValuesFee,
-                grade: null,
+                pupil: null,
             })
         }
     };
@@ -200,7 +199,7 @@ const UpdateFee = (props) => {
 
     const FormFee = (
         <div className="form-admin-content">
-            <h4>Add Fee</h4>
+            <h4>Update Fee</h4>
             <label
                 className={
                     "error" +
@@ -254,10 +253,11 @@ const UpdateFee = (props) => {
                         </label>
                     </div>
                     {/* show type-input */}
-                    <div className="type-input hidden" id="paiddate">
+                    <div className={(allValuesFee.fee_status == "true" ? "type-input " : "hidden")} id="paiddate">
                         <h4>Paid Date</h4>
                         <input
-                            className="input-content"
+                            //className="input-content"
+                            className={(allValuesFee.fee_status ? "input-content " : " hidden")}
                             type="date"
                             name="paid_date"
                             placeholder="Enter Paid Date"
@@ -272,7 +272,7 @@ const UpdateFee = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Invalid End Date
+                            Invalid Paid Date
                         </label>
                     </div>
                     <div className="type-input">
@@ -280,16 +280,18 @@ const UpdateFee = (props) => {
                         <div className="radio-btn">
                             <div className="radio">
                                 <input
+                                    checked={allValuesFee.fee_status === "true"}
                                     type="radio"
                                     value={true}
-                                    name="status"
+                                    name="fee_status"
                                     onChange={changeHandlerFee}
                                 />
                                 Paid
                                 <input
+                                    checked={allValuesFee.fee_status === "false"}
                                     type="radio"
                                     value={false}
-                                    name="status"
+                                    name="fee_status"
                                     onChange={changeHandlerFee}
                                 />
                                 UnPaid
@@ -314,7 +316,7 @@ const UpdateFee = (props) => {
                             options={feeCategory}
                             value={feeCategoryDropValue}
                             onChange={handleFeeCategoryChange}
-                            feecategoryValue={allValuesFee.fee_category_id}
+                            feecategoryValue={allValuesFee.fee_category}
                         />
                         <label
                             className={
@@ -333,7 +335,7 @@ const UpdateFee = (props) => {
                             options={pupil}
                             value={pupilDropValue}
                             onChange={handlePupilChange}
-                            pupilValue={allValuesFee.pupil_id}
+                            pupilValue={allValuesFee.pupil}
                         />
                         <label
                             className={
@@ -373,22 +375,20 @@ const UpdateFee = (props) => {
         //     check = true;
         // } else fee_status = false;
         // console.log("Hello fee_status", check);
-        // if (dateConvert < allValuesFee.start_date) {
-        //     start_date = true;
-        //     check = true;
-        // } else start_date = false;
-        // console.log("hello start_date", start_date);
-        // if (dateConvert < allValuesFee.end_date) {
-        //     end_date = true;
-        //     check = true;
-        // } else end_date = false;
-        // console.log("hello end_date", end_date);
+        if (allValuesFee.start_date > allValuesFee.end_date) {
+            start_date = true;
+            check = true;
+        } else start_date = false;
 
-        // if (dateConvert < allValuesFee.paid_date) {
-        //     paid_date = true;
-        //     check = true;
-        // } else paid_date = false;
-        // console.log("hello paid_date", paid_date);
+        if (allValuesFee.end_date < allValuesFee.start_date) {
+            end_date = true;
+            check = true;
+        } else end_date = false;
+
+        if (allValuesFee.paid_date < allValuesFee.start_date) {
+            paid_date = true;
+            check = true;
+        } else paid_date = false;
 
         if (!allValuesFee.fee_category) {
             fee_category = true;
@@ -396,7 +396,6 @@ const UpdateFee = (props) => {
         } else {
             fee_category = false
         }
-        console.log("hello fee_category", fee_category);
 
         if (!allValuesFee.pupil) {
             pupil = true;
@@ -404,7 +403,6 @@ const UpdateFee = (props) => {
         } else {
             pupil = false
         }
-        console.log("hello pupil", pupil);
 
         // if (allValuesFee.fee_status == "false") {
         //     allValuesFee.paid_date = null;
