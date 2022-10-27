@@ -64,6 +64,9 @@ router.post("/", async (req, res) => {
         return res
             .status(400)
             .json({ success: false, message: "Fee for this pupil is already existed." })
+
+
+
     try {
         let checkStatus = false
         if (paid_date)
@@ -104,9 +107,9 @@ router.put("/:feeId", async (req, res) => {
             .status(400)
             .json({ success: false, message: "Fee is not existed." })
 
-    const feeValidate = await Fee.findOne({ pupil_id: pupil_id, fee_category_id: fee_category_id })
-    if (feeValidate)
-        if (feeValidate._id.toString() !== req.params.feeId) {
+    const pupilValidate = await Fee.findOne({ fee_category_id: fee_category_id, pupil_id: pupil_id })
+    if (pupilValidate)
+        if (pupilValidate._id.toString() !== req.params.feeId) {
             return res.status(400).json({
                 success: false,
                 message: "This pupil already have a fee",
