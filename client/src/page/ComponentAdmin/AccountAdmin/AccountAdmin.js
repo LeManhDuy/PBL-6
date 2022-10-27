@@ -66,6 +66,10 @@ function AccountAdmin() {
         setKeyword("");
     };
 
+    const handleChangeSearch = (e) => {
+        setKeyword(e.target.value);
+    };
+
     // Get Account
 
     const getPrincipal = () => {
@@ -568,6 +572,45 @@ function AccountAdmin() {
         setIsDelete(false);
     };
 
+    //Handle Search
+    const searchAccount = (account) => {
+        if (dropValue === "principal") {
+            return account.filter(
+                (account) =>
+                    account.name
+                        .toLowerCase()
+                        .includes(keyword.toLowerCase()) ||
+                    account.email.toLowerCase().includes(keyword.toLowerCase())
+            );
+        } else if (dropValue === "parents") {
+            return account.filter(
+                (account) =>
+                    account.name
+                        .toLowerCase()
+                        .includes(keyword.toLowerCase()) ||
+                    account.email.toLowerCase().includes(keyword.toLowerCase())
+            );
+        } else if (dropValue === "teacher") {
+            return account.filter(
+                (account) =>
+                    account.name
+                        .toLowerCase()
+                        .includes(keyword.toLowerCase()) ||
+                    account.email.toLowerCase().includes(keyword.toLowerCase())
+            );
+        } else if (dropValue === "affair") {
+            return account.filter(
+                (account) =>
+                    account.name
+                        .toLowerCase()
+                        .includes(keyword.toLowerCase()) ||
+                    account.email.toLowerCase().includes(keyword.toLowerCase())
+            );
+        } else {
+            return account;
+        }
+    };
+
     const ConfirmDelete = (
         <ModalCustom
             show={isDelete}
@@ -605,22 +648,36 @@ function AccountAdmin() {
                             />
                         </button>
                         <input
+                            onChange={handleChangeSearch}
                             className="input-search"
                             type="text"
                             placeholder="Search..."
+                            value={keyword}
                         ></input>
                     </div>
                 </div>
             </header>
             <div className="table-content">
                 {dropValue === "principal" ? (
-                    <TableAccounts accounts={principal} value={dropValue} />
+                    <TableAccounts
+                        accounts={searchAccount(principal)}
+                        value={dropValue}
+                    />
                 ) : dropValue === "parents" ? (
-                    <TableAccounts accounts={parents} value={dropValue} />
+                    <TableAccounts
+                        accounts={searchAccount(parents)}
+                        value={dropValue}
+                    />
                 ) : dropValue === "teacher" ? (
-                    <TableAccounts accounts={teacher} value={dropValue} />
+                    <TableAccounts
+                        accounts={searchAccount(teacher)}
+                        value={dropValue}
+                    />
                 ) : (
-                    <TableAccounts accounts={affair} value={dropValue} />
+                    <TableAccounts
+                        accounts={searchAccount(affair)}
+                        value={dropValue}
+                    />
                 )}
             </div>
             <footer>

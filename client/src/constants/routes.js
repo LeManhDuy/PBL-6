@@ -18,10 +18,18 @@ const ROUTES = {
     },
 
     PARENTS_PAGE: {
+        PARENTS_STUDENT_PATH: "/parents/student",
         PARENTS_PARENTS_PATH: "/parents/parents",
+        PARENTS_SCORE_PATH: "/parents/score",
+        PARENTS_NOTIFICATION_PATH: "/parents/notification",
     },
 
-    TEACHER_PAGE: {},
+    TEACHER_PAGE: {
+        TEACHER_SCORE_PATH: "/teacher/score",
+        TEACHER_CLASS_PATH: "/teacher/class",
+        TEACHER_SCHEDULE_PATH: "/teacher/schedule",
+        TEACHER_NOTIFICATION_PATH: "/teacher/notification",
+    },
 
     AFFAIR_PAGE: {
         AFFAIR_HOME: "/affair",

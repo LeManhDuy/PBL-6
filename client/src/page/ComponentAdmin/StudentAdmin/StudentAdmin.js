@@ -18,6 +18,7 @@ const StudentAdmin = () => {
     const [student, setStudent] = useState([]);
     const [isChange, setIsChange] = useState(false);
     const [name, setName] = useState("");
+    const [keyword, setKeyword] = useState("");
     const [id, setId] = useState("");
     const [addState, setAddState] = useState(false);
     const [updateState, setUpdateState] = useState(false);
@@ -48,9 +49,13 @@ const StudentAdmin = () => {
                             : "Empty",
                         teacher: item.class_id
                             ? item.class_id.homeroom_teacher_id.person_id
-                                .person_fullname
+                                  .person_fullname
                             : "Empty",
-                        grade: item.class_id ? item.class_id.grade_id ? item.class_id.grade_id.grade_name : "Empty" : "Empty"
+                        grade: item.class_id
+                            ? item.class_id.grade_id
+                                ? item.class_id.grade_id.grade_name
+                                : "Empty"
+                            : "Empty",
                     };
                 });
                 setStudent(dataSources);
@@ -63,21 +68,21 @@ const StudentAdmin = () => {
     const getClass = () => {
         ClassService.getClass()
             .then((response) => {
-                const dataSources = response.allClass.map(
-                    (item, index) => {
-                        return {
-                            key: index + 1,
-                            id: item._id,
-                            class_name: item.class_name ? item.class_name : "Empty",
-                            grade_name: item.grade_id ? item.grade_id.grade_name : "Empty"
-                        }
-                    }
-                );
+                const dataSources = response.allClass.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
+                        class_name: item.class_name ? item.class_name : "Empty",
+                        grade_name: item.grade_id
+                            ? item.grade_id.grade_name
+                            : "Empty",
+                    };
+                });
                 setClass(dataSources);
             })
             .catch((error) => {
                 console.log(error);
-            })
+            });
     };
 
     const getStudentWithFilter = (filter) => {
@@ -98,24 +103,30 @@ const StudentAdmin = () => {
                                 : "Empty",
                             teacher: item.class_id
                                 ? item.class_id.homeroom_teacher_id.person_id
-                                    .person_fullname
+                                      .person_fullname
                                 : "Empty",
-                            grade: item.class_id.grade_id ? item.class_id.grade_id.grade_name : "Empty",
-                        }
+                            grade: item.class_id.grade_id
+                                ? item.class_id.grade_id.grade_name
+                                : "Empty",
+                        };
                     }
                 );
                 setStudent(dataSources);
             })
             .catch((error) => {
                 console.log(error);
-            })
+            });
     };
 
     const Dropdown = ({ value, options, onChange }) => {
         return (
             <label>
                 Grade-Class
-                <select className="dropdown-account" value={value} onChange={onChange}>
+                <select
+                    className="dropdown-account"
+                    value={value}
+                    onChange={onChange}
+                >
                     <option value="All">All</option>
                     {options.map((option) => (
                         <option key={option.key} value={option.id}>
@@ -137,8 +148,6 @@ const StudentAdmin = () => {
             }
         });
     };
-
-
 
     const TableStudent = ({ students }) => {
         const studentItem = students.map((item) => (
@@ -226,6 +235,7 @@ const StudentAdmin = () => {
                 setIsChange(!isChange);
                 setErrorServer(false);
                 setAddState(false);
+                setKeyword("");
             } else {
                 setAddState(true);
                 setErrorServer(true);
@@ -247,6 +257,7 @@ const StudentAdmin = () => {
                 setIsChange(!isChange);
                 setUpdateState(false);
                 setErrorServer(false);
+                setKeyword("");
             } else {
                 setUpdateState(true);
                 setErrorServer(true);
@@ -301,6 +312,19 @@ const StudentAdmin = () => {
         setAddState(true);
     };
 
+    const searchStudent = (students) => {
+        return students.filter(
+            (student) =>
+                student.name.toLowerCase().includes(keyword.toLowerCase()) ||
+                student.teacher.toLowerCase().includes(keyword.toLowerCase()) ||
+                student.parent.toLowerCase().includes(keyword.toLowerCase())
+        );
+    };
+
+    const handleChangeSearch = (e) => {
+        setKeyword(e.target.value);
+    };
+
     return (
         <div className="main-container">
             <header>
@@ -324,15 +348,17 @@ const StudentAdmin = () => {
                             />
                         </button>
                         <input
+                            onChange={handleChangeSearch}
                             className="input-search"
                             type="text"
                             placeholder="Search..."
+                            value={keyword}
                         ></input>
                     </div>
                 </div>
             </header>
             <div className="table-content">
-                <TableStudent students={student} />
+                <TableStudent students={searchStudent(student)} />
             </div>
             <footer>
                 <hr></hr>

@@ -15,12 +15,12 @@ import GradeService from "../../../config/service/GradeService";
 import UpdateClass from "../../../lib/ModalInput/UpdateClass/UpdateClass";
 import ViewClass from "../../../lib/ModalInput/ViewClass/ViewClass";
 
-
 const ClassAdmin = () => {
     const [addClassState, setAddClassState] = useState(false);
     const [updateClassState, setUpdateClassState] = useState(false);
     const [id, setId] = useState("");
     const [name, setName] = useState("");
+    const [keyword, setKeyword] = useState("");
     const [state, setState] = useState(false);
     const [classRooms, setClass] = useState([]);
     const [grades, setGrade] = useState([]);
@@ -28,7 +28,6 @@ const ClassAdmin = () => {
     const [errorServer, setErrorServer] = useState(false);
     const [viewState, setViewState] = useState(false);
     const [dropValueGrade, setDropValueGrade] = useState("All");
-
 
     useEffect(() => {
         getClass();
@@ -38,50 +37,52 @@ const ClassAdmin = () => {
     const getClass = () => {
         ClassService.getClass()
             .then((response) => {
-                const dataSources = response.allClass.map(
-                    (item, index) => {
-                        return {
-                            key: index + 1,
-                            id: item._id,
-                            class_name: item.class_name,
-                            homeroomteacher_name: item.homeroom_teacher_id ? item.homeroom_teacher_id.person_id.person_fullname : "Empty",
-                            grade_name: item.grade_id ? item.grade_id.grade_name : "Empty"
-                        }
-                    }
-                );
+                const dataSources = response.allClass.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
+                        class_name: item.class_name,
+                        homeroomteacher_name: item.homeroom_teacher_id
+                            ? item.homeroom_teacher_id.person_id.person_fullname
+                            : "Empty",
+                        grade_name: item.grade_id
+                            ? item.grade_id.grade_name
+                            : "Empty",
+                    };
+                });
                 setClass(dataSources);
             })
             .catch((error) => {
                 console.log(error);
-            })
-    }
+            });
+    };
 
     const getGrade = () => {
         GradeService.getGrades()
             .then((response) => {
-                const dataSources = response.allGrade.map(
-                    (item, index) => {
-                        return {
-                            key: index + 1,
-                            id: item._id,
-                            grade_name: item ? item.grade_name : "Empty"
-                        }
-                    }
-                );
+                const dataSources = response.allGrade.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
+                        grade_name: item ? item.grade_name : "Empty",
+                    };
+                });
                 setGrade(dataSources);
             })
             .catch((error) => {
                 console.log(error);
-            })
+            });
     };
-
-    
 
     const Dropdown = ({ value, options, onChange }) => {
         return (
             <label>
                 Grade
-                <select className="dropdown-account" value={value} onChange={onChange}>
+                <select
+                    className="dropdown-account"
+                    value={value}
+                    onChange={onChange}
+                >
                     <option value="All">All</option>
                     {options.map((option) => (
                         <option key={option.key} value={option.id}>
@@ -95,6 +96,7 @@ const ClassAdmin = () => {
 
     const handleChangeGrade = (event) => {
         setDropValueGrade(event.target.value);
+        setKeyword("");
         // grades.map((item) => {
         //     if (event.target.value === item.id) {
         //         getStudentWithFilter(item.id);
@@ -103,7 +105,6 @@ const ClassAdmin = () => {
         //     }
         // });
     };
-
 
     const handleInputCustom = () => {
         setAddClassState(false);
@@ -117,7 +118,7 @@ const ClassAdmin = () => {
         ClassService.addClass({
             class_name: allValue.name,
             grade_id: allValue.grade,
-            homeroom_teacher_id: allValue.teacher
+            homeroom_teacher_id: allValue.teacher,
         })
             .then((res) => {
                 if (res.success) {
@@ -130,26 +131,27 @@ const ClassAdmin = () => {
                 }
             })
             .catch((error) => console.log("error", error));
-    }
+    };
 
     const handleConfirmUpdateClass = (allValue) => {
         ClassService.updateClass(id, {
             class_name: allValue.name,
             grade_id: allValue.grade,
-            homeroom_teacher_id: allValue.teacher
+            homeroom_teacher_id: allValue.teacher,
         })
             .then((res) => {
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
                     setUpdateClassState(false);
+                    setKeyword("");
                 } else {
                     setErrorServer(true);
                     setUpdateClassState(true);
                 }
             })
             .catch((error) => console.log("error", error));
-    }
+    };
 
     //Component Add Class (Form)
     const DivAddClass = (
@@ -186,10 +188,7 @@ const ClassAdmin = () => {
             show={viewState}
             handleInputCustom={handleInputCustom}
             content={
-                <ViewClass
-                    classID={id}
-                    handleInputCustom={handleInputCustom}
-                />
+                <ViewClass classID={id} handleInputCustom={handleInputCustom} />
             }
         />
     );
@@ -197,9 +196,7 @@ const ClassAdmin = () => {
     const handleAddClass = () => {
         setAddClassState(true);
         setErrorServer(false);
-    }
-
-
+    };
 
     const TableClasses = ({ classRooms }) => {
         const classItem = classRooms.map((item) => (
@@ -229,8 +226,7 @@ const ClassAdmin = () => {
             } else if (e.target.className.includes("btn-edit")) {
                 setUpdateClassState(true);
                 setId(id);
-            }
-            else if (e.target.className.includes("btn-view")) {
+            } else if (e.target.className.includes("btn-view")) {
                 setViewState(true);
                 setId(id);
             }
@@ -277,6 +273,22 @@ const ClassAdmin = () => {
         />
     );
 
+    const handleChangeSearch = (e) => {
+        setKeyword(e.target.value);
+    };
+
+    const searchClass = (classroom) => {
+        if (dropValueGrade === "All") {
+            return classroom.filter((classroom) =>
+                classroom.homeroomteacher_name
+                    .toLowerCase()
+                    .includes(keyword.toLowerCase())
+            );
+        } else {
+            return classroom;
+        }
+    };
+
     return (
         <div className="main-container">
             <header>
@@ -289,7 +301,9 @@ const ClassAdmin = () => {
                     onChange={handleChangeGrade}
                 />
                 <div className="right-header">
-                    <button className="btn-account" onClick={handleAddClass}>Add Class</button>
+                    <button className="btn-account" onClick={handleAddClass}>
+                        Add Class
+                    </button>
                     <div className="search-box">
                         <button className="btn-search">
                             <FontAwesomeIcon
@@ -298,15 +312,17 @@ const ClassAdmin = () => {
                             />
                         </button>
                         <input
+                            onChange={handleChangeSearch}
                             className="input-search"
                             type="text"
                             placeholder="Search..."
+                            value={keyword}
                         ></input>
                     </div>
                 </div>
             </header>
             <div className="table-content">
-                <TableClasses classRooms={classRooms} />
+                <TableClasses classRooms={searchClass(classRooms)} />
             </div>
             <footer>
                 <hr></hr>

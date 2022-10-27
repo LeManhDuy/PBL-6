@@ -18,8 +18,9 @@ const FeeAdmin = () => {
     const [updateFeeState, setUpdateFeeState] = useState(false);
     const [id, setId] = useState("");
     const [name, setName] = useState("");
+    const [keyword, setKeyword] = useState("");
     const [state, setState] = useState(false);
-    const [fees, setFee] = useState([])
+    const [fees, setFee] = useState([]);
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
     useEffect(() => {
@@ -29,26 +30,30 @@ const FeeAdmin = () => {
     const getFee = () => {
         FeeService.getFee()
             .then((response) => {
-                const dataSources = response.allFee.map(
-                    (item, index) => {
-                        return {
-                            key: index + 1,
-                            id: item._id,
-                            fee_name: item.fee_category_id ? item.fee_category_id.fee_name : "Empty",
-                            pupil_name: item.pupil_id ? item.pupil_id.pupil_name : "Empty",
-                            start_date: item.start_date.split("T")[0],
-                            end_date: item.end_date.split("T")[0],
-                            paid_date: item.paid_date ? item.paid_date.split("T")[0] : "YYYY-MM-DD",
-                            fee_status: item.fee_status ? "PAID" : "UNPAID",
-                        }
-                    }
-                );
+                const dataSources = response.allFee.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
+                        fee_name: item.fee_category_id
+                            ? item.fee_category_id.fee_name
+                            : "Empty",
+                        pupil_name: item.pupil_id
+                            ? item.pupil_id.pupil_name
+                            : "Empty",
+                        start_date: item.start_date.split("T")[0],
+                        end_date: item.end_date.split("T")[0],
+                        paid_date: item.paid_date
+                            ? item.paid_date.split("T")[0]
+                            : "YYYY-MM-DD",
+                        fee_status: item.fee_status ? "PAID" : "UNPAID",
+                    };
+                });
                 setFee(dataSources);
             })
             .catch((error) => {
                 console.log(error);
-            })
-    }
+            });
+    };
 
     const handleInputCustom = () => {
         setAddFeeState(false);
@@ -58,7 +63,7 @@ const FeeAdmin = () => {
 
     const handleConfirmAddFee = (allValue) => {
         if (allValue.fee_status === "false" || allValue.fee_status == "") {
-            allValue.paid_date = null
+            allValue.paid_date = null;
         }
         FeeService.addFee({
             start_date: allValue.start_date,
@@ -66,20 +71,21 @@ const FeeAdmin = () => {
             paid_date: allValue.paid_date,
             fee_status: allValue.fee_status,
             fee_category_id: allValue.fee_category,
-            pupil_id: allValue.pupil
+            pupil_id: allValue.pupil,
         })
             .then((res) => {
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
                     setAddFeeState(false);
+                    setKeyword("");
                 } else {
                     setErrorServer(true);
                     setAddFeeState(true);
                 }
             })
             .catch((error) => console.log("error", error));
-    }
+    };
     const DivAddFee = (
         <ModalInput
             show={addFeeState}
@@ -96,11 +102,11 @@ const FeeAdmin = () => {
     const handleAddFee = () => {
         setAddFeeState(true);
         setErrorServer(false);
-    }
+    };
 
     const handleConfirmUpdateFee = (allValue) => {
         if (allValue.fee_status === "false" || allValue.fee_status == "") {
-            allValue.paid_date = null
+            allValue.paid_date = null;
         }
         FeeService.updateFee(id, {
             start_date: allValue.start_date,
@@ -108,20 +114,21 @@ const FeeAdmin = () => {
             paid_date: allValue.paid_date,
             fee_status: allValue.fee_status,
             fee_category_id: allValue.fee_category,
-            pupil_id: allValue.pupil
+            pupil_id: allValue.pupil,
         })
             .then((res) => {
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
                     setUpdateFeeState(false);
+                    setKeyword("");
                 } else {
                     setErrorServer(true);
                     setUpdateFeeState(true);
                 }
             })
             .catch((error) => console.log("error", error));
-    }
+    };
 
     const DivUpdateFee = (
         <ModalInput
@@ -137,7 +144,6 @@ const FeeAdmin = () => {
             }
         />
     );
-
 
     const handleCloseModalCustom = () => {
         setIsDelete(false);
@@ -182,7 +188,6 @@ const FeeAdmin = () => {
             }
         }
 
-
         const headerFee = (
             <tr>
                 <th>Fee's Name</th>
@@ -216,9 +221,17 @@ const FeeAdmin = () => {
         />
     );
 
+    const searchFee = (fees) => {
+        return fees.filter(
+            (fee) =>
+                fee.fee_name.toLowerCase().includes(keyword.toLowerCase()) ||
+                fee.pupil_name.toLowerCase().includes(keyword.toLowerCase())
+        );
+    };
 
-
-
+    const handleChangeSearch = (e) => {
+        setKeyword(e.target.value);
+    };
 
     return (
         <div className="main-container">
@@ -227,7 +240,9 @@ const FeeAdmin = () => {
                     <h3>Manage Fee</h3>
                 </div>
                 <div className="right-header">
-                    <button className="btn-account" onClick={handleAddFee}>Add Fee</button>
+                    <button className="btn-account" onClick={handleAddFee}>
+                        Add Fee
+                    </button>
                     <div className="search-box">
                         <button className="btn-search">
                             <FontAwesomeIcon
@@ -236,15 +251,17 @@ const FeeAdmin = () => {
                             />
                         </button>
                         <input
+                            onChange={handleChangeSearch}
                             className="input-search"
                             type="text"
                             placeholder="Search..."
+                            value={keyword}
                         ></input>
                     </div>
                 </div>
             </header>
             <div className="table-content">
-                <TableFee fees={fees} />
+                <TableFee fees={searchFee(fees)} />
             </div>
             <footer>
                 <hr></hr>
