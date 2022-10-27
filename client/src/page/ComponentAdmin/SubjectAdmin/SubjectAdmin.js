@@ -203,6 +203,7 @@ const SubjectAdmin = () => {
                     <h3>Manage Subject</h3>
                 </div>
                 <div className="right-header">
+                    <a href="subject_teacher"><button className="btn-account">Assign Subject</button></a>
                     <button className="btn-account" onClick={handleAddSubject}>Add Subject</button>
                     <div className="search-box">
                         <button className="btn-search">
