@@ -13,7 +13,7 @@ const deleteSubjectTeacherById = async (id) => {
 };
 
 const getSubjectTeacherById = async (filters) => {
-    return await HandleApi.APIGetWithToken(`subject_teacher/search?subject_id=${filters.subject_id}&teacher_id=${filters.teacher_id}`);
+    return await HandleApi.APIGetWithToken(`subject_teacher/search?subject_teacher_id=${filters.subject_teacher_id}&subject_id=${filters.subject_id}&teacher_id=${filters.teacher_id}`);
 };
 
 const updateSubjectTeacher = async (id, params) => {

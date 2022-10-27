@@ -13,6 +13,8 @@ import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
 import SubjectService from "../../../config/service/SubjectService";
 import AccountService from "../../../config/service/AccountService";
+import AddSubjectTeacher from "../../../lib/ModalInput/AddSubjectTeacher/AddSubjectTeacher";
+import UpdateSubjectTeacher from "../../../lib/ModalInput/UpdateSubjectTeacher/UpdateSubjectTeacher";
 
 
 
@@ -27,7 +29,7 @@ const SubjectTeacherAdmin = () => {
     const [name, setName] = useState();
     const [subjects, setSubject] = useState([]);
     const [teachers, setTeacher] = useState([]);
-    const [dropValue, setDropValue] = useState("All");
+    const [dropValueSubject, setDropValueSubject] = useState("All");
     const [dropValueTeacher, setDropValueTeacher] = useState("All");
     const [filter, setFilter] = useState([]);
 
@@ -140,12 +142,12 @@ const SubjectTeacherAdmin = () => {
 
     const handleChangeSubject = (event) => {
         console.log(event.target.value)
-        setDropValue(event.target.value);
-        console.log(dropValue)
+        setDropValueSubject(event.target.value);
+        console.log(dropValueSubject)
         // handleFilter();
       };
     const handleChangeTeacher = (event) => {
-        setDropValueTeacher(event.target.selectedValue);
+        setDropValueTeacher(event.target.value);
         console.log(event.target.value)
         console.log(dropValueTeacher)
         // teacher_id = event.target.selectedValue
@@ -153,9 +155,9 @@ const SubjectTeacherAdmin = () => {
       };
 
     const handleFilter = () => {
-        let f = {subject_id:"",teacher_id:""}
-        if (dropValue !== "All"){
-            f.subject_id = dropValue
+        let f = {subject_teacher_id:"",subject_id:"",teacher_id:""}
+        if (dropValueSubject !== "All"){
+            f.subject_id = dropValueSubject
             console.log(f)
         }
         if (dropValueTeacher !== "All"){
@@ -167,108 +169,112 @@ const SubjectTeacherAdmin = () => {
         // console.log(filter)
     }
 
-    // Add Subject
-    // const handleConfirmAddSubject = (allValue) => {
-    //     SubjectService.addSubject({
-    //         subject_name: allValue.name
-    //     })
-    //     .then((res) => {
-    //         if (res.success) {
-    //             setState(!state);
-    //             setErrorServer(false);
-    //             setAddSubjectState(false);
-    //         } else {
-    //             setErrorServer(true);
-    //             setAddSubjectState(true);
-    //         }
-    //     })
-    //     .catch((error) => console.log("error", error));
-    // }
+    // Add Subject Teacher
+    const handleConfirmAddSubjectTeacher = (allValue) => {
+        // console.log("save");
+        SubjectTeacherService.addSubjectTeacher({
+            subject_id: allValue.subject_id,
+            teacher_id: allValue.teacher_id,
+        })
+        .then((res) => {
+            if (res.success) {
+                setState(!state);
+                setErrorServer(false);
+                setAddSubjectTeacherState(false);
+            } else {
+                setErrorServer(true);
+                setAddSubjectTeacherState(true);
+            }
+        })
+        .catch((error) => console.log("error", error));
+    }
 
-    // const handleInputCustom = () => {
-    //     setAddSubjectState(false);
-    //     setErrorServer(false);
-    //     setUpdateSubjectState(false);
-    // };
+    
+    const handleInputCustom = () => {
+        setAddSubjectTeacherState(false);
+        setErrorServer(false);
+        setUpdateSubjectTeacherState(false);
+    };
 
-    // const DivAddSubject = (
-    //     <ModalInput
-    //         show={addSubjectState}
-    //         handleInputCustom={handleInputCustom}
-    //         content={
-    //             <AddSubject
-    //                 handleInputCustom={handleInputCustom}
-    //                 handleConfirmAddSubject={handleConfirmAddSubject}
-    //                 errorServer={errorServer}
-    //             />
-    //         }
-    //     />
-    // );
+    const DivAddSubjectTeacher = (
+        <ModalInput
+            show={addSubjectTeacherState}
+            handleInputCustom={handleInputCustom}
+            content={
+                <AddSubjectTeacher
+                    handleInputCustom={handleInputCustom}
+                    handleConfirmAddSubjectTeacher={handleConfirmAddSubjectTeacher}
+                    errorServer={errorServer}
+                />
+            }
+        />
+    );
 
-    // const handleConfirmUpdateSubject = (allValue) => {
-    //     SubjectService.updateSubject(Id, {
-    //         subject_name:  allValue.name
-    //     }).then((res) => {
-    //         console.log(res);
-    //         if (res.success) {
-    //             setState(!state);
-    //             setErrorServer(false);
-    //             setUpdateSubjectState(false);
-    //         } else {
-    //             setErrorServer(true);
-    //             setUpdateSubjectState(true);
-    //         }
-    //     })
-    //     .catch((error) => console.log("error", error));
-    // }
+    const handleConfirmUpdateSubjectTeacher = (allValue) => {
+        SubjectTeacherService.updateSubjectTeacher(Id, {
+            subject_id:  allValue.subject_id,
+            teacher_id: allValue.teacher_id
+        }).then((res) => {
+            console.log(res);
+            if (res.success) {
+                setState(!state);
+                setErrorServer(false);
+                setUpdateSubjectTeacherState(false);
+            } else {
+                setErrorServer(true);
+                setUpdateSubjectTeacherState(true);
+            }
+        })
+        .catch((error) => console.log("error", error));
+    }
 
-    //Component Add Subject (Form)
-    // const DivUpdateSubject = (
-    //     <ModalInput
-    //         show={updateSubjectState}
-    //         handleInputCustom={handleInputCustom}
-    //         content={
-    //             <UpdateSubject
-    //                 handleInputCustom={handleInputCustom}
-    //                 handleConfirmUpdateSubject={handleConfirmUpdateSubject}
-    //                 errorServer={errorServer}
-    //                 SubjectId={Id}
-    //             />
-    //         }
-    //     />
-    // );
+    // Component Add Subject (Form)
+    const DivUpdateSubjectTeacher = (
+        <ModalInput
+            show={updateSubjectTeacherState}
+            handleInputCustom={handleInputCustom}
+            content={
+                <UpdateSubjectTeacher
+                    handleInputCustom={handleInputCustom}
+                    handleConfirmUpdateSubjectTeacher={handleConfirmUpdateSubjectTeacher}
+                    errorServer={errorServer}
+                    SubjectTeacherId={Id}
+                />
+            }
+        />
+    );
 
-    // const handleCloseModalCustom = () => {
-    //     setIsDelete(false);
-    // };
+    const handleCloseModalCustom = () => {
+        setIsDelete(false);
+    };
 
-    // const handleDelete = () => {
-    //     SubjectService.deleteSubjectById(Id).then((res) => {
-    //         if (res.success) {
-    //             setState(!state);
-    //         }
-    //     });
-    //     setIsDelete(false);
-    // }
+    const handleDelete = () => {
+        SubjectTeacherService.deleteSubjectTeacherById(Id).then((res) => {
+            if (res.success) {
+                setState(!state);
+            }
+        });
+        setIsDelete(false);
+    }
 
-    // const ConfirmDelete = (
-    //     <ModalCustom
-    //         show={isDelete}
-    //         content={
-    //             <ConfirmAlert
-    //                 handleCloseModalCustom={handleCloseModalCustom}
-    //                 handleDelete={handleDelete}
-    //                 title={`Do you want to delete this subject?`}
-    //             />
-    //         }
-    //         handleCloseModalCustom={handleCloseModalCustom}
-    //     />
-    // );
+    const ConfirmDelete = (
+        <ModalCustom
+            show={isDelete}
+            content={
+                <ConfirmAlert
+                    handleCloseModalCustom={handleCloseModalCustom}
+                    handleDelete={handleDelete}
+                    title={`Do you want to delete this subject?`}
+                />
+            }
+            handleCloseModalCustom={handleCloseModalCustom}
+        />
+    );
 
-    // const handleAddSubject = () => {
-    //     setAddSubjectState(true);
-    //     setErrorServer(false);
-    // }
+    const handleAddSubjectTeacher = () => {
+        setAddSubjectTeacherState(true);
+        setErrorServer(false);
+    }
 
     const TableSubjectTeacher = ({subjectsTeacher}) => {
         const subjectTeacherItem = subjectsTeacher.map((item) => (
@@ -321,18 +327,12 @@ const SubjectTeacherAdmin = () => {
                     <h3>Manage Subject Teacher</h3>
                 </div>
                 <div className="right-header">
-                    <button className="btn-account" onClick>Add Subject Teacher</button>
+                    <button className="btn-account" onClick={handleAddSubjectTeacher}>Add Subject Teacher</button>
                     <div className="search-box">
-                        <button className="btn-search" onClick={handleFilter}>
-                            <FontAwesomeIcon
-                                className="icon-search"
-                                icon={faMagnifyingGlass}
-                            />
-                        </button>
                         <Dropdown
                             label="Subject"
                             options={subjects}
-                            value={dropValue}
+                            value={dropValueSubject}
                             onChange={handleChangeSubject}
                         />
                         <Dropdown
@@ -341,6 +341,13 @@ const SubjectTeacherAdmin = () => {
                             value={dropValueTeacher}
                             onChange={handleChangeTeacher}
                         />
+                        <button className="btn-account" onClick={handleFilter}>
+                            Search
+                            {/* <FontAwesomeIcon
+                                className="icon-search"
+                                icon={faMagnifyingGlass}
+                            /> */}
+                        </button>
                     </div>
                 </div>
             </header>
@@ -374,9 +381,9 @@ const SubjectTeacherAdmin = () => {
                         />
                     </button>
                 </div>
-                {/* {addSubjectState ? DivAddSubject : null}
-                {updateSubjectState ? DivUpdateSubject : null}
-                {isDelete ? ConfirmDelete : null} */}
+                {addSubjectTeacherState ? DivAddSubjectTeacher : null}
+                {updateSubjectTeacherState ? DivUpdateSubjectTeacher : null}
+                {isDelete ? ConfirmDelete : null}
             </footer>
         </div>
     );
