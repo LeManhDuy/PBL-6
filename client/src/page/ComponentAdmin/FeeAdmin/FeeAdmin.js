@@ -35,14 +35,11 @@ const FeeAdmin = () => {
                             key: index + 1,
                             id: item._id,
                             fee_name: item.fee_category_id ? item.fee_category_id.fee_name : "Empty",
-                            //fee_amount: item.allFee[0].fee_category_id.fee_amount,
-                            pupil_name: item.pupil_id.pupil_name,
-                            // person_fullname: item.allFee[0].pupil_id.parent_id.person_id.pupil_name,
+                            pupil_name: item.pupil_id ? item.pupil_id.pupil_name : "Empty",
                             start_date: item.start_date.split("T")[0],
                             end_date: item.end_date.split("T")[0],
                             paid_date: item.paid_date ? item.paid_date.split("T")[0] : "YYYY-MM-DD",
                             fee_status: item.fee_status ? "PAID" : "UNPAID",
-                            // class_name: item.allFee[0].class_id.class_name,
                         }
                     }
                 );
@@ -60,7 +57,7 @@ const FeeAdmin = () => {
     };
 
     const handleConfirmAddFee = (allValue) => {
-        if (allValue.fee_status === "false") {
+        if (allValue.fee_status === "false" || allValue.fee_status == "") {
             allValue.paid_date = null
         }
         FeeService.addFee({
@@ -102,7 +99,9 @@ const FeeAdmin = () => {
     }
 
     const handleConfirmUpdateFee = (allValue) => {
-        console.log("true", allValue);
+        if (allValue.fee_status === "false" || allValue.fee_status == "") {
+            allValue.paid_date = null
+        }
         FeeService.updateFee(id, {
             start_date: allValue.start_date,
             end_date: allValue.end_date,
