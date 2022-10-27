@@ -78,6 +78,7 @@ const FeeAdmin = () => {
                     setState(!state);
                     setErrorServer(false);
                     setAddFeeState(false);
+                    setKeyword("");
                 } else {
                     setErrorServer(true);
                     setAddFeeState(true);
@@ -120,6 +121,7 @@ const FeeAdmin = () => {
                     setState(!state);
                     setErrorServer(false);
                     setUpdateFeeState(false);
+                    setKeyword("");
                 } else {
                     setErrorServer(true);
                     setUpdateFeeState(true);
