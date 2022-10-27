@@ -28,7 +28,6 @@ const UpdateClass = (props) => {
                 name: res.getClassInfor[0].class_name,
                 teacher: res.getClassInfor[0].homeroom_teacher_id._id,
                 grade: res.getClassInfor[0].grade_id._id
-
             })
         })
     }, []);
@@ -160,7 +159,7 @@ const UpdateClass = (props) => {
 
     const FormClass = (
         <div className="form-admin-content">
-            <h4>Add Class</h4>
+            <h4>Update Class</h4>
             <label
                 className={
                     "error" +

@@ -67,7 +67,7 @@ const UpdateGrade = (props) => {
                         <h4>Name</h4>
                         <input
                             className="input-content"
-                            type="text"
+                            type="number"
                             name="name"
                             placeholder="Enter name"
                         value={allValuesGrade.name}

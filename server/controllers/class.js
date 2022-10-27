@@ -1,5 +1,6 @@
 const Class = require("../model/class")
 const Pupil = require("../model/Pupil")
+const Teacher = require("../model/Teacher")
 
 const createClass = async (req, res) => {
     const {
@@ -18,13 +19,25 @@ const createClass = async (req, res) => {
             message: "Please fill in complete information.",
         })
     }
+    const classValidate = await Class.findOne({ class_name, grade_id: grade_id, homeroom_teacher_id: homeroom_teacher_id })
+    if (classValidate)
+        return res
+            .status(400)
+            .json({ success: false, message: "Class is already existed." })
+    const teacherValidateInDB = await Teacher.findById(homeroom_teacher_id);
+    if (!teacherValidateInDB)
+        return res.status(404).json({
+            success: false,
+            message: "Teacher is not existing!",
+        });
+
+    const teacherValidate = await Class.findOne({ homeroom_teacher_id: homeroom_teacher_id });
+    if (teacherValidate)
+        return res
+            .status(400)
+            .json({ success: false, message: "This teacher already have a class." })
 
     try {
-        const classValidate = await Class.findOne({ class_name })
-        if (classValidate)
-            return res
-                .status(400)
-                .json({ success: false, message: "Class is already existed." })
         const newclass = new Class({
             class_name,
             grade_id,
@@ -106,8 +119,7 @@ const getClassByID = async (req, res) => {
 
 const getStudentByClassID = async (req, res) => {
     try {
-        console.log(req.params.classID);
-        const studentsInfor = await Pupil.find({ class_id: req.params.classID})
+        const studentsInfor = await Pupil.find({ class_id: req.params.classID })
             .select([
                 "pupil_name",
                 "pupil_gender",
@@ -123,7 +135,34 @@ const getStudentByClassID = async (req, res) => {
                     select: ["person_fullname"],
                 }]
             })
-            res.json({ success: true, studentsInfor })
+            .populate({
+                path: "class_id",
+                model: "Class",
+                populate: [
+                    {
+                        path: "grade_id",
+                        model: "Grade",
+                        select: ["grade_name"],
+                    },
+                ],
+            })
+            .populate({
+                path: "class_id",
+                model: "Class",
+                populate: [
+                    {
+                        path: "homeroom_teacher_id",
+                        model: "Teacher",
+                        select: ["_id"],
+                        populate: [{
+                            path: "person_id",
+                            model: "Person",
+                            select: ["person_fullname"],
+                        }]
+                    },
+                ],
+            })
+        res.json({ success: true, studentsInfor })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }
@@ -135,7 +174,6 @@ const updateClassByID = async (req, res) => {
         grade_id,
         homeroom_teacher_id
     } = req.body
-
     if (
         !class_name ||
         !grade_id ||
@@ -147,22 +185,34 @@ const updateClassByID = async (req, res) => {
         })
     }
 
-    try {
-        const classItem = await Class.findById(req.params.classID)
-        
-        if (!classItem)
-            return res
-                .status(400)
-                .json({ success: false, message: "Class is not existed." })
-        const classValidate = await Class.findOne({ class_name })
+    //Check Class And Teacher is in DB
+    const classItem = await Class.findById(req.params.classID)
+    if (!classItem)
+        return res
+            .status(400)
+            .json({ success: false, message: "Class is not existed." })
+    const teacherValidateInDB = await Teacher.findById(homeroom_teacher_id);
+    if (!teacherValidateInDB)
+        return res.status(404).json({
+            success: false,
+            message: "Teacher is not existing!",
+        });
 
-        if(class_name != classItem.class_name){
-            if (classValidate)
-            return res
-                .status(400)
-                .json({ success: false, message: "Class is already existed." })
+    const classValidate = await Class.findOne({ class_name, grade_id: grade_id })
+    if (classValidate)
+        return res
+            .status(400)
+            .json({ success: false, message: "Class is already existed." })
+
+    if (classItem.homeroom_teacher_id) {
+        if (classItem.homeroom_teacher_id.toString() !== homeroom_teacher_id) {
+            return res.status(400).json({
+                success: false,
+                message: "This teacher already have a class",
+            });
         }
-        
+    }
+    try {
         let updateClass = {
             class_name,
             grade_id,

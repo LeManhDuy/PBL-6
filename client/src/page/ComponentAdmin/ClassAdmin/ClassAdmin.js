@@ -11,6 +11,7 @@ import ModalInput from "../../../lib/ModalInput/ModalInput";
 import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
 import ClassService from "../../../config/service/ClassService";
+import GradeService from "../../../config/service/GradeService";
 import UpdateClass from "../../../lib/ModalInput/UpdateClass/UpdateClass";
 import ViewClass from "../../../lib/ModalInput/ViewClass/ViewClass";
 
@@ -22,12 +23,16 @@ const ClassAdmin = () => {
     const [name, setName] = useState("");
     const [state, setState] = useState(false);
     const [classRooms, setClass] = useState([]);
+    const [grades, setGrade] = useState([]);
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
     const [viewState, setViewState] = useState(false);
+    const [dropValueGrade, setDropValueGrade] = useState("All");
+
 
     useEffect(() => {
         getClass();
+        getGrade();
     }, [state]);
 
     const getClass = () => {
@@ -50,6 +55,55 @@ const ClassAdmin = () => {
                 console.log(error);
             })
     }
+
+    const getGrade = () => {
+        GradeService.getGrades()
+            .then((response) => {
+                const dataSources = response.allGrade.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            grade_name: item ? item.grade_name : "Empty"
+                        }
+                    }
+                );
+                setGrade(dataSources);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    };
+
+    
+
+    const Dropdown = ({ value, options, onChange }) => {
+        return (
+            <label>
+                Grade
+                <select className="dropdown-account" value={value} onChange={onChange}>
+                    <option value="All">All</option>
+                    {options.map((option) => (
+                        <option key={option.key} value={option.id}>
+                            {option.grade_name}
+                        </option>
+                    ))}
+                </select>
+            </label>
+        );
+    };
+
+    const handleChangeGrade = (event) => {
+        setDropValueGrade(event.target.value);
+        // grades.map((item) => {
+        //     if (event.target.value === item.id) {
+        //         getStudentWithFilter(item.id);
+        //     } else if (event.target.value === "All") {
+        //         getStudent();
+        //     }
+        // });
+    };
+
 
     const handleInputCustom = () => {
         setAddClassState(false);
@@ -85,7 +139,6 @@ const ClassAdmin = () => {
             homeroom_teacher_id: allValue.teacher
         })
             .then((res) => {
-                console.log(res);
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
@@ -230,6 +283,11 @@ const ClassAdmin = () => {
                 <div>
                     <h3>Manage Class</h3>
                 </div>
+                <Dropdown
+                    options={grades}
+                    value={dropValueGrade}
+                    onChange={handleChangeGrade}
+                />
                 <div className="right-header">
                     <button className="btn-account" onClick={handleAddClass}>Add Class</button>
                     <div className="search-box">

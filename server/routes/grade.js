@@ -37,6 +37,22 @@ router.get("/:gradeID", async (req, res) => {
     }
 })
 
+// @route GET api/admin/principle
+// @desc GET class in grade
+// @access Private Only Admin
+router.get("/get-class-by-grade-id/:gradeID", async (req, res) => {
+    try {
+        // Return token
+        const getClassByGradeId = await Class.find({ grade_id: req.params.gradeID })
+        .select([
+            "grade_name",
+        ])
+        res.json({ success: true, getClassByGradeId })
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
 // @route POST api/admin/grade
 // @desc post subject
 // @access Private

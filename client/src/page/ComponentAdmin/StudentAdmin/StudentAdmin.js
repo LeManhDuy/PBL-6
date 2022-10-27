@@ -7,6 +7,7 @@ import {
     faArrowRightLong,
 } from "@fortawesome/free-solid-svg-icons";
 import StudentService from "../../../config/service/StudentService";
+import ClassService from "../../../config/service/ClassService";
 import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
 import ModalInput from "../../../lib/ModalInput/ModalInput";
@@ -17,15 +18,17 @@ const StudentAdmin = () => {
     const [student, setStudent] = useState([]);
     const [isChange, setIsChange] = useState(false);
     const [name, setName] = useState("");
-    const [state, setState] = useState(false);
     const [id, setId] = useState("");
     const [addState, setAddState] = useState(false);
     const [updateState, setUpdateState] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
+    const [dropValueClass, setDropValueClass] = useState("All");
+    const [classroom, setClass] = useState([]);
 
     useEffect(() => {
         getStudent();
+        getClass();
     }, [isChange]);
 
     const getStudent = () => {
@@ -39,15 +42,15 @@ const StudentAdmin = () => {
                         gender: item.pupil_gender,
                         parent: item.parent_id
                             ? item.parent_id.person_id.person_fullname
-                            : "null",
+                            : "Empty",
                         class: item.class_id
                             ? item.class_id.class_name
-                            : "null",
+                            : "Empty",
                         teacher: item.class_id
                             ? item.class_id.homeroom_teacher_id.person_id
-                                  .person_fullname
-                            : "null",
-                        grade: item.class_id.grade_id.grade_name,
+                                .person_fullname
+                            : "Empty",
+                        grade: item.class_id ? item.class_id.grade_id ? item.class_id.grade_id.grade_name : "Empty" : "Empty"
                     };
                 });
                 setStudent(dataSources);
@@ -56,6 +59,86 @@ const StudentAdmin = () => {
                 console.log(error);
             });
     };
+
+    const getClass = () => {
+        ClassService.getClass()
+            .then((response) => {
+                const dataSources = response.allClass.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            class_name: item.class_name ? item.class_name : "Empty",
+                            grade_name: item.grade_id ? item.grade_id.grade_name : "Empty"
+                        }
+                    }
+                );
+                setClass(dataSources);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    };
+
+    const getStudentWithFilter = (filter) => {
+        ClassService.getStudentByClassID(filter)
+            .then((response) => {
+                const dataSources = response.studentsInfor.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            name: item.pupil_name,
+                            gender: item.pupil_gender,
+                            parent: item.parent_id
+                                ? item.parent_id.person_id.person_fullname
+                                : "Empty",
+                            class: item.class_id
+                                ? item.class_id.class_name
+                                : "Empty",
+                            teacher: item.class_id
+                                ? item.class_id.homeroom_teacher_id.person_id
+                                    .person_fullname
+                                : "Empty",
+                            grade: item.class_id.grade_id ? item.class_id.grade_id.grade_name : "Empty",
+                        }
+                    }
+                );
+                setStudent(dataSources);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    };
+
+    const Dropdown = ({ value, options, onChange }) => {
+        return (
+            <label>
+                Grade-Class
+                <select className="dropdown-account" value={value} onChange={onChange}>
+                    <option value="All">All</option>
+                    {options.map((option) => (
+                        <option key={option.key} value={option.id}>
+                            {option.grade_name} - {option.class_name}
+                        </option>
+                    ))}
+                </select>
+            </label>
+        );
+    };
+
+    const handleChangeClass = (event) => {
+        setDropValueClass(event.target.value);
+        classroom.map((item) => {
+            if (event.target.value === item.id) {
+                getStudentWithFilter(item.id);
+            } else if (event.target.value === "All") {
+                getStudent();
+            }
+        });
+    };
+
+
 
     const TableStudent = ({ students }) => {
         const studentItem = students.map((item) => (
@@ -95,7 +178,7 @@ const StudentAdmin = () => {
                 <tr>
                     <th>Name</th>
                     <th>Gender</th>
-                    <th>Class-Grade</th>
+                    <th>Grade-Class</th>
                     <th>Parent</th>
                     <th>Teacher</th>
                     <th>Action</th>
@@ -224,6 +307,11 @@ const StudentAdmin = () => {
                 <div>
                     <h3>Manage Pupil</h3>
                 </div>
+                <Dropdown
+                    options={classroom}
+                    value={dropValueClass}
+                    onChange={handleChangeClass}
+                />
                 <div className="right-header">
                     <button className="btn-account" onClick={handleAddStudent}>
                         Add Pupil
