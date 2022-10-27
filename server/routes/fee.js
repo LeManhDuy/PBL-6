@@ -104,7 +104,7 @@ router.put("/:feeId", async (req, res) => {
             .status(400)
             .json({ success: false, message: "Fee is not existed." })
 
-    const feeValidate = await Fee.findOne({ pupil_id: pupil_id })
+    const feeValidate = await Fee.findOne({ pupil_id: pupil_id, fee_category_id: fee_category_id })
     if (feeValidate)
         if (feeValidate._id.toString() !== req.params.feeId) {
             return res.status(400).json({
