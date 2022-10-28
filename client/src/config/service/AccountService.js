@@ -8,7 +8,7 @@ const getAccountsPrincipal = async () => {
 
 const getAccountsPrincipalsById = async (id) => {
     return await HandleApi.APIGetWithToken(`principal/${id}`);
-}
+};
 
 const addAccountPrincipals = async (params) => {
     return await HandleApi.APIPostWithTokenIMG(`principal`, params);
@@ -42,6 +42,10 @@ const deleteAccountParentsById = async (id) => {
 
 const updateAccountParents = async (params, id) => {
     return await HandleApi.APIPutWithTokenIMG(`parent/${id}`, params);
+};
+
+const GetParentsInformation = async (id) => {
+    return await HandleApi.APIGetWithToken(`parent/get-parents-info/${id}`);
 };
 
 //Teacher
@@ -87,7 +91,6 @@ const updateAccountAffairs = async (params, id) => {
     return await HandleApi.APIPutWithTokenIMG(`affair/${id}`, params);
 };
 
-
 const AccountService = {
     //Principal
     getAccountsPrincipal,
@@ -101,6 +104,7 @@ const AccountService = {
     updateAccountParents,
     deleteAccountParentsById,
     addAccountParents,
+    GetParentsInformation,
     //Teacher
     getAccountsTeacher,
     getAccountsTeachersById,
@@ -112,7 +116,7 @@ const AccountService = {
     addAccountAffairs,
     deleteAccountAffairsById,
     updateAccountAffairs,
-    getAccountsAffairsById
+    getAccountsAffairsById,
 };
 
 export default AccountService;
