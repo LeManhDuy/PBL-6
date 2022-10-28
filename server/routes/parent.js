@@ -398,4 +398,34 @@ router.delete("/:parentID", async (req, res) => {
     }
 });
 
+router.get("/get-parents-info/:personID", async (req, res) => {
+    try {
+        // Return token
+        const personInfor = await Person.findById(req.params.personID);
+        const getParentInfor = await Parent.find({
+            person_id: personInfor._id.toString(),
+        })
+            .select([
+                "parent_job",
+                "parent_relationship",
+                "is_in_association",
+                "parent_job_address",
+            ])
+            .populate({
+                path: "person_id",
+                model: "Person",
+                populate: [
+                    {
+                        path: "account_id",
+                        model: "Account",
+                        select: ["account_username", "account_role"],
+                    },
+                ],
+            });
+        res.json({ success: true, getParentInfor });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+});
+
 module.exports = router;
