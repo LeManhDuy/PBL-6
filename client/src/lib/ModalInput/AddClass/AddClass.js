@@ -12,6 +12,7 @@ const AddClass = (props) => {
         name: "",
         teacher: "",
         grade: "",
+        gradeName: "",
     });
     const [classError, setClassError] = useState({
         name: false,
@@ -137,6 +138,9 @@ const AddClass = (props) => {
                 grade: event.target.options[
                     event.target.selectedIndex
                 ].getAttribute("data-key"),
+                gradeName: event.target.options[
+                    event.target.selectedIndex
+                ].value
             });
         } else {
             setAllValuesClass({
@@ -156,7 +160,7 @@ const AddClass = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Add Failed.
+                Class is already existed in grade or Teacher has class.
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
