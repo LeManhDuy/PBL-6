@@ -23,6 +23,7 @@ const FeeCategoryAdmin = () => {
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
     const [name, setName] = useState();
+    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         getFeeCategory();
@@ -57,10 +58,12 @@ const FeeCategoryAdmin = () => {
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
+                    setErrorMessage("");
                     setAddFeeCategoryState(false);
                     setKeyword("");
                 } else {
                     setErrorServer(true);
+                    setErrorMessage(res.message);
                     setAddFeeCategoryState(true);
                 }
             })
@@ -80,6 +83,7 @@ const FeeCategoryAdmin = () => {
                     handleInputCustom={handleInputCustom}
                     handleConfirmAddFeeCategory={handleConfirmAddFeeCategory}
                     errorServer={errorServer}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -94,10 +98,12 @@ const FeeCategoryAdmin = () => {
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
+                    setErrorMessage("");
                     setUpdateFeeCategoryState(false);
                     setKeyword("");
                 } else {
                     setErrorServer(true);
+                    setErrorMessage(res.message);
                     setUpdateFeeCategoryState(true);
                 }
             })
@@ -116,6 +122,7 @@ const FeeCategoryAdmin = () => {
                     }
                     errorServer={errorServer}
                     FeeCategoryId={Id}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -151,6 +158,7 @@ const FeeCategoryAdmin = () => {
     const handleAddFeeCategory = () => {
         setAddFeeCategoryState(true);
         setErrorServer(false);
+        setErrorMessage("");
         setKeyword("");
     };
 

@@ -1,46 +1,44 @@
-import React, { useState, useEffect } from "react"
-import "./AddFeeCategory.css"
+import React, { useState, useEffect } from "react";
+import "./AddFeeCategory.css";
 
 const AddFeeCategory = (props) => {
     const [allValuesFeeCategory, setAllValuesFeeCategory] = useState({
         name: "",
-        ammount: ""
-    })
+        ammount: "",
+    });
 
     const [FeeCategoryError, setFeeCategoryError] = useState({
         name: false,
-        ammount: false
-    })
+        ammount: false,
+    });
 
     const handleAddFeeCategory = () => {
-        let name = false
-        let ammount = false
-        let check = false
+        let name = false;
+        let ammount = false;
+        let check = false;
         if (
             allValuesFeeCategory.name.length > 30 ||
             allValuesFeeCategory.name.length < 2
         ) {
-            name = true
-            check = true
-        } else name = false
+            name = true;
+            check = true;
+        } else name = false;
 
         setFeeCategoryError({
             name: name,
-            ammount: ammount
-        })
+            ammount: ammount,
+        });
         if (!check) {
-            props.handleConfirmAddFeeCategory(allValuesFeeCategory)
+            props.handleConfirmAddFeeCategory(allValuesFeeCategory);
         }
-    }
+    };
 
     const changeHandlerFeeCategory = (e) => {
         setAllValuesFeeCategory({
             ...allValuesFeeCategory,
             [e.target.name]: e.target.value,
-        })
-    }
-
-
+        });
+    };
 
     const FormAddFeeCategory = (
         <div className="form-admin-content">
@@ -51,7 +49,7 @@ const AddFeeCategory = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Update failed.
+                Add failed. {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -100,28 +98,29 @@ const AddFeeCategory = (props) => {
                 </div>
             </div>
         </div>
-    )
+    );
 
     const clickSave = (e) => {
-        e.preventDefault()
-        handleAddFeeCategory()
-    }
+        e.preventDefault();
+        handleAddFeeCategory();
+    };
 
     return (
         <div className="add-account-form">
             <div className="form-add-account">
                 {FormAddFeeCategory}
-                <button onClick={props.handleInputCustom} className="btn-cancel">
+                <button
+                    onClick={props.handleInputCustom}
+                    className="btn-cancel"
+                >
                     Cancel
                 </button>
-                <button type="submit"
-                    onClick={clickSave}
-                    className="btn-ok">
+                <button type="submit" onClick={clickSave} className="btn-ok">
                     Save
                 </button>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default AddFeeCategory
+export default AddFeeCategory;

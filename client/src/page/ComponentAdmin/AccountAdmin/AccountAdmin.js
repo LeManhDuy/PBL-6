@@ -27,6 +27,7 @@ function AccountAdmin() {
     const [updateState, setUpdateState] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         getPrincipal();
@@ -245,6 +246,7 @@ function AccountAdmin() {
         setAddState(false);
         setUpdateState(false);
         setErrorServer(false);
+        setErrorMessage("");
     };
 
     //Add Account
@@ -271,9 +273,11 @@ function AccountAdmin() {
                         setState(!state);
                         setDropValue(type);
                         setErrorServer(false);
+                        setErrorMessage("");
                         setAddState(false);
                     } else {
                         setErrorServer(true);
+                        setErrorMessage(res.message);
                         setAddState(true);
                     }
                 })
@@ -304,9 +308,11 @@ function AccountAdmin() {
                         setState(!state);
                         setDropValue(type);
                         setErrorServer(false);
+                        setErrorMessage("");
                         setAddState(false);
                     } else {
                         setErrorServer(true);
+                        setErrorMessage(res.message);
                         setAddState(true);
                     }
                 })
@@ -336,9 +342,11 @@ function AccountAdmin() {
                         setState(!state);
                         setDropValue(type);
                         setErrorServer(false);
+                        setErrorMessage("");
                         setAddState(false);
                     } else {
                         setErrorServer(true);
+                        setErrorMessage(res.message);
                         setAddState(true);
                     }
                 })
@@ -366,9 +374,11 @@ function AccountAdmin() {
                         setState(!state);
                         setDropValue(type);
                         setErrorServer(false);
+                        setErrorMessage("");
                         setAddState(false);
                     } else {
                         setErrorServer(true);
+                        setErrorMessage(res.message);
                         setAddState(true);
                     }
                 })
@@ -398,9 +408,11 @@ function AccountAdmin() {
                     if (res.success) {
                         setState(!state);
                         setErrorServer(false);
+                        setErrorMessage("");
                         setUpdateState(false);
                     } else {
                         setErrorServer(true);
+                        setErrorMessage(res.message);
                         setUpdateState(true);
                     }
                 })
@@ -432,9 +444,11 @@ function AccountAdmin() {
                     if (res.success) {
                         setState(!state);
                         setErrorServer(false);
+                        setErrorMessage("");
                         setUpdateState(false);
                     } else {
                         setErrorServer(true);
+                        setErrorMessage(res.message);
                         setUpdateState(true);
                     }
                 })
@@ -463,9 +477,11 @@ function AccountAdmin() {
                     if (res.success) {
                         setState(!state);
                         setErrorServer(false);
+                        setErrorMessage("");
                         setUpdateState(false);
                     } else {
                         setErrorServer(true);
+                        setErrorMessage(res.message);
                         setAddState(true);
                     }
                 })
@@ -494,9 +510,11 @@ function AccountAdmin() {
                     if (res.success) {
                         setState(!state);
                         setErrorServer(false);
+                        setErrorMessage("");
                         setUpdateState(false);
                     } else {
                         setErrorServer(true);
+                        setErrorMessage(res.message);
                         setUpdateState(true);
                     }
                 })
@@ -514,6 +532,7 @@ function AccountAdmin() {
                     handleInputCustom={handleInputCustom}
                     handleConfirmAddAccount={handleConfirmAddAccount}
                     errorServer={errorServer}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -531,6 +550,7 @@ function AccountAdmin() {
                     handleConfirmUpdateAccount={handleConfirmUpdateAccount}
                     errorServer={errorServer}
                     dropValue={dropValue}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -538,6 +558,8 @@ function AccountAdmin() {
 
     const handleAddAccount = () => {
         setAddState(true);
+        setErrorServer(false);
+        setErrorMessage("");
     };
 
     // Delete

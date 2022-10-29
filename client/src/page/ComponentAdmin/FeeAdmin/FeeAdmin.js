@@ -23,6 +23,8 @@ const FeeAdmin = () => {
     const [fees, setFee] = useState([]);
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
     useEffect(() => {
         getFee();
     }, [state]);
@@ -58,6 +60,7 @@ const FeeAdmin = () => {
     const handleInputCustom = () => {
         setAddFeeState(false);
         setErrorServer(false);
+        setErrorMessage("");
         setUpdateFeeState(false);
     };
 
@@ -77,10 +80,12 @@ const FeeAdmin = () => {
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
+                    setErrorMessage("");
                     setAddFeeState(false);
                     setKeyword("");
                 } else {
                     setErrorServer(true);
+                    setErrorMessage(res.message);
                     setAddFeeState(true);
                 }
             })
@@ -95,6 +100,7 @@ const FeeAdmin = () => {
                     handleInputCustom={handleInputCustom}
                     handleConfirmAddFee={handleConfirmAddFee}
                     errorServer={errorServer}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -102,6 +108,7 @@ const FeeAdmin = () => {
     const handleAddFee = () => {
         setAddFeeState(true);
         setErrorServer(false);
+        setErrorMessage("");
     };
 
     const handleConfirmUpdateFee = (allValue) => {
@@ -120,10 +127,12 @@ const FeeAdmin = () => {
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
+                    setErrorMessage("");
                     setUpdateFeeState(false);
                     setKeyword("");
                 } else {
                     setErrorServer(true);
+                    setErrorMessage(res.message);
                     setUpdateFeeState(true);
                 }
             })
@@ -140,6 +149,7 @@ const FeeAdmin = () => {
                     handleInputCustom={handleInputCustom}
                     handleConfirmUpdateFee={handleConfirmUpdateFee}
                     errorServer={errorServer}
+                    errorMessage={errorMessage}
                 />
             }
         />
