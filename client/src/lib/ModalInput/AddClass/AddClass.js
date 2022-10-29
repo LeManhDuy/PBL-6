@@ -140,6 +140,7 @@ const AddClass = (props) => {
                 grade: event.target.options[
                     event.target.selectedIndex
                 ].getAttribute("data-key"),
+
                 gradeName:
                     event.target.options[event.target.selectedIndex].value,
             });

@@ -81,13 +81,12 @@ router.post("/", upload.single("person_image"), async (req, res) => {
             message: "Phone number must have 10 numbers.",
         });
     }
-    const phoneValidate = await Person.findOne({ person_phonenumber })
-    if (!validator.validate(person_phonenumber) || phoneValidate) {
-        return res.status(400).json({
-            success: false,
-            message: "Phone must be unquie.",
-        })
-    }
+    const phoneValidate = await Person.findOne({ person_phonenumber });
+
+    if (phoneValidate)
+        return res
+            .status(400)
+            .json({ success: false, message: "Phone is unique." });
     if (!validator.validate(person_email)) {
         return res.status(400).json({
             success: false,
