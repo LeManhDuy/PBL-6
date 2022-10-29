@@ -80,12 +80,10 @@ router.post("/", upload.single("person_image"), async (req, res) => {
         })
     }
     const phoneValidate = await Person.findOne({ person_phonenumber })
-    if (!validator.validate(person_phonenumber) || phoneValidate) {
-        return res.status(400).json({
-            success: false,
-            message: "Phone must be unquie.",
-        })
-    }
+    if (phoneValidate)
+            return res
+                .status(400)
+                .json({ success: false, message: "Phone is unique." });
     const emailValidate = await Person.findOne({ person_email })
     if (!validator.validate(person_email) || emailValidate) {
         return res.status(400).json({
