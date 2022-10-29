@@ -118,7 +118,7 @@ const ClassAdmin = () => {
     // Add Class
     const handleConfirmAddClass = (allValue) => {
         ClassService.addClass({
-            class_name: allValue.name,
+            class_name: allValue.gradeName + '/' + allValue.name.toUpperCase(),
             grade_id: allValue.grade,
             homeroom_teacher_id: allValue.teacher,
         })
