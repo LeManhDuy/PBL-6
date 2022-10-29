@@ -27,13 +27,15 @@ const AddClass = (props) => {
     const getTeachers = () => {
         ClassService.getTeachers()
             .then((response) => {
-                const dataSources = response.getTeacherInfor.map((item, index) => {
-                    return {
-                        key: index + 1,
-                        id: item._id,
-                        teacher: item.person_id.person_fullname,
-                    };
-                });
+                const dataSources = response.getTeacherInfor.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            teacher: item.person_id.person_fullname,
+                        };
+                    }
+                );
                 setTeacher(dataSources);
             })
             .catch((error) => {
@@ -63,7 +65,6 @@ const AddClass = (props) => {
             ...allValuesClass,
             [e.target.name]: e.target.value,
         });
-
     };
 
     const TeacherDropDown = ({ value, options, onChange }) => {
@@ -117,15 +118,16 @@ const AddClass = (props) => {
         if (event.target.value !== "Pick") {
             setAllValuesClass({
                 ...allValuesClass,
-                teacher: event.target.options[
-                    event.target.selectedIndex
-                ].getAttribute("data-key"),
+                teacher:
+                    event.target.options[
+                        event.target.selectedIndex
+                    ].getAttribute("data-key"),
             });
         } else {
             setAllValuesClass({
                 ...allValuesClass,
                 teacher: null,
-            })
+            });
         }
     };
 
@@ -142,10 +144,9 @@ const AddClass = (props) => {
             setAllValuesClass({
                 ...allValuesClass,
                 grade: null,
-            })
+            });
         }
     };
-
 
     const FormClass = (
         <div className="form-admin-content">
@@ -156,7 +157,7 @@ const AddClass = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Add Failed.
+                Add Failed. {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -230,42 +231,35 @@ const AddClass = (props) => {
         let grade = false;
         let check = false;
 
-        if (
-            allValuesClass.name.length > 30
-        ) {
+        if (allValuesClass.name.length > 30) {
             name = true;
             check = true;
         } else name = false;
 
         if (!allValuesClass.teacher) {
             teacher = true;
-            check = true
+            check = true;
         } else {
-            grade = false
+            grade = false;
         }
 
         if (!allValuesClass.grade) {
             grade = true;
-            check = true
+            check = true;
         } else {
-            grade = false
+            grade = false;
         }
-
 
         setClassError({
             name: name,
             grade: grade,
-            teacher: teacher
-        })
+            teacher: teacher,
+        });
 
         if (!check) {
             props.handleConfirmAddClass(allValuesClass);
         }
-
-
-
-
-    }
+    };
 
     const clickSave = (e) => {
         e.preventDefault();
@@ -284,10 +278,7 @@ const AddClass = (props) => {
         </div>
     );
 
-    return (
-        <div className="add-account-form">{FormAddClass}</div>
-    );
-
-}
+    return <div className="add-account-form">{FormAddClass}</div>;
+};
 
 export default AddClass;

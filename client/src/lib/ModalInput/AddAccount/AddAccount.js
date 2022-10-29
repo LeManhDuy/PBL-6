@@ -439,7 +439,6 @@ const AddAccount = (props) => {
         }
     };
 
-
     const handleAddAffairAccount = () => {
         let name = false;
         let username = false;
@@ -764,7 +763,8 @@ const AddAccount = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Account or email already exists
+                {props.errorMessage}
+                {/* Account or email already exists */}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -1035,7 +1035,8 @@ const AddAccount = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Account already exists
+                {props.errorMessage}
+                {/* Account or email already exists */}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -1366,7 +1367,8 @@ const AddAccount = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Account or email already exists
+                {props.errorMessage}
+                {/* Account or email already exists */}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -1640,7 +1642,8 @@ const AddAccount = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Account already exists
+                {props.errorMessage}
+                {/* Account or email already exists */}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">

@@ -11,27 +11,33 @@ const AddFee = (props) => {
     const [pupilDropValue, setPupilDropValue] = useState();
     const [allValuesFee, setAllValuesFee] = useState({
         fee_status: "",
-        start_date: `${date.split("/")[2]}-${date.split("/")[0] < 10
-            ? "0" + date.split("/")[0]
-            : date.split("/")[0]
-            }-${date.split("/")[1] < 10
+        start_date: `${date.split("/")[2]}-${
+            date.split("/")[0] < 10
+                ? "0" + date.split("/")[0]
+                : date.split("/")[0]
+        }-${
+            date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-            }`,
-        end_date: `${date.split("/")[2]}-${date.split("/")[0] < 10
-            ? "0" + date.split("/")[0]
-            : date.split("/")[0]
-            }-${date.split("/")[1] < 10
+        }`,
+        end_date: `${date.split("/")[2]}-${
+            date.split("/")[0] < 10
+                ? "0" + date.split("/")[0]
+                : date.split("/")[0]
+        }-${
+            date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-            }`,
-        paid_date: `${date.split("/")[2]}-${date.split("/")[0] < 10
-            ? "0" + date.split("/")[0]
-            : date.split("/")[0]
-            }-${date.split("/")[1] < 10
+        }`,
+        paid_date: `${date.split("/")[2]}-${
+            date.split("/")[0] < 10
+                ? "0" + date.split("/")[0]
+                : date.split("/")[0]
+        }-${
+            date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-            }`,
+        }`,
         fee_category: "",
         pupil: "",
     });
@@ -52,13 +58,15 @@ const AddFee = (props) => {
     const getFeeCategory = () => {
         FeeCategoryService.getFeeCategory()
             .then((response) => {
-                const dataSources = response.allFeeCategory.map((item, index) => {
-                    return {
-                        key: index + 1,
-                        id: item._id,
-                        fee_category: item.fee_name,
-                    };
-                });
+                const dataSources = response.allFeeCategory.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            fee_category: item.fee_name,
+                        };
+                    }
+                );
                 setFeeCategory(dataSources);
             })
             .catch((error) => {
@@ -98,11 +106,7 @@ const AddFee = (props) => {
 
     const FeeCategoryDropDown = ({ value, options, onChange }) => {
         return (
-            <select
-                className="dropdown-Fee"
-                value={value}
-                onChange={onChange}
-            >
+            <select className="dropdown-Fee" value={value} onChange={onChange}>
                 <option key={10000} value="Pick">
                     FeeCategory
                 </option>
@@ -121,11 +125,7 @@ const AddFee = (props) => {
 
     const PupilDropDown = ({ value, options, onChange }) => {
         return (
-            <select
-                className="dropdown-Fee"
-                value={value}
-                onChange={onChange}
-            >
+            <select className="dropdown-Fee" value={value} onChange={onChange}>
                 <option key={10000} value="Pick">
                     Pupils
                 </option>
@@ -147,15 +147,16 @@ const AddFee = (props) => {
         if (event.target.value !== "Pick") {
             setAllValuesFee({
                 ...allValuesFee,
-                fee_category: event.target.options[
-                    event.target.selectedIndex
-                ].getAttribute("data-key"),
+                fee_category:
+                    event.target.options[
+                        event.target.selectedIndex
+                    ].getAttribute("data-key"),
             });
         } else {
             setAllValuesFee({
                 ...allValuesFee,
                 teacher: null,
-            })
+            });
         }
     };
 
@@ -172,10 +173,9 @@ const AddFee = (props) => {
             setAllValuesFee({
                 ...allValuesFee,
                 grade: null,
-            })
+            });
         }
     };
-
 
     const FormFee = (
         <div className="form-admin-content">
@@ -186,7 +186,7 @@ const AddFee = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Add Failed.
+                Add Failed. {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -325,26 +325,28 @@ const AddFee = (props) => {
                     </div>
                 </div>
             </div>
-        </div >
+        </div>
     );
 
     const handleAddFee = () => {
         let check = false;
-        let fee_status = false
-        let start_date = false
-        let end_date = false
-        let paid_date = false
-        let fee_category = false
-        let pupil = false
+        let fee_status = false;
+        let start_date = false;
+        let end_date = false;
+        let paid_date = false;
+        let fee_category = false;
+        let pupil = false;
 
-        let dateNow = new Date().toLocaleDateString()
-        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
-            ? "0" + dateNow.split("/")[0]
-            : dateNow.split("/")[0]
-            }-${dateNow.split("/")[1] < 10
+        let dateNow = new Date().toLocaleDateString();
+        let dateConvert = `${dateNow.split("/")[2]}-${
+            dateNow.split("/")[0] < 10
+                ? "0" + dateNow.split("/")[0]
+                : dateNow.split("/")[0]
+        }-${
+            dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
-            }`;
+        }`;
         // if (!allValuesFee.fee_status) {
         //     fee_status = true;
         //     check = true;
@@ -367,15 +369,15 @@ const AddFee = (props) => {
 
         if (!allValuesFee.fee_category) {
             fee_category = true;
-            check = true
+            check = true;
         } else {
-            fee_category = false
+            fee_category = false;
         }
         if (!allValuesFee.pupil) {
             pupil = true;
-            check = true
+            check = true;
         } else {
-            pupil = false
+            pupil = false;
         }
         // if (allValuesFee.fee_status == "false") {
         //     allValuesFee.paid_date = null;
@@ -388,12 +390,12 @@ const AddFee = (props) => {
             end_date: end_date,
             paid_date: paid_date,
             fee_category: fee_category,
-            pupil: pupil
-        })
+            pupil: pupil,
+        });
         if (!check) {
             props.handleConfirmAddFee(allValuesFee);
         }
-    }
+    };
 
     const clickSave = (e) => {
         e.preventDefault();
@@ -412,10 +414,7 @@ const AddFee = (props) => {
         </div>
     );
 
-    return (
-        <div className="add-account-form">{FormAddFee}</div>
-    );
-
-}
+    return <div className="add-account-form">{FormAddFee}</div>;
+};
 
 export default AddFee;

@@ -28,6 +28,7 @@ const ClassAdmin = () => {
     const [errorServer, setErrorServer] = useState(false);
     const [viewState, setViewState] = useState(false);
     const [dropValueGrade, setDropValueGrade] = useState("All");
+    const [errorMessage, setErrorMessage] = useState();
 
     useEffect(() => {
         getClass();
@@ -109,6 +110,7 @@ const ClassAdmin = () => {
     const handleInputCustom = () => {
         setAddClassState(false);
         setErrorServer(false);
+        setErrorMessage("");
         setUpdateClassState(false);
         setViewState(false);
     };
@@ -124,9 +126,11 @@ const ClassAdmin = () => {
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
+                    setErrorMessage("");
                     setAddClassState(false);
                 } else {
                     setErrorServer(true);
+                    setErrorMessage(res.message);
                     setAddClassState(true);
                 }
             })
@@ -144,9 +148,11 @@ const ClassAdmin = () => {
                     setState(!state);
                     setErrorServer(false);
                     setUpdateClassState(false);
+                    setErrorMessage("");
                     setKeyword("");
                 } else {
                     setErrorServer(true);
+                    setErrorMessage(res.message);
                     setUpdateClassState(true);
                 }
             })
@@ -163,6 +169,7 @@ const ClassAdmin = () => {
                     handleInputCustom={handleInputCustom}
                     handleConfirmAddClass={handleConfirmAddClass}
                     errorServer={errorServer}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -178,6 +185,7 @@ const ClassAdmin = () => {
                     handleInputCustom={handleInputCustom}
                     handleConfirmUpdateClass={handleConfirmUpdateClass}
                     errorServer={errorServer}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -196,6 +204,7 @@ const ClassAdmin = () => {
     const handleAddClass = () => {
         setAddClassState(true);
         setErrorServer(false);
+        setErrorMessage("");
     };
 
     const TableClasses = ({ classRooms }) => {
