@@ -3,6 +3,8 @@ import "./AddStudent.css";
 import Logo from "../../../assets/image/Logo.png";
 import ClassService from "../../../config/service/ClassService";
 import AccountService from "../../../config/service/AccountService";
+import { Select2 } from "select2-react-component";
+import ReactSelect2 from 'react-select-2z'
 import Select from 'react-select-2';
 
 const AddStudent = (props) => {
@@ -35,11 +37,6 @@ const AddStudent = (props) => {
         classroom: false,
     });
     const [avatar, setAvatar] = useState(Logo);
-    const [isClearable, setIsClearable] = useState(true);
-    const [isSearchable, setIsSearchable] = useState(true);
-    const [isDisabled, setIsDisabled] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isRtl, setIsRtl] = useState(false);
 
     useEffect(() => {
         getClasses();
@@ -47,42 +44,34 @@ const AddStudent = (props) => {
     }, []);
 
     const ParentDropDown = ({ value, options, onChange }) => {
+        // var options = [
+        //     { value: 'one', label: 'One' },
+        //     { value: 'two', label: 'Two' }
+        // ]
         return (
-            // <select
-            //     className="dropdown-class"
-            //     value={value}
-            //     onChange={onChange}
-            // >
-            //     <option key={10000} value="Pick">
-            //         Parents
-            //     </option>
-            // {options.map((option) => (
-            //     <option
-            //         key={option.key}
-            //         value={option.name}
-            //         data-key={option.id}
-            //     >
-            //         {option.name}
-            //     </option>
-            // ))}
-            // </select>
-
-            <Select
+            <select
                 className="dropdown-class"
-                classNamePrefix="select"
-                name="color"
-                options={
-                    options.map((option) => (
-                        <option
-                            key={option.key}
-                            value={option.name}
-                            data-key={option.id}
-                        >
-                            {option.name}
-                        </option>
-                    ))
-                }
-            />
+                value={value}
+                onChange={onChange}
+            >
+                <option key={10000} value="Pick">
+                    Parents
+                </option>
+                {options.map((option) => (
+                    <option
+                        key={option.key}
+                        value={option.name}
+                        data-key={option.id}
+                    >
+                        {option.name}
+                    </option>
+                ))}
+            </select>
+            // <Select2
+            //     data={options}
+            //     value={value}
+            //     update={value => this.update(value)}>
+            // </Select2>
         );
     };
 
@@ -278,6 +267,28 @@ const AddStudent = (props) => {
             console.log(err);
         }
     };
+
+    // var getOptions = function (input, callback) {
+    //     setTimeout(function () {
+    //         callback(null, {
+    //             options: [
+    //                 options.map((option) => (
+    //                     <option
+    //                         key={option.key}
+    //                         value={option.name}
+    //                         data-key={option.id}
+    //                     >
+    //                         {option.name}
+    //                     </option>
+    //                 ))
+    //             ],
+    //             // CAREFUL! Only set this to true when there are no more options,
+    //             // or more specific queries will not be sent to the server.
+    //             complete: true
+    //         });
+    //     }, 500);
+    // };
+
     const FormAccountStudents = (
         <div className="form-admin-content">
             <h4>Add Pupil</h4>
