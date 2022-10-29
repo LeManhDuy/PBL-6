@@ -11,8 +11,8 @@ const UpdateSubjectTeacher = (props) => {
     });
     const [subjects, setSubject] = useState([]);
     const [teachers, setTeacher] = useState([]);
-    const [subjectDropValue, setSubjectDropValue] = useState ()
-    const [teacherDropValue, setTeacherDropValue] = useState ()
+    const [subjectDropValue, setSubjectDropValue] = useState()
+    const [teacherDropValue, setTeacherDropValue] = useState()
     const [subjectTeacherError, setSubjectTeacherError] = useState({
         subject_id: false,
         teacher_id: false,
@@ -22,13 +22,13 @@ const UpdateSubjectTeacher = (props) => {
     useEffect(() => {
         getSubject();
         getTeachers();
-        SubjectTeacherService.getSubjectTeacherById({subject_teacher_id:props.SubjectTeacherId,subject_id:"",teacher_id:""})
-            .then((res)=>{
-            setAllValuesSubjectTeacher({
-                subject_id: res.allSubjectTeacher[0].subject_id._id,
-                teacher_id: res.allSubjectTeacher[0].teacher_id._id,
-            })
-        });
+        SubjectTeacherService.getSubjectTeacherById({ subject_teacher_id: props.SubjectTeacherId, subject_id: "", teacher_id: "" })
+            .then((res) => {
+                setAllValuesSubjectTeacher({
+                    subject_id: res.allSubjectTeacher[0].subject_id._id,
+                    teacher_id: res.allSubjectTeacher[0].teacher_id._id,
+                })
+            });
         // setSubjectDropValue(allValuesSubjectTeacher.subject_id);
         // setTeacherDropValue(allValuesSubjectTeacher.teacher_id);
     }, []);
@@ -72,30 +72,30 @@ const UpdateSubjectTeacher = (props) => {
             });
     };
 
-    const Dropdown = ({ value, options, onChange ,selectedValue}) => {
+    const Dropdown = ({ value, options, onChange, selectedValue }) => {
         return (
-          <label>
-            {/* <input list="brow"/> */}
-            <select className="dropdown-account" value={value} onChange={onChange}>
-              {/* <option value="All">All</option> */}
-              {options.map((option) => (
-                <option 
-                    key={option.key} 
-                    value={option.id} 
-                    selected={selectedValue === option.id}
-                >
-                  {option.name}
-                  
-                </option>
-              ))}
-            </select>
-          </label>
+            <label>
+                {/* <input list="brow"/> */}
+                <select className="dropdown-account" value={value} onChange={onChange}>
+                    {/* <option value="All">All</option> */}
+                    {options.map((option) => (
+                        <option
+                            key={option.key}
+                            value={option.id}
+                            selected={selectedValue === option.id}
+                        >
+                            {option.name}
+
+                        </option>
+                    ))}
+                </select>
+            </label>
         );
     };
 
     const handleSubjectChange = (event) => {
         setSubjectDropValue(event.target.value);
-        if (event.target.value !== 'All'){
+        if (event.target.value !== 'All') {
             setAllValuesSubjectTeacher({
                 ...allValuesSubjectTeacher,
                 subject_id: event.target.value,
@@ -112,7 +112,7 @@ const UpdateSubjectTeacher = (props) => {
     const handleTeacherChange = (event) => {
         // console.log(event.target.value)  
         setTeacherDropValue(event.target.value);
-        if (event.target.value !== 'All'){
+        if (event.target.value !== 'All') {
             setAllValuesSubjectTeacher({
                 ...allValuesSubjectTeacher,
                 teacher_id: event.target.value,
@@ -158,28 +158,28 @@ const UpdateSubjectTeacher = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Subject Teacher already exists
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
                     <div className="type-input">
                         <h4>Subject</h4>
-                            <Dropdown
-                                options={subjects}
-                                value={subjectDropValue}
-                                onChange={handleSubjectChange}
-                                selectedValue={allValuesSubjectTeacher.subject_id}
-                            />
-                            <label
-                                className={
-                                    "error" +
-                                    (subjectTeacherError.subject_id
-                                        ? " error-show"
-                                        : " error-hidden")
-                                }
-                            >
-                                Invalid Subject
-                            </label>
+                        <Dropdown
+                            options={subjects}
+                            value={subjectDropValue}
+                            onChange={handleSubjectChange}
+                            selectedValue={allValuesSubjectTeacher.subject_id}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (subjectTeacherError.subject_id
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid Subject
+                        </label>
                     </div>
                     <div className="type-input">
                         <h4>Teacher</h4>
@@ -218,7 +218,7 @@ const UpdateSubjectTeacher = (props) => {
                     Cancel
                 </button>
                 <button type="submit"
-                    onClick={clickSave} 
+                    onClick={clickSave}
                     className="btn-ok">
                     Save
                 </button>

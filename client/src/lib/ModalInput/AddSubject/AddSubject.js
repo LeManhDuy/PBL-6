@@ -47,7 +47,7 @@ const AddSubject = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Subject already exists
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -58,8 +58,8 @@ const AddSubject = (props) => {
                             type="text"
                             name="name"
                             placeholder="Enter name"
-                        value={allValuesSubject.name}
-                        onChange={changeHandlerSubject}
+                            value={allValuesSubject.name}
+                            onChange={changeHandlerSubject}
                         />
                         <label
                             className={
@@ -90,7 +90,7 @@ const AddSubject = (props) => {
                     Cancel
                 </button>
                 <button type="submit"
-                    onClick={clickSave} 
+                    onClick={clickSave}
                     className="btn-ok">
                     Save
                 </button>

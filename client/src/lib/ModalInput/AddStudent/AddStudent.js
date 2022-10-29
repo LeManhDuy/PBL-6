@@ -3,6 +3,7 @@ import "./AddStudent.css";
 import Logo from "../../../assets/image/Logo.png";
 import ClassService from "../../../config/service/ClassService";
 import AccountService from "../../../config/service/AccountService";
+import Select from 'react-select-2';
 
 const AddStudent = (props) => {
     let date = new Date().toLocaleDateString();
@@ -33,8 +34,12 @@ const AddStudent = (props) => {
         parent: false,
         classroom: false,
     });
-
     const [avatar, setAvatar] = useState(Logo);
+    const [isClearable, setIsClearable] = useState(true);
+    const [isSearchable, setIsSearchable] = useState(true);
+    const [isDisabled, setIsDisabled] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isRtl, setIsRtl] = useState(false);
 
     useEffect(() => {
         getClasses();
@@ -43,24 +48,41 @@ const AddStudent = (props) => {
 
     const ParentDropDown = ({ value, options, onChange }) => {
         return (
-            <select
+            // <select
+            //     className="dropdown-class"
+            //     value={value}
+            //     onChange={onChange}
+            // >
+            //     <option key={10000} value="Pick">
+            //         Parents
+            //     </option>
+            // {options.map((option) => (
+            //     <option
+            //         key={option.key}
+            //         value={option.name}
+            //         data-key={option.id}
+            //     >
+            //         {option.name}
+            //     </option>
+            // ))}
+            // </select>
+
+            <Select
                 className="dropdown-class"
-                value={value}
-                onChange={onChange}
-            >
-                <option key={10000} value="Pick">
-                    Parents
-                </option>
-                {options.map((option) => (
-                    <option
-                        key={option.key}
-                        value={option.name}
-                        data-key={option.id}
-                    >
-                        {option.name}
-                    </option>
-                ))}
-            </select>
+                classNamePrefix="select"
+                name="color"
+                options={
+                    options.map((option) => (
+                        <option
+                            key={option.key}
+                            value={option.name}
+                            data-key={option.id}
+                        >
+                            {option.name}
+                        </option>
+                    ))
+                }
+            />
         );
     };
 
@@ -167,7 +189,6 @@ const AddStudent = (props) => {
         let classroom = false;
         let check = false;
         if (
-            allValuesStudent.name.length > 30 ||
             allValuesStudent.name.length < 2
         ) {
             name = true;
@@ -257,7 +278,6 @@ const AddStudent = (props) => {
             console.log(err);
         }
     };
-
     const FormAccountStudents = (
         <div className="form-admin-content">
             <h4>Add Pupil</h4>
@@ -267,7 +287,7 @@ const AddStudent = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Add Failed.
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -311,7 +331,7 @@ const AddStudent = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Name must be less than 30 chars
+                            Name must be greater than 2 chars
                         </label>
                     </div>
                     <div className="type-input">
@@ -375,6 +395,7 @@ const AddStudent = (props) => {
                             value={parentDropValue}
                             onChange={handleParentChange}
                         />
+
                         <label
                             className={
                                 "error" +

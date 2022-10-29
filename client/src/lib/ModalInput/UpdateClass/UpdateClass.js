@@ -166,7 +166,7 @@ const UpdateClass = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Update Failed. {props.ErrorMessage}
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">

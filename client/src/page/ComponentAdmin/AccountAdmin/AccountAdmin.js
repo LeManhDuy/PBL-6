@@ -37,10 +37,10 @@ function AccountAdmin() {
     }, [state]);
 
     const options = [
-        { key: 1, label: "Principal", value: "principal" },
-        { key: 2, label: "Parents", value: "parents" },
+        { key: 1, label: "Admin", value: "principal" },
+        { key: 2, label: "Parent", value: "parents" },
         { key: 3, label: "Teacher", value: "teacher" },
-        { key: 4, label: "Affair", value: "affair" },
+        { key: 4, label: "Staff", value: "affair" },
     ];
 
     const Dropdown = ({ value, options, onChange }) => {
@@ -83,6 +83,7 @@ function AccountAdmin() {
                             id: item._id,
                             name: item.person_fullname,
                             username: item.account_id.account_username,
+                            role: item.account_id.account_role,
                             birth: item.person_dateofbirth,
                             email: item.person_email,
                             gender: item.person_gender,
@@ -110,6 +111,8 @@ function AccountAdmin() {
                             name: item.person_id.person_fullname,
                             username:
                                 item.person_id.account_id.account_username,
+                            role:
+                                item.person_id.account_id.account_role,
                             birth: item.person_id.person_dateofbirth,
                             email: item.person_id.person_email,
                             gender: item.person_id.person_gender,
@@ -137,6 +140,8 @@ function AccountAdmin() {
                             name: item.person_id.person_fullname,
                             username:
                                 item.person_id.account_id.account_username,
+                            role:
+                                item.person_id.account_id.account_role,
                             birth: item.person_id.person_dateofbirth,
                             email: item.person_id.person_email,
                             gender: item.person_id.person_gender,
@@ -163,6 +168,7 @@ function AccountAdmin() {
                             id: item._id,
                             name: item.person_fullname,
                             username: item.account_id.account_username,
+                            role: item.account_id.account_role,
                             birth: item.person_dateofbirth,
                             email: item.person_email,
                             gender: item.person_gender,
@@ -187,7 +193,7 @@ function AccountAdmin() {
                 <td>{item.username}</td>
                 <td>{item.name}</td>
                 <td>{item.email}</td>
-                <td>{value.toUpperCase()}</td>
+                <td>{item.role.toUpperCase()}</td>
                 <td onClick={click}>
                     <i className="fa-regular fa-pen-to-square btn-edit"></i>
                     <i className="fa-regular fa-trash-can btn-delete"></i>

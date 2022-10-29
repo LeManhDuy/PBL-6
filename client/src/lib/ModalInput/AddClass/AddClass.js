@@ -161,7 +161,7 @@ const AddClass = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Add Failed. {props.errorMessage}
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
