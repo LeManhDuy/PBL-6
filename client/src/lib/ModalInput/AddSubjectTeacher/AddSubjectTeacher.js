@@ -66,7 +66,7 @@ const AddSubjectTeacher = (props) => {
         return (
           <label>
             {/* <input list="brow"/> */}
-            <select className="dropdown-account" value={value} onChange={onChange}>
+            <select className="dropdown-class" value={value} onChange={onChange}>
               <option value="All">All</option>
               {options.map((option) => (
                 <option key={option.key} value={option.id}>
@@ -139,7 +139,7 @@ const AddSubjectTeacher = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Subject Teacher already exists
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">

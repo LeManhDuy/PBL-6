@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./UpdateFeeCategory.css";
 import FeeCategoryService from "../../../config/service/FeeCategoryService";
-
+import { NumericFormat } from 'react-number-format';
 const UpdateFeeCategory = (props) => {
     const [allValuesFeeCategory, setAllValuesFeeCategory] = useState({
         name: "",
@@ -67,7 +67,7 @@ const UpdateFeeCategory = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Update failed. {props.errorMessage}
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -95,13 +95,15 @@ const UpdateFeeCategory = (props) => {
 
                     <div className="type-input">
                         <h4>Fee Ammount</h4>
-                        <input
+                        <NumericFormat
                             className="input-content"
-                            type="number"
+                            type="text"
                             name="ammount"
                             placeholder="Enter fee ammount"
                             value={allValuesFeeCategory.ammount}
                             onChange={changeHandlerFeeCategory}
+                            allowLeadingZeros
+                            thousandSeparator=","
                         />
                         <label
                             className={

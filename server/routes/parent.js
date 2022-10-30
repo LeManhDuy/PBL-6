@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
@@ -82,15 +83,15 @@ router.post("/", upload.single("person_image"), async (req, res) => {
         });
     }
     const phoneValidate = await Person.findOne({ person_phonenumber });
-
     if (phoneValidate)
         return res
             .status(400)
             .json({ success: false, message: "Phone is unique." });
-    if (!validator.validate(person_email)) {
+    const emailValidate = await Person.findOne({ person_email });
+    if (!validator.validate(person_email) || emailValidate) {
         return res.status(400).json({
             success: false,
-            message: "Invalid Email.",
+            message: "Email must be unquie and correct address form.",
         });
     }
     if (account_password.length < 6) {
@@ -113,7 +114,7 @@ router.post("/", upload.single("person_image"), async (req, res) => {
         const newAccount = new Account({
             account_username,
             account_password: hashPassword,
-            account_role: "Parents",
+            account_role: process.env.ROLE_PARENT,
         });
         await newAccount.save();
 
@@ -257,6 +258,22 @@ router.put("/:parentID", upload.single("person_image"), async (req, res) => {
     if (req.file) {
         person_image = req.file.publicUrl;
     }
+    const phoneValidate = await Person.findOne({ person_phonenumber: person_phonenumber })
+    if (phoneValidate)
+        if (phoneValidate._id.toString() !== req.params.personID) {
+            return res.status(400).json({
+                success: false,
+                message: "Phone is unique.",
+            });
+        }
+    const emailValidate = await Person.findOne({ person_email: person_email })
+    if (emailValidate)
+        if (emailValidate._id.toString() !== req.params.personID) {
+            return res.status(400).json({
+                success: false,
+                message: "email is unique.",
+            });
+        }
     if (person_phonenumber.length != 10) {
         return res.status(400).json({
             success: false,

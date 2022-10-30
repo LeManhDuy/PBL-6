@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./AddFeeCategory.css";
+import { NumericFormat } from 'react-number-format';
 
 const AddFeeCategory = (props) => {
     const [allValuesFeeCategory, setAllValuesFeeCategory] = useState({
@@ -17,7 +18,6 @@ const AddFeeCategory = (props) => {
         let ammount = false;
         let check = false;
         if (
-            allValuesFeeCategory.name.length > 30 ||
             allValuesFeeCategory.name.length < 2
         ) {
             name = true;
@@ -39,7 +39,6 @@ const AddFeeCategory = (props) => {
             [e.target.name]: e.target.value,
         });
     };
-
     const FormAddFeeCategory = (
         <div className="form-admin-content">
             <h4>Add Fee Category</h4>
@@ -49,7 +48,7 @@ const AddFeeCategory = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Add failed. {props.errorMessage}
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -76,13 +75,15 @@ const AddFeeCategory = (props) => {
                     </div>
                     <div className="type-input">
                         <h4>Fee Ammount</h4>
-                        <input
+                        <NumericFormat
                             className="input-content"
-                            type="number"
+                            type="text"
                             name="ammount"
                             placeholder="Enter fee ammount"
                             value={allValuesFeeCategory.ammount}
                             onChange={changeHandlerFeeCategory}
+                            allowLeadingZeros
+                            thousandSeparator=","
                         />
                         <label
                             className={

@@ -207,7 +207,7 @@ const UpdateFee = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Update Failed. {props.errorMessage}
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">

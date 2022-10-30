@@ -106,7 +106,7 @@ const AddFee = (props) => {
 
     const FeeCategoryDropDown = ({ value, options, onChange }) => {
         return (
-            <select className="dropdown-Fee" value={value} onChange={onChange}>
+            <select className="dropdown-class" value={value} onChange={onChange}>
                 <option key={10000} value="Pick">
                     FeeCategory
                 </option>
@@ -125,7 +125,7 @@ const AddFee = (props) => {
 
     const PupilDropDown = ({ value, options, onChange }) => {
         return (
-            <select className="dropdown-Fee" value={value} onChange={onChange}>
+            <select className="dropdown-class" value={value} onChange={onChange}>
                 <option key={10000} value="Pick">
                     Pupils
                 </option>
@@ -186,7 +186,7 @@ const AddFee = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Add Failed. {props.errorMessage}
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">

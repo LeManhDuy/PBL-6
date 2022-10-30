@@ -67,7 +67,6 @@ router.post("/", upload.single("person_image"), async (req, res) => {
             message: "Please fill in complete information.",
         });
     }
-
     if (person_phonenumber.length != 10) {
         return res.status(400).json({
             success: false,
@@ -75,7 +74,6 @@ router.post("/", upload.single("person_image"), async (req, res) => {
         });
     }
     const phoneValidate = await Person.findOne({ person_phonenumber });
-
     if (phoneValidate)
         return res
             .status(400)
@@ -228,6 +226,22 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
     if (req.file) {
         person_image = req.file.publicUrl;
     }
+    const phoneValidate = await Person.findOne({ person_phonenumber: person_phonenumber })
+    if (phoneValidate)
+        if (phoneValidate._id.toString() !== req.params.personID) {
+            return res.status(400).json({
+                success: false,
+                message: "Phone is unique.",
+            });
+        }
+    const emailValidate = await Person.findOne({ person_email: person_email })
+    if (emailValidate)
+        if (emailValidate._id.toString() !== req.params.personID) {
+            return res.status(400).json({
+                success: false,
+                message: "email is unique.",
+            });
+        }
     if (person_phonenumber.length != 10) {
         return res.status(400).json({
             success: false,

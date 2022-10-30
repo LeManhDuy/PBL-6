@@ -227,7 +227,6 @@ const UpdateStudent = (props) => {
         let classroom = false;
         let check = false;
         if (
-            allValuesStudent.name.length > 30 ||
             allValuesStudent.name.length < 2
         ) {
             name = true;
@@ -316,7 +315,7 @@ const UpdateStudent = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Update Failed.
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -360,7 +359,7 @@ const UpdateStudent = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Name must be less than 30 chars
+                            Name must be greater than 2 chars
                         </label>
                     </div>
                     <div className="type-input">

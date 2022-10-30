@@ -60,7 +60,7 @@ const UpdateSubject = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Subject already exists
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">

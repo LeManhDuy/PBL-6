@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
@@ -82,11 +83,10 @@ router.post("/", upload.single("person_image"), async (req, res) => {
         });
     }
     const phoneValidate = await Person.findOne({ person_phonenumber });
-
     if (phoneValidate)
         return res
             .status(400)
-            .json({ success: false, message: "Phone is unique." });
+            .json({ success: false, message: "Phone number must be unique." });
     const emailValidate = await Person.findOne({ person_email });
     if (!validator.validate(person_email) || emailValidate) {
         return res.status(400).json({
@@ -114,7 +114,7 @@ router.post("/", upload.single("person_image"), async (req, res) => {
         const newAccount = new Account({
             account_username,
             account_password: hashPassword,
-            account_role: "Academic Affair",
+            account_role: process.env.ROLE_STAFF,
         });
         await newAccount.save();
 
@@ -138,7 +138,7 @@ router.post("/", upload.single("person_image"), async (req, res) => {
         );
         res.json({
             success: true,
-            message: "Create Academic Affair successfully.",
+            message: "Create Staff successfully.",
             accessToken,
         });
     } catch (error) {
@@ -153,7 +153,7 @@ router.get("/", async (req, res) => {
     try {
         // Return token
         const allAffair = await Account.find({
-            account_role: "Academic Affair",
+            account_role: process.env.ROLE_STAFF,
         });
         const arrAffairId = [];
         allAffair.map((item) => {
@@ -231,6 +231,22 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
     if (req.file) {
         person_image = req.file.publicUrl;
     }
+    const phoneValidate = await Person.findOne({ person_phonenumber: person_phonenumber })
+    if (phoneValidate)
+        if (phoneValidate._id.toString() !== req.params.personID) {
+            return res.status(400).json({
+                success: false,
+                message: "Phone is unique.",
+            });
+        }
+    const emailValidate = await Person.findOne({ person_email: person_email })
+    if (emailValidate)
+        if (emailValidate._id.toString() !== req.params.personID) {
+            return res.status(400).json({
+                success: false,
+                message: "email is unique.",
+            });
+        }
     if (person_phonenumber.length != 10) {
         return res.status(400).json({
             success: false,
