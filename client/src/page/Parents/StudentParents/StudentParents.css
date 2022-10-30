@@ -48,7 +48,7 @@
     border-radius: 10px;
     padding: 30px;
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
     justify-content: center;
     align-items: center;
 }
@@ -74,10 +74,37 @@
 }
 
 .left-student-content {
-    width: 60%;
+    width: 33%;
     height: auto;
     display: inline-block;
     text-align: center;
+}
+
+.between-student-content {
+    width: 33%;
+    height: auto;
+    display: inline-block;
+    text-align: center;
+}
+
+.between-student-content i {
+    height: 50px;
+    width: 50px;
+    line-height: 50px;
+    font-size: 30px;
+    border-radius: 10px/10px;
+    text-align: center;
+    background-color: #83ACDC;
+    color: white;
+}
+
+.between-student-content h4 {
+    margin: 0;
+    display: inline-block;
+}
+
+.between-student-content p {
+    margin: 0%;
 }
 
 .left-student-content img {
@@ -99,7 +126,7 @@
 }
 
 .right-student-content {
-    width: 100%;
+    width: 33%;
     height: auto;
     display: flex;
     text-align: end;
