@@ -16,11 +16,10 @@ import AccountService from "../../../config/service/AccountService";
 import AddSubjectTeacher from "../../../lib/ModalInput/AddSubjectTeacher/AddSubjectTeacher";
 import UpdateSubjectTeacher from "../../../lib/ModalInput/UpdateSubjectTeacher/UpdateSubjectTeacher";
 
-
-
 const SubjectTeacherAdmin = () => {
     const [addSubjectTeacherState, setAddSubjectTeacherState] = useState(false);
-    const [updateSubjectTeacherState, setUpdateSubjectTeacherState] = useState(false);
+    const [updateSubjectTeacherState, setUpdateSubjectTeacherState] =
+        useState(false);
     const [Id, setId] = useState();
     const [state, setState] = useState(false);
     const [subjectsTeacher, setSubjectTeacher] = useState([]);
@@ -32,13 +31,13 @@ const SubjectTeacherAdmin = () => {
     const [dropValueSubject, setDropValueSubject] = useState("All");
     const [dropValueTeacher, setDropValueTeacher] = useState("All");
     const [filter, setFilter] = useState([]);
-
+    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         getSubjectTeacher();
         getSubject();
         getTeachers();
-        setFilter({subject_id:"",teacher_id:""});
+        setFilter({ subject_id: "", teacher_id: "" });
     }, [state]);
 
     const getSubjectTeacher = () => {
@@ -52,15 +51,16 @@ const SubjectTeacherAdmin = () => {
                             subject_id: item.subject_id._id,
                             subject_name: item.subject_id.subject_name,
                             teacher_id: item.teacher_id._id,
-                            teacher_name: item.teacher_id.person_id.person_fullname,
-                        }
+                            teacher_name:
+                                item.teacher_id.person_id.person_fullname,
+                        };
                     }
                 );
                 setSubjectTeacher(dataSources);
             })
             .catch((error) => {
                 console.log(error);
-            })
+            });
     };
 
     const getSubjectTeacherWithFilter = (filter) => {
@@ -74,50 +74,53 @@ const SubjectTeacherAdmin = () => {
                             subject_id: item.subject_id._id,
                             subject_name: item.subject_id.subject_name,
                             teacher_id: item.teacher_id._id,
-                            teacher_name: item.teacher_id.person_id.person_fullname,
-                        }
+                            teacher_name:
+                                item.teacher_id.person_id.person_fullname,
+                        };
                     }
                 );
                 setSubjectTeacher(dataSources);
             })
             .catch((error) => {
                 console.log(error);
-            })
+            });
     };
 
     const Dropdown = ({ value, options, onChange }) => {
         return (
-          <label>
-            {/* <input list="brow"/> */}
-            <select className="dropdown-account" value={value} onChange={onChange}>
-              <option value="All">All</option>
-              {options.map((option) => (
-                <option key={option.key} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
-          </label>
+            <label>
+                {/* <input list="brow"/> */}
+                <select
+                    className="dropdown-account"
+                    value={value}
+                    onChange={onChange}
+                >
+                    <option value="All">All</option>
+                    {options.map((option) => (
+                        <option key={option.key} value={option.id}>
+                            {option.name}
+                        </option>
+                    ))}
+                </select>
+            </label>
         );
-      };
+    };
 
     const getSubject = () => {
         SubjectService.getSubject()
             .then((response) => {
-                const dataSources = response.allSubject.map(
-                    (item, index) => {
-                        return {
-                            key: index + 1,
-                            id: item._id,
-                            name: item.subject_name
-                        }
-                    }
-                );
+                const dataSources = response.allSubject.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
+                        name: item.subject_name,
+                    };
+                });
                 setSubject(dataSources);
             })
             .catch((error) => {
                 console.log(error);
-            })
+            });
     };
 
     const getTeachers = () => {
@@ -143,25 +146,25 @@ const SubjectTeacherAdmin = () => {
     const handleChangeSubject = (event) => {
         setDropValueSubject(event.target.value);
         // handleFilter();
-      };
+    };
     const handleChangeTeacher = (event) => {
         setDropValueTeacher(event.target.value);
         // teacher_id = event.target.selectedValue
         // handleFilter();
-      };
+    };
 
     const handleFilter = () => {
-        let f = {subject_teacher_id:"",subject_id:"",teacher_id:""}
-        if (dropValueSubject !== "All"){
-            f.subject_id = dropValueSubject
+        let f = { subject_teacher_id: "", subject_id: "", teacher_id: "" };
+        if (dropValueSubject !== "All") {
+            f.subject_id = dropValueSubject;
         }
-        if (dropValueTeacher !== "All"){
-            f.teacher_id = dropValueTeacher
+        if (dropValueTeacher !== "All") {
+            f.teacher_id = dropValueTeacher;
         }
         // setFilter()
-        getSubjectTeacherWithFilter(f)
+        getSubjectTeacherWithFilter(f);
         // console.log(filter)
-    }
+    };
 
     // Add Subject Teacher
     const handleConfirmAddSubjectTeacher = (allValue) => {
@@ -170,23 +173,25 @@ const SubjectTeacherAdmin = () => {
             subject_id: allValue.subject_id,
             teacher_id: allValue.teacher_id,
         })
-        .then((res) => {
-            if (res.success) {
-                setState(!state);
-                setErrorServer(false);
-                setAddSubjectTeacherState(false);
-            } else {
-                setErrorServer(true);
-                setAddSubjectTeacherState(true);
-            }
-        })
-        .catch((error) => console.log("error", error));
-    }
+            .then((res) => {
+                if (res.success) {
+                    setState(!state);
+                    setErrorServer(false);
+                    setErrorMessage("");
+                    setAddSubjectTeacherState(false);
+                } else {
+                    setErrorServer(true);
+                    setErrorMessage(res.message);
+                    setAddSubjectTeacherState(true);
+                }
+            })
+            .catch((error) => console.log("error", error));
+    };
 
-    
     const handleInputCustom = () => {
         setAddSubjectTeacherState(false);
         setErrorServer(false);
+        setErrorMessage("");
         setUpdateSubjectTeacherState(false);
     };
 
@@ -197,8 +202,11 @@ const SubjectTeacherAdmin = () => {
             content={
                 <AddSubjectTeacher
                     handleInputCustom={handleInputCustom}
-                    handleConfirmAddSubjectTeacher={handleConfirmAddSubjectTeacher}
+                    handleConfirmAddSubjectTeacher={
+                        handleConfirmAddSubjectTeacher
+                    }
                     errorServer={errorServer}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -206,20 +214,23 @@ const SubjectTeacherAdmin = () => {
 
     const handleConfirmUpdateSubjectTeacher = (allValue) => {
         SubjectTeacherService.updateSubjectTeacher(Id, {
-            subject_id:  allValue.subject_id,
-            teacher_id: allValue.teacher_id
-        }).then((res) => {
-            if (res.success) {
-                setState(!state);
-                setErrorServer(false);
-                setUpdateSubjectTeacherState(false);
-            } else {
-                setErrorServer(true);
-                setUpdateSubjectTeacherState(true);
-            }
+            subject_id: allValue.subject_id,
+            teacher_id: allValue.teacher_id,
         })
-        .catch((error) => console.log("error", error));
-    }
+            .then((res) => {
+                if (res.success) {
+                    setState(!state);
+                    setErrorServer(false);
+                    setErrorMessage("");
+                    setUpdateSubjectTeacherState(false);
+                } else {
+                    setErrorServer(true);
+                    setErrorMessage(res.message);
+                    setUpdateSubjectTeacherState(true);
+                }
+            })
+            .catch((error) => console.log("error", error));
+    };
 
     // Component Add Subject (Form)
     const DivUpdateSubjectTeacher = (
@@ -229,9 +240,12 @@ const SubjectTeacherAdmin = () => {
             content={
                 <UpdateSubjectTeacher
                     handleInputCustom={handleInputCustom}
-                    handleConfirmUpdateSubjectTeacher={handleConfirmUpdateSubjectTeacher}
+                    handleConfirmUpdateSubjectTeacher={
+                        handleConfirmUpdateSubjectTeacher
+                    }
                     errorServer={errorServer}
                     SubjectTeacherId={Id}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -248,7 +262,7 @@ const SubjectTeacherAdmin = () => {
             }
         });
         setIsDelete(false);
-    }
+    };
 
     const ConfirmDelete = (
         <ModalCustom
@@ -267,9 +281,10 @@ const SubjectTeacherAdmin = () => {
     const handleAddSubjectTeacher = () => {
         setAddSubjectTeacherState(true);
         setErrorServer(false);
-    }
+        setErrorMessage("");
+    };
 
-    const TableSubjectTeacher = ({subjectsTeacher}) => {
+    const TableSubjectTeacher = ({ subjectsTeacher }) => {
         const subjectTeacherItem = subjectsTeacher.map((item) => (
             <tr data-key={item.id} key={item.id}>
                 <td>{item.subject_name}</td>
@@ -282,7 +297,8 @@ const SubjectTeacherAdmin = () => {
         ));
 
         function click(e) {
-            const id =  e.target.parentElement.parentElement.getAttribute("data-key");
+            const id =
+                e.target.parentElement.parentElement.getAttribute("data-key");
             if (e.target.className.includes("btn-delete")) {
                 setIsDelete(true);
                 setId(id);
@@ -312,7 +328,6 @@ const SubjectTeacherAdmin = () => {
         );
     };
 
-
     return (
         <div className="main-container">
             <header>
@@ -320,7 +335,12 @@ const SubjectTeacherAdmin = () => {
                     <h3>Manage Subject Teacher</h3>
                 </div>
                 <div className="right-header">
-                    <button className="btn-account" onClick={handleAddSubjectTeacher}>Add Subject Teacher</button>
+                    <button
+                        className="btn-account"
+                        onClick={handleAddSubjectTeacher}
+                    >
+                        Add Subject Teacher
+                    </button>
                     <div className="search-box">
                         <Dropdown
                             label="Subject"
@@ -345,7 +365,7 @@ const SubjectTeacherAdmin = () => {
                 </div>
             </header>
             <div className="table-content">
-                <TableSubjectTeacher  subjectsTeacher={subjectsTeacher}/>
+                <TableSubjectTeacher subjectsTeacher={subjectsTeacher} />
             </div>
             <footer>
                 <hr></hr>
@@ -380,8 +400,6 @@ const SubjectTeacherAdmin = () => {
             </footer>
         </div>
     );
-
-
 };
 
 export default SubjectTeacherAdmin;
