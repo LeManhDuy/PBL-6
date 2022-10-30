@@ -259,8 +259,10 @@ router.put("/:parentID", upload.single("person_image"), async (req, res) => {
         person_image = req.file.publicUrl;
     }
     const phoneValidate = await Person.findOne({ person_phonenumber: person_phonenumber })
+    const parentInfor = await Parent.findById(req.params.parentID)
+        .populate("person_id", ["person_id"])
     if (phoneValidate)
-        if (phoneValidate._id.toString() !== req.params.personID) {
+        if (phoneValidate._id.toString() !== parentInfor.person_id._id.toString()) {
             return res.status(400).json({
                 success: false,
                 message: "Phone number must be unique.",
@@ -268,7 +270,7 @@ router.put("/:parentID", upload.single("person_image"), async (req, res) => {
         }
     const emailValidate = await Person.findOne({ person_email: person_email })
     if (emailValidate)
-        if (emailValidate._id.toString() !== req.params.personID) {
+        if (emailValidate._id.toString() !== parentInfor.person_id._id.toString()) {
             return res.status(400).json({
                 success: false,
                 message: "Email must be unquie.",

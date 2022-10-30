@@ -1,6 +1,7 @@
 const Class = require("../model/class")
 const Pupil = require("../model/Pupil")
 const Teacher = require("../model/Teacher")
+const Parent = require("../model/Parent")
 
 const createClass = async (req, res) => {
     const {
@@ -248,7 +249,16 @@ const getParentAssociations = async (req, res) => {
         const classInfor = await Class.find({
             homeroom_teacher_id: req.params.teacherID
         })
-        res.json({ success: true, classInfor });
+        const parentId = await Pupil.find({
+            class_id: classInfor[0]._id.toString()
+        }).select('parent_id')
+
+        let parentArray = []
+        parentId.forEach(element => {
+            parentArray.push(element.parent_id)
+        });
+        const parentInfor = await Parent.find().where('_id').in(parentArray)
+        res.json({ success: true, parentInfor });
         // // Return token
         // const personInfor = await Class.findById(req.params.classID);
         // const getParentInfor = await Parent.find({

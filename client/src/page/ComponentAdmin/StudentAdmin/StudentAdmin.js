@@ -48,8 +48,10 @@ const StudentAdmin = () => {
                             ? item.class_id.class_name
                             : "Empty",
                         teacher: item.class_id
-                            ? item.class_id.homeroom_teacher_id.person_id
-                                  .person_fullname
+                            ? item.class_id.homeroom_teacher_id
+                                ? item.class_id.homeroom_teacher_id.person_id
+                                    .person_fullname
+                                : "Empty"
                             : "Empty",
                         grade: item.class_id
                             ? item.class_id.grade_id
@@ -103,7 +105,7 @@ const StudentAdmin = () => {
                                 : "Empty",
                             teacher: item.class_id
                                 ? item.class_id.homeroom_teacher_id.person_id
-                                      .person_fullname
+                                    .person_fullname
                                 : "Empty",
                             grade: item.class_id.grade_id
                                 ? item.class_id.grade_id.grade_name

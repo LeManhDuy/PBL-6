@@ -238,18 +238,12 @@ router.put("/:pupilID", upload.single("pupil_image"), async (req, res) => {
             }
         }
         //update Pupil Information
-        let updatePupil = {
-            pupil_name,
-            pupil_dateofbirth,
-            pupil_gender,
-            parent_id,
-            class_id,
-        };
-        const postUpdatePupil = { _id: req.params.pupilID.toString() };
+        let updatePupil = { pupil_name, pupil_dateofbirth, pupil_gender, pupil_image, parent_id, class_id }
+        const postUpdatePupil = { _id: req.params.pupilID.toString() }
         updatedPupil = await Pupil.findOneAndUpdate(
             postUpdatePupil,
             updatePupil,
-            { new: true }
+            { new: true }  
         );
         if (!updatePupil)
             return res
