@@ -22,7 +22,7 @@ router.post("/", multer().single('scheduleFile'), async (req, res) => {
                 scheduleFile = Buffer.from(req.file.buffer)
             }
             else{
-                return res.status(500).json({ success: false, message: "File does not exist!" })
+                return res.status(400).json({ success: false, message: "File does not exist!" })
             }
             const schedule = excelToJson({
                 source: scheduleFile,
@@ -64,7 +64,7 @@ router.post("/", multer().single('scheduleFile'), async (req, res) => {
                 }
             })
             if(msg!==""){
-                return res.status(500).json({success: false, message: msg})
+                return res.status(400).json({success: false, message: msg})
             }
             //get subject teacher info
             let classes_teachers = {}
@@ -136,16 +136,18 @@ router.post("/", multer().single('scheduleFile'), async (req, res) => {
             }
           
             if (msg!==""){
-                return res.status(500).json({success: false, message: msg})
+                return res.status(400).json({success: false, message: msg})
             } 
             else{
+                try{
                 for(let c of class_name){
-                    //delete existed schedule to replace
-                    const existed_schedule = Schedule.findOne({class_id:existed_class_name[c]})
+                    //delete existed schedule to replace    
+                    const existed_schedule = await Schedule.findOne({class_id:existed_class_name[c]})
+                    // return res.status(200).json({ success: true, existed_schedule})
                     if(existed_schedule){
                         // const existed_periods = Period.find({schedule_id:existed_schedule._id})
                         await Period.deleteMany({schedule_id:existed_schedule._id})
-                        await Schedule.deleteOne(existed_schedule)
+                        await Schedule.deleteOne(existed_schedule[0])
                     }
 
                     let new_schedule = new Schedule({
@@ -162,15 +164,108 @@ router.post("/", multer().single('scheduleFile'), async (req, res) => {
                         await new_period.save()
                     }
                 }
-
+                }
+                catch(error){
+                    return res.status(500).json({success: false, message: "WRONG: " + error})
+                }
                 return res.status(200).json({ success: true, message:"Add schedule successfully", 
                     forClasses:existed_class_name,periods,classes_teachers})
             }
         }catch(error){
-            return res.status(500).json({success: false, message: "Something's wrong: " + error+ " "+msg})
+            return res.status(500).json({success: false, message: "Something's wrong: " + error})
         }
         
     })
+router.get("/",multer().single(), async (req,res) =>{
+    try{
+        const schedule = await Schedule.find().select()
+            .populate({
+                path:'class_id',
+                model: 'Class',
+                select: ['class_name']
+            })
+        let schedules = []
+        for(let s of schedule){
+            const periods = await Period.find({schedule_id:s._id}).select()
+            .populate({
+                path: 'subject_teacher_id',
+                model: 'SubjectTeacher',
+                populate: [{
+                    path: "subject_id",
+                    model: "Subject",
+                    select: ["subject_name"]
+                },{
+                    path: "teacher_id",
+                    model: "Teacher",
+                    select: ["person_id"],
+                    populate:[{
+                        path: "person_id",
+                        model: "Person",
+                        select: ["person_fullname"]
+                    }]
+                }]
+            })
+            schedules.push({schedule:s,periods})
+        }
+        return res.status(200).json({success:true, message:"Get Schedule successfully!", 
+        schedules})
+    }
+    catch(error){
+        return res.status(500).json({success: false, message: "" + error})
+    }
+})
+router.get("/class/:classId",multer().single(), async (req,res) => {
+    //validate classID
+    try{
+        const existed_class = await Class.findOne({_id: req.params.classId})
+        if(!existed_class){
+            return res.status(400).json({success:false, message: "Class id doesn't exist!"})
+        }
+        
+        const existed_schedule = await Schedule.findOne({class_id: existed_class._id})
+        if(!existed_schedule){
+            return res.status(400).json({success:false, message: "No Schedule for this class exist!"})
+        }
+        const existed_period = await Period.find({schedule_id: existed_schedule._id})
+        return res.status(200).json({success:true, message:"Get Schedule successfully!", 
+            class: existed_class, schedule: existed_schedule, existed_period})
+    }
+    catch(error){
+        return res.status(500).json({success: false, message: "" + error})
+    }
+})
 
+router.get("/teacher/:teacherId",multer().single(), async (req,res) => {
+    //validate teacherID
+    try{
+        const existed_teacher = await Teacher.find({_id: req.params.teacherId})
+        if(!existed_teacher){
+            return res.status(500).json({success:false, message: "Teacher id doesn't exist!"})
+        }
+        const existed_subject_teachers = await Subject_Teacher.find({teacher_id: existed_teacher[0]._id}).select(["_id"])
+
+        const existed_periods = await Period.find({subject_teacher_id:{$in: existed_subject_teachers}})
+        let date_of_week = ['Mon','Tue','Wed','Thu','Fri']
+        existed_periods.sort((a,b)=>{
+                return date_of_week.indexOf(a.period_date) - date_of_week.indexOf(b.period_date) ||
+                    a.period_number - b.period_number
+        })
+        return res.status(200).json({success:true, message:"Get Schedule successfully!", 
+            teacher: existed_teacher, existed_periods})
+    }
+    catch(error){
+        return res.status(500).json({success: false, message: "" + error})
+    }
+})
+
+router.delete("/:scheduleId",multer().single(), async (req,res) =>{
+    try{
+        await Period.deleteMany({schedule_id:req.params.scheduleId})
+        await Schedule.deleteOne({_id:req.params.scheduleId})
+        return res.status(200).json({success:true, message:"Delete successfully!"})
+    }catch(error){
+        return res.status(500).json({success: false, message: "" + error})
+    }
+} )
 
 module.exports = router
