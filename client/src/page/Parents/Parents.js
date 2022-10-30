@@ -21,12 +21,10 @@ const Parents = () => {
         is_in_association: "",
         parent_username: "",
     });
-    const [id, setId] = useState(false);
     const [state, setState] = useState(false);
 
     useEffect(() => {
         getInfoParents();
-        console.log(JSON.parse(localStorage.getItem("@Login")).AccountId);
     }, [state]);
 
     const getInfoParents = () => {

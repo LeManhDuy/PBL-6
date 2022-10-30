@@ -21,6 +21,7 @@ const GradeAdmin = () => {
     const [grades, setGrade] = useState([]);
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
+    const [errorMessage, setErrorMessage] = useState();
     const [name, setName] = useState();
 
     useEffect(() => {
@@ -53,9 +54,11 @@ const GradeAdmin = () => {
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
+                    setErrorMessage("");
                     setAddGradeState(false);
                 } else {
                     setErrorServer(true);
+                    setErrorMessage(res.message);
                     setAddGradeState(true);
                 }
             })
@@ -65,6 +68,7 @@ const GradeAdmin = () => {
     const handleInputCustom = () => {
         setAddGradeState(false);
         setErrorServer(false);
+        setErrorMessage("");
         setUpdateGradeState(false);
     };
     //Component Add Grade (Form)
@@ -77,6 +81,7 @@ const GradeAdmin = () => {
                     handleInputCustom={handleInputCustom}
                     handleConfirmAddGrade={handleConfirmAddGrade}
                     errorServer={errorServer}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -90,9 +95,11 @@ const GradeAdmin = () => {
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
+                    setErrorMessage("");
                     setUpdateGradeState(false);
                 } else {
                     setErrorServer(true);
+                    setErrorMessage(res.message);
                     setUpdateGradeState(true);
                 }
             })
@@ -109,6 +116,7 @@ const GradeAdmin = () => {
                     handleInputCustom={handleInputCustom}
                     handleConfirmUpdateGrade={handleConfirmUpdateGrade}
                     errorServer={errorServer}
+                    errorMessage={errorMessage}
                     GradeId={Id}
                 />
             }
@@ -145,6 +153,7 @@ const GradeAdmin = () => {
     const handleAddGrade = () => {
         setAddGradeState(true);
         setErrorServer(false);
+        setErrorMessage("");
     };
 
     const TableGrade = ({ grades }) => {
