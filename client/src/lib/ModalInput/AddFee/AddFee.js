@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import FeeCategoryService from "../../../config/service/FeeCategoryService";
 import PupilService from "../../../config/service/StudentService";
 import "./AddFee.css";
+import Select from 'react-select';
 
 const AddFee = (props) => {
     let date = new Date().toLocaleDateString();
@@ -11,33 +12,27 @@ const AddFee = (props) => {
     const [pupilDropValue, setPupilDropValue] = useState();
     const [allValuesFee, setAllValuesFee] = useState({
         fee_status: "",
-        start_date: `${date.split("/")[2]}-${
-            date.split("/")[0] < 10
-                ? "0" + date.split("/")[0]
-                : date.split("/")[0]
-        }-${
-            date.split("/")[1] < 10
+        start_date: `${date.split("/")[2]}-${date.split("/")[0] < 10
+            ? "0" + date.split("/")[0]
+            : date.split("/")[0]
+            }-${date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-        }`,
-        end_date: `${date.split("/")[2]}-${
-            date.split("/")[0] < 10
-                ? "0" + date.split("/")[0]
-                : date.split("/")[0]
-        }-${
-            date.split("/")[1] < 10
+            }`,
+        end_date: `${date.split("/")[2]}-${date.split("/")[0] < 10
+            ? "0" + date.split("/")[0]
+            : date.split("/")[0]
+            }-${date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-        }`,
-        paid_date: `${date.split("/")[2]}-${
-            date.split("/")[0] < 10
-                ? "0" + date.split("/")[0]
-                : date.split("/")[0]
-        }-${
-            date.split("/")[1] < 10
+            }`,
+        paid_date: `${date.split("/")[2]}-${date.split("/")[0] < 10
+            ? "0" + date.split("/")[0]
+            : date.split("/")[0]
+            }-${date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-        }`,
+            }`,
         fee_category: "",
         pupil: "",
     });
@@ -61,9 +56,9 @@ const AddFee = (props) => {
                 const dataSources = response.allFeeCategory.map(
                     (item, index) => {
                         return {
-                            key: index + 1,
-                            id: item._id,
-                            fee_category: item.fee_name,
+                            //key: index + 1,
+                            value: item._id,
+                            label: item.fee_name,
                         };
                     }
                 );
@@ -79,9 +74,11 @@ const AddFee = (props) => {
             .then((response) => {
                 const dataSources = response.getPuilInfor.map((item, index) => {
                     return {
-                        key: index + 1,
-                        id: item._id,
-                        pupil: item.pupil_name,
+                        //key: index + 1,
+                        value: item._id,
+                        label: item.class_id
+                            ? item.pupil_name + " - " + item.class_id.class_name
+                            : item.pupil_name + " - " + "Empty"
                     };
                 });
                 setPupil(dataSources);
@@ -104,77 +101,58 @@ const AddFee = (props) => {
         }
     };
 
-    const FeeCategoryDropDown = ({ value, options, onChange }) => {
-        return (
-            <select className="dropdown-class" value={value} onChange={onChange}>
-                <option key={10000} value="Pick">
-                    FeeCategory
-                </option>
-                {options.map((option) => (
-                    <option
-                        key={option.key}
-                        value={option.fee_category}
-                        data-key={option.id}
-                    >
-                        {option.fee_category}
-                    </option>
-                ))}
-            </select>
-        );
-    };
+    // const FeeCategoryDropDown = ({ value, options, onChange }) => {
+    //     return (
+    //         <select className="dropdown-class" value={value} onChange={onChange}>
+    //             <option key={10000} value="Pick">
+    //                 FeeCategory
+    //             </option>
+    //             {options.map((option) => (
+    //                 <option
+    //                     key={option.key}
+    //                     value={option.fee_category}
+    //                     data-key={option.id}
+    //                 >
+    //                     {option.fee_category}
+    //                 </option>
+    //             ))}
+    //         </select>
+    //     );
+    // };
 
-    const PupilDropDown = ({ value, options, onChange }) => {
-        return (
-            <select className="dropdown-class" value={value} onChange={onChange}>
-                <option key={10000} value="Pick">
-                    Pupils
-                </option>
-                {options.map((option) => (
-                    <option
-                        key={option.key}
-                        value={option.pupil}
-                        data-key={option.id}
-                    >
-                        {option.pupil}
-                    </option>
-                ))}
-            </select>
-        );
-    };
+    // const PupilDropDown = ({ value, options, onChange }) => {
+    //     return (
+    //         <select className="dropdown-class" value={value} onChange={onChange}>
+    //             <option key={10000} value="Pick">
+    //                 Pupils
+    //             </option>
+    //             {options.map((option) => (
+    //                 <option
+    //                     key={option.key}
+    //                     value={option.pupil}
+    //                     data-key={option.id}
+    //                 >
+    //                     {option.pupil}
+    //                 </option>
+    //             ))}
+    //         </select>
+    //     );
+    // };
 
     const handleFeeCategoryChange = (event) => {
-        setFeeCategoryDropValue(event.target.value);
-        if (event.target.value !== "Pick") {
-            setAllValuesFee({
-                ...allValuesFee,
-                fee_category:
-                    event.target.options[
-                        event.target.selectedIndex
-                    ].getAttribute("data-key"),
-            });
-        } else {
-            setAllValuesFee({
-                ...allValuesFee,
-                teacher: null,
-            });
-        }
+        setFeeCategoryDropValue(event);
+        setAllValuesFee({
+            ...allValuesFee,
+            fee_category: event.value
+        });
     };
 
     const handlePupilChange = (event) => {
-        setPupilDropValue(event.target.value);
-        if (event.target.value !== "Pick") {
-            setAllValuesFee({
-                ...allValuesFee,
-                pupil: event.target.options[
-                    event.target.selectedIndex
-                ].getAttribute("data-key"),
-            });
-        } else {
-            setAllValuesFee({
-                ...allValuesFee,
-                grade: null,
-            });
-        }
+        setPupilDropValue(event);
+        setAllValuesFee({
+            ...allValuesFee,
+            pupil: event.value
+        });
     };
 
     const FormFee = (
@@ -289,10 +267,18 @@ const AddFee = (props) => {
                 <div className="teacher-content-right">
                     <div className="type-input">
                         <h4>Fee Category</h4>
-                        <FeeCategoryDropDown
+                        {/* <FeeCategoryDropDown
                             options={feeCategory}
                             value={feeCategoryDropValue}
                             onChange={handleFeeCategoryChange}
+                        /> */}
+                        <Select
+                            className="dropdown-class"
+                            value={feeCategoryDropValue}
+                            onChange={handleFeeCategoryChange}
+                            options={feeCategory}
+                            placeholder="Fee Category"
+                            maxMenuHeight={200}
                         />
                         <label
                             className={
@@ -307,10 +293,18 @@ const AddFee = (props) => {
                     </div>
                     <div className="type-input">
                         <h4>Pupil</h4>
-                        <PupilDropDown
+                        {/* <PupilDropDown
                             options={pupil}
                             value={pupilDropValue}
                             onChange={handlePupilChange}
+                        /> */}
+                        <Select
+                            className="dropdown-class"
+                            value={pupilDropValue}
+                            onChange={handlePupilChange}
+                            options={pupil}
+                            placeholder="Name - Class"
+                            maxMenuHeight={200}
                         />
                         <label
                             className={
@@ -338,15 +332,13 @@ const AddFee = (props) => {
         let pupil = false;
 
         let dateNow = new Date().toLocaleDateString();
-        let dateConvert = `${dateNow.split("/")[2]}-${
-            dateNow.split("/")[0] < 10
-                ? "0" + dateNow.split("/")[0]
-                : dateNow.split("/")[0]
-        }-${
-            dateNow.split("/")[1] < 10
+        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
+            ? "0" + dateNow.split("/")[0]
+            : dateNow.split("/")[0]
+            }-${dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
-        }`;
+            }`;
         // if (!allValuesFee.fee_status) {
         //     fee_status = true;
         //     check = true;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ClassService from "../../../config/service/ClassService";
 import GradeService from "../../../config/service/GradeService";
 import "./UpdateClass.css";
+import Select from 'react-select';
 
 const UpdateClass = (props) => {
     const [teacher, setTeacher] = useState([]);
@@ -12,11 +13,17 @@ const UpdateClass = (props) => {
         name: "",
         teacher: "",
         grade: "",
+
+        teacher_name: "",
+        grade_name: "",
     });
     const [classError, setClassError] = useState({
         name: false,
         teacher: false,
         grade: false,
+
+        teacher_name: false,
+        grade_name: false,
     });
 
     useEffect(() => {
@@ -25,8 +32,29 @@ const UpdateClass = (props) => {
         ClassService.getClassById(props.classID).then((res) => {
             setAllValuesClass({
                 name: res.getClassInfor[0].class_name,
-                teacher: res.getClassInfor[0].homeroom_teacher_id._id,
-                grade: res.getClassInfor[0].grade_id._id,
+                teacher: res.getClassInfor[0]
+                    ? res.getClassInfor[0].homeroom_teacher_id
+                        ? res.getClassInfor[0].homeroom_teacher_id._id
+                        : null
+                    : null,
+                grade: res.getClassInfor[0]
+                    ? res.getClassInfor[0].grade_id
+                        ? res.getClassInfor[0].grade_id._id
+                        : null
+                    : null,
+
+                teacher_name: res.getClassInfor[0]
+                    ? res.getClassInfor[0].homeroom_teacher_id
+                        ? res.getClassInfor[0].homeroom_teacher_id.person_id
+                            ? res.getClassInfor[0].homeroom_teacher_id.person_id.person_fullname
+                            : "Empty"
+                        : "Empty"
+                    : "Empty",
+                grade_name: res.getClassInfor[0]
+                    ? res.getClassInfor[0].grade_id
+                        ? res.getClassInfor[0].grade_id.grade_name
+                        : "Empty"
+                    : "Empty",
             });
         });
     }, []);
@@ -37,9 +65,8 @@ const UpdateClass = (props) => {
                 const dataSources = response.getTeacherInfor.map(
                     (item, index) => {
                         return {
-                            key: index + 1,
-                            id: item._id,
-                            teacher: item.person_id.person_fullname,
+                            value: item._id,
+                            label: item.person_id.person_fullname,
                         };
                     }
                 );
@@ -55,9 +82,8 @@ const UpdateClass = (props) => {
             .then((response) => {
                 const dataSources = response.allGrade.map((item, index) => {
                     return {
-                        key: index + 1,
-                        id: item._id,
-                        grade: item.grade_name,
+                        value: item._id,
+                        label: item.grade_name,
                     };
                 });
                 setGrade(dataSources);
@@ -123,38 +149,49 @@ const UpdateClass = (props) => {
     };
 
     const handleTeacherChange = (event) => {
-        setTeacherDropValue(event.target.value);
-        if (event.target.value !== "Pick") {
-            setAllValuesClass({
-                ...allValuesClass,
-                teacher:
-                    event.target.options[
-                        event.target.selectedIndex
-                    ].getAttribute("data-key"),
-            });
-        } else {
-            setAllValuesClass({
-                ...allValuesClass,
-                teacher: null,
-            });
-        }
+        // setTeacherDropValue(event.target.value);
+        // if (event.target.value !== "Pick") {
+        //     setAllValuesClass({
+        //         ...allValuesClass,
+        //         teacher:
+        //             event.target.options[
+        //                 event.target.selectedIndex
+        //             ].getAttribute("data-key"),
+        //     });
+        // } else {
+        //     setAllValuesClass({
+        //         ...allValuesClass,
+        //         teacher: null,
+        //     });
+        // }
+        setTeacherDropValue(event);
+        setAllValuesClass({
+            ...allValuesClass,
+            teacher: event.value
+        });
     };
 
     const handleGradeChange = (event) => {
-        setGradeDropValue(event.target.value);
-        if (event.target.value !== "Pick") {
-            setAllValuesClass({
-                ...allValuesClass,
-                grade: event.target.options[
-                    event.target.selectedIndex
-                ].getAttribute("data-key"),
-            });
-        } else {
-            setAllValuesClass({
-                ...allValuesClass,
-                grade: null,
-            });
-        }
+        // setGradeDropValue(event.target.value);
+        // if (event.target.value !== "Pick") {
+        //     setAllValuesClass({
+        //         ...allValuesClass,
+        //         grade: event.target.options[
+        //             event.target.selectedIndex
+        //         ].getAttribute("data-key"),
+        //     });
+        // } else {
+        //     setAllValuesClass({
+        //         ...allValuesClass,
+        //         grade: null,
+        //     });
+        // }
+        setGradeDropValue(event);
+        setAllValuesClass({
+            ...allValuesClass,
+            grade: event.value,
+            gradeName: event.label
+        });
     };
 
     const FormClass = (
@@ -194,31 +231,14 @@ const UpdateClass = (props) => {
                 </div>
                 <div className="teacher-content-right">
                     <div className="type-input">
-                        <h4>Teacher</h4>
-                        <TeacherDropDown
-                            options={teacher}
-                            value={teacherDropValue}
-                            onChange={handleTeacherChange}
-                            teacherValue={allValuesClass.teacher}
-                        />
-                        <label
-                            className={
-                                "error" +
-                                (classError.teacher
-                                    ? " error-show"
-                                    : " error-hidden")
-                            }
-                        >
-                            Invalid Teacher
-                        </label>
-                    </div>
-                    <div className="type-input">
                         <h4>Grade</h4>
-                        <GradeDropDown
-                            options={grade}
+                        <Select
+                            className="dropdown-class"
                             value={gradeDropValue}
                             onChange={handleGradeChange}
-                            gradeValue={allValuesClass.grade}
+                            options={grade}
+                            placeholder={allValuesClass.grade_name}
+                            maxMenuHeight={200}
                         />
                         <label
                             className={
@@ -231,6 +251,27 @@ const UpdateClass = (props) => {
                             Invalid Class
                         </label>
                     </div>
+                    <div className="type-input">
+                        <h4>Teacher</h4>
+                        <Select
+                            className="dropdown-class"
+                            value={teacherDropValue}
+                            onChange={handleTeacherChange}
+                            options={teacher}
+                            placeholder={allValuesClass.teacher_name}
+                            maxMenuHeight={200}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (classError.teacher
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid Teacher
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -240,6 +281,10 @@ const UpdateClass = (props) => {
         let name = false;
         let teacher = false;
         let grade = false;
+
+        let teacher_name = false;
+        let grade_name = false;
+
         let check = false;
 
         if (allValuesClass.name.length > 30) {
@@ -265,6 +310,8 @@ const UpdateClass = (props) => {
             name: name,
             grade: grade,
             teacher: teacher,
+            teacher_name: teacher_name,
+            grade_name: grade_name
         });
 
         if (!check) {

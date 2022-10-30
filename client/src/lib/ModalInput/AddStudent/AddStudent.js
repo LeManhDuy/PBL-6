@@ -153,7 +153,7 @@ const AddStudent = (props) => {
                         return {
                             //key: index + 1,
                             value: item._id,
-                            label: item.person_id.person_fullname,
+                            label: item.person_id.person_fullname + " - " + item.person_id.person_phonenumber,
                         };
                     });
                 setParent(dataSources);
@@ -418,17 +418,13 @@ const AddStudent = (props) => {
                 <div className="teacher-content-right">
                     <div className="type-input">
                         <h4>Parent</h4>
-                        {/* <ParentDropDown
-                            options={parent}
-                            value={parentDropValue}
-                            onChange={handleParentChange}
-                        /> */}
-
                         <Select
                             className="dropdown-class"
                             value={parentDropValue}
                             onChange={handleParentChange}
                             options={parent}
+                            placeholder="Name - Phone number"
+                            maxMenuHeight={200}
                         />
                         <label
                             className={
@@ -443,17 +439,13 @@ const AddStudent = (props) => {
                     </div>
                     <div className="type-input">
                         <h4>Class</h4>
-                        {/* <ClassDropDown
-                            options={classroom}
-                            value={classDropValue}
-                            onChange={handleClassChange}
-                        /> */}
-
                         <Select
                             className="dropdown-class"
                             value={classDropValue}
                             onChange={handleClassChange}
                             options={classroom}
+                            placeholder="Grade - Class"
+                            maxMenuHeight={200}
                         />
                         <label
                             className={

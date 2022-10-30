@@ -73,7 +73,9 @@ const AddFeeCategory = (props) => {
                             This field is requied
                         </label>
                     </div>
-                    <div className="type-input">
+                </div>
+                <div className="teacher-content-right">
+                <div className="type-input">
                         <h4>Fee Ammount</h4>
                         <NumericFormat
                             className="input-content"

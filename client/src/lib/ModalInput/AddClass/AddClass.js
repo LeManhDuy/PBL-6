@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ClassService from "../../../config/service/ClassService";
 import GradeService from "../../../config/service/GradeService";
 import "./AddClass.css";
+import Select from 'react-select';
 
 const AddClass = (props) => {
     const [teacher, setTeacher] = useState([]);
@@ -31,9 +32,9 @@ const AddClass = (props) => {
                 const dataSources = response.getTeacherInfor.map(
                     (item, index) => {
                         return {
-                            key: index + 1,
-                            id: item._id,
-                            teacher: item.person_id.person_fullname,
+                            //key: index + 1,
+                            value: item._id,
+                            label: item.person_id.person_fullname,
                         };
                     }
                 );
@@ -49,9 +50,9 @@ const AddClass = (props) => {
             .then((response) => {
                 const dataSources = response.allGrade.map((item, index) => {
                     return {
-                        key: index + 1,
-                        id: item._id,
-                        grade: item.grade_name,
+                        //key: index + 1,
+                        value: item._id,
+                        label: item.grade_name,
                     };
                 });
                 setGrade(dataSources);
@@ -115,41 +116,53 @@ const AddClass = (props) => {
     };
 
     const handleTeacherChange = (event) => {
-        setTeacherDropValue(event.target.value);
-        if (event.target.value !== "Pick") {
-            setAllValuesClass({
-                ...allValuesClass,
-                teacher:
-                    event.target.options[
-                        event.target.selectedIndex
-                    ].getAttribute("data-key"),
-            });
-        } else {
-            setAllValuesClass({
-                ...allValuesClass,
-                teacher: null,
-            });
-        }
+        // setTeacherDropValue(event.target.value);
+        // if (event.target.value !== "Pick") {
+        //     setAllValuesClass({
+        //         ...allValuesClass,
+        //         teacher:
+        //             event.target.options[
+        //                 event.target.selectedIndex
+        //             ].getAttribute("data-key"),
+        //     });
+        // } else {
+        //     setAllValuesClass({
+        //         ...allValuesClass,
+        //         teacher: null,
+        //     });
+        // }
+
+        setTeacherDropValue(event);
+        setAllValuesClass({
+            ...allValuesClass,
+            teacher: event.value
+        });
     };
 
     const handleGradeChange = (event) => {
-        setGradeDropValue(event.target.value);
-        if (event.target.value !== "Pick") {
-            setAllValuesClass({
-                ...allValuesClass,
-                grade: event.target.options[
-                    event.target.selectedIndex
-                ].getAttribute("data-key"),
+        // setGradeDropValue(event.target.value);
+        // if (event.target.value !== "Pick") {
+        //     setAllValuesClass({
+        //         ...allValuesClass,
+        //         grade: event.target.options[
+        //             event.target.selectedIndex
+        //         ].getAttribute("data-key"),
 
-                gradeName:
-                    event.target.options[event.target.selectedIndex].value,
-            });
-        } else {
-            setAllValuesClass({
-                ...allValuesClass,
-                grade: null,
-            });
-        }
+        //         gradeName:
+        //             event.target.options[event.target.selectedIndex].value,
+        //     });
+        // } else {
+        //     setAllValuesClass({
+        //         ...allValuesClass,
+        //         grade: null,
+        //     });
+        // }
+        setGradeDropValue(event);
+        setAllValuesClass({
+            ...allValuesClass,
+            grade: event.value,
+            gradeName: event.label
+        });
     };
 
     const FormClass = (
@@ -187,13 +200,38 @@ const AddClass = (props) => {
                         </label>
                     </div>
                 </div>
+
                 <div className="teacher-content-right">
                     <div className="type-input">
+                        <h4>Grade</h4>
+                        <Select
+                            className="dropdown-class"
+                            value={gradeDropValue}
+                            onChange={handleGradeChange}
+                            options={grade}
+                            placeholder="Grade's Name"
+                            maxMenuHeight={200}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (classError.grade
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid Grade
+                        </label>
+                    </div>
+                    <div className="type-input">
                         <h4>Teacher</h4>
-                        <TeacherDropDown
-                            options={teacher}
+                        <Select
+                            className="dropdown-class"
                             value={teacherDropValue}
                             onChange={handleTeacherChange}
+                            options={teacher}
+                            placeholder="Teacher's Name"
+                            maxMenuHeight={200}
                         />
                         <label
                             className={
@@ -204,24 +242,6 @@ const AddClass = (props) => {
                             }
                         >
                             Invalid Teacher
-                        </label>
-                    </div>
-                    <div className="type-input">
-                        <h4>Grade</h4>
-                        <GradeDropDown
-                            options={grade}
-                            value={gradeDropValue}
-                            onChange={handleGradeChange}
-                        />
-                        <label
-                            className={
-                                "error" +
-                                (classError.grade
-                                    ? " error-show"
-                                    : " error-hidden")
-                            }
-                        >
-                            Invalid Class
                         </label>
                     </div>
                 </div>
