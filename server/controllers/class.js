@@ -2,6 +2,7 @@ const Class = require("../model/class")
 const Pupil = require("../model/Pupil")
 const Teacher = require("../model/Teacher")
 const Parent = require("../model/Parent")
+const Person = require("../model/Person")
 
 const createClass = async (req, res) => {
     const {
@@ -246,8 +247,11 @@ const deleteClass = async (req, res) => {
 
 const getParentAssociations = async (req, res) => {
     try {
+        const teacher = await Teacher.find({
+            person_id: req.params.personID
+        })
         const classInfor = await Class.find({
-            homeroom_teacher_id: req.params.teacherID
+            homeroom_teacher_id: teacher[0]._id
         })
         const parentId = await Pupil.find({
             class_id: classInfor[0]._id.toString()
@@ -258,30 +262,8 @@ const getParentAssociations = async (req, res) => {
             parentArray.push(element.parent_id)
         });
         const parentInfor = await Parent.find().where('_id').in(parentArray)
+            .populate('person_id')
         res.json({ success: true, parentInfor });
-        // // Return token
-        // const personInfor = await Class.findById(req.params.classID);
-        // const getParentInfor = await Parent.find({
-        //     person_id: personInfor._id.toString(),
-        // })
-        //     .select([
-        //         "parent_job",
-        //         "parent_relationship",
-        //         "is_in_association",
-        //         "parent_job_address",
-        //     ])
-        //     .populate({
-        //         path: "person_id",
-        //         model: "Person",
-        //         populate: [
-        //             {
-        //                 path: "account_id",
-        //                 model: "Account",
-        //                 select: ["account_username", "account_role"],
-        //             },
-        //         ],
-        //     });
-        // res.json({ success: true, getParentInfor });
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error });
     }
