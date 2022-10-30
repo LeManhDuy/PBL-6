@@ -12,27 +12,33 @@ const UpdateFee = (props) => {
     const [pupilDropValue, setPupilDropValue] = useState();
     const [allValuesFee, setAllValuesFee] = useState({
         fee_status: "",
-        start_date: `${date.split("/")[2]}-${date.split("/")[0] < 10
-            ? "0" + date.split("/")[0]
-            : date.split("/")[0]
-            }-${date.split("/")[1] < 10
+        start_date: `${date.split("/")[2]}-${
+            date.split("/")[0] < 10
+                ? "0" + date.split("/")[0]
+                : date.split("/")[0]
+        }-${
+            date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-            }`,
-        end_date: `${date.split("/")[2]}-${date.split("/")[0] < 10
-            ? "0" + date.split("/")[0]
-            : date.split("/")[0]
-            }-${date.split("/")[1] < 10
+        }`,
+        end_date: `${date.split("/")[2]}-${
+            date.split("/")[0] < 10
+                ? "0" + date.split("/")[0]
+                : date.split("/")[0]
+        }-${
+            date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-            }`,
-        paid_date: `${date.split("/")[2]}-${date.split("/")[0] < 10
-            ? "0" + date.split("/")[0]
-            : date.split("/")[0]
-            }-${date.split("/")[1] < 10
+        }`,
+        paid_date: `${date.split("/")[2]}-${
+            date.split("/")[0] < 10
+                ? "0" + date.split("/")[0]
+                : date.split("/")[0]
+        }-${
+            date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-            }`,
+        }`,
         fee_category: "",
         pupil: "",
     });
@@ -51,31 +57,29 @@ const UpdateFee = (props) => {
         FeeService.getFeeById(props.feeID).then((res) => {
             setAllValuesFee({
                 fee_status: `${res.getfeeInfor[0].fee_status}`,
-                start_date:
-                    res.getfeeInfor[0].start_date.split(
-                        "T"
-                    )[0],
-                end_date:
-                    res.getfeeInfor[0].end_date.split(
-                        "T"
-                    )[0],
-                paid_date: res.getfeeInfor[0].paid_date ? res.getfeeInfor[0].paid_date.split("T")[0] : null,
+                start_date: res.getfeeInfor[0].start_date.split("T")[0],
+                end_date: res.getfeeInfor[0].end_date.split("T")[0],
+                paid_date: res.getfeeInfor[0].paid_date
+                    ? res.getfeeInfor[0].paid_date.split("T")[0]
+                    : null,
                 fee_category: res.getfeeInfor[0].fee_category_id._id,
-                pupil: res.getfeeInfor[0].pupil_id._id
-            })
-        })
+                pupil: res.getfeeInfor[0].pupil_id._id,
+            });
+        });
     }, []);
 
     const getFeeCategory = () => {
         FeeCategoryService.getFeeCategory()
             .then((response) => {
-                const dataSources = response.allFeeCategory.map((item, index) => {
-                    return {
-                        key: index + 1,
-                        id: item._id,
-                        fee_category: item.fee_name,
-                    };
-                });
+                const dataSources = response.allFeeCategory.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            fee_category: item.fee_name,
+                        };
+                    }
+                );
                 setFeeCategory(dataSources);
             })
             .catch((error) => {
@@ -114,13 +118,14 @@ const UpdateFee = (props) => {
         }
     };
 
-    const FeeCategoryDropDown = ({ value, options, onChange, feecategoryValue }) => {
+    const FeeCategoryDropDown = ({
+        value,
+        options,
+        onChange,
+        feecategoryValue,
+    }) => {
         return (
-            <select
-                className="dropdown-Fee"
-                value={value}
-                onChange={onChange}
-            >
+            <select className="dropdown-Fee" value={value} onChange={onChange}>
                 <option key={10000} value="Pick">
                     FeeCategory
                 </option>
@@ -140,11 +145,7 @@ const UpdateFee = (props) => {
 
     const PupilDropDown = ({ value, options, onChange, pupilValue }) => {
         return (
-            <select
-                className="dropdown-Fee"
-                value={value}
-                onChange={onChange}
-            >
+            <select className="dropdown-Fee" value={value} onChange={onChange}>
                 <option key={10000} value="Pick">
                     Pupils
                 </option>
@@ -167,15 +168,16 @@ const UpdateFee = (props) => {
         if (event.target.value !== "Pick") {
             setAllValuesFee({
                 ...allValuesFee,
-                fee_category: event.target.options[
-                    event.target.selectedIndex
-                ].getAttribute("data-key"),
+                fee_category:
+                    event.target.options[
+                        event.target.selectedIndex
+                    ].getAttribute("data-key"),
             });
         } else {
             setAllValuesFee({
                 ...allValuesFee,
                 fee_category: null,
-            })
+            });
         }
     };
 
@@ -192,10 +194,9 @@ const UpdateFee = (props) => {
             setAllValuesFee({
                 ...allValuesFee,
                 pupil: null,
-            })
+            });
         }
     };
-
 
     const FormFee = (
         <div className="form-admin-content">
@@ -206,7 +207,7 @@ const UpdateFee = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Update Failed.
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -253,11 +254,22 @@ const UpdateFee = (props) => {
                         </label>
                     </div>
                     {/* show type-input */}
-                    <div className={(allValuesFee.fee_status == "true" ? "type-input " : "hidden")} id="paiddate">
+                    <div
+                        className={
+                            allValuesFee.fee_status == "true"
+                                ? "type-input "
+                                : "hidden"
+                        }
+                        id="paiddate"
+                    >
                         <h4>Paid Date</h4>
                         <input
                             //className="input-content"
-                            className={(allValuesFee.fee_status ? "input-content " : " hidden")}
+                            className={
+                                allValuesFee.fee_status
+                                    ? "input-content "
+                                    : " hidden"
+                            }
                             type="date"
                             name="paid_date"
                             placeholder="Enter Paid Date"
@@ -288,7 +300,9 @@ const UpdateFee = (props) => {
                                 />
                                 Paid
                                 <input
-                                    checked={allValuesFee.fee_status === "false"}
+                                    checked={
+                                        allValuesFee.fee_status === "false"
+                                    }
                                     type="radio"
                                     value={false}
                                     name="fee_status"
@@ -350,17 +364,17 @@ const UpdateFee = (props) => {
                     </div>
                 </div>
             </div>
-        </div >
+        </div>
     );
 
     const handleUpdateFee = () => {
         let check = false;
-        let fee_status = false
-        let start_date = false
-        let end_date = false
-        let paid_date = false
-        let fee_category = false
-        let pupil = false
+        let fee_status = false;
+        let start_date = false;
+        let end_date = false;
+        let paid_date = false;
+        let fee_category = false;
+        let pupil = false;
 
         // let dateNow = new Date().toLocaleDateString()
         // let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
@@ -392,16 +406,16 @@ const UpdateFee = (props) => {
 
         if (!allValuesFee.fee_category) {
             fee_category = true;
-            check = true
+            check = true;
         } else {
-            fee_category = false
+            fee_category = false;
         }
 
         if (!allValuesFee.pupil) {
             pupil = true;
-            check = true
+            check = true;
         } else {
-            pupil = false
+            pupil = false;
         }
 
         // if (allValuesFee.fee_status == "false") {
@@ -415,12 +429,12 @@ const UpdateFee = (props) => {
             end_date: end_date,
             paid_date: paid_date,
             fee_category: fee_category,
-            pupil: pupil
-        })
+            pupil: pupil,
+        });
         if (!check) {
             props.handleConfirmUpdateFee(allValuesFee);
         }
-    }
+    };
 
     const clickSave = (e) => {
         e.preventDefault();
@@ -439,10 +453,7 @@ const UpdateFee = (props) => {
         </div>
     );
 
-    return (
-        <div className="add-account-form">{FormUpdateFee}</div>
-    );
-
-}
+    return <div className="add-account-form">{FormUpdateFee}</div>;
+};
 
 export default UpdateFee;

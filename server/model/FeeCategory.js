@@ -6,7 +6,7 @@ const feeCategorySchema = new mongoose.Schema({
         require: true
     },
     fee_amount:{
-        type: Number,
+        type: String,
         require: true
     }
 })

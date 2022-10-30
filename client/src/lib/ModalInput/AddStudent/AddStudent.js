@@ -3,6 +3,9 @@ import "./AddStudent.css";
 import Logo from "../../../assets/image/Logo.png";
 import ClassService from "../../../config/service/ClassService";
 import AccountService from "../../../config/service/AccountService";
+import { Select2 } from "select2-react-component";
+import ReactSelect2 from 'react-select-2z'
+import Select from 'react-select-2';
 
 const AddStudent = (props) => {
     let date = new Date().toLocaleDateString();
@@ -33,7 +36,6 @@ const AddStudent = (props) => {
         parent: false,
         classroom: false,
     });
-
     const [avatar, setAvatar] = useState(Logo);
 
     useEffect(() => {
@@ -42,6 +44,10 @@ const AddStudent = (props) => {
     }, []);
 
     const ParentDropDown = ({ value, options, onChange }) => {
+        // var options = [
+        //     { value: 'one', label: 'One' },
+        //     { value: 'two', label: 'Two' }
+        // ]
         return (
             <select
                 className="dropdown-class"
@@ -61,6 +67,11 @@ const AddStudent = (props) => {
                     </option>
                 ))}
             </select>
+            // <Select2
+            //     data={options}
+            //     value={value}
+            //     update={value => this.update(value)}>
+            // </Select2>
         );
     };
 
@@ -167,7 +178,6 @@ const AddStudent = (props) => {
         let classroom = false;
         let check = false;
         if (
-            allValuesStudent.name.length > 30 ||
             allValuesStudent.name.length < 2
         ) {
             name = true;
@@ -258,6 +268,27 @@ const AddStudent = (props) => {
         }
     };
 
+    // var getOptions = function (input, callback) {
+    //     setTimeout(function () {
+    //         callback(null, {
+    //             options: [
+    //                 options.map((option) => (
+    //                     <option
+    //                         key={option.key}
+    //                         value={option.name}
+    //                         data-key={option.id}
+    //                     >
+    //                         {option.name}
+    //                     </option>
+    //                 ))
+    //             ],
+    //             // CAREFUL! Only set this to true when there are no more options,
+    //             // or more specific queries will not be sent to the server.
+    //             complete: true
+    //         });
+    //     }, 500);
+    // };
+
     const FormAccountStudents = (
         <div className="form-admin-content">
             <h4>Add Pupil</h4>
@@ -267,7 +298,7 @@ const AddStudent = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Add Failed.
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -311,7 +342,7 @@ const AddStudent = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Name must be less than 30 chars
+                            Name must be greater than 2 chars
                         </label>
                     </div>
                     <div className="type-input">
@@ -375,6 +406,7 @@ const AddStudent = (props) => {
                             value={parentDropValue}
                             onChange={handleParentChange}
                         />
+
                         <label
                             className={
                                 "error" +
