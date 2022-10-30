@@ -1,6 +1,7 @@
 const Class = require("../model/class")
 const Pupil = require("../model/Pupil")
 const Teacher = require("../model/Teacher")
+const Parent = require("../model/Parent")
 
 const createClass = async (req, res) => {
     const {
@@ -243,4 +244,55 @@ const deleteClass = async (req, res) => {
     }
 }
 
-module.exports = { createClass, getClass, getClassByID, updateClassByID, deleteClass, getStudentByClassID };
+const getParentAssociations = async (req, res) => {
+    try {
+        const classInfor = await Class.find({
+            homeroom_teacher_id: req.params.teacherID
+        })
+        const parentId = await Pupil.find({
+            class_id: classInfor[0]._id.toString()
+        }).select('parent_id')
+
+        let parentArray = []
+        parentId.forEach(element => {
+            parentArray.push(element.parent_id)
+        });
+        const parentInfor = await Parent.find().where('_id').in(parentArray)
+        res.json({ success: true, parentInfor });
+        // // Return token
+        // const personInfor = await Class.findById(req.params.classID);
+        // const getParentInfor = await Parent.find({
+        //     person_id: personInfor._id.toString(),
+        // })
+        //     .select([
+        //         "parent_job",
+        //         "parent_relationship",
+        //         "is_in_association",
+        //         "parent_job_address",
+        //     ])
+        //     .populate({
+        //         path: "person_id",
+        //         model: "Person",
+        //         populate: [
+        //             {
+        //                 path: "account_id",
+        //                 model: "Account",
+        //                 select: ["account_username", "account_role"],
+        //             },
+        //         ],
+        //     });
+        // res.json({ success: true, getParentInfor });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+module.exports = { 
+    createClass, 
+    getClass, 
+    getClassByID, 
+    updateClassByID, 
+    deleteClass, 
+    getStudentByClassID,
+    getParentAssociations
+ };

@@ -37,4 +37,9 @@ router.delete("/:classID", multer().single(), classController.deleteClass);
 
 
 
+router.get("/get-parent-associations/:teacherID", classController.getParentAssociations);
+
+
+
+
 module.exports = router

@@ -3,9 +3,8 @@ import "./AddStudent.css";
 import Logo from "../../../assets/image/Logo.png";
 import ClassService from "../../../config/service/ClassService";
 import AccountService from "../../../config/service/AccountService";
-import { Select2 } from "select2-react-component";
-import ReactSelect2 from 'react-select-2z'
-import Select from 'react-select-2';
+import Select from 'react-select';
+
 
 const AddStudent = (props) => {
     let date = new Date().toLocaleDateString();
@@ -44,10 +43,6 @@ const AddStudent = (props) => {
     }, []);
 
     const ParentDropDown = ({ value, options, onChange }) => {
-        // var options = [
-        //     { value: 'one', label: 'One' },
-        //     { value: 'two', label: 'Two' }
-        // ]
         return (
             <select
                 className="dropdown-class"
@@ -67,11 +62,14 @@ const AddStudent = (props) => {
                     </option>
                 ))}
             </select>
-            // <Select2
-            //     data={options}
+            // <Select
+            //     name="form-field-name"
             //     value={value}
-            //     update={value => this.update(value)}>
-            // </Select2>
+            //     options={options}
+            //     onChange={onChange}
+            // />
+
+
         );
     };
 
@@ -100,36 +98,51 @@ const AddStudent = (props) => {
     };
 
     const handleParentChange = (event) => {
-        setParentDropValue(event.target.value);
-        if (event.target.value !== "Pick") {
-            setAllValuesStudent({
-                ...allValuesStudent,
-                parent: event.target.options[
-                    event.target.selectedIndex
-                ].getAttribute("data-key"),
-            });
-        }
-        console.log(parent);
+        // setParentDropValue({ event }, () =>
+        //     console.log(`Option selected:`, this.state.event)
+        // );
+        setParentDropValue(event);
+        //console.log(parent);
+        //setParentDropValue(event.target.value);
+        // if (event.target.value !== "Pick") {
+        setAllValuesStudent({
+            ...allValuesStudent,
+            // parent: event.options[
+            //     event.selectedIndex
+            // ].getAttribute("data-key"),
+            parent: event.value
+        });
     };
 
     const handleClassChange = (event) => {
-        setClassDropValue(event.target.value);
-        if (event.target.value !== "Pick") {
-            setAllValuesStudent({
-                ...allValuesStudent,
-                classroom:
-                    event.target.options[
-                        event.target.selectedIndex
-                    ].getAttribute("data-key"),
-            });
-            setTeacher(
-                event.target.options[event.target.selectedIndex].getAttribute(
-                    "data-teacher"
-                )
-            );
-        } else {
-            setTeacher("");
-        }
+        setClassDropValue(event)
+        setAllValuesStudent({
+            ...allValuesStudent,
+            classroom: event.value
+        });
+        setTeacher(
+            // event.target.options[event.target.selectedIndex].getAttribute(
+            //     "data-teacher"
+            // )
+            event.teacher
+        );
+        // setClassDropValue(event.target.value);
+        // if (event.target.value !== "Pick") {
+        //     setAllValuesStudent({
+        //         ...allValuesStudent,
+        //         classroom:
+        //             event.target.options[
+        //                 event.target.selectedIndex
+        //             ].getAttribute("data-key"),
+        //     });
+        //     setTeacher(
+        //         event.target.options[event.target.selectedIndex].getAttribute(
+        //             "data-teacher"
+        //         )
+        //     );
+        // } else {
+        //     setTeacher("");
+        // }
     };
 
     const getParents = () => {
@@ -138,9 +151,9 @@ const AddStudent = (props) => {
                 const dataSources = response.getParentsInfor
                     .map((item, index) => {
                         return {
-                            key: index + 1,
-                            id: item._id,
-                            name: item.person_id.person_fullname,
+                            //key: index + 1,
+                            value: item._id,
+                            label: item.person_id.person_fullname,
                         };
                     });
                 setParent(dataSources);
@@ -155,11 +168,15 @@ const AddStudent = (props) => {
             .then((response) => {
                 const dataSources = response.allClass.map((item, index) => {
                     return {
-                        key: index + 1,
-                        id: item._id,
-                        name: item.class_name,
-                        grade: item.grade_id.grade_name,
-                        teacher: item.homeroom_teacher_id.person_id.person_fullname,
+                        //key: index + 1,
+                        value: item._id,
+                        label: item.class_name,
+                        grade: item.grade_id ? item.grade_id.grade_name : "Empty",
+                        teacher: item.homeroom_teacher_id
+                            ? item.homeroom_teacher_id.person_id
+                                ? item.homeroom_teacher_id.person_id.person_fullname
+                                : "Empty"
+                            : "Empty",
                     };
                 });
                 setClassroom(dataSources);
@@ -401,12 +418,18 @@ const AddStudent = (props) => {
                 <div className="teacher-content-right">
                     <div className="type-input">
                         <h4>Parent</h4>
-                        <ParentDropDown
+                        {/* <ParentDropDown
                             options={parent}
                             value={parentDropValue}
                             onChange={handleParentChange}
-                        />
+                        /> */}
 
+                        <Select
+                            className="dropdown-class"
+                            value={parentDropValue}
+                            onChange={handleParentChange}
+                            options={parent}
+                        />
                         <label
                             className={
                                 "error" +
@@ -420,10 +443,17 @@ const AddStudent = (props) => {
                     </div>
                     <div className="type-input">
                         <h4>Class</h4>
-                        <ClassDropDown
+                        {/* <ClassDropDown
                             options={classroom}
                             value={classDropValue}
                             onChange={handleClassChange}
+                        /> */}
+
+                        <Select
+                            className="dropdown-class"
+                            value={classDropValue}
+                            onChange={handleClassChange}
+                            options={classroom}
                         />
                         <label
                             className={
@@ -442,7 +472,7 @@ const AddStudent = (props) => {
                             className="input-content"
                             placeholder="Teacher's name..."
                             value={teacher}
-                            readOnly
+                            disabled
                         />
                     </div>
                 </div>

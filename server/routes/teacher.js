@@ -83,7 +83,7 @@ router.post("/", upload.single("person_image"), async (req, res) => {
     if (phoneValidate)
         return res
             .status(400)
-            .json({ success: false, message: "Phone is unique." });
+            .json({ success: false, message: "Phone number must be unique." });
     const emailValidate = await Person.findOne({ person_email });
     if (!validator.validate(person_email) || emailValidate) {
         return res.status(400).json({
@@ -246,20 +246,24 @@ router.put("/:teacherID", upload.single("person_image"), async (req, res) => {
     if (req.file) {
         person_image = req.file.path;
     }
+    const teacherInfor = await Teacher.findById(req.params.teacherID)
+        .populate("person_id", ["person_id"])
+    
     const phoneValidate = await Person.findOne({ person_phonenumber: person_phonenumber })
+    console.log(phoneValidate._id.toString());
     if (phoneValidate)
-        if (phoneValidate._id.toString() !== req.params.personID) {
+        if (phoneValidate._id.toString() !== teacherInfor.person_id._id.toString()) {
             return res.status(400).json({
                 success: false,
-                message: "Phone is unique.",
+                message: "Phone number must be unique.",
             });
         }
     const emailValidate = await Person.findOne({ person_email: person_email })
     if (emailValidate)
-        if (emailValidate._id.toString() !== req.params.personID) {
+        if (emailValidate._id.toString() !== teacherInfor.person_id._id.toString()) {
             return res.status(400).json({
                 success: false,
-                message: "email is unique.",
+                message: "Email must be unquie.",
             });
         }
     if (person_phonenumber.length != 10) {
@@ -271,7 +275,7 @@ router.put("/:teacherID", upload.single("person_image"), async (req, res) => {
     if (!validator.validate(person_email)) {
         return res.status(400).json({
             success: false,
-            message: "Invalid Email.",
+            message: "Email must be in the correct format.",
         });
     }
     if (account_password.length < 6) {

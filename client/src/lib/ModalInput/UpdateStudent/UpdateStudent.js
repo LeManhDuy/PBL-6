@@ -4,6 +4,8 @@ import Logo from "../../../assets/image/Logo.png";
 import ClassService from "../../../config/service/ClassService";
 import AccountService from "../../../config/service/AccountService";
 import StudentService from "../../../config/service/StudentService";
+import Select from 'react-select';
+
 
 const UpdateStudent = (props) => {
     let date = new Date().toLocaleDateString();
@@ -41,6 +43,7 @@ const UpdateStudent = (props) => {
         getClasses();
         getParents();
         StudentService.getPupilById(props.studentID).then((res) => {
+            console.log(res);
             !!res.getPupilInfor[0].pupil_image
                 ? setAvatar(
                     res.getPupilInfor[0].pupil_image
@@ -52,8 +55,18 @@ const UpdateStudent = (props) => {
                 name: res.getPupilInfor[0].pupil_name,
                 dateOfBirth: res.getPupilInfor[0].pupil_dateofbirth.split("T")[0],
                 gender: `${res.getPupilInfor[0].pupil_gender}`,
-                parent: res.getPupilInfor[0].parent_id ? res.getPupilInfor[0].parent_id._id : " ",
-                classroom: res.getPupilInfor[0].class_id ? res.getPupilInfor[0].class_id._id : " ",
+                //parent: res.getPupilInfor[0].parent_id ? res.getPupilInfor[0].parent_id._id : " ",
+                //classroom: res.getPupilInfor[0].class_id ? res.getPupilInfor[0].class_id._id : " ",
+                parent: res.getPupilInfor[0]
+                    ? res.getPupilInfor[0].parent_id
+                        ? res.getPupilInfor[0].parent_id._id
+                        : "Empty"
+                    : "Empty",
+                classroom: res.getPupilInfor[0]
+                    ? res.getPupilInfor[0].class_id
+                        ? res.getPupilInfor[0].class_id._id
+                        : "Empty"
+                    : "Empty",
             });
         });
     }, []);
@@ -149,35 +162,63 @@ const UpdateStudent = (props) => {
     };
 
     const handleParentChange = (event) => {
-        setParentDropValue(event.target.value);
-        if (event.target.value !== "Pick") {
-            setAllValuesStudent({
-                ...allValuesStudent,
-                parent: event.target.options[
-                    event.target.selectedIndex
-                ].getAttribute("data-key"),
-            });
-        }
+        // setParentDropValue(event.target.value);
+        // if (event.target.value !== "Pick") {
+        //     setAllValuesStudent({
+        //         ...allValuesStudent,
+        //         parent: event.target.options[
+        //             event.target.selectedIndex
+        //         ].getAttribute("data-key"),
+        //     });
+        // }
+
+
+        // setParentDropValue({ event }, () =>
+        //     console.log(`Option selected:`, this.state.event)
+        // );
+        setParentDropValue(event);
+        //console.log(parent);
+        //setParentDropValue(event.target.value);
+        // if (event.target.value !== "Pick") {
+        setAllValuesStudent({
+            ...allValuesStudent,
+            // parent: event.options[
+            //     event.selectedIndex
+            // ].getAttribute("data-key"),
+            parent: event.value
+        });
     };
 
     const handleClassChange = (event) => {
-        setClassDropValue(event.target.value);
-        if (event.target.value !== "Pick") {
-            setAllValuesStudent({
-                ...allValuesStudent,
-                classroom:
-                    event.target.options[
-                        event.target.selectedIndex
-                    ].getAttribute("data-key"),
-            });
-            setTeacher(
-                event.target.options[event.target.selectedIndex].getAttribute(
-                    "data-teacher"
-                )
-            );
-        } else {
-            setTeacher("");
-        }
+        // setClassDropValue(event.target.value);
+        // if (event.target.value !== "Pick") {
+        //     setAllValuesStudent({
+        //         ...allValuesStudent,
+        //         classroom:
+        //             event.target.options[
+        //                 event.target.selectedIndex
+        //             ].getAttribute("data-key"),
+        //     });
+        //     setTeacher(
+        //         event.target.options[event.target.selectedIndex].getAttribute(
+        //             "data-teacher"
+        //         )
+        //     );
+        // } else {
+        //     setTeacher("");
+        // }
+
+        setClassDropValue(event)
+        setAllValuesStudent({
+            ...allValuesStudent,
+            classroom: event.value
+        });
+        setTeacher(
+            // event.target.options[event.target.selectedIndex].getAttribute(
+            //     "data-teacher"
+            // )
+            event.teacher
+        );
     };
 
     const getParents = () => {
@@ -186,9 +227,9 @@ const UpdateStudent = (props) => {
                 const dataSources = response.getParentsInfor
                     .map((item, index) => {
                         return {
-                            key: index + 1,
-                            id: item._id,
-                            name: item.person_id.person_fullname,
+                            //key: index + 1,
+                            value: item._id,
+                            label: item.person_id.person_fullname,
                         };
                     });
                 setParent(dataSources);
@@ -203,12 +244,21 @@ const UpdateStudent = (props) => {
             .then((response) => {
                 const dataSources = response.allClass.map((item, index) => {
                     return {
-                        key: index + 1,
-                        id: item._id,
-                        name: item.class_name,
-                        // grade: item.grade_id.grade_name,
+                        // key: index + 1,
+                        // id: item._id,
+                        // name: item.class_name,
+                        // // grade: item.grade_id.grade_name,
+                        // grade: item.grade_id ? item.grade_id.grade_name : "Empty",
+                        // teacher: item.homeroom_teacher_id.person_id.person_fullname,
+
+                        value: item._id,
+                        label: item.class_name,
                         grade: item.grade_id ? item.grade_id.grade_name : "Empty",
-                        teacher: item.homeroom_teacher_id.person_id.person_fullname,
+                        teacher: item.homeroom_teacher_id
+                            ? item.homeroom_teacher_id.person_id
+                                ? item.homeroom_teacher_id.person_id.person_fullname
+                                : "Empty"
+                            : "Empty",
                     };
                 });
                 setClassroom(dataSources);
@@ -383,8 +433,6 @@ const UpdateStudent = (props) => {
                             Invalid birthday
                         </label>
                     </div>
-                </div>
-                <div className="teacher-content-right">
                     <div className="type-input">
                         <h4>Gender</h4>
                         <div className="radio-btn">
@@ -420,22 +468,42 @@ const UpdateStudent = (props) => {
                             </label>
                         </div>
                     </div>
+                </div>
+                <div className="teacher-content-right">
+
                     <div className="type-input">
                         <h4>Parent</h4>
-                        <ParentDropDown
+                        {/* <ParentDropDown
                             options={parent}
                             value={parentDropValue}
                             onChange={handleParentChange}
                             parentValue={allValuesStudent.parent}
+                        /> */}
+
+                        <Select
+                            className="dropdown-class"
+                            value={parentDropValue}
+                            onChange={handleParentChange}
+                            options={parent}
+                            //.onInputChange={allValuesStudent.parent}
+                            defaultValue={allValuesStudent.parent}
+                            placeholder="Parent - Phone number"
                         />
                     </div>
                     <div className="type-input">
                         <h4>Grade-Class</h4>
-                        <ClassDropDown
+                        {/* <ClassDropDown
                             options={classroom}
                             value={classDropValue}
                             onChange={handleClassChange}
                             classValue={allValuesStudent.classroom}
+                        /> */}
+                        <Select
+                            className="dropdown-class"
+                            value={classDropValue}
+                            onChange={handleClassChange}
+                            options={classroom}
+                            placeholder="Grade - Class"
                         />
                     </div>
                     <div className="type-input">
@@ -444,7 +512,7 @@ const UpdateStudent = (props) => {
                             className="input-content"
                             placeholder="Teacher's name..."
                             value={teacher}
-                            readOnly
+                            disabled
                         />
                     </div>
                 </div>
