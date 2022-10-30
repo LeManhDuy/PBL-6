@@ -453,4 +453,16 @@ router.get("/get-parents-info/:personID", async (req, res) => {
     }
 });
 
+router.get("/change-is-association/:parentID", async(req, res) => {
+    try {
+        const parentInfor = await Parent.findById(req.params.parentID);
+        parentInfor.is_in_association = !parentInfor.is_in_association;
+        parentInfor.save();
+        res.json({ success: true, message: 'Change is association success' });
+        // res.json({ success: true, message: "Change is Association Success" });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+});
+
 module.exports = router;

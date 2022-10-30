@@ -36,6 +36,7 @@ import ScoreTeacher from "../page/Teacher/ScoreTeacher/ScoreTeacher";
 import NotificationTeacher from "../page/Teacher/NotificationTeacher/NotificationTeacher";
 import ScheduleTeacher from "../page/Teacher/ScheduleTeacher/ScheduleTeacher";
 import ClassTeacher from "../page/Teacher/ClassTeacher/ClassTeacher";
+import AssociationTeacher from "../page/Teacher/AssociationTeacher/AssociationTeacher"
 
 const Routes = () => {
     return (
@@ -164,6 +165,12 @@ const Routes = () => {
                         component={NotificationTeacher}
                         exact
                         path={ROUTES.TEACHER_PAGE.TEACHER_NOTIFICATION_PATH}
+                    />
+
+                <TeacherRoute
+                        component={AssociationTeacher}
+                        exact
+                        path={ROUTES.TEACHER_PAGE.TEACHER_ASSOCIATION_PATH}
                     />
 
                     {/* Affair Route */}
