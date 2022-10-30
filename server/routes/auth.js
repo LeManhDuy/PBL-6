@@ -88,8 +88,7 @@ router.post("/login", async (req, res) => {
             const personId = await Person.find({
                 account_id: checkAcccountUserName._id,
             });
-            console.log(personId._id);
-            if (personId._id !== undefined) {
+            if (personId[0]._id) {
                 return res.status(200).json({
                     success: true,
                     AccountUserName: checkAcccountUserName.account_username,

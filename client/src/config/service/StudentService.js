@@ -20,9 +20,12 @@ const getPupilById = async (id) => {
 };
 
 const updatePupil = async (pupilID, params) => {
-    return await HandleApi.APIPutWithTokenIMG(
-        `pupil/${pupilID}`,
-        params
+    return await HandleApi.APIPutWithTokenIMG(`pupil/${pupilID}`, params);
+};
+
+const getPupilByParentId = async (personID) => {
+    return await HandleApi.APIGetWithToken(
+        `pupil/get-pupil-by-parent/${personID}`
     );
 };
 
@@ -31,7 +34,8 @@ const PupilService = {
     addPupil,
     deletePupilById,
     getPupilById,
-    updatePupil
+    updatePupil,
+    getPupilByParentId,
 };
 
 export default PupilService;
