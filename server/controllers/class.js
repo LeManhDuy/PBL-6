@@ -243,4 +243,46 @@ const deleteClass = async (req, res) => {
     }
 }
 
-module.exports = { createClass, getClass, getClassByID, updateClassByID, deleteClass, getStudentByClassID };
+const getParentAssociations = async (req, res) => {
+    try {
+        const classInfor = await Class.find({
+            homeroom_teacher_id: req.params.teacherID
+        })
+        res.json({ success: true, classInfor });
+        // // Return token
+        // const personInfor = await Class.findById(req.params.classID);
+        // const getParentInfor = await Parent.find({
+        //     person_id: personInfor._id.toString(),
+        // })
+        //     .select([
+        //         "parent_job",
+        //         "parent_relationship",
+        //         "is_in_association",
+        //         "parent_job_address",
+        //     ])
+        //     .populate({
+        //         path: "person_id",
+        //         model: "Person",
+        //         populate: [
+        //             {
+        //                 path: "account_id",
+        //                 model: "Account",
+        //                 select: ["account_username", "account_role"],
+        //             },
+        //         ],
+        //     });
+        // res.json({ success: true, getParentInfor });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+module.exports = { 
+    createClass, 
+    getClass, 
+    getClassByID, 
+    updateClassByID, 
+    deleteClass, 
+    getStudentByClassID,
+    getParentAssociations
+ };
