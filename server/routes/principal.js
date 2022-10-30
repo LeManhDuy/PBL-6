@@ -231,7 +231,7 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
         if (phoneValidate._id.toString() !== req.params.personID) {
             return res.status(400).json({
                 success: false,
-                message: "Phone is unique.",
+                message: "Phone number must be unique.",
             });
         }
     const emailValidate = await Person.findOne({ person_email: person_email })
@@ -239,7 +239,7 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
         if (emailValidate._id.toString() !== req.params.personID) {
             return res.status(400).json({
                 success: false,
-                message: "email is unique.",
+                message: "Email must be unquie.",
             });
         }
     if (person_phonenumber.length != 10) {
