@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const Pupil = require("../model/Pupil");
 const multer = require("multer");
 const Parent = require("../model/Parent");
-const Person = require("../model/Person");
+const Classroom = require("../model/class");
 const FirebaseStorage = require("multer-firebase-storage");
 const fs = require("fs");
 
@@ -207,6 +207,62 @@ router.get("/:pupilID", async (req, res) => {
     }
 });
 
+// // @route GET api/admin/pupil
+// // @desc GET pupil by teacher Id
+// // @access Private Only Admin
+router.get("/get-pupil-by-teacher-id/:teacherID", async (req, res) => {
+    try {
+        // Return token
+        const getClassId = await Classroom.find({ homeroom_teacher_id: req.params.teacherID })
+        const studentsInfor = await Pupil.find({ class_id: getClassId })
+            .select([
+                "pupil_name",
+                "pupil_gender",
+                "pupil_dateofbirth",
+                "parent_id",
+            ])
+            .populate({
+                path: "parent_id",
+                model: "Parent",
+                populate: [{
+                    path: "person_id",
+                    model: "Person",
+                    select: ["person_fullname"],
+                }]
+            })
+            .populate({
+                path: "class_id",
+                model: "Class",
+                populate: [
+                    {
+                        path: "grade_id",
+                        model: "Grade",
+                        select: ["grade_name"],
+                    },
+                ],
+            })
+            .populate({
+                path: "class_id",
+                model: "Class",
+                populate: [
+                    {
+                        path: "homeroom_teacher_id",
+                        model: "Teacher",
+                        select: ["_id"],
+                        populate: [{
+                            path: "person_id",
+                            model: "Person",
+                            select: ["person_fullname"],
+                        }]
+                    },
+                ],
+            })
+        res.json({ success: true, studentsInfor })
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+});
+
 // // @route PUT api/admin/parent
 // // @desc PUT parent
 // // @access Private Only Admin
@@ -243,7 +299,7 @@ router.put("/:pupilID", upload.single("pupil_image"), async (req, res) => {
         updatedPupil = await Pupil.findOneAndUpdate(
             postUpdatePupil,
             updatePupil,
-            { new: true }  
+            { new: true }
         );
         if (!updatePupil)
             return res

@@ -176,8 +176,52 @@ const AddClass = (props) => {
             >
                 {props.errorMessage}
             </label>
-            <div className="form-teacher-content">
+            <div className="form-teacher-content" style={{ height: 240 }}>
                 <div className="teacher-content-left">
+                    <div className="type-input">
+                        <h4>Teacher</h4>
+                        <Select
+                            className="dropdown-class"
+                            value={teacherDropValue}
+                            onChange={handleTeacherChange}
+                            options={teacher}
+                            placeholder="Teacher's Name"
+                            maxMenuHeight={150}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (classError.teacher
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid Teacher
+                        </label>
+                    </div>
+                </div>
+                <div className="teacher-content-right-class">
+                    <div className="type-input">
+                        <h4>Grade</h4>
+                        <Select
+                            className="dropdown-class"
+                            value={gradeDropValue}
+                            onChange={handleGradeChange}
+                            options={grade}
+                            placeholder="Grade's Name"
+                            maxMenuHeight={150}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (classError.grade
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid Grade
+                        </label>
+                    </div>
                     <div className="type-input">
                         <h4>Class Name</h4>
                         <input
@@ -200,53 +244,9 @@ const AddClass = (props) => {
                         </label>
                     </div>
                 </div>
-
-                <div className="teacher-content-right">
-                    <div className="type-input">
-                        <h4>Grade</h4>
-                        <Select
-                            className="dropdown-class"
-                            value={gradeDropValue}
-                            onChange={handleGradeChange}
-                            options={grade}
-                            placeholder="Grade's Name"
-                            maxMenuHeight={200}
-                        />
-                        <label
-                            className={
-                                "error" +
-                                (classError.grade
-                                    ? " error-show"
-                                    : " error-hidden")
-                            }
-                        >
-                            Invalid Grade
-                        </label>
-                    </div>
-                    <div className="type-input">
-                        <h4>Teacher</h4>
-                        <Select
-                            className="dropdown-class"
-                            value={teacherDropValue}
-                            onChange={handleTeacherChange}
-                            options={teacher}
-                            placeholder="Teacher's Name"
-                            maxMenuHeight={200}
-                        />
-                        <label
-                            className={
-                                "error" +
-                                (classError.teacher
-                                    ? " error-show"
-                                    : " error-hidden")
-                            }
-                        >
-                            Invalid Teacher
-                        </label>
-                    </div>
-                </div>
             </div>
         </div>
+
     );
 
     const handleAddClass = () => {
@@ -293,12 +293,16 @@ const AddClass = (props) => {
     const FormAddClass = (
         <div className="form-add-account">
             {FormClass}
-            <button onClick={props.handleInputCustom} className="btn-cancel">
-                Cancel
-            </button>
-            <button type="submit" onClick={clickSave} className="btn-ok">
-                Save
-            </button>
+
+            <div className="test">
+                <button onClick={props.handleInputCustom} className="btn-cancel">
+                    Cancel
+                </button>
+                <button type="submit" onClick={clickSave} className="btn-ok">
+                    Save
+                </button>
+            </div>
+
         </div>
     );
 

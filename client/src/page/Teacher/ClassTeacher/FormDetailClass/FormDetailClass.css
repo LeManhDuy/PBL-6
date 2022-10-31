@@ -1,0 +1,66 @@
+@import "../../../../assets/css/variables.css";
+@import "../../../../assets/css/custom.css";
+
+.form-detail-class{
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  height: 80vh;
+  width: 90vw;
+  overflow: auto;
+}
+
+.student-information{
+  margin: 20px;
+}
+
+.form-detail-class img{
+  width: 150px;
+  border-radius: 50%;
+  border: 4px solid var(--text-color);
+  height: 150px;
+  object-fit: cover;
+}
+
+.form-detail-class label{
+  margin: 0;
+}
+
+.parents-information{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+}
+
+.parents-information .info-right{
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 30px;
+  text-align: left;
+}
+
+.protector-information{
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 30px;
+  text-align: left;
+  margin: 30px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 10px;
+  padding: 20px;
+  width: 50%;
+}
+
+.form-detail-class .protector{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+
+

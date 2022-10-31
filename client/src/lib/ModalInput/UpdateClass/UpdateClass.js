@@ -205,8 +205,52 @@ const UpdateClass = (props) => {
             >
                 {props.errorMessage}
             </label>
-            <div className="form-teacher-content">
+            <div className="form-teacher-content" style={{ height: 300 }}>
                 <div className="teacher-content-left">
+                    <div className="type-input">
+                        <h4>Teacher</h4>
+                        <Select
+                            className="dropdown-class"
+                            value={teacherDropValue}
+                            onChange={handleTeacherChange}
+                            options={teacher}
+                            placeholder="Teacher's Name"
+                            maxMenuHeight={200}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (classError.teacher
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid Teacher
+                        </label>
+                    </div>
+                </div>
+                <div className="teacher-content-right-class">
+                    <div className="type-input">
+                        <h4>Grade</h4>
+                        <Select
+                            className="dropdown-class"
+                            value={gradeDropValue}
+                            onChange={handleGradeChange}
+                            options={grade}
+                            placeholder="Grade's Name"
+                            maxMenuHeight={200}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (classError.grade
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid Grade
+                        </label>
+                    </div>
                     <div className="type-input">
                         <h4>Class Name</h4>
                         <input
@@ -226,50 +270,6 @@ const UpdateClass = (props) => {
                             }
                         >
                             Name must be less than 30 chars
-                        </label>
-                    </div>
-                </div>
-                <div className="teacher-content-right">
-                    <div className="type-input">
-                        <h4>Grade</h4>
-                        <Select
-                            className="dropdown-class"
-                            value={gradeDropValue}
-                            onChange={handleGradeChange}
-                            options={grade}
-                            placeholder={allValuesClass.grade_name}
-                            maxMenuHeight={200}
-                        />
-                        <label
-                            className={
-                                "error" +
-                                (classError.grade
-                                    ? " error-show"
-                                    : " error-hidden")
-                            }
-                        >
-                            Invalid Class
-                        </label>
-                    </div>
-                    <div className="type-input">
-                        <h4>Teacher</h4>
-                        <Select
-                            className="dropdown-class"
-                            value={teacherDropValue}
-                            onChange={handleTeacherChange}
-                            options={teacher}
-                            placeholder={allValuesClass.teacher_name}
-                            maxMenuHeight={200}
-                        />
-                        <label
-                            className={
-                                "error" +
-                                (classError.teacher
-                                    ? " error-show"
-                                    : " error-hidden")
-                            }
-                        >
-                            Invalid Teacher
                         </label>
                     </div>
                 </div>

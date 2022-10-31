@@ -463,7 +463,7 @@ const UpdateStudent = (props) => {
                             value={parentDropValue}
                             onChange={handleParentChange}
                             options={parent}
-                            maxMenuHeight={200}
+                            maxMenuHeight={150}
                             placeholder={allValuesStudent.parent_name}
                         />
                     </div>
@@ -474,7 +474,7 @@ const UpdateStudent = (props) => {
                             value={classDropValue}
                             onChange={handleClassChange}
                             options={classroom}
-                            maxMenuHeight={200}
+                            maxMenuHeight={150}
                             placeholder={allValuesStudent.classroom_name}
                         />
                     </div>
