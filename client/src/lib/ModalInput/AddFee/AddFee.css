@@ -143,3 +143,7 @@
 .show {
   display: block;
 }
+
+.teacher-content-right-fee .type-input:first-child {
+  margin: 0 0 15px;
+}
