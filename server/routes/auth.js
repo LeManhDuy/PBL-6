@@ -4,7 +4,7 @@ const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
 const Account = require("../model/Account");
 const Person = require("../model/Person");
-
+const multer = require("multer");
 // @route POST api/auth/register
 // @desc Register user
 // @access Private
@@ -109,6 +109,50 @@ router.post("/login", async (req, res) => {
                 success: false,
                 message: "Incorrect email or password",
             });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+});
+
+router.put("/:personID", multer().single(), async (req, res) => {
+    const { account_password } = req.body;
+    if (!account_password)
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information",
+        });
+    const personInfor = await Person.findById(req.params.personID);
+    const accountInfor = await Account.findById(personInfor.account_id);
+    console.log(accountInfor);
+    if (!accountInfor) {
+        return res.status(400).json({
+            success: false,
+            message: "Account does not exists.",
+        });
+    }
+
+    try {
+        if (account_password.length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: "Password must have at least 6 characters.",
+            });
+        }
+        const hashPassword = await argon2.hash(account_password);
+        let updateAccount = {
+            account_password: hashPassword,
+        };
+        const postUpdateAccount = { _id: personInfor.account_id };
+        updatedAccount = await Account.findOneAndUpdate(
+            postUpdateAccount,
+            updateAccount,
+            { new: true }
+        );
+        res.json({
+            success: true,
+            message: "Update password successfully.",
+            update_Account: updateAccount,
+        });
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error });
     }

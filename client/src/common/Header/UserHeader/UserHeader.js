@@ -5,6 +5,9 @@ import ROUTES from "../../../constants/routes";
 import { Link, useHistory } from "react-router-dom";
 import Logo from "../../../assets/image/Logo.png";
 import AvatarDropdown from "../AvatarDropdown/AvatarDropdown";
+import ChangePassword from "../../../lib/ModalInput/ChangePassword/ChangePassword";
+import ModalInput from "../../../lib/ModalInput/ModalInput.js";
+
 function useOutsideAlerter(ref, handle) {
     useEffect(() => {
         /**
@@ -105,6 +108,11 @@ function UserHeader() {
             key: 5,
             label: "Notification",
             link: ROUTES.TEACHER_PAGE.TEACHER_NOTIFICATION_PATH,
+        },
+        {
+            key: 6,
+            label: "Association",
+            link: ROUTES.TEACHER_PAGE.TEACHER_ASSOCIATION_PATH,
         },
     ];
 

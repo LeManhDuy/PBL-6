@@ -26,6 +26,7 @@ const StudentAdmin = () => {
     const [errorServer, setErrorServer] = useState(false);
     const [dropValueClass, setDropValueClass] = useState("All");
     const [classroom, setClass] = useState([]);
+    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         getStudent();
@@ -218,6 +219,7 @@ const StudentAdmin = () => {
     const handleInputCustom = () => {
         setAddState(false);
         setUpdateState(false);
+        setErrorMessage("");
         setErrorServer(false);
     };
 
@@ -236,10 +238,12 @@ const StudentAdmin = () => {
             if (res.success) {
                 setIsChange(!isChange);
                 setErrorServer(false);
+                setErrorMessage("");
                 setAddState(false);
                 setKeyword("");
             } else {
                 setAddState(true);
+                setErrorMessage(res.message);
                 setErrorServer(true);
             }
         });
@@ -258,10 +262,12 @@ const StudentAdmin = () => {
             if (res.success) {
                 setIsChange(!isChange);
                 setUpdateState(false);
+                setErrorMessage("");
                 setErrorServer(false);
                 setKeyword("");
             } else {
                 setUpdateState(true);
+                setErrorMessage(res.message);
                 setErrorServer(true);
             }
         });
@@ -276,6 +282,7 @@ const StudentAdmin = () => {
                     handleInputCustom={handleInputCustom}
                     handleConfirmAddStudent={handleConfirmAddStudent}
                     errorServer={errorServer}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -291,6 +298,7 @@ const StudentAdmin = () => {
                     handleInputCustom={handleInputCustom}
                     handleConfirmUpdateStudent={handleConfirmUpdateStudent}
                     errorServer={errorServer}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -312,6 +320,7 @@ const StudentAdmin = () => {
 
     const handleAddStudent = () => {
         setAddState(true);
+        setErrorMessage("");
     };
 
     const searchStudent = (students) => {

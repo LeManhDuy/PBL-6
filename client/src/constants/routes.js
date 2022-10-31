@@ -29,6 +29,7 @@ const ROUTES = {
         TEACHER_CLASS_PATH: "/teacher/class",
         TEACHER_SCHEDULE_PATH: "/teacher/schedule",
         TEACHER_NOTIFICATION_PATH: "/teacher/notification",
+        TEACHER_ASSOCIATION_PATH: "/teacher/association",
     },
 
     AFFAIR_PAGE: {
