@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import FeeCategoryService from "../../../config/service/FeeCategoryService";
 import PupilService from "../../../config/service/StudentService";
+import GradeService from "../../../config/service/GradeService";
 import "./AddFee.css";
 import Select from 'react-select';
 
@@ -140,8 +141,8 @@ const AddFee = (props) => {
     //     );
     // };
 
-    let fee_category_id;
     const handleFeeCategoryChange = (event) => {
+        let fee_category_id;
         setFeeCategoryDropValue(event);
         setAllValuesFee({
             ...allValuesFee,
