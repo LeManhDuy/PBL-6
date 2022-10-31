@@ -5,10 +5,12 @@ const jwt = require("jsonwebtoken");
 const Account = require("../model/Account");
 const Person = require("../model/Person");
 const Teacher = require("../model/Teacher");
+const Class = require("../model/class");
 const argon2 = require("argon2");
 const validator = require("email-validator");
 const multer = require("multer");
 const FirebaseStorage = require("multer-firebase-storage");
+const mongoose = require('mongoose');
 const fs = require("fs");
 
 const fileFilter = (req, file, cb) => {
@@ -206,6 +208,47 @@ router.get("/:teacherID", async (req, res) => {
     }
 });
 
+// @route GET api/teacher/id
+// @desc GET teacher by ID
+// @access Private Only Admin
+router.post("/get-teacher-dont-have-class", async (req, res) => {
+    try {
+        // Return token
+        //get ClassId and TeacherId -> compare two array and get value doesn't match
+        const getClassID = await Class.find().select(["homeroom_teacher_id"])
+        const getTeacherID = await Teacher.find().select(["_id"])
+        const arrClassId = [];
+        getClassID.map((item) => {
+            arrClassId.push(item.homeroom_teacher_id.toString());
+        });
+        const arrTeacherId = [];
+        getTeacherID.map((item) => {
+            arrTeacherId.push(item._id.toString());
+        });
+        var getAnotherArrTeacherId = arrTeacherId.filter((word) => !arrClassId.includes(word));
+
+        //Because getAnotherArrTeacherId is String Array -> Convert String Array To ObjectID Array
+        const arrGetAnotherArrTeacherId = [];
+        getAnotherArrTeacherId.map((item) => {
+            arrGetAnotherArrTeacherId.push(mongoose.Types.ObjectId(item));
+        });
+
+        //get teacher dont have class
+        const getTeacherDontHaveClass = await Teacher.find({
+            _id: arrGetAnotherArrTeacherId,
+        })
+            .select(["_id"])
+            .populate({
+                path: "person_id",
+                model: "Person",
+                select: ["person_fullname"],
+            });
+        res.json({ success: true, getTeacherDontHaveClass });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+});
+
 // @route PUT api/teacher
 // @desc PUT teacher
 // @access Private Only Admin
@@ -248,7 +291,7 @@ router.put("/:teacherID", upload.single("person_image"), async (req, res) => {
     }
     const teacherInfor = await Teacher.findById(req.params.teacherID)
         .populate("person_id", ["person_id"])
-    
+
     const phoneValidate = await Person.findOne({ person_phonenumber: person_phonenumber })
     console.log(phoneValidate._id.toString());
     if (phoneValidate)

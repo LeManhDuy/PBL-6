@@ -13,6 +13,8 @@ import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
 import ModalInput from "../../../lib/ModalInput/ModalInput";
 import AddStudent from "../../../lib/ModalInput/AddStudent/AddStudent";
 import UpdateStudent from "../../../lib/ModalInput/UpdateStudent/UpdateStudent";
+import GradeService from "../../../config/service/GradeService";
+
 
 const StudentAdmin = () => {
     const [student, setStudent] = useState([]);
@@ -25,12 +27,15 @@ const StudentAdmin = () => {
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
     const [dropValueClass, setDropValueClass] = useState("All");
+    const [dropValueGrade, setDropValueGrade] = useState("All");
     const [classroom, setClass] = useState([]);
+    const [grades, setGrade] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         getStudent();
         getClass();
+        getGrade();
     }, [isChange]);
 
     const getStudent = () => {
@@ -61,7 +66,7 @@ const StudentAdmin = () => {
                             : "Empty",
                     };
                 });
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.class > b.class ? 1 : -1,);
                 setStudent(dataSourcesSorted);
             })
             .catch((error) => {
@@ -88,6 +93,50 @@ const StudentAdmin = () => {
                 console.log(error);
             });
     };
+
+    const getGrade = () => {
+        GradeService.getGrades()
+            .then((response) => {
+                const dataSources = response.allGrade.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
+                        grade_name: item ? item.grade_name : "Empty",
+                    };
+                });
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.grade_name > b.grade_name ? 1 : -1,);
+                setGrade(dataSourcesSorted);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+    const getClassWithFilter = (filter) => {
+        GradeService.getClassByGradeId(filter)
+            .then((response) => {
+                const dataSources = response.getClassByGradeId.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
+                        class_name: item.class_name,
+                        homeroomteacher_name: item.homeroom_teacher_id
+                            ? item.homeroom_teacher_id.person_id
+                                ? item.homeroom_teacher_id.person_id.person_fullname
+                                : "Empty"
+                            : "Empty",
+                        grade_name: item.grade_id
+                            ? item.grade_id.grade_name
+                            : "Empty",
+                    }
+                })
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.class_name > b.class_name ? 1 : -1,);
+                setClass(dataSourcesSorted)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
 
     const getStudentWithFilter = (filter) => {
         ClassService.getStudentByClassID(filter)
@@ -125,7 +174,7 @@ const StudentAdmin = () => {
     const Dropdown = ({ value, options, onChange }) => {
         return (
             <label>
-                Grade-Class
+                Class
                 <select
                     className="dropdown-account"
                     value={value}
@@ -134,7 +183,27 @@ const StudentAdmin = () => {
                     <option value="All">All</option>
                     {options.map((option) => (
                         <option key={option.key} value={option.id}>
-                            {option.grade_name} - {option.class_name}
+                            {option.class_name}
+                        </option>
+                    ))}
+                </select>
+            </label>
+        );
+    };
+
+    const GradeDropdown = ({ value, options, onChange }) => {
+        return (
+            <label>
+                Grade
+                <select
+                    className="dropdown-account"
+                    value={value}
+                    onChange={onChange}
+                >
+                    <option value="All">All</option>
+                    {options.map((option) => (
+                        <option key={option.key} value={option.id}>
+                            {option.grade_name}
                         </option>
                     ))}
                 </select>
@@ -151,6 +220,18 @@ const StudentAdmin = () => {
                 getStudent();
             }
         });
+    };
+
+    const handleChangeGrade = (event) => {
+        setDropValueGrade(event.target.value);
+        grades.map((item) => {
+            if (event.target.value === item.id) {
+                getClassWithFilter(item.id);
+            } else if (event.target.value === "All") {
+                getClass();
+            }
+        });
+        setKeyword("");
     };
 
     const TableStudent = ({ students }) => {
@@ -343,6 +424,11 @@ const StudentAdmin = () => {
                 <div>
                     <h3>Manage Pupil</h3>
                 </div>
+                <GradeDropdown
+                    options={grades}
+                    value={dropValueGrade}
+                    onChange={handleChangeGrade}
+                />
                 <Dropdown
                     options={classroom}
                     value={dropValueClass}

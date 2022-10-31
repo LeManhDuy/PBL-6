@@ -27,6 +27,9 @@ const getTeachers = async () => {
 const getParentAssociations = async (id) => {
     return await HandleApi.APIGetWithToken(`class/get-parent-associations/${id}`)
 }
+const getTeacherDontHaveClass = async (params) => {
+    return await HandleApi.APIPostWithToken(`teacher/get-teacher-dont-have-class`, params);
+};
 
 const getStudentByClassID = async (id) => {
     return await HandleApi.APIGetWithToken(`class/get-pupil-by-class/${id}`)
@@ -44,7 +47,8 @@ const ClassService = {
     getTeachers,
     getStudentByClassID,
     getParentAssociations,
-    changeIsAssociation
+    changeIsAssociation,
+    getTeacherDontHaveClass
 };
 
 export default ClassService;

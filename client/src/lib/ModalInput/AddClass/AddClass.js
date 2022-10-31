@@ -27,9 +27,9 @@ const AddClass = (props) => {
     }, []);
 
     const getTeachers = () => {
-        ClassService.getTeachers()
+        ClassService.getTeacherDontHaveClass()
             .then((response) => {
-                const dataSources = response.getTeacherInfor.map(
+                const dataSources = response.getTeacherDontHaveClass.map(
                     (item, index) => {
                         return {
                             //key: index + 1,
