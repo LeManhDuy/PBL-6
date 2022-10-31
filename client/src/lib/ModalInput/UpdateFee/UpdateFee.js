@@ -4,7 +4,7 @@ import FeeService from "../../../config/service/FeeService";
 import PupilService from "../../../config/service/StudentService";
 import "./UpdateFee.css";
 import Select from 'react-select';
-
+ 
 
 const UpdateFee = (props) => {
     let date = new Date().toLocaleDateString();
