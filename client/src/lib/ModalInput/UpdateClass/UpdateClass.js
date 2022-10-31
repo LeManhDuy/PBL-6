@@ -70,7 +70,8 @@ const UpdateClass = (props) => {
                         };
                     }
                 );
-                setTeacher(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setTeacher(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -86,7 +87,8 @@ const UpdateClass = (props) => {
                         label: item.grade_name,
                     };
                 });
-                setGrade(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setGrade(dataSourcesSorted)
             })
             .catch((error) => {
                 console.log(error);

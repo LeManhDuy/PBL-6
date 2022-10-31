@@ -42,6 +42,20 @@ router.get("/:feeID", async (req, res) => {
                 path: "pupil_id",
                 model: "Pupil",
                 select: ["pupil_name"],
+                populate: [
+                    {
+                        path: "class_id",
+                        model: "Class",
+                        select: ["class_name"],
+                        populate: [
+                            {
+                                path: "grade_id",
+                                model: "Grade",
+                                select: ["grade_name"],
+                            }
+                        ]
+                    },
+                ],
             })
         res.json({ success: true, getfeeInfor })
     } catch (error) {

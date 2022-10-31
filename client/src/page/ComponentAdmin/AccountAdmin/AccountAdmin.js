@@ -93,7 +93,8 @@ function AccountAdmin() {
                         };
                     }
                 );
-                setPrincipal(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setPrincipal(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -122,7 +123,8 @@ function AccountAdmin() {
                         };
                     }
                 );
-                setParents(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setParents(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -151,7 +153,8 @@ function AccountAdmin() {
                         };
                     }
                 );
-                setTeacher(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setTeacher(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -178,7 +181,8 @@ function AccountAdmin() {
                         };
                     }
                 );
-                setAffair(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setAffair(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);

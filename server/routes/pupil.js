@@ -107,7 +107,7 @@ router.get("/", async (req, res) => {
                     {
                         path: "person_id",
                         model: "Person",
-                        select: ["person_fullname"],
+                        select: ["person_fullname", "person_phonenumber"],
                     },
                 ],
             })
@@ -168,7 +168,7 @@ router.get("/:pupilID", async (req, res) => {
                     {
                         path: "person_id",
                         model: "Person",
-                        select: ["person_fullname"],
+                        select: ["person_fullname", "person_phonenumber"],
                     },
                 ],
             })
@@ -227,7 +227,7 @@ router.get("/get-pupil-by-teacher-id/:teacherID", async (req, res) => {
                 populate: [{
                     path: "person_id",
                     model: "Person",
-                    select: ["person_fullname"],
+                    select: ["person_fullname", "person_phonenumber"],
                 }]
             })
             .populate({

@@ -42,7 +42,8 @@ const FeeCategoryAdmin = () => {
                         };
                     }
                 );
-                setFeeCategory(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setFeeCategory(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);

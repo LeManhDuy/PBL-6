@@ -61,7 +61,8 @@ const StudentAdmin = () => {
                             : "Empty",
                     };
                 });
-                setStudent(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setStudent(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);

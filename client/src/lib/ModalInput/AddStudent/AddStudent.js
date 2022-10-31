@@ -156,7 +156,8 @@ const AddStudent = (props) => {
                             label: item.person_id.person_fullname + " - " + item.person_id.person_phonenumber,
                         };
                     });
-                setParent(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setParent(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -179,7 +180,8 @@ const AddStudent = (props) => {
                             : "Empty",
                     };
                 });
-                setClassroom(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setClassroom(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);

@@ -77,7 +77,7 @@ router.post("/", upload.single("person_image"), async (req, res) => {
     if (phoneValidate)
         return res
             .status(400)
-            .json({ success: false, message: "Phone is unique." });
+            .json({ success: false, message: "Phone number must be unique." });
     const emailValidate = await Person.findOne({ person_email });
     if (!validator.validate(person_email) || emailValidate) {
         return res.status(400).json({

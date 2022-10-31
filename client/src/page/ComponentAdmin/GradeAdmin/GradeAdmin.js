@@ -38,7 +38,8 @@ const GradeAdmin = () => {
                         name: item.grade_name,
                     };
                 });
-                setGrade(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setGrade(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
