@@ -2,7 +2,7 @@
 @import "../../../assets/css/custom.css";
 
 .main-container {
-  width: 100%;  
+  width: 100%;
   margin: 30px 40px;
   position: relative;
 }
@@ -14,7 +14,7 @@
   justify-content: space-between;
 }
 
-.main-container header .dropdown-account{
+.main-container header .dropdown-account {
   height: 40px;
   margin-left: 10px;
   width: 100px;
@@ -22,28 +22,28 @@
   border-radius: 4px;
 }
 
-.main-container header label{
+.main-container header label {
   margin-left: 20px;
 }
 
-.main-container header h3{
+.main-container header h3 {
   width: 30%;
   display: inline;
   color: var(--text-color);
   text-align: left;
 }
 
-.main-container header .right-header{
+.main-container header .right-header {
   display: inline;
   text-align: right;
 }
 
-.right-header .search-box{
+.right-header .search-box {
   display: inline;
   position: relative;
 }
 
-.right-header .btn-search{
+.right-header .btn-search {
   background: none;
   position: absolute;
   right: 0;
@@ -53,14 +53,14 @@
   transform: translateY(-50%);
 }
 
-.right-header button{
+.right-header button {
   margin: 0 4px;
   background: var(--primary-color);
   color: #fff;
   font-size: 18px;
 }
 
-.right-header button:hover{
+.right-header button:hover {
   margin: 0 4px;
   background: var(--primary-hover-color);
   color: #fff;
@@ -84,17 +84,17 @@
 .paging {
   display: flex;
   align-items: center;
-  justify-content:space-between;
+  justify-content: space-between;
   color: var(--text-color);
 }
 
-.paging .icon{
+.paging .icon {
   width: 16px;
   margin: 0 10px;
   color: var(--text-color);
 }
 
-.paging button:hover .icon{
+.paging button:hover .icon {
   color: #fff;
 }
 
@@ -143,7 +143,7 @@
   cursor: pointer;
 }
 
-.table-content table .btn-edit{
+.table-content table .btn-edit {
   color: var(--info-color)
 }
 
@@ -153,4 +153,13 @@
 
 .table-content table .btn-view {
   color: rgb(224, 175, 0)
+}
+
+.class-teacher {
+  margin: 20px;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
 }

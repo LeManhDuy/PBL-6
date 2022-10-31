@@ -9,7 +9,7 @@ const validator = require("email-validator");
 const multer = require("multer");
 const FirebaseStorage = require("multer-firebase-storage");
 const fs = require("fs");
-
+  
 // const storage = multer.diskStorage({
 //     destination: function (req, res, cb) {
 //         cb(null, "./uploads/affairs")

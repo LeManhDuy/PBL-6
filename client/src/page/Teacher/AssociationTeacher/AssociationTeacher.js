@@ -6,6 +6,7 @@ import {
     faArrowRightLong,
 } from "@fortawesome/free-solid-svg-icons";
 import ClassService from "../../../config/service/ClassService";
+import "./AssociationTeacher.css";
 
 
 const AssociationTeacher = () => {
@@ -57,7 +58,7 @@ const AssociationTeacher = () => {
 
     const searchParent = (parents) => {
         return parents.filter(
-            (parents) => 
+            (parents) =>
                 parents.name
                     .toLowerCase()
                     .includes(keyword.toLowerCase()) ||
@@ -76,7 +77,7 @@ const AssociationTeacher = () => {
                 <td>
                     <button onClick={click}>
                         {item.isInAssociation ? "Yes" : "No"}
-                    </button> 
+                    </button>
                 </td>
             </tr>
         ));
@@ -113,31 +114,33 @@ const AssociationTeacher = () => {
     };
 
     return (
-        <div className="main-container">
+        <div className="class-teacher">
             <header>
-                <div>
+                <div className="title">
                     <h3>Manage Parent Association</h3>
-                </div>
-                <div className="right-header">
-                    <div className="search-box">
-                        <button className="btn-search">
-                            <FontAwesomeIcon
-                                className="icon-search"
-                                icon={faMagnifyingGlass}
-                            />
-                        </button>
-                        <input
-                            onChange={handleChangeSearch}
-                            className="input-search"
-                            type="text"
-                            placeholder="Search..."
-                            value={keyword}
-                        ></input>
+
+                    <div className="right-header">
+                        <div className="search-box">
+                            <button className="btn-search">
+                                <FontAwesomeIcon
+                                    className="icon-search"
+                                    icon={faMagnifyingGlass}
+                                />
+                            </button>
+                            <input
+                                onChange={handleChangeSearch}
+                                className="input-search"
+                                type="text"
+                                placeholder="Search..."
+                                value={keyword}
+                            ></input>
+                        </div>
                     </div>
                 </div>
+
             </header>
             <div className="table-content">
-                <TableParents parents={searchParent(parents)}/>
+                <TableParents parents={searchParent(parents)} />
             </div>
             <footer>
                 <hr></hr>
