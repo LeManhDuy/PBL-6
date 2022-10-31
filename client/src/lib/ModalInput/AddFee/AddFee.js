@@ -70,6 +70,7 @@ const AddFee = (props) => {
     };
 
     const getPupil = () => {
+        console.log("here", fee_category_id);
         PupilService.getPupils()
             .then((response) => {
                 const dataSources = response.getPuilInfor.map((item, index) => {
@@ -139,12 +140,16 @@ const AddFee = (props) => {
     //     );
     // };
 
+    let fee_category_id;
     const handleFeeCategoryChange = (event) => {
         setFeeCategoryDropValue(event);
         setAllValuesFee({
             ...allValuesFee,
             fee_category: event.value
         });
+        fee_category_id = event.value
+        console.log(event.value);
+        getPupil()
     };
 
     const handlePupilChange = (event) => {
@@ -166,7 +171,7 @@ const AddFee = (props) => {
             >
                 {props.errorMessage}
             </label>
-            <div className="form-teacher-content">
+            <div className="form-teacher-content" style={{ height: 350 }}>
                 <div className="teacher-content-left">
                     <div className="type-input">
                         <h4>Start Date</h4>
@@ -264,7 +269,7 @@ const AddFee = (props) => {
                         </div>
                     </div>
                 </div>
-                <div className="teacher-content-right">
+                <div className="teacher-content-right-fee">
                     <div className="type-input">
                         <h4>Fee Category</h4>
                         {/* <FeeCategoryDropDown
@@ -278,7 +283,7 @@ const AddFee = (props) => {
                             onChange={handleFeeCategoryChange}
                             options={feeCategory}
                             placeholder="Fee Category"
-                            maxMenuHeight={200}
+                            maxMenuHeight={150}
                         />
                         <label
                             className={
@@ -304,7 +309,7 @@ const AddFee = (props) => {
                             onChange={handlePupilChange}
                             options={pupil}
                             placeholder="Name - Class"
-                            maxMenuHeight={200}
+                            maxMenuHeight={150}
                         />
                         <label
                             className={

@@ -4,7 +4,7 @@ import FeeService from "../../../config/service/FeeService";
 import PupilService from "../../../config/service/StudentService";
 import "./UpdateFee.css";
 import Select from 'react-select';
- 
+
 
 const UpdateFee = (props) => {
     let date = new Date().toLocaleDateString();
@@ -187,21 +187,6 @@ const UpdateFee = (props) => {
     };
 
     const handleFeeCategoryChange = (event) => {
-        // setFeeCategoryDropValue(event.target.value);
-        // if (event.target.value !== "Pick") {
-        //     setAllValuesFee({
-        //         ...allValuesFee,
-        //         fee_category:
-        //             event.target.options[
-        //                 event.target.selectedIndex
-        //             ].getAttribute("data-key"),
-        //     });
-        // } else {
-        //     setAllValuesFee({
-        //         ...allValuesFee,
-        //         fee_category: null,
-        //     });
-        // }
         setFeeCategoryDropValue(event);
         setAllValuesFee({
             ...allValuesFee,
@@ -242,7 +227,7 @@ const UpdateFee = (props) => {
             >
                 {props.errorMessage}
             </label>
-            <div className="form-teacher-content">
+            <div className="form-teacher-content" style={{ height: 350 }}>
                 <div className="teacher-content-left">
                     <div className="type-input">
                         <h4>Start Date</h4>
@@ -356,7 +341,7 @@ const UpdateFee = (props) => {
                         </div>
                     </div>
                 </div>
-                <div className="teacher-content-right">
+                <div className="teacher-content-right-fee">
                     <div className="type-input">
                         <h4>Fee Category</h4>
                         {/* <FeeCategoryDropDown
@@ -371,7 +356,7 @@ const UpdateFee = (props) => {
                             onChange={handleFeeCategoryChange}
                             options={feeCategory}
                             placeholder={allValuesFee.fee_category_name}
-                            maxMenuHeight={200}
+                            maxMenuHeight={150}
                         />
                         <label
                             className={
@@ -392,7 +377,7 @@ const UpdateFee = (props) => {
                             onChange={handlePupilChange}
                             options={pupil}
                             placeholder={allValuesFee.pupil_name}
-                            maxMenuHeight={200}
+                            maxMenuHeight={150}
                         />
                         <label
                             className={
