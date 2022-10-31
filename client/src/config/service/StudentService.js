@@ -19,6 +19,10 @@ const getPupilById = async (id) => {
     return await HandleApi.APIGetWithToken(`pupil/${id}`);
 };
 
+const GetParentsInformation = async (id) => {
+    return await HandleApi.APIGetWithToken(`parent/get-parents-info/${id}`);
+};
+
 const updatePupil = async (pupilID, params) => {
     return await HandleApi.APIPutWithTokenIMG(`pupil/${pupilID}`, params);
 };

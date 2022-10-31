@@ -424,7 +424,7 @@ const AddStudent = (props) => {
                             onChange={handleParentChange}
                             options={parent}
                             placeholder="Name - Phone number"
-                            maxMenuHeight={200}
+                            maxMenuHeight={150}
                         />
                         <label
                             className={
@@ -445,7 +445,7 @@ const AddStudent = (props) => {
                             onChange={handleClassChange}
                             options={classroom}
                             placeholder="Grade - Class"
-                            maxMenuHeight={200}
+                            maxMenuHeight={150}
                         />
                         <label
                             className={
