@@ -31,7 +31,7 @@ const UpdateClass = (props) => {
         getGrades();
         ClassService.getClassById(props.classID).then((res) => {
             setAllValuesClass({
-                name: res.getClassInfor[0].class_name,
+                name: res.getClassInfor[0].class_name.split("/")[1],
                 teacher: res.getClassInfor[0]
                     ? res.getClassInfor[0].homeroom_teacher_id
                         ? res.getClassInfor[0].homeroom_teacher_id._id
@@ -190,7 +190,7 @@ const UpdateClass = (props) => {
         setAllValuesClass({
             ...allValuesClass,
             grade: event.value,
-            gradeName: event.label
+            grade_name: event.label
         });
     };
 

@@ -139,7 +139,7 @@ const ClassAdmin = () => {
 
     const handleConfirmUpdateClass = (allValue) => {
         ClassService.updateClass(id, {
-            class_name: allValue.name,
+            class_name: allValue.grade_name + '/' + allValue.name.toUpperCase(),
             grade_id: allValue.grade,
             homeroom_teacher_id: allValue.teacher,
         })
