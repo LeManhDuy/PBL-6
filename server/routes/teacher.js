@@ -5,10 +5,12 @@ const jwt = require("jsonwebtoken");
 const Account = require("../model/Account");
 const Person = require("../model/Person");
 const Teacher = require("../model/Teacher");
+const Class = require("../model/class");
 const argon2 = require("argon2");
 const validator = require("email-validator");
 const multer = require("multer");
 const FirebaseStorage = require("multer-firebase-storage");
+const mongoose = require('mongoose');
 const fs = require("fs");
 
 const fileFilter = (req, file, cb) => {
@@ -206,6 +208,95 @@ router.get("/:teacherID", async (req, res) => {
     }
 });
 
+// @route GET api/teacher/id
+// @desc GET teacher by ID
+// @access Private Only Admin
+router.post("/get-teacher-dont-have-class", async (req, res) => {
+    try {
+        // Return token
+        //get Teacher Have Class Id Id and All Teacher Id
+        //-> compare two array (Teacher Have Class Id-All Teacher Id) and get value doesn't match
+        const getTeacherHaveClass = await Class.find().select(["homeroom_teacher_id"])
+        const arrTeacherHaveClassId = [];
+        getTeacherHaveClass.map((item) => {
+            arrTeacherHaveClassId.push(item.homeroom_teacher_id.toString());
+        });
+
+        const getAllTeacherID = await Teacher.find().select(["_id"])
+        const arrAllTeacherId = [];
+        getAllTeacherID.map((item) => {
+            arrAllTeacherId.push(item._id.toString());
+        });
+
+        var getTheRemainingTeacherId = arrAllTeacherId.filter((word) => !arrTeacherHaveClassId.includes(word));
+        //getTheRemainingTeacherId is String Array -> Convert String Array To ObjectID Array
+        const arrGetTheRemainingTeacherId = [];
+        getTheRemainingTeacherId.map((item) => {
+            arrGetTheRemainingTeacherId.push(mongoose.Types.ObjectId(item));
+        });
+
+        //get teacher dont have class
+        const getTeacherDontHaveClass = await Teacher.find({
+            _id: arrGetTheRemainingTeacherId,
+        })
+            .select(["_id"])
+            .populate({
+                path: "person_id",
+                model: "Person",
+                select: ["person_fullname"],
+            });
+        res.json({ success: true, getTeacherDontHaveClass });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+});
+// @route GET api/teacher/id
+// @desc GET teacher by ID
+// @access Private Only Admin
+router.get("/get-cbb-teacher-dont-have-class/:classID", async (req, res) => {
+    try {
+        // Return token
+        //get Teacher Have Class Id Id and All Teacher Id
+        //-> compare two array (Teacher Have Class Id-All Teacher Id) and get value doesn't match
+        const getTeacherHaveClass = await Class.find().select(["homeroom_teacher_id"])
+        const arrTeacherHaveClassId = [];
+        getTeacherHaveClass.map((item) => {
+            arrTeacherHaveClassId.push(item.homeroom_teacher_id.toString());
+        });
+
+        const getAllTeacherID = await Teacher.find().select(["_id"])
+        const arrAllTeacherId = [];
+        getAllTeacherID.map((item) => {
+            arrAllTeacherId.push(item._id.toString());
+        });
+
+        //value doesn't match in two of arrays above
+        var getTheRemainingTeacherId = arrAllTeacherId.filter((word) => !arrTeacherHaveClassId.includes(word));
+
+        //We get ID Teacher Dont Have Class 
+        const getTeacherDontHaveClass = await Class.find({ _id: req.params.classID }).select(["homeroom_teacher_id"])
+
+        //getTheRemainingTeacherId is String Array -> Convert String Array To ObjectID Array
+        const arrGetTheRemainingTeacherId = [getTeacherDontHaveClass[0].homeroom_teacher_id];
+        getTheRemainingTeacherId.map((item) => {
+            arrGetTheRemainingTeacherId.push(mongoose.Types.ObjectId(item));
+        });
+
+        //get teacher have class
+        const getTeacherInfor = await Teacher.find({
+            _id: arrGetTheRemainingTeacherId
+        }).select(["_id"])
+            .populate({
+                path: "person_id",
+                model: "Person",
+                select: ["person_fullname"],
+            });
+        res.json({ success: true, getTeacherInfor });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+});
+
 // @route PUT api/teacher
 // @desc PUT teacher
 // @access Private Only Admin
@@ -248,7 +339,7 @@ router.put("/:teacherID", upload.single("person_image"), async (req, res) => {
     }
     const teacherInfor = await Teacher.findById(req.params.teacherID)
         .populate("person_id", ["person_id"])
-    
+
     const phoneValidate = await Person.findOne({ person_phonenumber: person_phonenumber })
     console.log(phoneValidate._id.toString());
     if (phoneValidate)

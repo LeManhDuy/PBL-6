@@ -27,9 +27,9 @@ const AddClass = (props) => {
     }, []);
 
     const getTeachers = () => {
-        ClassService.getTeachers()
+        ClassService.getTeacherDontHaveClass()
             .then((response) => {
-                const dataSources = response.getTeacherInfor.map(
+                const dataSources = response.getTeacherDontHaveClass.map(
                     (item, index) => {
                         return {
                             //key: index + 1,
@@ -38,7 +38,8 @@ const AddClass = (props) => {
                         };
                     }
                 );
-                setTeacher(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setTeacher(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -55,7 +56,8 @@ const AddClass = (props) => {
                         label: item.grade_name,
                     };
                 });
-                setGrade(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setGrade(dataSourcesSorted)
             })
             .catch((error) => {
                 console.log(error);
@@ -116,22 +118,6 @@ const AddClass = (props) => {
     };
 
     const handleTeacherChange = (event) => {
-        // setTeacherDropValue(event.target.value);
-        // if (event.target.value !== "Pick") {
-        //     setAllValuesClass({
-        //         ...allValuesClass,
-        //         teacher:
-        //             event.target.options[
-        //                 event.target.selectedIndex
-        //             ].getAttribute("data-key"),
-        //     });
-        // } else {
-        //     setAllValuesClass({
-        //         ...allValuesClass,
-        //         teacher: null,
-        //     });
-        // }
-
         setTeacherDropValue(event);
         setAllValuesClass({
             ...allValuesClass,
@@ -140,23 +126,6 @@ const AddClass = (props) => {
     };
 
     const handleGradeChange = (event) => {
-        // setGradeDropValue(event.target.value);
-        // if (event.target.value !== "Pick") {
-        //     setAllValuesClass({
-        //         ...allValuesClass,
-        //         grade: event.target.options[
-        //             event.target.selectedIndex
-        //         ].getAttribute("data-key"),
-
-        //         gradeName:
-        //             event.target.options[event.target.selectedIndex].value,
-        //     });
-        // } else {
-        //     setAllValuesClass({
-        //         ...allValuesClass,
-        //         grade: null,
-        //     });
-        // }
         setGradeDropValue(event);
         setAllValuesClass({
             ...allValuesClass,

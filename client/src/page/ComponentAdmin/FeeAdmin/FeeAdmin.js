@@ -50,7 +50,8 @@ const FeeAdmin = () => {
                         fee_status: item.fee_status ? "PAID" : "UNPAID",
                     };
                 });
-                setFee(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.fee_name > b.fee_name ? 1 : -1,);
+                setFee(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);

@@ -83,6 +83,13 @@ const UpdateStudent = (props) => {
                             : "Empty"
                         : "Empty"
                     : "Empty",
+                person_phonenumber: res.getPupilInfor[0]
+                    ? res.getPupilInfor[0].parent_id
+                        ? res.getPupilInfor[0].parent_id.person_id
+                            ? res.getPupilInfor[0].parent_id.person_id.person_phonenumber
+                            : "Empty"
+                        : "Empty"
+                    : "Empty",
                 classroom_name: res.getPupilInfor[0]
                     ? res.getPupilInfor[0].class_id
                         ? res.getPupilInfor[0].class_id.class_name
@@ -209,10 +216,11 @@ const UpdateStudent = (props) => {
                         return {
                             //key: index + 1,
                             value: item._id,
-                            label: item.person_id.person_fullname,
+                            label: item.person_id.person_fullname + " - " + item.person_id.person_phonenumber,
                         };
                     });
-                setParent(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setParent(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -240,7 +248,8 @@ const UpdateStudent = (props) => {
                             : "Empty",
                     };
                 });
-                setClassroom(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setClassroom(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -464,7 +473,7 @@ const UpdateStudent = (props) => {
                             onChange={handleParentChange}
                             options={parent}
                             maxMenuHeight={150}
-                            placeholder={allValuesStudent.parent_name}
+                            placeholder={allValuesStudent.parent_name + " - " + allValuesStudent.person_phonenumber}
                         />
                     </div>
                     <div className="type-input">

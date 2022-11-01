@@ -35,7 +35,8 @@ const AssociationTeacher = () => {
                         isInAssociation: item.is_in_association
                     };
                 });
-                setParent(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setParent(dataSourcesSorted);
             }).catch((error) => {
                 console.log(error);
             });
@@ -115,30 +116,30 @@ const AssociationTeacher = () => {
 
     return (
         <div className="class-teacher">
-            <header>
-                <div className="title">
-                    <h3>Manage Parent Association</h3>
-
-                    <div className="right-header">
-                        <div className="search-box">
-                            <button className="btn-search">
-                                <FontAwesomeIcon
-                                    className="icon-search"
-                                    icon={faMagnifyingGlass}
-                                />
-                            </button>
-                            <input
-                                onChange={handleChangeSearch}
-                                className="input-search"
-                                type="text"
-                                placeholder="Search..."
-                                value={keyword}
-                            ></input>
+            <div className="class-teacher-header">
+                <header>
+                    <div className="title">
+                        <h3>Manage Parent Association</h3>
+                        <div className="right-header">
+                            <div className="search-box">
+                                <button className="btn-search">
+                                    <FontAwesomeIcon
+                                        className="icon-search"
+                                        icon={faMagnifyingGlass}
+                                    />
+                                </button>
+                                <input
+                                    onChange={handleChangeSearch}
+                                    className="input-search"
+                                    type="text"
+                                    placeholder="Search..."
+                                    value={keyword}
+                                ></input>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-            </header>
+                </header>
+            </div>
             <div className="table-content">
                 <TableParents parents={searchParent(parents)} />
             </div>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import FeeCategoryService from "../../../config/service/FeeCategoryService";
-import FeeService from "../../../config/service/FeeService";
-import PupilService from "../../../config/service/StudentService";
+import FeeCategoryService from "../../../config/service/FeeCategoryService"
+import GradeService from "../../../config/service/GradeService"
+import ClassService from "../../../config/service/ClassService"
+import FeeService from "../../../config/service/FeeService"
 import "./UpdateFee.css";
 import Select from 'react-select';
 
@@ -10,8 +11,12 @@ const UpdateFee = (props) => {
     let date = new Date().toLocaleDateString();
     const [feeCategory, setFeeCategory] = useState([]);
     const [pupil, setPupil] = useState([]);
+    const [grade, setGrade] = useState([])
+    const [classroom, setClassroom] = useState([])
     const [feeCategoryDropValue, setFeeCategoryDropValue] = useState();
     const [pupilDropValue, setPupilDropValue] = useState();
+    const [gradeDropValue, setGradeDropValue] = useState()
+    const [classDropValue, setClassDropValue] = useState()
     const [allValuesFee, setAllValuesFee] = useState({
         fee_status: "",
         start_date: `${date.split("/")[2]}-${date.split("/")[0] < 10
@@ -40,6 +45,10 @@ const UpdateFee = (props) => {
 
         fee_category_name: "",
         pupil_name: "",
+        grade: "",
+        gradeName: "",
+        classroom: "",
+        class_name: "",
     });
     const [FeeError, setFeeError] = useState({
         fee_status: false,
@@ -51,11 +60,17 @@ const UpdateFee = (props) => {
 
         fee_category_name: false,
         pupil_name: false,
+        grade: false,
+        classroom: false,
+        gradeName: false,
+        class_name: false,
     });
 
     useEffect(() => {
         getFeeCategory();
         getPupil();
+        getGrades();
+        getClasses();
         FeeService.getFeeById(props.feeID).then((res) => {
             setAllValuesFee({
                 fee_status: `${res.getfeeInfor[0].fee_status}`,
@@ -85,6 +100,22 @@ const UpdateFee = (props) => {
                         ? res.getfeeInfor[0].pupil_id.pupil_name
                         : "Empty"
                     : "Empty",
+                class_name: res.getfeeInfor[0]
+                    ? res.getfeeInfor[0].pupil_id
+                        ? res.getfeeInfor[0].pupil_id.class_id
+                            ? res.getfeeInfor[0].pupil_id.class_id.class_name
+                            : "Empty"
+                        : "Empty"
+                    : "Empty",
+                grade_name: res.getfeeInfor[0]
+                    ? res.getfeeInfor[0].pupil_id
+                        ? res.getfeeInfor[0].pupil_id.class_id
+                            ? res.getfeeInfor[0].pupil_id.class_id.grade_id
+                                ? res.getfeeInfor[0].pupil_id.class_id.grade_id.grade_name
+                                : "Empty"
+                            : "Empty"
+                        : "Empty"
+                    : "Empty",
             });
         });
     }, []);
@@ -101,31 +132,69 @@ const UpdateFee = (props) => {
                         };
                     }
                 );
-                setFeeCategory(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setFeeCategory(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
             });
     };
 
-    const getPupil = () => {
-        PupilService.getPupils()
+    const getPupil = (studentID) => {
+        ClassService.getStudentByClassID(studentID)
             .then((response) => {
-                const dataSources = response.getPuilInfor.map((item, index) => {
+                const dataSources = response.studentsInfor.map((item, index) => {
                     return {
-                        key: index + 1,
+                        //key: index + 1,
                         value: item._id,
                         label: item.class_id
                             ? item.pupil_name + " - " + item.class_id.class_name
                             : item.pupil_name + " - " + "Empty"
-                    };
-                });
-                setPupil(dataSources);
+                    }
+                })
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setPupil(dataSourcesSorted)
             })
             .catch((error) => {
-                console.log(error);
-            });
-    };
+                console.log(error)
+            })
+    }
+
+
+    const getGrades = () => {
+        GradeService.getGrades()
+            .then((response) => {
+                const dataSources = response.allGrade.map((item, index) => {
+                    return {
+                        value: item._id,
+                        label: item.grade_name,
+                    }
+                })
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setGrade(dataSourcesSorted)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
+    const getClasses = (gradeID) => {
+        GradeService.getClassByGradeId(gradeID)
+            .then((response) => {
+                const dataSources = response.getClassByGradeId.map((item, index) => {
+                    return {
+                        //key: index + 1,
+                        value: item._id,
+                        label: item.class_name,
+                    }
+                })
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setClassroom(dataSourcesSorted)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
 
     const changeHandlerFee = (e) => {
         setAllValuesFee({
@@ -141,50 +210,50 @@ const UpdateFee = (props) => {
         }
     };
 
-    const FeeCategoryDropDown = ({
-        value,
-        options,
-        onChange,
-        feecategoryValue,
-    }) => {
-        return (
-            <select className="dropdown-Fee" value={value} onChange={onChange}>
-                <option key={10000} value="Pick">
-                    FeeCategory
-                </option>
-                {options.map((option) => (
-                    <option
-                        key={option.key}
-                        value={option.fee_category}
-                        data-key={option.id}
-                        selected={feecategoryValue === option.id}
-                    >
-                        {option.fee_category}
-                    </option>
-                ))}
-            </select>
-        );
-    };
+    // const FeeCategoryDropDown = ({
+    //     value,
+    //     options,
+    //     onChange,
+    //     feecategoryValue,
+    // }) => {
+    //     return (
+    //         <select className="dropdown-Fee" value={value} onChange={onChange}>
+    //             <option key={10000} value="Pick">
+    //                 FeeCategory
+    //             </option>
+    //             {options.map((option) => (
+    //                 <option
+    //                     key={option.key}
+    //                     value={option.fee_category}
+    //                     data-key={option.id}
+    //                     selected={feecategoryValue === option.id}
+    //                 >
+    //                     {option.fee_category}
+    //                 </option>
+    //             ))}
+    //         </select>
+    //     );
+    // };
 
-    const PupilDropDown = ({ value, options, onChange, pupilValue }) => {
-        return (
-            <select className="dropdown-Fee" value={value} onChange={onChange}>
-                <option key={10000} value="Pick">
-                    Pupils
-                </option>
-                {options.map((option) => (
-                    <option
-                        key={option.key}
-                        value={option.pupil}
-                        data-key={option.id}
-                        selected={pupilValue === option.id}
-                    >
-                        {option.pupil}
-                    </option>
-                ))}
-            </select>
-        );
-    };
+    // const PupilDropDown = ({ value, options, onChange, pupilValue }) => {
+    //     return (
+    //         <select className="dropdown-Fee" value={value} onChange={onChange}>
+    //             <option key={10000} value="Pick">
+    //                 Pupils
+    //             </option>
+    //             {options.map((option) => (
+    //                 <option
+    //                     key={option.key}
+    //                     value={option.pupil}
+    //                     data-key={option.id}
+    //                     selected={pupilValue === option.id}
+    //                 >
+    //                     {option.pupil}
+    //                 </option>
+    //             ))}
+    //         </select>
+    //     );
+    // };
 
     const handleFeeCategoryChange = (event) => {
         setFeeCategoryDropValue(event);
@@ -195,26 +264,35 @@ const UpdateFee = (props) => {
     };
 
     const handlePupilChange = (event) => {
-        // setPupilDropValue(event.target.value);
-        // if (event.target.value !== "Pick") {
-        //     setAllValuesFee({
-        //         ...allValuesFee,
-        //         pupil: event.target.options[
-        //             event.target.selectedIndex
-        //         ].getAttribute("data-key"),
-        //     });
-        // } else {
-        //     setAllValuesFee({
-        //         ...allValuesFee,
-        //         pupil: null,
-        //     });
-        // }
         setPupilDropValue(event);
         setAllValuesFee({
             ...allValuesFee,
             pupil: event.value
         });
     };
+
+    const handleGradeChange = (event) => {
+        let gradeID = null;
+        setGradeDropValue(event)
+        setAllValuesFee({
+            ...allValuesFee,
+            grade: event.value,
+            gradeName: event.label
+        })
+        gradeID = event.value
+        getClasses(gradeID)
+    }
+
+    const handleClassChange = (event) => {
+        let studentID = null;
+        setClassDropValue(event)
+        setAllValuesFee({
+            ...allValuesFee,
+            classroom: event.value
+        })
+        studentID = event.value
+        getPupil(studentID)
+    }
 
     const FormFee = (
         <div className="form-admin-content">
@@ -227,8 +305,8 @@ const UpdateFee = (props) => {
             >
                 {props.errorMessage}
             </label>
-            <div className="form-teacher-content" style={{ height: 350 }}>
-                <div className="teacher-content-left">
+            <div className="form-teacher-content-fee" style={{ height: 350 }}>
+                <div className="teacher-content-left-fee">
                     <div className="type-input">
                         <h4>Start Date</h4>
                         <input
@@ -341,6 +419,50 @@ const UpdateFee = (props) => {
                         </div>
                     </div>
                 </div>
+                <div className="teacher-content-center-fee">
+                    <div className="type-input">
+                        <h4>Grade</h4>
+                        <Select
+                            className="dropdown-class"
+                            value={gradeDropValue}
+                            onChange={handleGradeChange}
+                            options={grade}
+                            placeholder={allValuesFee.grade_name}
+                            maxMenuHeight={200}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (FeeError.grade
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid Grade
+                        </label>
+                    </div>
+                    <div className="type-input">
+                        <h4>Class</h4>
+                        <Select
+                            className="dropdown-class"
+                            value={classDropValue}
+                            onChange={handleClassChange}
+                            options={classroom}
+                            placeholder={allValuesFee.class_name}
+                            maxMenuHeight={135}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (FeeError.classroom
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid Class
+                        </label>
+                    </div>
+                </div>
                 <div className="teacher-content-right-fee">
                     <div className="type-input">
                         <h4>Fee Category</h4>
@@ -356,7 +478,7 @@ const UpdateFee = (props) => {
                             onChange={handleFeeCategoryChange}
                             options={feeCategory}
                             placeholder={allValuesFee.fee_category_name}
-                            maxMenuHeight={150}
+                            maxMenuHeight={200}
                         />
                         <label
                             className={
@@ -377,7 +499,7 @@ const UpdateFee = (props) => {
                             onChange={handlePupilChange}
                             options={pupil}
                             placeholder={allValuesFee.pupil_name}
-                            maxMenuHeight={150}
+                            maxMenuHeight={135}
                         />
                         <label
                             className={
@@ -406,6 +528,8 @@ const UpdateFee = (props) => {
 
         let fee_category_name = false;
         let pupil_name = false;
+        let grade_name = false;
+        let class_name = false;
 
         // let dateNow = new Date().toLocaleDateString()
         // let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
@@ -463,7 +587,9 @@ const UpdateFee = (props) => {
             pupil: pupil,
 
             fee_category_name: fee_category_name,
-            pupil_name: pupil_name
+            pupil_name: pupil_name,
+            grade_name: grade_name,
+            class_name: class_name
         });
         if (!check) {
             props.handleConfirmUpdateFee(allValuesFee);

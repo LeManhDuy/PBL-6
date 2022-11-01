@@ -44,14 +44,17 @@ const ClassAdmin = () => {
                         id: item._id,
                         class_name: item.class_name,
                         homeroomteacher_name: item.homeroom_teacher_id
-                            ? item.homeroom_teacher_id.person_id.person_fullname
+                            ? item.homeroom_teacher_id.person_id
+                                ? item.homeroom_teacher_id.person_id.person_fullname
+                                : "Empty"
                             : "Empty",
                         grade_name: item.grade_id
                             ? item.grade_id.grade_name
                             : "Empty",
                     };
                 });
-                setClass(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.class_name > b.class_name ? 1 : -1,);
+                setClass(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -68,12 +71,39 @@ const ClassAdmin = () => {
                         grade_name: item ? item.grade_name : "Empty",
                     };
                 });
-                setGrade(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.grade_name > b.grade_name ? 1 : -1,);
+                setGrade(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
             });
     };
+
+    const getClassWithFilter = (filter) => {
+        GradeService.getClassByGradeId(filter)
+            .then((response) => {
+                const dataSources = response.getClassByGradeId.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
+                        class_name: item.class_name,
+                        homeroomteacher_name: item.homeroom_teacher_id
+                            ? item.homeroom_teacher_id.person_id
+                                ? item.homeroom_teacher_id.person_id.person_fullname
+                                : "Empty"
+                            : "Empty",
+                        grade_name: item.grade_id
+                            ? item.grade_id.grade_name
+                            : "Empty",
+                    }
+                })
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.class_name > b.class_name ? 1 : -1,);
+                setClass(dataSourcesSorted)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
 
     const Dropdown = ({ value, options, onChange }) => {
         return (
@@ -97,14 +127,14 @@ const ClassAdmin = () => {
 
     const handleChangeGrade = (event) => {
         setDropValueGrade(event.target.value);
+        grades.map((item) => {
+            if (event.target.value === item.id) {
+                getClassWithFilter(item.id);
+            } else if (event.target.value === "All") {
+                getClass();
+            }
+        });
         setKeyword("");
-        // grades.map((item) => {
-        //     if (event.target.value === item.id) {
-        //         getStudentWithFilter(item.id);
-        //     } else if (event.target.value === "All") {
-        //         getStudent();
-        //     }
-        // });
     };
 
     const handleInputCustom = () => {

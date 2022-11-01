@@ -39,7 +39,8 @@ const SubjectAdmin = () => {
                         name: item.subject_name,
                     };
                 });
-                setSubject(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setSubject(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
