@@ -24,6 +24,7 @@ import Parents from "../page/Parents/Parents";
 import StudentParents from "../page/Parents/StudentParents/StudentParents";
 import ScoreParents from "../page/Parents/ScoreParents/ScoreParents";
 import NotificationParents from "../page/Parents/NotificationParents/NotificationParents";
+import FeeParents from "../page/Parents/FeeParents/FeeParents";
 //Affair
 import AffairRoute from "./AffairRoute/AffairRoute";
 import HomeAffair from "../page/ComponentAffair/HomeAffair/HomeAffair";
@@ -36,7 +37,7 @@ import ScoreTeacher from "../page/Teacher/ScoreTeacher/ScoreTeacher";
 import NotificationTeacher from "../page/Teacher/NotificationTeacher/NotificationTeacher";
 import ScheduleTeacher from "../page/Teacher/ScheduleTeacher/ScheduleTeacher";
 import ClassTeacher from "../page/Teacher/ClassTeacher/ClassTeacher";
-import AssociationTeacher from "../page/Teacher/AssociationTeacher/AssociationTeacher"
+import AssociationTeacher from "../page/Teacher/AssociationTeacher/AssociationTeacher";
 
 const Routes = () => {
     return (
@@ -141,6 +142,12 @@ const Routes = () => {
                         path={ROUTES.PARENTS_PAGE.PARENTS_NOTIFICATION_PATH}
                     />
 
+                    <ParentsRoute
+                        component={FeeParents}
+                        exact
+                        path={ROUTES.PARENTS_PAGE.PARENTS_FEE_PATH}
+                    />
+
                     {/* Teacher Route */}
 
                     <TeacherRoute
@@ -167,7 +174,7 @@ const Routes = () => {
                         path={ROUTES.TEACHER_PAGE.TEACHER_NOTIFICATION_PATH}
                     />
 
-                <TeacherRoute
+                    <TeacherRoute
                         component={AssociationTeacher}
                         exact
                         path={ROUTES.TEACHER_PAGE.TEACHER_ASSOCIATION_PATH}

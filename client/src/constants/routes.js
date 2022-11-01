@@ -22,6 +22,7 @@ const ROUTES = {
         PARENTS_PARENTS_PATH: "/parents/parents",
         PARENTS_SCORE_PATH: "/parents/score",
         PARENTS_NOTIFICATION_PATH: "/parents/notification",
+        PARENTS_FEE_PATH: "/parents/fee",
     },
 
     TEACHER_PAGE: {

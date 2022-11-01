@@ -85,6 +85,11 @@ function UserHeader() {
             label: "Notification",
             link: ROUTES.PARENTS_PAGE.PARENTS_NOTIFICATION_PATH,
         },
+        {
+            key: 6,
+            label: "Fee Manager",
+            link: ROUTES.PARENTS_PAGE.PARENTS_FEE_PATH,
+        },
     ];
 
     const optionsTeacher = [
