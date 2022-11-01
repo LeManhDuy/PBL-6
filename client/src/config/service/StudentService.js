@@ -33,6 +33,14 @@ const getPupilByParentId = async (personID) => {
     );
 };
 
+const getStudentByTeacherIdAtTeacherRole = async (id) => {
+    return await HandleApi.APIGetWithToken(`class/get-pupil-at-teacher-role/${id}`);
+}
+
+const getStudentByStudentId = async (id) => {
+    return await HandleApi.APIGetWithToken(`pupil/${id}`);
+}
+
 const PupilService = {
     getPupils,
     addPupil,
@@ -40,6 +48,8 @@ const PupilService = {
     getPupilById,
     updatePupil,
     getPupilByParentId,
+    getStudentByTeacherIdAtTeacherRole,
+    getStudentByStudentId,
 };
 
 export default PupilService;

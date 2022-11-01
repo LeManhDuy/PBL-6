@@ -269,6 +269,74 @@ const getParentAssociations = async (req, res) => {
     }
 };
 
+
+const getStudentByTeacherIdAtTeacherRole = async (req, res) => {
+    try {
+        const teacher = await Teacher.find({
+            person_id: req.params.personID
+        })
+        const classInfor = await Class.find({
+            homeroom_teacher_id: teacher[0]._id
+        })
+        const getPupilsInfor = await Pupil.find({
+            class_id: classInfor[0]._id.toString()
+        }).select([
+            "pupil_name",
+            "pupil_dateofbirth",
+            "pupil_gender",
+            "pupil_image",
+        ])
+        .populate({
+            path: "parent_id",
+            model: "Parent",
+            populate: [
+                {
+                    path: "person_id",
+                    model: "Person",
+                    select: [
+                        "person_fullname",
+                        "person_phonenumber",
+                        "person_address"
+                    ],
+                },
+            ],
+        })
+        .populate({
+            path: "class_id",
+            model: "Class",
+            populate: [
+                {
+                    path: "grade_id",
+                    model: "Grade",
+                    select: ["grade_name"],
+                },
+            ],
+        })
+        .populate({
+            path: "class_id",
+            model: "Class",
+            populate: [
+                {
+                    path: "homeroom_teacher_id",
+                    model: "Teacher",
+                    select: ["_id"],
+                    populate: [
+                        {
+                            path: "person_id",
+                            model: "Person",
+                            select: ["person_fullname"],
+                        },
+                    ],
+                },
+            ],
+        });
+        res.json({ success: true, getPupilsInfor, class_name: classInfor[0].class_name });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+
 module.exports = { 
     createClass, 
     getClass, 
@@ -276,5 +344,6 @@ module.exports = {
     updateClassByID, 
     deleteClass, 
     getStudentByClassID,
-    getParentAssociations
+    getParentAssociations,
+    getStudentByTeacherIdAtTeacherRole
  };

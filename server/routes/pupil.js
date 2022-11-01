@@ -168,7 +168,6 @@ router.get("/:pupilID", async (req, res) => {
                     {
                         path: "person_id",
                         model: "Person",
-                        select: ["person_fullname", "person_phonenumber"],
                     },
                 ],
             })
