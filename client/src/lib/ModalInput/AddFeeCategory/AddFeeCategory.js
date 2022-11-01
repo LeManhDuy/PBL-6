@@ -58,7 +58,7 @@ const AddFeeCategory = (props) => {
                             className="input-content"
                             type="text"
                             name="name"
-                            placeholder="Enter fee name"
+                            placeholder="Enter Fee Name"
                             value={allValuesFeeCategory.name}
                             onChange={changeHandlerFeeCategory}
                         />
@@ -81,7 +81,7 @@ const AddFeeCategory = (props) => {
                             className="input-content"
                             type="text"
                             name="ammount"
-                            placeholder="Enter fee ammount"
+                            placeholder="Enter Fee Ammount"
                             value={allValuesFeeCategory.ammount}
                             onChange={changeHandlerFeeCategory}
                             allowLeadingZeros

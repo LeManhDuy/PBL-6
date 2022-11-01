@@ -63,14 +63,14 @@ const StudentParents = () => {
                         <div className="item-content">
                             <i className="fas fa-child"></i>
                             <div className="detail-item-content">
-                                <h4>Name</h4>
+                                <h4>Full Name</h4>
                                 <p>{item.name}</p>
                             </div>
                         </div>
                         <div className="item-content">
                             <i className="fa fa-calendar"></i>
                             <div className="detail-item-content">
-                                <h4>Date of Birth</h4>
+                                <h4>Date Of Birth</h4>
                                 <p>{item.dateofbirth}</p>
                             </div>
                         </div>

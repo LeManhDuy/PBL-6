@@ -755,7 +755,7 @@ const AddAccount = (props) => {
                     <div className="avatar-teacher">
                         <img src={avatar} alt="avatar" />
                         <label className="choose-file" htmlFor="upload-photo">
-                            Choose image
+                            Choose Image
                         </label>
                         <input
                             id="upload-photo"
@@ -817,7 +817,7 @@ const AddAccount = (props) => {
                         </label>
                     </div>
                     <div className="type-input">
-                        <h4>Date of Birth</h4>
+                        <h4>Date Of Birth</h4>
                         <input
                             className="input-content"
                             type="date"
@@ -1027,7 +1027,7 @@ const AddAccount = (props) => {
                     <div className="avatar-teacher">
                         <img src={avatar} alt="avatar" />
                         <label className="choose-file" htmlFor="upload-photo">
-                            Choose image
+                            Choose Image
                         </label>
                         <input
                             id="upload-photo"
@@ -1089,7 +1089,7 @@ const AddAccount = (props) => {
                         </label>
                     </div>
                     <div className="type-input">
-                        <h4>Date of Birth</h4>
+                        <h4>Date Of Birth</h4>
                         <input
                             className="input-content"
                             type="date"
@@ -1253,7 +1253,7 @@ const AddAccount = (props) => {
                             className="input-content"
                             type="date"
                             name="working"
-                            placeholder="Enter Date Of Birth"
+                            placeholder="Enter Working Since"
                             value={allValuesTeacher.working}
                             onChange={changeHandlerTeacher}
                         />
@@ -1359,7 +1359,7 @@ const AddAccount = (props) => {
                     <div className="avatar-teacher">
                         <img src={avatar} alt="avatar" />
                         <label className="choose-file" htmlFor="upload-photo">
-                            Choose image
+                            Choose Image
                         </label>
                         <input
                             id="upload-photo"
@@ -1421,7 +1421,7 @@ const AddAccount = (props) => {
                         </label>
                     </div>
                     <div className="type-input">
-                        <h4>Date of Birth</h4>
+                        <h4>Date Of Birth</h4>
                         <input
                             className="input-content"
                             type="date"
@@ -1634,7 +1634,7 @@ const AddAccount = (props) => {
                     <div className="avatar-teacher">
                         <img src={avatar} alt="avatar" />
                         <label className="choose-file" htmlFor="upload-photo">
-                            Choose image
+                            Choose Image
                         </label>
                         <input
                             id="upload-photo"
@@ -1696,7 +1696,7 @@ const AddAccount = (props) => {
                         </label>
                     </div>
                     <div className="type-input">
-                        <h4>Date of Birth</h4>
+                        <h4>Date Of Birth</h4>
                         <input
                             className="input-content"
                             type="date"

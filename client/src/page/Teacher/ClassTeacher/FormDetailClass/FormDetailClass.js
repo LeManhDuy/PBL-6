@@ -110,7 +110,7 @@ const FormDetailClass = (props) => {
                         <p>{studentsInfo.ParentJob}</p>
                     </div>
                     <div className="info-item">
-                        <label>Is in Association</label>
+                        <label>Is In Association</label>
                         <p>{studentsInfo.IsInAssociation ? "Yes" : "No"}</p>
                     </div>
                 </div>

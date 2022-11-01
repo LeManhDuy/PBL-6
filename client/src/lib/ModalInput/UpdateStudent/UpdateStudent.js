@@ -366,7 +366,7 @@ const UpdateStudent = (props) => {
                     <div className="avatar-teacher">
                         <img src={avatar} />
                         <label className="choose-file" htmlFor="upload-photo">
-                            Choose image
+                            Choose Image
                         </label>
                         <input
                             id="upload-photo"
@@ -407,7 +407,7 @@ const UpdateStudent = (props) => {
                         </label>
                     </div>
                     <div className="type-input">
-                        <h4>Date of Birth</h4>
+                        <h4>Date Of Birth</h4>
                         <input
                             className="input-content"
                             type="date"

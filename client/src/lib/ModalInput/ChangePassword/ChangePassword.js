@@ -39,7 +39,7 @@ const ChangePassword = (props) => {
                             className="input-content"
                             type="password"
                             name="old"
-                            placeholder="Enter your old password"
+                            placeholder="Enter Your Old Password"
                             value={allValuesPassword.old}
                             onChange={changeHandler}
                         />
@@ -51,7 +51,7 @@ const ChangePassword = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Old password must be less than 30 chars
+                            Old Password Must Be Less Than 30 Chars
                         </label>
                     </div>
                 </div>
@@ -64,7 +64,7 @@ const ChangePassword = (props) => {
                             className="input-content"
                             type="password"
                             name="newP"
-                            placeholder="Enter your new password"
+                            placeholder="Enter Your New Password"
                             value={allValuesPassword.newP}
                             onChange={changeHandler}
                         />
@@ -76,7 +76,7 @@ const ChangePassword = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Password must be at least 6 chars long
+                            Password Must Be At Least 6 Chars Long
                         </label>
                     </div>
                 </div>
@@ -89,7 +89,7 @@ const ChangePassword = (props) => {
                             className="input-content"
                             type="password"
                             name="confirm"
-                            placeholder="Enter your confirm password"
+                            placeholder="Enter Your Confirm Password"
                             value={allValuesPassword.confirm}
                             onChange={changeHandler}
                         />
@@ -101,7 +101,7 @@ const ChangePassword = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Confirm password must the same with new password.
+                            Password Must Be The Same
                         </label>
                     </div>
                 </div>
@@ -151,12 +151,16 @@ const ChangePassword = (props) => {
     const FormChangePassword = (
         <div className="form-change-password">
             {FormPassword}
-            <button onClick={props.handleInputCustom} className="btn-cancel">
-                Cancel
-            </button>
-            <button type="submit" onClick={clickSave} className="btn-ok">
-                Save
-            </button>
+            <div className="form-change-password-btn-box">
+                <div className="form-change-password-btn">
+                    <button type="submit" onClick={clickSave} className="btn-ok">
+                        Save
+                    </button>
+                    <button onClick={props.handleInputCustom} className="btn-cancel">
+                        Cancel
+                    </button>
+                </div>
+            </div>
         </div>
     );
 

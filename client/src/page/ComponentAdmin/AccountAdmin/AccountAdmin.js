@@ -46,7 +46,7 @@ function AccountAdmin() {
     const Dropdown = ({ value, options, onChange }) => {
         return (
             <label>
-                Type of account
+                Type
                 <select
                     className="dropdown-account"
                     value={value}
@@ -232,9 +232,9 @@ function AccountAdmin() {
         ) {
             headerAccount = (
                 <tr>
-                    <th>User name</th>
-                    <th>Full name</th>
-                    <th>Email</th>
+                    <th>User Name</th>
+                    <th>Full Name</th>
+                    <th>Email Address</th>
                     <th>Role</th>
                     <th>Action</th>
                 </tr>
