@@ -70,7 +70,7 @@ const UpdateSubject = (props) => {
                             className="input-content"
                             type="text"
                             name="name"
-                            placeholder="Enter name"
+                            placeholder="Enter Name"
                         value={allValuesSubject.name}
                         onChange={changeHandlerSubject}
                         />

@@ -197,7 +197,7 @@ const AddClass = (props) => {
                             className="input-content"
                             type="text"
                             name="name"
-                            placeholder="Enter class name"
+                            placeholder="Enter Class Name"
                             value={allValuesClass.name}
                             onChange={changeHandlerClass}
                         />
