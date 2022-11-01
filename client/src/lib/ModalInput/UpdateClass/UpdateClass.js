@@ -60,7 +60,7 @@ const UpdateClass = (props) => {
     }, []);
 
     const getTeachers = () => {
-        ClassService.getTeachers()
+        ClassService.getCBBTeacherDontHaveClass(props.classID)
             .then((response) => {
                 const dataSources = response.getTeacherInfor.map(
                     (item, index) => {
@@ -88,7 +88,7 @@ const UpdateClass = (props) => {
                     };
                 });
                 const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
-                setGrade(dataSourcesSorted)
+                setGrade(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -216,7 +216,7 @@ const UpdateClass = (props) => {
                             value={teacherDropValue}
                             onChange={handleTeacherChange}
                             options={teacher}
-                            placeholder="Teacher's Name"
+                            placeholder={allValuesClass.teacher_name}
                             maxMenuHeight={200}
                         />
                         <label
@@ -239,7 +239,7 @@ const UpdateClass = (props) => {
                             value={gradeDropValue}
                             onChange={handleGradeChange}
                             options={grade}
-                            placeholder="Grade's Name"
+                            placeholder={allValuesClass.grade_name}
                             maxMenuHeight={200}
                         />
                         <label

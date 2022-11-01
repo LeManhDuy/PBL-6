@@ -30,6 +30,9 @@ const getParentAssociations = async (id) => {
 const getTeacherDontHaveClass = async (params) => {
     return await HandleApi.APIPostWithToken(`teacher/get-teacher-dont-have-class`, params);
 };
+const getCBBTeacherDontHaveClass = async (id) => {
+    return await HandleApi.APIGetWithToken(`teacher/get-cbb-teacher-dont-have-class/${id}`);
+};
 
 const getStudentByClassID = async (id) => {
     return await HandleApi.APIGetWithToken(`class/get-pupil-by-class/${id}`)
@@ -48,7 +51,8 @@ const ClassService = {
     getStudentByClassID,
     getParentAssociations,
     changeIsAssociation,
-    getTeacherDontHaveClass
+    getTeacherDontHaveClass,
+    getCBBTeacherDontHaveClass,
 };
 
 export default ClassService;
