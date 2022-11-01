@@ -294,16 +294,17 @@ const UpdateStudent = (props) => {
             check = true;
         } else gender = false;
 
-        if (!!allValuesStudent.img) {
-            let imgList = allValuesStudent.img.name.split(".");
-            if (
-                imgList[imgList.length - 1] != "png" &&
-                imgList[imgList.length - 1] != "jpg"
-            ) {
-                img = true;
-                check = true;
-            } else img = false;
-        }
+        // if (!!allValuesStudent.img) {
+        //     //let imgList = allValuesStudent.img.name.split(".");
+        //     let imgList = allValuesStudent.img.name;
+        //     if (
+        //         imgList[imgList.length - 1] != "png" &&
+        //         imgList[imgList.length - 1] != "jpg"
+        //     ) {
+        //         img = true;
+        //         check = true;
+        //     } else img = false;
+        // }
 
         setStudentsError({
             name: name,
@@ -340,9 +341,13 @@ const UpdateStudent = (props) => {
             gender: allValuesStudent.gender,
             img: e.target.files[0],
             parent: allValuesStudent.parent,
-            grade: allValuesStudent.grade,
             classroom: allValuesStudent.classroom,
+            parent_name: allValuesStudent.parent_name,
+            classroom_name: allValuesStudent.classroom_name,
+            //...allValuesStudent,
+            //[e.target.name]: e.target.value,
         });
+        console.log(setAllValuesStudent);
         try {
             setAvatar(URL.createObjectURL(e.target.files[0]));
         } catch (err) {
@@ -473,7 +478,7 @@ const UpdateStudent = (props) => {
                             onChange={handleParentChange}
                             options={parent}
                             maxMenuHeight={150}
-                            placeholder={allValuesStudent.parent_name + " - " + allValuesStudent.person_phonenumber}
+                            placeholder={allValuesStudent.parent_name}
                         />
                     </div>
                     <div className="type-input">

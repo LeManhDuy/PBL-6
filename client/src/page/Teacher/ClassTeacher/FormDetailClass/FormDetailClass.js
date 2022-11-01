@@ -65,78 +65,121 @@ const FormDetailClass = (props) => {
     };
 
     const StudentContent = ({ studentsInfo }) => (
-        <div className="student-information ">
-            <img src={avatarStudent} />
-            <div className="info-item">
-                <label>Name</label>
-                <p>{studentsInfo.studentFullName}</p>
+        <div className="student-item">
+            <div className="left-student-content">
+                <img src={avatarStudent} alt="studentImage" />
             </div>
-            <div className="info-item">
-                <label>Date of birth</label>
-                <p>
-                    {new Date(
-                        studentsInfo.studentDateOfBirth
-                    ).toLocaleDateString()}
-                </p>
-            </div>
-            <div className="info-item">
-                <label>Gender</label>
-                <p>{studentsInfo.studentGender ? "Male" : "Female"}</p>
+            <div className="between-student-content">
+                <div className="student-info-parents">
+                    <div className="item-content">
+                        <i className="fas fa-child"></i>
+                        <div className="detail-item-content">
+                            <h4>Full Name</h4>
+                            <p>{studentsInfo.studentFullName}</p>
+                        </div>
+                    </div>
+                    <div className="item-content">
+                        <i className="fas fa-calendar"></i>
+                        <div className="detail-item-content">
+                            <h4>Date Of birth</h4>
+                            <p>{new Date(
+                                studentsInfo.studentDateOfBirth
+                            ).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                    <div className="item-content">
+                        <i className="fas fa-transgender"></i>
+                        <div className="detail-item-content">
+                            <h4>Date Of birth</h4>
+                            <p>{studentsInfo.studentGender ? "Male" : "Female"}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
 
     const ParentsInfo = ({ studentsInfo }) => (
         <div className="parents-information">
-            <div className="info-left">
-                <img src={avatarParents}></img>
-                <div className="info-item">
-                    <label>Name</label>
-                    <p>{studentsInfo.ParentName}</p>
+
+            <div className="student-item">
+                <div className="left-student-content">
+                    <img src={avatarParents} alt="parentIMG" />
                 </div>
-            </div>
-            <div className="info-right">
-                <div>
-                    <div className="info-item">
-                        <label>Email</label>
-                        <p>{studentsInfo.ParentEmail}</p>
-                    </div>
-                    <div className="info-item">
-                        <label>Phone</label>
-                        <p>{studentsInfo.ParentPhone}</p>
-                    </div>
-                    <div className="info-item">
-                        <label>Job</label>
-                        <p>{studentsInfo.ParentJob}</p>
-                    </div>
-                    <div className="info-item">
-                        <label>Is In Association</label>
-                        <p>{studentsInfo.IsInAssociation ? "Yes" : "No"}</p>
+                <div className="between-student-content">
+                    <div className="student-info-parents">
+                        <div className="item-content">
+                            <i className="fa fa-solid fa-user-tie"></i>
+                            <div className="detail-item-content">
+                                <h4>Full Name</h4>
+                                <p>{studentsInfo.ParentName}</p>
+                            </div>
+                        </div>
+                        <div className="item-content">
+                            <i className="fas fa-phone"></i>
+                            <div className="detail-item-content">
+                                <h4>Phone Number</h4>
+                                <p>{studentsInfo.ParentPhone}</p>
+                            </div>
+                        </div>
+                        <div className="item-content">
+                            <i className="fa fa-solid fa-location-dot"></i>
+                            <div className="detail-item-content">
+                                <h4>Address</h4>
+                                <p>{studentsInfo.address}</p>
+                            </div>
+                        </div>
+                        <div className="item-content">
+                            <i className="fas fa-envelope"></i>
+                            <div className="detail-item-content">
+                                <h4>Email Address</h4>
+                                <p>{studentsInfo.ParentEmail}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <div className="info-item">
-                        <label>Gender</label>
-                        <p>{studentsInfo.ParentGender ? "Male" : "Female"}</p>
-                    </div>
-                    <div className="info-item">
-                        <label>Address</label>
-                        <p>{studentsInfo.address}</p>
-                    </div>
-                    <div className="info-item">
-                        <label>Relationship</label>
-                        <p>{studentsInfo.ParentRelationShip}</p>
+                <div className="right-student-content">
+                    <div className="student-info-parents">
+                        <div className="item-content">
+                            <i className="fas fa-transgender"></i>
+                            <div className="detail-item-content">
+                                <h4>Gender</h4>
+                                <p>{studentsInfo.ParentGender ? "Male" : "Female"}</p>
+                            </div>
+                        </div>
+                        <div className="item-content">
+                            <i className="fas fa-suitcase"></i>
+                            <div className="detail-item-content">
+                                <h4>Job</h4>
+                                <p>{studentsInfo.ParentJob}</p>
+                            </div>
+                        </div>
+                        <div className="item-content">
+                            <i className="fa fa-solid fa-heart"></i>
+                            <div className="detail-item-content">
+                                <h4>Relationship</h4>
+                                <p>{studentsInfo.ParentRelationShip}</p>
+                            </div>
+                        </div>
+                        <div className="item-content">
+                            <i className="fa fa-solid fa-people-group"></i>
+                            <div className="detail-item-content">
+                                <h4>Is In Association</h4>
+                                <p>{studentsInfo.IsInAssociation ? "Yes" : "No"}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+
     );
 
     return (
         <div className="form-detail-class">
-            <button onClick={props.handleCloseModalCustom}>Exit</button>
+            {/* <button onClick={props.handleCloseModalCustom}>Exit</button> */}
             <div className="student">
-                <hr />
                 <h5>Student Information</h5>
                 <StudentContent studentsInfo={studentsInfo} />
             </div>
@@ -145,7 +188,7 @@ const FormDetailClass = (props) => {
                 <h5>Parent Information</h5>
                 <ParentsInfo studentsInfo={studentsInfo} />
             </div>
-            <button onClick={props.handleCloseModalCustom}>Exit</button>
+            <button className="btn-cancel" onClick={props.handleCloseModalCustom}>Exit</button>
             <Loading isLoading={isLoading} />
         </div>
     );
