@@ -56,42 +56,40 @@ const Parents = () => {
     };
 
     const ParentsContent = ({ parentsInfo }) => (
-        <div className="parents-item">
-            <div className="image">
+
+        // <div className="parents-item">
+
+        <div className="student-item">
+            <div className="left-student-content">
                 <img src={parentsInfo.parent_img} alt="parentImage" />
-                <div className="type parents-name">
-                    <div className="text">
-                        <h3>{parentsInfo.parent_name}</h3>
-                    </div>
-                </div>
             </div>
-            <div className="detail-info">
-                <div className="left">
-                    <div className="type parents-username">
+            <div className="between-student-content">
+                <div className="student-info-parents">
+                    <div className="item-content">
                         <i class="fa fa-solid fa-user-tie"></i>
-                        <div className="text">
-                            <p>Username</p>
+                        <div className="detail-item-content">
+                            <h4>Username</h4>
                             <p>{parentsInfo.parent_username}</p>
                         </div>
                     </div>
-                    <div className="type parents-email">
+                    <div className="item-content">
                         <i class="fa fa-solid fa-envelope"></i>
                         <div className="text">
-                            <p>Email</p>
+                            <h4>Email</h4>
                             <p>{parentsInfo.parent_email}</p>
                         </div>
                     </div>
-                    <div className="type parents-phone">
+                    <div className="item-content">
                         <i className="fa fa-phone"></i>
                         <div className="text">
-                            <p>Phone Number</p>
+                            <h4>Phone Number</h4>
                             <p>{parentsInfo.parent_phone}</p>
                         </div>
                     </div>
-                    <div className="type parents-dateOfBirth">
+                    <div className="item-content">
                         <i class="fa fa-solid fa-cake-candles"></i>
                         <div className="text">
-                            <p>Date of birth</p>
+                            <h4>Date Of birth</h4>
                             <p>
                                 {new Date(
                                     parentsInfo.parent_dateofbirth
@@ -99,42 +97,44 @@ const Parents = () => {
                             </p>
                         </div>
                     </div>
-                    <div className="type parents-gender">
+                    <div className="item-content">
                         <i class="fa fa-solid fa-mars-and-venus"></i>
                         <div className="text">
-                            <p>Gender</p>
+                            <h4>Gender</h4>
                             <p>
                                 {parentsInfo.parent_gender ? "Male" : "Female"}
                             </p>
                         </div>
                     </div>
                 </div>
-                <div className="right">
-                    <div className="type parent-job">
+            </div>
+            <div className="right-student-content">
+                <div className="student-info-parents">
+                    <div className="item-content">
                         <i className="fa fa-suitcase" aria-hidden="true"></i>
                         <div className="text">
-                            <p>Job</p>
+                            <h4>Job</h4>
                             <p>{parentsInfo.parent_job}</p>
                         </div>
                     </div>
-                    <div className="type parents-address">
+                    <div className="item-content">
                         <i className="fa fa-solid fa-location-dot"></i>
                         <div className="text">
-                            <p>Address</p>
+                            <h4>Address</h4>
                             <p>{parentsInfo.parent_address}</p>
                         </div>
                     </div>
-                    <div className="type parents-jobAddress">
+                    <div className="item-content">
                         <i class="fa fa-solid fa-address-card"></i>
                         <div className="text">
-                            <p>Job Address</p>
+                            <h4>Job Address</h4>
                             <p>{parentsInfo.parent_job_address}</p>
                         </div>
                     </div>
-                    <div className="type parents-association">
+                    <div className="item-content">
                         <i class="fa fa-solid fa-people-group"></i>
                         <div className="text">
-                            <p>In Association:</p>
+                            <h4>In Association</h4>
                             <p>
                                 {parentsInfo.is_in_association
                                     ? "True"
@@ -142,10 +142,10 @@ const Parents = () => {
                             </p>
                         </div>
                     </div>
-                    <div className="type parents-relation">
+                    <div className="item-content">
                         <i class="fa fa-solid fa-heart"></i>
                         <div className="text">
-                            <p>Relationship</p>
+                            <h4>Relationship</h4>
                             <p>{parentsInfo.parent_relationship}</p>
                         </div>
                     </div>
@@ -155,9 +155,11 @@ const Parents = () => {
     );
 
     return (
-        <div className="parents-info">
-            <h3>PARENT INFORMATION</h3>
-            <div className="parents-content">
+        <div className="main-student-container">
+            <div className="header-title">
+                <h3>PARENT INFORMATION</h3>
+            </div>
+            <div className="detail-content">
                 <ParentsContent parentsInfo={parentsInfo} />
             </div>
         </div>
