@@ -123,7 +123,6 @@ router.put("/:personID", multer().single(), async (req, res) => {
         });
     const personInfor = await Person.findById(req.params.personID);
     const accountInfor = await Account.findById(personInfor.account_id);
-    console.log(accountInfor);
     if (!accountInfor) {
         return res.status(400).json({
             success: false,
