@@ -55,6 +55,7 @@ const FormDetailClass = (props) => {
                     ParentGender: response.getPupilInfor[0].parent_id.person_id.person_gender,
                     ParentRelationShip: response.getPupilInfor[0].parent_id.parent_relationship,
                     ParentImg: response.getPupilInfor[0].parent_id.person_id.person_image,
+                    IsInAssociation: response.getPupilInfor[0].parent_id.is_in_association
                 });
                 setIsLoading(false);
             })
@@ -107,6 +108,10 @@ const FormDetailClass = (props) => {
                     <div className="info-item">
                         <label>Job</label>
                         <p>{studentsInfo.ParentJob}</p>
+                    </div>
+                    <div className="info-item">
+                        <label>Is in Association</label>
+                        <p>{studentsInfo.IsInAssociation ? "Yes" : "No"}</p>
                     </div>
                 </div>
                 <div>
