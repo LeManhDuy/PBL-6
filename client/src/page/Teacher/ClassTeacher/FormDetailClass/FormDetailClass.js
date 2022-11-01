@@ -5,11 +5,11 @@ import Logo from "../../../../assets/image/Logo.png";
 import Loading from "../../../../lib/Loading/Loading";
 
 const FormDetailClass = (props) => {
-    const REACT_APP_API_ENDPOINT = "https://blue-school-project.herokuapp.com/";
+    // const REACT_APP_API_ENDPOINT = "https://blue-school-project.herokuapp.com/";
     const [isLoading, setIsLoading] = useState(false);
     const [studentsInfo, setStudentsInfo] = useState({
         studentImage: "",
-        studentFullName: "item.studentFullName",
+        studentFullName: "",
         studentDateOfBirth: "",
         studentGender: "",
         ParentName: "",
@@ -20,7 +20,7 @@ const FormDetailClass = (props) => {
         ParentGender: "",
         ParentImg: "",
     });
-    const [protectorInfo, setProtectorInfo] = useState([]);
+    // const [protectorInfo, setProtectorInfo] = useState([]);
     useEffect(() => {
         getStudentInfo();
     }, []);
@@ -32,41 +32,30 @@ const FormDetailClass = (props) => {
         setIsLoading(true);
         StudentService.getStudentByStudentId(props.id)
             .then((response) => {
-                if (!!response.studentImage) {
+                if (!!response.getPupilInfor[0].pupil_image) {
                     setAvatarStudent(
-                        `${REACT_APP_API_ENDPOINT}${response.studentImage}`
+                        response.getPupilInfor[0].pupil_image
                     );
                 }
-                if (!!response.ParentImg) {
+                if (!!response.getPupilInfor[0].parent_id.person_id.person_image) {
                     setAvatarParents(
-                        `${REACT_APP_API_ENDPOINT}${response.ParentImg}`
+                        response.getPupilInfor[0].parent_id.person_id.person_image
                     );
                 }
                 setStudentsInfo({
-                    studentImage: response.studentImage,
-                    studentFullName: response.studentFullName,
-                    studentDateOfBirth: response.studentDateOfBirth,
-                    studentGender: response.studentGender,
-                    ParentName: response.ParentName,
-                    ParentPhone: response.ParentPhone,
-                    address: response.studentAddress,
-                    ParentEmail: response.ParentEmail,
-                    ParentJob: response.ParentJob,
-                    ParentGender: response.ParentGender,
-                    ParentImg: response.ParentImg,
+                    studentImage: response.getPupilInfor[0].pupil_image,
+                    studentFullName: response.getPupilInfor[0].pupil_name,
+                    studentDateOfBirth: response.getPupilInfor[0].pupil_dateofbirth,
+                    studentGender: response.getPupilInfor[0].pupil_gender,
+                    ParentName: response.getPupilInfor[0].parent_id.person_id.person_fullname,
+                    ParentPhone: response.getPupilInfor[0].parent_id.person_id.person_phonenumber,
+                    address: response.getPupilInfor[0].parent_id.person_id.person_address,
+                    ParentEmail: response.getPupilInfor[0].parent_id.person_id.person_email,
+                    ParentJob: response.getPupilInfor[0].parent_id.parent_job,
+                    ParentGender: response.getPupilInfor[0].parent_id.person_id.person_gender,
+                    ParentRelationShip: response.getPupilInfor[0].parent_id.parent_relationship,
+                    ParentImg: response.getPupilInfor[0].parent_id.person_id.person_image,
                 });
-                const dataSources = response.ProtectorInformation.map(
-                    (item, index) => {
-                        return {
-                            key: index + 1,
-                            protector_name: item.protector_name,
-                            protector_address: item.protector_address,
-                            protector_phone: item.protector_phone,
-                            protector_relationship: item.protector_relationship,
-                        };
-                    }
-                );
-                setProtectorInfo(dataSources);
                 setIsLoading(false);
             })
             .catch((error) => {
@@ -129,36 +118,14 @@ const FormDetailClass = (props) => {
                         <label>Address</label>
                         <p>{studentsInfo.address}</p>
                     </div>
+                    <div className="info-item">
+                        <label>Relationship</label>
+                        <p>{studentsInfo.ParentRelationShip}</p>
+                    </div>
                 </div>
             </div>
         </div>
     );
-
-    const ProtectorInfo = ({ protectorInfo }) =>
-        protectorInfo.map((item) => (
-            <div className="protector-information" key={item.key}>
-                <div>
-                    <div className="info-item">
-                        <label>Name</label>
-                        <p>{item.protector_name}</p>
-                    </div>
-                    <div className="info-item">
-                        <label>Address</label>
-                        <p>{item.protector_address}</p>
-                    </div>
-                </div>
-                <div>
-                    <div className="info-item">
-                        <label>Phone</label>
-                        <p>{item.protector_phone}</p>
-                    </div>
-                    <div className="info-item">
-                        <label>Relationship</label>
-                        <p>{item.protector_relationship}</p>
-                    </div>
-                </div>
-            </div>
-        ));
 
     return (
         <div className="form-detail-class">
@@ -170,15 +137,9 @@ const FormDetailClass = (props) => {
             </div>
             <div className="parents">
                 <hr />
-                <h5>Parents Information</h5>
+                <h5>Parent Information</h5>
                 <ParentsInfo studentsInfo={studentsInfo} />
             </div>
-            <hr />
-            <div className="protector">
-                <h5>Protector Information</h5>
-                <ProtectorInfo protectorInfo={protectorInfo} />
-            </div>
-            <hr />
             <button onClick={props.handleCloseModalCustom}>Exit</button>
             <Loading isLoading={isLoading} />
         </div>
