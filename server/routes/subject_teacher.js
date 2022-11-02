@@ -4,6 +4,7 @@ const Subject_Teacher = require("../model/SubjectTeacher")
 const multer = require("multer")
 const Teacher = require("../model/Teacher")
 const Subject = require("../model/Subject")
+const { json } = require("express")
 const upload = multer().any()
 
 // @route GET api/subject
@@ -181,5 +182,106 @@ router.delete("/:subjectTeacherID", async (req, res) => {
         return res.status(500).json({ success: false, message: "" + error })
     }
 })
+
+router.post("/multi",multer().single(), async(req,res) =>{
+    const {teacher_id, subject_list} = req.body
+    // return res.status(400).json({
+    //     success: false,
+    //     subject_list
+    // })
+    if (!teacher_id || !subject_list)
+    return res.status(400).json({
+        success: false,
+        message: "Please fill in complete information.",
+    })
+    try {
+        //validate teacher id
+        const existed_teacher = await Teacher.findOne({_id:teacher_id})
+        if(!existed_teacher){
+            return res.status(400).json({ success:false, message: "Teacher Id doesn't exist!"})
+        }
+        let newSubjectTeacherList = []
+        for( const [key,value] of Object.entries(subject_list)){
+            //validate subject id
+            const existed_subject = await Subject.findOne({_id: key})
+            if(existed_subject && value==true){
+                //validate if subject teacher already exist
+                const existed_subject_teacher = await Subject_Teacher
+                    .findOne({subject_id:existed_subject._id, teacher_id: existed_teacher._id})
+                if(!existed_subject_teacher){
+                    const newSubjectTeacher = new Subject_Teacher({
+                        subject_id: key,
+                        teacher_id: existed_teacher._id 
+                    })
+                    await newSubjectTeacher.save()
+                    newSubjectTeacherList.push(newSubjectTeacher)
+                }
+            }else if(existed_subject && value==false){
+                await Subject_Teacher.deleteOne({subject_id:key,teacher_id:teacher_id})
+            }
+        }
+        return res.status(200).json({ success: true, message: "Create Subject Teacher successfully",
+                    newSubjectTeacherList: newSubjectTeacherList.length>0?newSubjectTeacherList:"None"})
+
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
+router.put("/multi/:teacherID",multer().single(), async(req,res) =>{
+    const {teacher_id, subject_list} = req.body
+    return res.status(400).json({
+        success: false,
+        subject_list
+    })
+    if (!teacher_id || !subject_list)
+    return res.status(400).json({
+        success: false,
+        message: "Please fill in complete information.",
+    })
+    try {
+        //validate teacher id
+        const existed_teacher = await Teacher.findOne({_id:teacher_id})
+        if(!existed_teacher){
+            return res.status(400).json({ success:false, message: "Teacher Id doesn't exist!"})
+        }
+        let newSubjectTeacherList = []
+        for( const [key,value] of Object.entries(subject_list)){
+            //validate subject id
+            const existed_subject = await Subject.findOne({_id: key})
+            if(existed_subject && value==true){
+                //validate if subject teacher already exist
+                const existed_subject_teacher = await Subject_Teacher
+                    .findOne({subject_id:existed_subject._id, teacher_id: existed_teacher._id})
+                if(!existed_subject_teacher){
+                    const newSubjectTeacher = new Subject_Teacher({
+                        subject_id: key,
+                        teacher_id: existed_teacher._id 
+                    })
+                    await newSubjectTeacher.save()
+                    newSubjectTeacherList.push(newSubjectTeacher)
+                }
+            }
+            else if(existed_subject && value==false){
+                const existed_subject_teacher = await Subject_Teacher
+                    .findOne({subject_id:existed_subject._id, teacher_id: existed_teacher._id})
+                if(!existed_subject_teacher){
+                    await Subject_Teacher.deleteOne(existed_subject_teacher)
+                }
+            }
+        }
+        return res.status(200).json({ success: true, message: "Create Subject Teacher successfully",
+                    newSubjectTeacherList: newSubjectTeacherList.length>0?newSubjectTeacherList:"None"})
+
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
+// @route Add api/subject_teacher/multi
+// @desc add multiple subject teacher
+// @access Private
 
 module.exports = router

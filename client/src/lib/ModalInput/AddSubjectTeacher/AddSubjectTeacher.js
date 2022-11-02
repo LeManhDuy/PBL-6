@@ -1,26 +1,32 @@
 import React, { useState, useEffect } from "react";
+import Select from 'react-select';
 import "./AddSubjectTeacher.css";
 import SubjectService from "../../../config/service/SubjectService";
 import AccountService from "../../../config/service/AccountService";
+import SubjectTeacherService from "../../../config/service/SubjectTeacherService";
 
 const AddSubjectTeacher = (props) => {
     const [allValuesSubjectTeacher, setAllValuesSubjectTeacher] = useState({
-        subject_id: "",
         teacher_id: "",
+        subject_id: [],
     });
     const [subjects, setSubject] = useState([]);
     const [teachers, setTeacher] = useState([]);
-    const [subjectDropValue, setSubjectDropValue] = useState ("All")
     const [teacherDropValue, setTeacherDropValue] = useState ("All")
+    const [subjectTeachers, setSubjectTeachers] = useState([])
+    const [listSubject, setListSubject] = useState([])
+
     const [subjectTeacherError, setSubjectTeacherError] = useState({
         subject_id: false,
         teacher_id: false,
     });
 
 
+
     useEffect(() => {
         getSubject();
         getTeachers();
+        getSubjectTeachers()
     }, []);
 
     const getSubject = () => {
@@ -31,7 +37,7 @@ const AddSubjectTeacher = (props) => {
                         return {
                             key: index + 1,
                             id: item._id,
-                            name: item.subject_name
+                            name: item.subject_name,
                         }
                     }
                 );
@@ -50,8 +56,9 @@ const AddSubjectTeacher = (props) => {
                         return {
                             key: index + 1,
                             id: item._id,
-                            name: item.person_id.person_fullname,
-                            email: item.person_id.person_email,
+                            value: item._id,
+                            label: item.person_id.person_fullname +'-'+item.person_id.person_email,
+                            info: item.person_id
                         };
                     }
                 );
@@ -62,11 +69,30 @@ const AddSubjectTeacher = (props) => {
             });
     };
 
+    const getSubjectTeachers = () => {
+        SubjectTeacherService.getSubjectTeacher()
+            .then((response) => {
+                const dataSources = response.allSubjectTeacher.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            subject_id: item.subject_id._id,
+                            teacher_id: item.teacher_id._id
+                        };
+                    }
+                );
+                setSubjectTeachers(dataSources);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
     const Dropdown = ({ value, options, onChange }) => {
         return (
           <label>
-            {/* <input list="brow"/> */}
-            <select className="dropdown-class" value={value} onChange={onChange}>
+            <select className="dropdown-account" defaultValue={value} onChange={onChange}>
               <option value="All">All</option>
               {options.map((option) => (
                 <option key={option.key} value={option.id}>
@@ -77,57 +103,95 @@ const AddSubjectTeacher = (props) => {
           </label>
         );
     };
+    const CheckList = ({ options }) => {
+        return (
+            <div>
+                {options.map(option => (
+                    // <CheckObj option={option} key={option.key}/>
 
-    const handleSubjectChange = (event) => {
-        // console.log(event.target.value)
-        setSubjectDropValue(event.target.value);
-        if (event.target.value !== 'All'){
-            setAllValuesSubjectTeacher({
-                ...allValuesSubjectTeacher,
-                subject_id: event.target.value,
-            });
+                    <div key={option.key}>
+                        <input type="checkbox" className="btn-check" 
+                        
+                        id={option.key} autoComplete="off"
+                        checked={listSubject[option.id]}
+                        onChange={()=>{
+                            setListSubject({
+                                ...listSubject,
+                                [option.id]: !listSubject[option.id]
+                            })
+                            console.log(listSubject)
+                        }}
+                        />
+                        <label className="btn btn-outline-primary"
+                            htmlFor={option.key}
+                            style={{
+                                width: "100%"
+                            }}
+                        >
+                            {option.name}
+                        </label><br />
+                    </div>
+                ))}
+                
+            </div>
+        );
+    }
+
+    const TeacherInfo = ({teacherInfo}) => {
+        if(teacherInfo){
+            return (
+                <div>
+                    <p className="text-justify">Teacher Name: {teacherInfo.person_fullname}</p>
+                    <p className="text-justify">Teacher Email: {teacherInfo.person_email}</p>
+                    <p className="text-justify">Teacher Gender: {teacherInfo.person_gender?'Male':'Female'}</p>
+                    <p className="text-justify">Teacher Phone: {teacherInfo.person_phonenumber}</p>
+                </div>
+            )
+        }
+        else{
+            return(
+                <div>
+                    <h4>Empty</h4>
+                </div>
+
+            )
         }
     }
 
     const handleTeacherChange = (event) => {
-        // console.log(event.target.value)  
-        setTeacherDropValue(event.target.value);
-        if (event.target.value !== 'All'){
-            setAllValuesSubjectTeacher({
-                ...allValuesSubjectTeacher,
-                teacher_id: event.target.value,
-            });
+        setTeacherDropValue(event);
+        if (event.value !== 'All'){
+            let subjectList = {}
+            const filtedSubject = subjectTeachers.filter((x) => {return x.teacher_id === event.value}).map(x => x.subject_id)
+            for(let subject of filtedSubject){
+                subjectList[subject] = true
+            }
+            setListSubject(subjectList)
+            console.log(filtedSubject)
         }
+        setSubjectTeacherError({
+            ...subjectTeacherError,
+            teacher_id: false
+        })
     }
 
     const handleAddSubjectTeacher = () => {
-        let subject_id = false;
-        let teacher_id = false;
-        let check = false;
-        if (!allValuesSubjectTeacher.subject_id) {
-            subject_id = true;
-            check = true;
-        } else subject_id = false;
-        if (!allValuesSubjectTeacher.teacher_id) {
-            teacher_id = true;
-            check = true;
-        } else teacher_id = false;
+        let teacher_id_error = false;
+        let has_error = false;
+
+        if (teacherDropValue==='All') {
+            teacher_id_error = true;
+            has_error = true;
+        } else teacher_id_error = false;
         setSubjectTeacherError({
-            subject_id: subject_id,
-            teacher_id: teacher_id,
+            teacher_id: teacher_id_error,
         })
-        if (!check) {
-            props.handleConfirmAddSubjectTeacher(allValuesSubjectTeacher);
+        if (!has_error) {
+            props.handleConfirmAddSubjectTeacher(teacherDropValue.value,listSubject);
         }
     }
-
-    const changeHandlerSubjectTeacher = (e) => {
-        setAllValuesSubjectTeacher({
-            ...allValuesSubjectTeacher,
-            [e.target.name]: e.target.value,
-        });
-    };
-
+    
+  
 
 
     const FormAddSubjectTeacher = (
@@ -143,32 +207,28 @@ const AddSubjectTeacher = (props) => {
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
-                <div className="type-input">
-                    <h4>Subject</h4>
-                        <Dropdown
-                            options={subjects}
-                            value={subjectDropValue}
-                            onChange={handleSubjectChange}
-                        />
-                        <label
-                            className={
-                                "error" +
-                                (subjectTeacherError.subject_id
-                                    ? " error-show"
-                                    : " error-hidden")
-                            }
-                        >
-                            Invalid Subject
-                        </label>
-                </div>
-                <div className="type-input">
-                    <h4>Teacher</h4>
-                        <Dropdown
+                    <div className="type-input">
+                        <h4>Teacher</h4>
+                        {/* <Dropdown
                             options={teachers}
                             value={teacherDropValue}
                             onChange={handleTeacherChange}
+                        /> */}
+                        <Select
+                            className="dropdown-class"
+                            // label="Teacher"
+                            classNamePrefix="select"
+                            options={teachers}
+                            // isMulti
+                            value={teacherDropValue}
+                            onChange={handleTeacherChange}
+                            placeholder="Teacher"
+                            maxMenuHeight={200}
+                            // isClearable={true}
+                            isSearchable={true}
                         />
                         <label
+                            style={{marginTop:50}}
                             className={
                                 "error" +
                                 (subjectTeacherError.teacher_id
@@ -178,7 +238,19 @@ const AddSubjectTeacher = (props) => {
                         >
                             Invalid Teacher
                         </label>
+                        <div style={{marginTop:50}}>
+                            <TeacherInfo teacherInfo={teacherDropValue.info}/>
+                        </div>
+                        
+                    </div>
                 </div>
+                <div className="teacher-content-right">
+                    <div className="type-input">
+                        <h4>Teaching Subject</h4>
+                        <CheckList 
+                            options={subjects}
+                        />
+                    </div>
                 </div>
             </div>
         </div>
