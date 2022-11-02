@@ -22,7 +22,7 @@ const app = express()
 app.use(express.json())
 
 //database
-const connectDB = async () => {
+const connectDB = async () => { 
     try {
         await mongoose.connect(process.env.DATABASE)
         console.log("MongoDB connected")
