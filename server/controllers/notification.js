@@ -1,0 +1,243 @@
+const Class = require("../model/class");
+const Pupil = require("../model/Pupil");
+const Teacher = require("../model/Teacher");
+const Parent = require("../model/Parent");
+const Person = require("../model/Person");
+const PublicNotification = require("../model/PublicNotification");
+const { now } = require("mongoose");
+const PrivateNotification = require("../model/PrivateNotification");
+
+const createPublicNotification = async (req, res) => {
+    let { title, content } = req.body;
+    //Validation
+    if (!title && !content)
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information.",
+        });
+    try {
+        let date = now().toString();
+        const newPublicNotification = new PublicNotification({
+            title: title,
+            content: content,
+            date: date,
+        });
+        await newPublicNotification.save();
+        res.status(200).json({
+            success: true,
+            message: "Create notification successfully.",
+            newPublicNotification,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+const getAllPublicNotification = async (req, res) => {
+    try {
+        const publicNotifications = await PublicNotification.find({});
+        res.status(200).json({
+            success: true,
+            publicNotifications,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+const getPublicNotificationById = async (req, res) => {
+    try {
+        const publicNotification = await PublicNotification.findById(
+            req.params.notificationID
+        );
+        res.status(200).json({
+            success: true,
+            publicNotification,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+const updatePublicNotification = async (req, res) => {
+    let { title, content } = req.body;
+    let date = now().toString();
+    //Validation
+    if (!title && !content)
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information.",
+        });
+    try {
+        let updatedNoti = {
+            title,
+            content,
+            date,
+        };
+        const updatedNotification = await PublicNotification.findByIdAndUpdate(
+            req.params.notificationID,
+            updatedNoti,
+            { new: true }
+        );
+        res.status(200).json({ success: true, updatedNotification });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+const deletePublicNotification = async (req, res) => {
+    try {
+        const deleteNotification = await PublicNotification.findByIdAndDelete(
+            req.params.notificationID
+        );
+        res.status(200).json({
+            success: true,
+            message: "Notification has been deleted!",
+            deleteNotification,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+// Private Notification
+const createPrivateNotification = async (req, res) => {
+    let { title, content, parent_id, teacher_id } = req.body;
+    let date = now().toString();
+    //Validation
+    if (!title || !content || !parent_id || !teacher_id)
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information.",
+        });
+    try {
+        const privateNotification = new PrivateNotification({
+            title,
+            content,
+            date,
+            parent_id,
+            teacher_id,
+        });
+        await privateNotification.save();
+        res.status(200).json({
+            success: true,
+            message: "Seding successfully!",
+            privateNotification,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+const getPrivateNotificationForTeacher = async (req, res) => {
+    const teacherInfor = await Teacher.find({
+        person_id: req.params.teacherID,
+    });
+    if (!teacherInfor[0]) {
+        res.status(404).json({
+            success: false,
+            message: "Teacher not found!",
+        });
+    }
+    try {
+        const privateNotifications = await PrivateNotification.find({
+            teacher_id: teacherInfor[0]._id,
+        });
+        res.status(200).json({
+            success: true,
+            privateNotifications,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+const getPrivateNotificationForParents = async (req, res) => {
+    const parentsInfor = await Parent.find({
+        person_id: req.params.parentsID,
+    });
+    if (!parentsInfor[0]) {
+        res.status(404).json({
+            success: false,
+            message: "Parents not found!",
+        });
+    }
+    try {
+        const privateNotifications = await PrivateNotification.find({
+            parent_id: parentsInfor[0]._id,
+        });
+        res.status(200).json({
+            success: true,
+            privateNotifications,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+const updatePrivateNotification = async (req, res) => {
+    let { title, content } = req.body;
+    let date = now().toString();
+    if (!title || !content)
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information.",
+        });
+    try {
+        let updatedNoti = {
+            title,
+            content,
+            date,
+        };
+        const updateNotification = await PrivateNotification.findByIdAndUpdate(
+            req.params.notificationID,
+            updatedNoti,
+            { new: true }
+        );
+        res.status(200).json({
+            success: true,
+            message: "Updated successfully!",
+            updateNotification,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+const deletePrivateNotification = async (req, res) => {
+    const notificationInfo = await PrivateNotification.findById(
+        req.params.notificationID
+    );
+    if (!notificationInfo)
+        return res.status(404).json({
+            success: false,
+            message: "Notification not found!",
+        });
+    try {
+        const deletedNoti = await PrivateNotification.findOneAndDelete(
+            req.params.notificationID
+        );
+        res.status(200).json({
+            success: true,
+            message: "Deleted!",
+            deletedNoti,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+module.exports = {
+    //public notification
+    createPublicNotification,
+    getAllPublicNotification,
+    getPublicNotificationById,
+    updatePublicNotification,
+    deletePublicNotification,
+    //private notification
+    createPrivateNotification,
+    getPrivateNotificationForTeacher,
+    getPrivateNotificationForParents,
+    updatePrivateNotification,
+    deletePrivateNotification,
+};
