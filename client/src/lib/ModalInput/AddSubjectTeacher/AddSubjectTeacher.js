@@ -203,7 +203,7 @@ const AddSubjectTeacher = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Subject Teacher already exists
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">

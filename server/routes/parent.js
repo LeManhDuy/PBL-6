@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
@@ -81,10 +82,16 @@ router.post("/", upload.single("person_image"), async (req, res) => {
             message: "Phone number must have 10 numbers.",
         });
     }
-    if (!validator.validate(person_email)) {
+    const phoneValidate = await Person.findOne({ person_phonenumber });
+    if (phoneValidate)
+        return res
+            .status(400)
+            .json({ success: false, message: "Phone number must be unique." });
+    const emailValidate = await Person.findOne({ person_email });
+    if (!validator.validate(person_email) || emailValidate) {
         return res.status(400).json({
             success: false,
-            message: "Invalid Email.",
+            message: "Email must be unquie and correct address form.",
         });
     }
     if (account_password.length < 6) {
@@ -107,7 +114,7 @@ router.post("/", upload.single("person_image"), async (req, res) => {
         const newAccount = new Account({
             account_username,
             account_password: hashPassword,
-            account_role: "Parents",
+            account_role: process.env.ROLE_PARENT,
         });
         await newAccount.save();
 
@@ -251,6 +258,24 @@ router.put("/:parentID", upload.single("person_image"), async (req, res) => {
     if (req.file) {
         person_image = req.file.publicUrl;
     }
+    const phoneValidate = await Person.findOne({ person_phonenumber: person_phonenumber })
+    const parentInfor = await Parent.findById(req.params.parentID)
+        .populate("person_id", ["person_id"])
+    if (phoneValidate)
+        if (phoneValidate._id.toString() !== parentInfor.person_id._id.toString()) {
+            return res.status(400).json({
+                success: false,
+                message: "Phone number must be unique.",
+            });
+        }
+    const emailValidate = await Person.findOne({ person_email: person_email })
+    if (emailValidate)
+        if (emailValidate._id.toString() !== parentInfor.person_id._id.toString()) {
+            return res.status(400).json({
+                success: false,
+                message: "Email must be unquie.",
+            });
+        }
     if (person_phonenumber.length != 10) {
         return res.status(400).json({
             success: false,
@@ -260,7 +285,7 @@ router.put("/:parentID", upload.single("person_image"), async (req, res) => {
     if (!validator.validate(person_email)) {
         return res.status(400).json({
             success: false,
-            message: "Invalid Email.",
+            message: "Email must be in the correct format.",
         });
     }
     if (account_password.length < 6) {
@@ -393,6 +418,48 @@ router.delete("/:parentID", async (req, res) => {
             success: true,
             message: "Deleted parent successfully!",
         });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+});
+
+router.get("/get-parents-info/:personID", async (req, res) => {
+    try {
+        // Return token
+        const personInfor = await Person.findById(req.params.personID);
+        const getParentInfor = await Parent.find({
+            person_id: personInfor._id.toString(),
+        })
+            .select([
+                "parent_job",
+                "parent_relationship",
+                "is_in_association",
+                "parent_job_address",
+            ])
+            .populate({
+                path: "person_id",
+                model: "Person",
+                populate: [
+                    {
+                        path: "account_id",
+                        model: "Account",
+                        select: ["account_username", "account_role"],
+                    },
+                ],
+            });
+        res.json({ success: true, getParentInfor });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+});
+
+router.get("/change-is-association/:parentID", async(req, res) => {
+    try {
+        const parentInfor = await Parent.findById(req.params.parentID);
+        parentInfor.is_in_association = !parentInfor.is_in_association;
+        parentInfor.save();
+        res.json({ success: true, message: 'Change is association success' });
+        // res.json({ success: true, message: "Change is Association Success" });
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error });
     }

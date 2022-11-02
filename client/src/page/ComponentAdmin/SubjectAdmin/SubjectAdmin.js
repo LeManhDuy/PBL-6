@@ -14,9 +14,6 @@ import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
 import AddSubject from "../../../lib/ModalInput/AddSubject/AddSubject";
 import UpdateSubject from "../../../lib/ModalInput/UpdateSubject/UpdateSubject";
 
-
-
-
 const SubjectAdmin = () => {
     const [addSubjectState, setAddSubjectState] = useState(false);
     const [updateSubjectState, setUpdateSubjectState] = useState(false);
@@ -26,8 +23,8 @@ const SubjectAdmin = () => {
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
     const [name, setName] = useState();
+    const [errorMessage, setErrorMessage] = useState("");
 
-    
     useEffect(() => {
         getSubject();
     }, [state]);
@@ -35,43 +32,45 @@ const SubjectAdmin = () => {
     const getSubject = () => {
         SubjectService.getSubject()
             .then((response) => {
-                const dataSources = response.allSubject.map(
-                    (item, index) => {
-                        return {
-                            key: index + 1,
-                            id: item._id,
-                            name: item.subject_name
-                        }
-                    }
-                );
-                setSubject(dataSources);
+                const dataSources = response.allSubject.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
+                        name: item.subject_name,
+                    };
+                });
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setSubject(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
-            })
+            });
     };
 
     // Add Subject
     const handleConfirmAddSubject = (allValue) => {
         SubjectService.addSubject({
-            subject_name: allValue.name
+            subject_name: allValue.name,
         })
-        .then((res) => {
-            if (res.success) {
-                setState(!state);
-                setErrorServer(false);
-                setAddSubjectState(false);
-            } else {
-                setErrorServer(true);
-                setAddSubjectState(true);
-            }
-        })
-        .catch((error) => console.log("error", error));
-    }
+            .then((res) => {
+                if (res.success) {
+                    setState(!state);
+                    setErrorServer(false);
+                    setErrorMessage("");
+                    setAddSubjectState(false);
+                } else {
+                    setErrorServer(true);
+                    setErrorMessage(res.message);
+                    setAddSubjectState(true);
+                }
+            })
+            .catch((error) => console.log("error", error));
+    };
 
     const handleInputCustom = () => {
         setAddSubjectState(false);
         setErrorServer(false);
+        setErrorMessage("");
         setUpdateSubjectState(false);
     };
 
@@ -84,6 +83,7 @@ const SubjectAdmin = () => {
                     handleInputCustom={handleInputCustom}
                     handleConfirmAddSubject={handleConfirmAddSubject}
                     errorServer={errorServer}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -91,20 +91,23 @@ const SubjectAdmin = () => {
 
     const handleConfirmUpdateSubject = (allValue) => {
         SubjectService.updateSubject(Id, {
-            subject_name:  allValue.name
-        }).then((res) => {
-            console.log(res);
-            if (res.success) {
-                setState(!state);
-                setErrorServer(false);
-                setUpdateSubjectState(false);
-            } else {
-                setErrorServer(true);
-                setUpdateSubjectState(true);
-            }
+            subject_name: allValue.name,
         })
-        .catch((error) => console.log("error", error));
-    }
+            .then((res) => {
+                console.log(res);
+                if (res.success) {
+                    setState(!state);
+                    setErrorServer(false);
+                    setErrorMessage("");
+                    setUpdateSubjectState(false);
+                } else {
+                    setErrorServer(true);
+                    setErrorMessage(res.message);
+                    setUpdateSubjectState(true);
+                }
+            })
+            .catch((error) => console.log("error", error));
+    };
 
     //Component Add Subject (Form)
     const DivUpdateSubject = (
@@ -117,6 +120,7 @@ const SubjectAdmin = () => {
                     handleConfirmUpdateSubject={handleConfirmUpdateSubject}
                     errorServer={errorServer}
                     SubjectId={Id}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -133,7 +137,7 @@ const SubjectAdmin = () => {
             }
         });
         setIsDelete(false);
-    }
+    };
 
     const ConfirmDelete = (
         <ModalCustom
@@ -152,9 +156,10 @@ const SubjectAdmin = () => {
     const handleAddSubject = () => {
         setAddSubjectState(true);
         setErrorServer(false);
-    }
+        setErrorMessage("");
+    };
 
-    const TableSubject = ({subjects}) => {
+    const TableSubject = ({ subjects }) => {
         const subjectItem = subjects.map((item) => (
             <tr data-key={item.id} key={item.id}>
                 <td>{item.name}</td>
@@ -166,7 +171,8 @@ const SubjectAdmin = () => {
         ));
 
         function click(e) {
-            const id =  e.target.parentElement.parentElement.getAttribute("data-key");
+            const id =
+                e.target.parentElement.parentElement.getAttribute("data-key");
             if (e.target.className.includes("btn-delete")) {
                 setIsDelete(true);
                 setId(id);
@@ -195,7 +201,6 @@ const SubjectAdmin = () => {
         );
     };
 
-
     return (
         <div className="main-container">
             <header>
@@ -203,8 +208,12 @@ const SubjectAdmin = () => {
                     <h3>Manage Subject</h3>
                 </div>
                 <div className="right-header">
-                    <a href="subject_teacher"><button className="btn-account">Assign Subject</button></a>
-                    <button className="btn-account" onClick={handleAddSubject}>Add Subject</button>
+                    <a href="subject_teacher">
+                        <button className="btn-account">Assign Subject</button>
+                    </a>
+                    <button className="btn-account" onClick={handleAddSubject}>
+                        Add Subject
+                    </button>
                     <div className="search-box">
                         <button className="btn-search">
                             <FontAwesomeIcon
@@ -221,7 +230,7 @@ const SubjectAdmin = () => {
                 </div>
             </header>
             <div className="table-content">
-                <TableSubject  subjects={subjects}/>
+                <TableSubject subjects={subjects} />
             </div>
             <footer>
                 <hr></hr>
@@ -256,8 +265,6 @@ const SubjectAdmin = () => {
             </footer>
         </div>
     );
-
-
 };
 
 export default SubjectAdmin;

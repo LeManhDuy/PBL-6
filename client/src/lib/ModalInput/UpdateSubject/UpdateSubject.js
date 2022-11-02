@@ -60,7 +60,7 @@ const UpdateSubject = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Subject already exists
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -70,7 +70,7 @@ const UpdateSubject = (props) => {
                             className="input-content"
                             type="text"
                             name="name"
-                            placeholder="Enter name"
+                            placeholder="Enter Name"
                         value={allValuesSubject.name}
                         onChange={changeHandlerSubject}
                         />

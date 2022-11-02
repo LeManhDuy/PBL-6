@@ -42,6 +42,20 @@ router.get("/:feeID", async (req, res) => {
                 path: "pupil_id",
                 model: "Pupil",
                 select: ["pupil_name"],
+                populate: [
+                    {
+                        path: "class_id",
+                        model: "Class",
+                        select: ["class_name"],
+                        populate: [
+                            {
+                                path: "grade_id",
+                                model: "Grade",
+                                select: ["grade_name"],
+                            }
+                        ]
+                    },
+                ],
             })
         res.json({ success: true, getfeeInfor })
     } catch (error) {
@@ -59,12 +73,15 @@ router.post("/", async (req, res) => {
             success: false,
             message: "Please fill in complete information.",
         })
+    const feeValidate = await Fee.findOne({ fee_category_id, pupil_id })
+    if (feeValidate)
+        return res
+            .status(400)
+            .json({ success: false, message: "Fee for this pupil is already existed." })
+
+
+
     try {
-        const feeValidate = await Fee.findOne({ fee_category_id, pupil_id })
-        if (feeValidate)
-            return res
-                .status(400)
-                .json({ success: false, message: "Fee for this pupil is already existed." })
         let checkStatus = false
         if (paid_date)
             checkStatus = true
@@ -98,12 +115,22 @@ router.put("/:feeId", async (req, res) => {
             success: false,
             message: "Please fill in complete information.",
         })
+    const feeCategoryValidate = await FeeCategory.findById(fee_category_id)
+    if (!feeCategoryValidate)
+        return res
+            .status(400)
+            .json({ success: false, message: "Fee is not existed." })
+
+    const pupilValidate = await Fee.findOne({ fee_category_id: fee_category_id, pupil_id: pupil_id })
+    if (pupilValidate)
+        if (pupilValidate._id.toString() !== req.params.feeId) {
+            return res.status(400).json({
+                success: false,
+                message: "This pupil already have a fee",
+            });
+        }
+
     try {
-        const fee = await Fee.findById(req.params.feeId)
-        if (!fee)
-            return res
-                .status(400)
-                .json({ success: false, message: "Fee is not existed." })
         let checkStatus = false
         if (paid_date)
             checkStatus = true

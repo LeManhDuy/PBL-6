@@ -19,19 +19,37 @@ const getPupilById = async (id) => {
     return await HandleApi.APIGetWithToken(`pupil/${id}`);
 };
 
+const GetParentsInformation = async (id) => {
+    return await HandleApi.APIGetWithToken(`parent/get-parents-info/${id}`);
+};
+
 const updatePupil = async (pupilID, params) => {
-    return await HandleApi.APIPutWithTokenIMG(
-        `pupil/${pupilID}`,
-        params
+    return await HandleApi.APIPutWithTokenIMG(`pupil/${pupilID}`, params);
+};
+
+const getPupilByParentId = async (personID) => {
+    return await HandleApi.APIGetWithToken(
+        `pupil/get-pupil-by-parent/${personID}`
     );
 };
+
+const getStudentByTeacherIdAtTeacherRole = async (id) => {
+    return await HandleApi.APIGetWithToken(`class/get-pupil-at-teacher-role/${id}`);
+}
+
+const getStudentByStudentId = async (id) => {
+    return await HandleApi.APIGetWithToken(`pupil/${id}`);
+}
 
 const PupilService = {
     getPupils,
     addPupil,
     deletePupilById,
     getPupilById,
-    updatePupil
+    updatePupil,
+    getPupilByParentId,
+    getStudentByTeacherIdAtTeacherRole,
+    getStudentByStudentId,
 };
 
 export default PupilService;

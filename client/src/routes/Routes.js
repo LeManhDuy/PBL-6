@@ -21,12 +21,23 @@ import StatisticAdmin from "../page/ComponentAdmin/StatisticAdmin/StatisticAdmin
 //Parents
 import ParentsRoute from "./ParentsRoute/ParentsRoute";
 import Parents from "../page/Parents/Parents";
+import StudentParents from "../page/Parents/StudentParents/StudentParents";
+import ScoreParents from "../page/Parents/ScoreParents/ScoreParents";
+import NotificationParents from "../page/Parents/NotificationParents/NotificationParents";
+import FeeParents from "../page/Parents/FeeParents/FeeParents";
 //Affair
 import AffairRoute from "./AffairRoute/AffairRoute";
 import HomeAffair from "../page/ComponentAffair/HomeAffair/HomeAffair";
 import FeeAffair from "../page/ComponentAffair/FeeAffair/FeeAffair";
 import FeeCategoryAffair from "../page/ComponentAffair/FeeCategoryAffair/FeeCategoryAffair";
 import StatisticAffair from "../page/ComponentAffair/StatisticAffair/StatisticAffair";
+//Teacher
+import TeacherRoute from "./TeacherRoute/TeacherRoute";
+import ScoreTeacher from "../page/Teacher/ScoreTeacher/ScoreTeacher";
+import NotificationTeacher from "../page/Teacher/NotificationTeacher/NotificationTeacher";
+import ScheduleTeacher from "../page/Teacher/ScheduleTeacher/ScheduleTeacher";
+import ClassTeacher from "../page/Teacher/ClassTeacher/ClassTeacher";
+import AssociationTeacher from "../page/Teacher/AssociationTeacher/AssociationTeacher";
 
 const Routes = () => {
     return (
@@ -108,12 +119,66 @@ const Routes = () => {
                     {/* Parents Route */}
 
                     <ParentsRoute
+                        component={StudentParents}
+                        exact
+                        path={ROUTES.PARENTS_PAGE.PARENTS_STUDENT_PATH}
+                    />
+
+                    <ParentsRoute
                         component={Parents}
                         exact
                         path={ROUTES.PARENTS_PAGE.PARENTS_PARENTS_PATH}
                     />
 
+                    <ParentsRoute
+                        component={ScoreParents}
+                        exact
+                        path={ROUTES.PARENTS_PAGE.PARENTS_SCORE_PATH}
+                    />
+
+                    <ParentsRoute
+                        component={NotificationParents}
+                        exact
+                        path={ROUTES.PARENTS_PAGE.PARENTS_NOTIFICATION_PATH}
+                    />
+
+                    <ParentsRoute
+                        component={FeeParents}
+                        exact
+                        path={ROUTES.PARENTS_PAGE.PARENTS_FEE_PATH}
+                    />
+
                     {/* Teacher Route */}
+
+                    <TeacherRoute
+                        component={ScoreTeacher}
+                        exact
+                        path={ROUTES.TEACHER_PAGE.TEACHER_SCORE_PATH}
+                    />
+
+                    <TeacherRoute
+                        component={ClassTeacher}
+                        exact
+                        path={ROUTES.TEACHER_PAGE.TEACHER_CLASS_PATH}
+                    />
+
+                    <TeacherRoute
+                        component={ScheduleTeacher}
+                        exact
+                        path={ROUTES.TEACHER_PAGE.TEACHER_SCHEDULE_PATH}
+                    />
+
+                    <TeacherRoute
+                        component={NotificationTeacher}
+                        exact
+                        path={ROUTES.TEACHER_PAGE.TEACHER_NOTIFICATION_PATH}
+                    />
+
+                    <TeacherRoute
+                        component={AssociationTeacher}
+                        exact
+                        path={ROUTES.TEACHER_PAGE.TEACHER_ASSOCIATION_PATH}
+                    />
 
                     {/* Affair Route */}
 

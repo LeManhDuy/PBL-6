@@ -40,6 +40,10 @@ const getData = () => {
     return JSON.parse(localStorage.getItem("@Login"));
 };
 
+const ChangePassword = async (id, params) => {
+    return await HandleApi.APIPutWithToken(`authentication/${id}`, params);
+};
+
 const AuthenticationService = {
     postLogin,
     saveDataLogin,
@@ -50,6 +54,7 @@ const AuthenticationService = {
     isTeacher,
     isAffair,
     getData,
+    ChangePassword,
 };
 
 export default AuthenticationService;

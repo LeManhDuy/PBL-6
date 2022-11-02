@@ -37,6 +37,39 @@ router.get("/:gradeID", async (req, res) => {
     }
 })
 
+// @route GET api/admin/principle
+// @desc GET class in grade
+// @access Private Only Admin
+router.get("/get-class-by-grade-id/:gradeID", async (req, res) => {
+    try {
+        // Return token
+        const getClassByGradeId = await Class.find({ grade_id: req.params.gradeID })
+            .select([
+                "class_id",
+                "class_name",
+                "grade_id",
+                "homeroom_teacher_id"
+            ])
+            .populate({
+                path: "grade_id",
+                model: "Grade",
+                select: ["grade_name"],
+            })
+            .populate({
+                path: "homeroom_teacher_id",
+                model: "Teacher",
+                populate: [{
+                    path: "person_id",
+                    model: "Person",
+                    select: ["person_fullname"],
+                }]
+            })
+        res.json({ success: true, getClassByGradeId })
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
 // @route POST api/admin/grade
 // @desc post subject
 // @access Private

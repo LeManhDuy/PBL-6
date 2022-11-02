@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ClassService from "../../../config/service/ClassService";
 import GradeService from "../../../config/service/GradeService";
 import "./AddClass.css";
+import Select from 'react-select';
 
 const AddClass = (props) => {
     const [teacher, setTeacher] = useState([]);
@@ -12,6 +13,7 @@ const AddClass = (props) => {
         name: "",
         teacher: "",
         grade: "",
+        gradeName: "",
     });
     const [classError, setClassError] = useState({
         name: false,
@@ -25,16 +27,19 @@ const AddClass = (props) => {
     }, []);
 
     const getTeachers = () => {
-        ClassService.getTeachers()
+        ClassService.getTeacherDontHaveClass()
             .then((response) => {
-                const dataSources = response.getTeacherInfor.map((item, index) => {
-                    return {
-                        key: index + 1,
-                        id: item._id,
-                        teacher: item.person_id.person_fullname,
-                    };
-                });
-                setTeacher(dataSources);
+                const dataSources = response.getTeacherDontHaveClass.map(
+                    (item, index) => {
+                        return {
+                            //key: index + 1,
+                            value: item._id,
+                            label: item.person_id.person_fullname,
+                        };
+                    }
+                );
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setTeacher(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -46,12 +51,13 @@ const AddClass = (props) => {
             .then((response) => {
                 const dataSources = response.allGrade.map((item, index) => {
                     return {
-                        key: index + 1,
-                        id: item._id,
-                        grade: item.grade_name,
+                        //key: index + 1,
+                        value: item._id,
+                        label: item.grade_name,
                     };
                 });
-                setGrade(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setGrade(dataSourcesSorted)
             })
             .catch((error) => {
                 console.log(error);
@@ -63,7 +69,6 @@ const AddClass = (props) => {
             ...allValuesClass,
             [e.target.name]: e.target.value,
         });
-
     };
 
     const TeacherDropDown = ({ value, options, onChange }) => {
@@ -113,39 +118,21 @@ const AddClass = (props) => {
     };
 
     const handleTeacherChange = (event) => {
-        setTeacherDropValue(event.target.value);
-        if (event.target.value !== "Pick") {
-            setAllValuesClass({
-                ...allValuesClass,
-                teacher: event.target.options[
-                    event.target.selectedIndex
-                ].getAttribute("data-key"),
-            });
-        } else {
-            setAllValuesClass({
-                ...allValuesClass,
-                teacher: null,
-            })
-        }
+        setTeacherDropValue(event);
+        setAllValuesClass({
+            ...allValuesClass,
+            teacher: event.value
+        });
     };
 
     const handleGradeChange = (event) => {
-        setGradeDropValue(event.target.value);
-        if (event.target.value !== "Pick") {
-            setAllValuesClass({
-                ...allValuesClass,
-                grade: event.target.options[
-                    event.target.selectedIndex
-                ].getAttribute("data-key"),
-            });
-        } else {
-            setAllValuesClass({
-                ...allValuesClass,
-                grade: null,
-            })
-        }
+        setGradeDropValue(event);
+        setAllValuesClass({
+            ...allValuesClass,
+            grade: event.value,
+            gradeName: event.label
+        });
     };
-
 
     const FormClass = (
         <div className="form-admin-content">
@@ -156,17 +143,61 @@ const AddClass = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Add Failed.
+                {props.errorMessage}
             </label>
-            <div className="form-teacher-content">
+            <div className="form-teacher-content" style={{ height: 240 }}>
                 <div className="teacher-content-left">
+                    <div className="type-input">
+                        <h4>Teacher</h4>
+                        <Select
+                            className="dropdown-class"
+                            value={teacherDropValue}
+                            onChange={handleTeacherChange}
+                            options={teacher}
+                            placeholder="Teacher's Name"
+                            maxMenuHeight={150}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (classError.teacher
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid Teacher
+                        </label>
+                    </div>
+                </div>
+                <div className="teacher-content-right-class">
+                    <div className="type-input">
+                        <h4>Grade</h4>
+                        <Select
+                            className="dropdown-class"
+                            value={gradeDropValue}
+                            onChange={handleGradeChange}
+                            options={grade}
+                            placeholder="Grade's Name"
+                            maxMenuHeight={150}
+                        />
+                        <label
+                            className={
+                                "error" +
+                                (classError.grade
+                                    ? " error-show"
+                                    : " error-hidden")
+                            }
+                        >
+                            Invalid Grade
+                        </label>
+                    </div>
                     <div className="type-input">
                         <h4>Class Name</h4>
                         <input
                             className="input-content"
                             type="text"
                             name="name"
-                            placeholder="Enter class name"
+                            placeholder="Enter Class Name"
                             value={allValuesClass.name}
                             onChange={changeHandlerClass}
                         />
@@ -182,46 +213,9 @@ const AddClass = (props) => {
                         </label>
                     </div>
                 </div>
-                <div className="teacher-content-right">
-                    <div className="type-input">
-                        <h4>Teacher</h4>
-                        <TeacherDropDown
-                            options={teacher}
-                            value={teacherDropValue}
-                            onChange={handleTeacherChange}
-                        />
-                        <label
-                            className={
-                                "error" +
-                                (classError.teacher
-                                    ? " error-show"
-                                    : " error-hidden")
-                            }
-                        >
-                            Invalid Teacher
-                        </label>
-                    </div>
-                    <div className="type-input">
-                        <h4>Grade</h4>
-                        <GradeDropDown
-                            options={grade}
-                            value={gradeDropValue}
-                            onChange={handleGradeChange}
-                        />
-                        <label
-                            className={
-                                "error" +
-                                (classError.grade
-                                    ? " error-show"
-                                    : " error-hidden")
-                            }
-                        >
-                            Invalid Class
-                        </label>
-                    </div>
-                </div>
             </div>
         </div>
+
     );
 
     const handleAddClass = () => {
@@ -230,42 +224,35 @@ const AddClass = (props) => {
         let grade = false;
         let check = false;
 
-        if (
-            allValuesClass.name.length > 30
-        ) {
+        if (allValuesClass.name.length > 30) {
             name = true;
             check = true;
         } else name = false;
 
         if (!allValuesClass.teacher) {
             teacher = true;
-            check = true
+            check = true;
         } else {
-            grade = false
+            grade = false;
         }
 
         if (!allValuesClass.grade) {
             grade = true;
-            check = true
+            check = true;
         } else {
-            grade = false
+            grade = false;
         }
-
 
         setClassError({
             name: name,
             grade: grade,
-            teacher: teacher
-        })
+            teacher: teacher,
+        });
 
         if (!check) {
             props.handleConfirmAddClass(allValuesClass);
         }
-
-
-
-
-    }
+    };
 
     const clickSave = (e) => {
         e.preventDefault();
@@ -275,19 +262,20 @@ const AddClass = (props) => {
     const FormAddClass = (
         <div className="form-add-account">
             {FormClass}
-            <button onClick={props.handleInputCustom} className="btn-cancel">
-                Cancel
-            </button>
-            <button type="submit" onClick={clickSave} className="btn-ok">
-                Save
-            </button>
+
+            <div className="test">
+                <button onClick={props.handleInputCustom} className="btn-cancel">
+                    Cancel
+                </button>
+                <button type="submit" onClick={clickSave} className="btn-ok">
+                    Save
+                </button>
+            </div>
+
         </div>
     );
 
-    return (
-        <div className="add-account-form">{FormAddClass}</div>
-    );
-
-}
+    return <div className="add-account-form">{FormAddClass}</div>;
+};
 
 export default AddClass;

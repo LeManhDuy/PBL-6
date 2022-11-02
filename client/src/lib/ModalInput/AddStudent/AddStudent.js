@@ -3,6 +3,8 @@ import "./AddStudent.css";
 import Logo from "../../../assets/image/Logo.png";
 import ClassService from "../../../config/service/ClassService";
 import AccountService from "../../../config/service/AccountService";
+import Select from 'react-select';
+
 
 const AddStudent = (props) => {
     let date = new Date().toLocaleDateString();
@@ -33,7 +35,6 @@ const AddStudent = (props) => {
         parent: false,
         classroom: false,
     });
-
     const [avatar, setAvatar] = useState(Logo);
 
     useEffect(() => {
@@ -61,6 +62,14 @@ const AddStudent = (props) => {
                     </option>
                 ))}
             </select>
+            // <Select
+            //     name="form-field-name"
+            //     value={value}
+            //     options={options}
+            //     onChange={onChange}
+            // />
+
+
         );
     };
 
@@ -89,36 +98,51 @@ const AddStudent = (props) => {
     };
 
     const handleParentChange = (event) => {
-        setParentDropValue(event.target.value);
-        if (event.target.value !== "Pick") {
-            setAllValuesStudent({
-                ...allValuesStudent,
-                parent: event.target.options[
-                    event.target.selectedIndex
-                ].getAttribute("data-key"),
-            });
-        }
-        console.log(parent);
+        // setParentDropValue({ event }, () =>
+        //     console.log(`Option selected:`, this.state.event)
+        // );
+        setParentDropValue(event);
+        //console.log(parent);
+        //setParentDropValue(event.target.value);
+        // if (event.target.value !== "Pick") {
+        setAllValuesStudent({
+            ...allValuesStudent,
+            // parent: event.options[
+            //     event.selectedIndex
+            // ].getAttribute("data-key"),
+            parent: event.value
+        });
     };
 
     const handleClassChange = (event) => {
-        setClassDropValue(event.target.value);
-        if (event.target.value !== "Pick") {
-            setAllValuesStudent({
-                ...allValuesStudent,
-                classroom:
-                    event.target.options[
-                        event.target.selectedIndex
-                    ].getAttribute("data-key"),
-            });
-            setTeacher(
-                event.target.options[event.target.selectedIndex].getAttribute(
-                    "data-teacher"
-                )
-            );
-        } else {
-            setTeacher("");
-        }
+        setClassDropValue(event)
+        setAllValuesStudent({
+            ...allValuesStudent,
+            classroom: event.value
+        });
+        setTeacher(
+            // event.target.options[event.target.selectedIndex].getAttribute(
+            //     "data-teacher"
+            // )
+            event.teacher
+        );
+        // setClassDropValue(event.target.value);
+        // if (event.target.value !== "Pick") {
+        //     setAllValuesStudent({
+        //         ...allValuesStudent,
+        //         classroom:
+        //             event.target.options[
+        //                 event.target.selectedIndex
+        //             ].getAttribute("data-key"),
+        //     });
+        //     setTeacher(
+        //         event.target.options[event.target.selectedIndex].getAttribute(
+        //             "data-teacher"
+        //         )
+        //     );
+        // } else {
+        //     setTeacher("");
+        // }
     };
 
     const getParents = () => {
@@ -127,12 +151,13 @@ const AddStudent = (props) => {
                 const dataSources = response.getParentsInfor
                     .map((item, index) => {
                         return {
-                            key: index + 1,
-                            id: item._id,
-                            name: item.person_id.person_fullname,
+                            //key: index + 1,
+                            value: item._id,
+                            label: item.person_id.person_fullname + " - " + item.person_id.person_phonenumber,
                         };
                     });
-                setParent(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setParent(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -144,14 +169,19 @@ const AddStudent = (props) => {
             .then((response) => {
                 const dataSources = response.allClass.map((item, index) => {
                     return {
-                        key: index + 1,
-                        id: item._id,
-                        name: item.class_name,
-                        grade: item.grade_id.grade_name,
-                        teacher: item.homeroom_teacher_id.person_id.person_fullname,
+                        //key: index + 1,
+                        value: item._id,
+                        label: item.class_name,
+                        grade: item.grade_id ? item.grade_id.grade_name : "Empty",
+                        teacher: item.homeroom_teacher_id
+                            ? item.homeroom_teacher_id.person_id
+                                ? item.homeroom_teacher_id.person_id.person_fullname
+                                : "Empty"
+                            : "Empty",
                     };
                 });
-                setClassroom(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setClassroom(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -167,7 +197,6 @@ const AddStudent = (props) => {
         let classroom = false;
         let check = false;
         if (
-            allValuesStudent.name.length > 30 ||
             allValuesStudent.name.length < 2
         ) {
             name = true;
@@ -258,6 +287,27 @@ const AddStudent = (props) => {
         }
     };
 
+    // var getOptions = function (input, callback) {
+    //     setTimeout(function () {
+    //         callback(null, {
+    //             options: [
+    //                 options.map((option) => (
+    //                     <option
+    //                         key={option.key}
+    //                         value={option.name}
+    //                         data-key={option.id}
+    //                     >
+    //                         {option.name}
+    //                     </option>
+    //                 ))
+    //             ],
+    //             // CAREFUL! Only set this to true when there are no more options,
+    //             // or more specific queries will not be sent to the server.
+    //             complete: true
+    //         });
+    //     }, 500);
+    // };
+
     const FormAccountStudents = (
         <div className="form-admin-content">
             <h4>Add Pupil</h4>
@@ -267,14 +317,14 @@ const AddStudent = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Add Failed.
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
                     <div className="avatar-teacher">
                         <img src={avatar} />
                         <label className="choose-file" htmlFor="upload-photo">
-                            Choose image
+                            Choose Image
                         </label>
                         <input
                             id="upload-photo"
@@ -311,11 +361,11 @@ const AddStudent = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Name must be less than 30 chars
+                            Name must be greater than 2 chars
                         </label>
                     </div>
                     <div className="type-input">
-                        <h4>Date of Birth</h4>
+                        <h4>Date Of Birth</h4>
                         <input
                             className="input-content"
                             type="date"
@@ -370,10 +420,13 @@ const AddStudent = (props) => {
                 <div className="teacher-content-right">
                     <div className="type-input">
                         <h4>Parent</h4>
-                        <ParentDropDown
-                            options={parent}
+                        <Select
+                            className="dropdown-class"
                             value={parentDropValue}
                             onChange={handleParentChange}
+                            options={parent}
+                            placeholder="Name - Phone Number"
+                            maxMenuHeight={150}
                         />
                         <label
                             className={
@@ -388,10 +441,13 @@ const AddStudent = (props) => {
                     </div>
                     <div className="type-input">
                         <h4>Class</h4>
-                        <ClassDropDown
-                            options={classroom}
+                        <Select
+                            className="dropdown-class"
                             value={classDropValue}
                             onChange={handleClassChange}
+                            options={classroom}
+                            placeholder="Grade - Class"
+                            maxMenuHeight={150}
                         />
                         <label
                             className={
@@ -410,7 +466,7 @@ const AddStudent = (props) => {
                             className="input-content"
                             placeholder="Teacher's name..."
                             value={teacher}
-                            readOnly
+                            disabled
                         />
                     </div>
                 </div>

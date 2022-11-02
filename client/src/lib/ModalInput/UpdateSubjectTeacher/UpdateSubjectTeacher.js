@@ -32,6 +32,7 @@ const UpdateSubjectTeacher = (props) => {
             }     
             setListSubject(l)
         });
+
     }, []);
     const getSubject = () => {
         SubjectService.getSubject()
@@ -97,7 +98,6 @@ const UpdateSubjectTeacher = (props) => {
             <div>
                 {options.map(option => (
                     // <CheckObj option={option} key={option.key}/>
-
                     <div key={option.id}>
                         <input type="checkbox" className="btn-check" 
                         id={option.key} autoComplete="off"
@@ -126,7 +126,7 @@ const UpdateSubjectTeacher = (props) => {
 
     const handleTeacherChange = (event) => {
         setTeacherDropValue(event.target.value);
-        if (event.target.value !== 'All'){
+        if (event.target.value !== 'All') {
             setAllValuesSubjectTeacher({
                 ...allValuesSubjectTeacher,
                 teacher_id: event.target.value,
@@ -162,7 +162,7 @@ const UpdateSubjectTeacher = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Subject Teacher already exists
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -212,7 +212,7 @@ const UpdateSubjectTeacher = (props) => {
                     Cancel
                 </button>
                 <button type="submit"
-                    onClick={clickSave} 
+                    onClick={clickSave}
                     className="btn-ok">
                     Save
                 </button>
