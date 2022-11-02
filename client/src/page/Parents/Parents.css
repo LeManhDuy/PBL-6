@@ -1,11 +1,11 @@
 @import "../../assets/css/variables.css";
 @import "../../assets/css/custom.css";
 
-.parents-info{
+.parents-info {
   margin-top: 20px;
 }
 
-.parents-info h3{
+.parents-info h3 {
   background: var(--primary-color);
   display: inline-block;
   padding: 10px 20px;
@@ -22,7 +22,7 @@
   flex-direction: column;
 }
 
-.parents-content p{
+.parents-content p {
   margin: 0;
   padding: 0;
 }
@@ -41,15 +41,37 @@
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   padding: 30px;
 }
-.parents-content .image{
+
+.parents-content .image {
   width: 40%;
 }
 
-.parents-content img{
+.parents-content img {
   width: 100px;
   border: 4px solid #fff;
   border-radius: 50%;
   height: 100px;
+}
+
+.left-parent-content {
+  width: 30%;
+  height: auto;
+  display: inline-block;
+  text-align: center;
+}
+
+.detail-content .student-item {
+  width: 90% !important;
+}
+
+.between-student-content {
+  width: 20% !important;
+}
+
+.left-parent-content img {
+  clip-path: circle();
+  object-fit: cover;
+  margin-right: 50px;
 }
 
 .parents-item .detail-info {
@@ -59,7 +81,18 @@
   gap: 0 30px;
 }
 
-.parents-item .detail-info .type{
+.student-item-parent {
+  width: 90%;
+  box-shadow: rgb(0 0 0 / 24%) 0px 3px 8px;
+  border-radius: 10px;
+  padding: 30px;
+  display: flex;
+  /* flex-direction: column; */
+  justify-content: center;
+  align-items: center;
+}
+
+.parents-item .detail-info .type {
   display: flex;
   text-align: left;
   align-items: center;
@@ -67,7 +100,8 @@
   margin: 20px 0;
 }
 
-.parents-item .detail-info .type .fa,.fas{
+.parents-item .detail-info .type .fa,
+.fas {
   width: 30px;
   font-size: 30px;
   text-align: center;

@@ -87,7 +87,7 @@ function UserHeader() {
         },
         {
             key: 6,
-            label: "Fee Manager",
+            label: "Fee",
             link: ROUTES.PARENTS_PAGE.PARENTS_FEE_PATH,
         },
     ];
