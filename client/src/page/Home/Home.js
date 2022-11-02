@@ -13,7 +13,67 @@ import financial from "../../assets/image/financial.png";
 import first from "../../assets/image/1st.png";
 import second from "../../assets/image/2nd.png";
 import third from "../../assets/image/3rd.png";
+import NotificationService from "../../config/service/NotificationService";
+
 const Home = () => {
+    const [notifications, setNotifications] = useState([]);
+
+    useEffect(() => {
+        getNotifications();
+    }, []);
+
+    const getNotifications = () => {
+        NotificationService.getNotifications()
+            .then((response) => {
+                const dataSources = response.publicNotifications.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item.id,
+                            title: item.title,
+                            content: item.content,
+                            date: item.date,
+                        };
+                    }
+                );
+                dataSources.sort(function (a, b) {
+                    return new Date(b.date) - new Date(a.date);
+                });
+                if (dataSources.length > 9) dataSources.length = 9;
+                setNotifications(dataSources);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+    const NotificationItem = ({ notifications }) =>
+        notifications.map((item) => (
+            <div className="col-md-4 my-3 my-md-2" key={item.key}>
+                <div className="card">
+                    <div className="card-body">
+                        <div className="media align-items-center mb-3">
+                            <div className="media-body">
+                                <h6 className="mt-1 mb-0">
+                                    Notifications : {item.title}
+                                </h6>
+                                <small className="text-muted mb-0">
+                                    {new Date(item.date).toDateString() +
+                                        ", " +
+                                        new Date(
+                                            item.date
+                                        ).toLocaleTimeString()}
+                                </small>
+                            </div>
+                        </div>
+                        <p id="content-home-notification" className="mb-0">
+                            {item.content}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        ));
+
     return (
         <div>
             <Header />
@@ -156,76 +216,13 @@ const Home = () => {
                         <h3 className="section-title mb-5 text-center">
                             Lastest News
                         </h3>
+                        <div>
+                            {notifications.length === 0 ? (
+                                <p>No notifications yet</p>
+                            ) : null}
+                        </div>
                         <div className="row">
-                            <div className="col-md-4 my-3 my-md-2">
-                                <div className="card">
-                                    <div className="card-body">
-                                        <div className="media align-items-center mb-3">
-                                            <div className="media-body">
-                                                <h6 className="mt-1 mb-0">
-                                                    Notifications :
-                                                    Notifications
-                                                </h6>
-                                                <small className="text-muted mb-0">
-                                                    12-10-2020
-                                                </small>
-                                            </div>
-                                        </div>
-                                        <p
-                                            id="content-home-notification"
-                                            className="mb-0"
-                                        >
-                                            lorem lorem
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-md-4 my-3 my-md-2">
-                                <div className="card">
-                                    <div className="card-body">
-                                        <div className="media align-items-center mb-3">
-                                            <div className="media-body">
-                                                <h6 className="mt-1 mb-0">
-                                                    Notifications :
-                                                    Notifications
-                                                </h6>
-                                                <small className="text-muted mb-0">
-                                                    12-10-2020
-                                                </small>
-                                            </div>
-                                        </div>
-                                        <p
-                                            id="content-home-notification"
-                                            className="mb-0"
-                                        >
-                                            lorem lorem
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-md-4 my-3 my-md-2">
-                                <div className="card">
-                                    <div className="card-body">
-                                        <div className="media align-items-center mb-3">
-                                            <div className="media-body">
-                                                <h6 className="mt-1 mb-0">
-                                                    Notifications :
-                                                    Notifications
-                                                </h6>
-                                                <small className="text-muted mb-0">
-                                                    12-10-2020
-                                                </small>
-                                            </div>
-                                        </div>
-                                        <p
-                                            id="content-home-notification"
-                                            className="mb-0"
-                                        >
-                                            lorem lorem
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                            <NotificationItem notifications={notifications} />
                         </div>
                     </div>
                 </section>
