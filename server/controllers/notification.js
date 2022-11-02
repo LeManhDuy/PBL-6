@@ -142,6 +142,15 @@ const getPrivateNotificationForTeacher = async (req, res) => {
     try {
         const privateNotifications = await PrivateNotification.find({
             teacher_id: teacherInfor[0]._id,
+        }).populate({
+            path: "parent_id",
+            model: "Parent",
+            populate: [
+                {
+                    path: "person_id",
+                    model: "Person",
+                },
+            ],
         });
         res.status(200).json({
             success: true,
@@ -165,6 +174,15 @@ const getPrivateNotificationForParents = async (req, res) => {
     try {
         const privateNotifications = await PrivateNotification.find({
             parent_id: parentsInfor[0]._id,
+        }).populate({
+            path: "teacher_id",
+            model: "Teacher",
+            populate: [
+                {
+                    path: "person_id",
+                    model: "Person",
+                },
+            ],
         });
         res.status(200).json({
             success: true,
