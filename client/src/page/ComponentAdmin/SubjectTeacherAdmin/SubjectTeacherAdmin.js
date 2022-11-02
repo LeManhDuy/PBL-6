@@ -29,9 +29,10 @@ const SubjectTeacherAdmin = () => {
     const [name, setName] = useState();
     const [subjects, setSubject] = useState([]);
     const [teachers, setTeacher] = useState([]);
-    const [dropValueSubject, setDropValueSubject] = useState({value:"All",label:'All Subject'});
-    const [dropValueTeacher, setDropValueTeacher] = useState({value:"All",label:'All Teacher'});
+    const [dropValueSubject, setDropValueSubject] = useState({ value: "All", label: 'All Subject' });
+    const [dropValueTeacher, setDropValueTeacher] = useState({ value: "All", label: 'All Teacher' });
     const [filtered, setFiltered] = useState([]);
+    const [errorMessage, setErrorMessage] = useState("");
 
 
 
@@ -57,8 +58,9 @@ const SubjectTeacherAdmin = () => {
                         };
                     }
                 );
-                setSubjectTeacher(dataSources);
-                setFiltered(dataSources)
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.teacher_name > b.teacher_name ? 1 : -1,);
+                setSubjectTeacher(dataSourcesSorted);
+                setFiltered(dataSourcesSorted)
             })
             .catch((error) => {
                 console.log(error);
@@ -81,7 +83,8 @@ const SubjectTeacherAdmin = () => {
                         };
                     }
                 );
-                setSubjectTeacher(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.teacher_name > b.teacher_name ? 1 : -1,);
+                setSubjectTeacher(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -122,7 +125,8 @@ const SubjectTeacherAdmin = () => {
                         }
                     }
                 );
-                setSubject(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setSubject(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -137,14 +141,15 @@ const SubjectTeacherAdmin = () => {
                         return {
                             key: index + 1,
                             value: item._id,
-                            label: item.person_id.person_fullname +"-"+item.person_id.person_email,
+                            label: item.person_id.person_fullname + "-" + item.person_id.person_email,
                             id: item._id,
                             name: item.person_id.person_fullname,
                             email: item.person_id.person_email,
                         };
                     }
                 );
-                setTeacher(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setTeacher(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -152,42 +157,42 @@ const SubjectTeacherAdmin = () => {
     };
 
     const handleChangeSubject = (event) => {
-        console.log(event.value+ '---'+dropValueTeacher.value)
+        console.log(event.value + '---' + dropValueTeacher.value)
         setDropValueSubject(event);
         let filterST = subjectsTeacher
-        if(event.value!=='All'){
-            filterST = filterST.filter(x =>{return x.subject_id=== event.value})
+        if (event.value !== 'All') {
+            filterST = filterST.filter(x => { return x.subject_id === event.value })
         }
         // console.log(filterST)
-        if(dropValueTeacher.value!=='All'){
-            filterST = filterST.filter(x =>{return x.teacher_id=== dropValueTeacher.value})
+        if (dropValueTeacher.value !== 'All') {
+            filterST = filterST.filter(x => { return x.teacher_id === dropValueTeacher.value })
         }
         // console.log(filterST)
         setFiltered(filterST)
         // console.log(filtered)
-      };
+    };
     const handleChangeTeacher = (event) => {
-        console.log(dropValueSubject.value+'---'+ event.value)
+        console.log(dropValueSubject.value + '---' + event.value)
         setDropValueTeacher(event);
         let filterST = subjectsTeacher
-        if(event.value!=='All'){
-            filterST = filterST.filter(x => { 
+        if (event.value !== 'All') {
+            filterST = filterST.filter(x => {
                 return x.teacher_id === event.value
             })
         }
         // console.log(filterST)
-        if(dropValueSubject.value!=='All'){
-            filterST = filterST.filter(x => { 
+        if (dropValueSubject.value !== 'All') {
+            filterST = filterST.filter(x => {
                 return x.subject_id === dropValueSubject.value
             })
         }
         // console.log(filterST)
         setFiltered(filterST)
         // console.log(filtered)
-      };
+    };
 
     // Add Subject Teacher
-    const handleConfirmAddSubjectTeacher = (teacher_id,subject_list) => {
+    const handleConfirmAddSubjectTeacher = (teacher_id, subject_list) => {
         SubjectTeacherService.addMultipleSubjectTeacher({
             teacher_id: teacher_id,
             subject_list: subject_list,
@@ -231,7 +236,7 @@ const SubjectTeacherAdmin = () => {
         />
     );
 
-    const handleConfirmUpdateSubjectTeacher = (teacher_id,subject_list) => {
+    const handleConfirmUpdateSubjectTeacher = (teacher_id, subject_list) => {
         SubjectTeacherService.updateMultipleSubjectTeacher(Id, {
             teacher_id: teacher_id,
             subject_list: subject_list,
@@ -364,7 +369,7 @@ const SubjectTeacherAdmin = () => {
                 <div className="right-header" >
                     <button className="btn-account" onClick={handleAddSubjectTeacher}>Add Subject Teacher</button>
                     {/* <div className="search-box"> */}
-                    <label style={{width: 300}}>
+                    <label style={{ width: 300 }}>
                         <Select
                             className="dropdown-class"
                             // label="Subject"
@@ -379,7 +384,7 @@ const SubjectTeacherAdmin = () => {
                             isSearchable={true}
                         />
                     </label>
-                    <label style={{width: 300}}>
+                    <label style={{ width: 300 }}>
                         <Select
                             className="dropdown-class"
                             // label="Teacher"
@@ -398,7 +403,7 @@ const SubjectTeacherAdmin = () => {
                 </div>
             </header>
             <div className="table-content">
-                <TableSubjectTeacher  subjectsTeacher={filtered}/>
+                <TableSubjectTeacher subjectsTeacher={filtered} />
             </div>
             <footer>
                 <hr></hr>

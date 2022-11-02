@@ -58,7 +58,7 @@ function SideBar() {
                 <ConfirmAlert
                     handleCloseModalCustom={handleCloseModalCustom}
                     handleDelete={handleLogout}
-                    title={"Do you want to logout? "}
+                    title={"Do You Want To Logout? "}
                 />
             }
             handleCloseModalCustom={handleCloseModalCustom}
