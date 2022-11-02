@@ -26,4 +26,32 @@ router.delete(
     NotificationController.deletePublicNotification
 );
 
+//private notification
+//create private notification
+router.post("/private/", NotificationController.createPrivateNotification);
+
+//get private notification for teacher
+router.get(
+    "/private/:teacherID",
+    NotificationController.getPrivateNotificationForTeacher
+);
+
+//get private notification for parents
+router.get(
+    "/private/parents/:parentsID",
+    NotificationController.getPrivateNotificationForParents
+);
+
+//update private notification
+router.put(
+    "/private/:notificationID",
+    NotificationController.updatePrivateNotification
+);
+
+//delete private notification
+router.delete(
+    "/private/:notificationID",
+    NotificationController.deletePrivateNotification
+);
+
 module.exports = router;
