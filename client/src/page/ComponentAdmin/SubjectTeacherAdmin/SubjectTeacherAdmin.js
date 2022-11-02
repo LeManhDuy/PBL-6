@@ -62,8 +62,11 @@ const SubjectTeacherAdmin = () => {
                         };
                     }
                 );
-                setSubjectTeacher(dataSources);
-                setFiltered(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.teacher_name > b.teacher_name ? 1 : -1
+                );
+                setSubjectTeacher(dataSourcesSorted);
+                setFiltered(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -86,7 +89,10 @@ const SubjectTeacherAdmin = () => {
                         };
                     }
                 );
-                setSubjectTeacher(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.teacher_name > b.teacher_name ? 1 : -1
+                );
+                setSubjectTeacher(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -125,7 +131,10 @@ const SubjectTeacherAdmin = () => {
                         name: item.subject_name,
                     };
                 });
-                setSubject(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.label > b.label ? 1 : -1
+                );
+                setSubject(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -150,7 +159,10 @@ const SubjectTeacherAdmin = () => {
                         };
                     }
                 );
-                setTeacher(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.label > b.label ? 1 : -1
+                );
+                setTeacher(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);

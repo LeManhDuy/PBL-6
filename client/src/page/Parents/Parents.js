@@ -58,7 +58,6 @@ const Parents = () => {
     const ParentsContent = ({ parentsInfo }) => (
 
         // <div className="parents-item">
-
         <div className="student-item">
             <div className="left-student-content">
                 <img src={parentsInfo.parent_img} alt="parentImage" />
