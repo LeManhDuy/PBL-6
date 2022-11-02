@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Select from 'react-select';
 import "./SubjectTeacherAdmin.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -29,16 +30,15 @@ const SubjectTeacherAdmin = () => {
     const [name, setName] = useState();
     const [subjects, setSubject] = useState([]);
     const [teachers, setTeacher] = useState([]);
-    const [dropValueSubject, setDropValueSubject] = useState("All");
-    const [dropValueTeacher, setDropValueTeacher] = useState("All");
-    const [filter, setFilter] = useState([]);
+    const [dropValueSubject, setDropValueSubject] = useState({value:"All",label:'All Subject'});
+    const [dropValueTeacher, setDropValueTeacher] = useState({value:"All",label:'All Teacher'});
+    const [filtered, setFiltered] = useState([]);
 
 
     useEffect(() => {
         getSubjectTeacher();
         getSubject();
         getTeachers();
-        setFilter({subject_id:"",teacher_id:""});
     }, [state]);
 
     const getSubjectTeacher = () => {
@@ -57,6 +57,7 @@ const SubjectTeacherAdmin = () => {
                     }
                 );
                 setSubjectTeacher(dataSources);
+                setFiltered(dataSources)
             })
             .catch((error) => {
                 console.log(error);
@@ -108,6 +109,8 @@ const SubjectTeacherAdmin = () => {
                     (item, index) => {
                         return {
                             key: index + 1,
+                            value: item._id,
+                            label: item.subject_name,
                             id: item._id,
                             name: item.subject_name
                         }
@@ -127,6 +130,8 @@ const SubjectTeacherAdmin = () => {
                     (item, index) => {
                         return {
                             key: index + 1,
+                            value: item._id,
+                            label: item.person_id.person_fullname +"-"+item.person_id.person_email,
                             id: item._id,
                             name: item.person_id.person_fullname,
                             email: item.person_id.person_email,
@@ -141,40 +146,45 @@ const SubjectTeacherAdmin = () => {
     };
 
     const handleChangeSubject = (event) => {
-        console.log(event.target.value)
-        setDropValueSubject(event.target.value);
-        console.log(dropValueSubject)
-        // handleFilter();
+        console.log(event.value+ '---'+dropValueTeacher.value)
+        setDropValueSubject(event);
+        let filterST = subjectsTeacher
+        if(event.value!=='All'){
+            filterST = filterST.filter(x =>{return x.subject_id=== event.value})
+        }
+        // console.log(filterST)
+        if(dropValueTeacher.value!=='All'){
+            filterST = filterST.filter(x =>{return x.teacher_id=== dropValueTeacher.value})
+        }
+        // console.log(filterST)
+        setFiltered(filterST)
+        // console.log(filtered)
       };
     const handleChangeTeacher = (event) => {
-        setDropValueTeacher(event.target.value);
-        console.log(event.target.value)
-        console.log(dropValueTeacher)
-        // teacher_id = event.target.selectedValue
-        // handleFilter();
+        console.log(dropValueSubject.value+'---'+ event.value)
+        setDropValueTeacher(event);
+        let filterST = subjectsTeacher
+        if(event.value!=='All'){
+            filterST = filterST.filter(x => { 
+                return x.teacher_id === event.value
+            })
+        }
+        // console.log(filterST)
+        if(dropValueSubject.value!=='All'){
+            filterST = filterST.filter(x => { 
+                return x.subject_id === dropValueSubject.value
+            })
+        }
+        // console.log(filterST)
+        setFiltered(filterST)
+        // console.log(filtered)
       };
 
-    const handleFilter = () => {
-        let f = {subject_teacher_id:"",subject_id:"",teacher_id:""}
-        if (dropValueSubject !== "All"){
-            f.subject_id = dropValueSubject
-            console.log(f)
-        }
-        if (dropValueTeacher !== "All"){
-            f.teacher_id = dropValueTeacher
-            console.log(f)
-        }
-        // setFilter()
-        getSubjectTeacherWithFilter(f)
-        // console.log(filter)
-    }
-
     // Add Subject Teacher
-    const handleConfirmAddSubjectTeacher = (allValue) => {
-        // console.log("save");
-        SubjectTeacherService.addSubjectTeacher({
-            subject_id: allValue.subject_id,
-            teacher_id: allValue.teacher_id,
+    const handleConfirmAddSubjectTeacher = (teacher_id,subject_list) => {
+        SubjectTeacherService.addMultipleSubjectTeacher({
+            teacher_id: teacher_id,
+            subject_list: subject_list,
         })
         .then((res) => {
             if (res.success) {
@@ -210,12 +220,11 @@ const SubjectTeacherAdmin = () => {
         />
     );
 
-    const handleConfirmUpdateSubjectTeacher = (allValue) => {
-        SubjectTeacherService.updateSubjectTeacher(Id, {
-            subject_id:  allValue.subject_id,
-            teacher_id: allValue.teacher_id
+    const handleConfirmUpdateSubjectTeacher = (teacher_id,subject_list) => {
+        SubjectTeacherService.updateMultipleSubjectTeacher(Id, {
+            teacher_id: teacher_id,
+            subject_list: subject_list,
         }).then((res) => {
-            console.log(res);
             if (res.success) {
                 setState(!state);
                 setErrorServer(false);
@@ -238,7 +247,7 @@ const SubjectTeacherAdmin = () => {
                     handleInputCustom={handleInputCustom}
                     handleConfirmUpdateSubjectTeacher={handleConfirmUpdateSubjectTeacher}
                     errorServer={errorServer}
-                    SubjectTeacherId={Id}
+                    TeacherId={Id}
                 />
             }
         />
@@ -278,11 +287,11 @@ const SubjectTeacherAdmin = () => {
 
     const TableSubjectTeacher = ({subjectsTeacher}) => {
         const subjectTeacherItem = subjectsTeacher.map((item) => (
-            <tr data-key={item.id} key={item.id}>
+            <tr data-key={item.teacher_id} key={item.id}>
                 <td>{item.subject_name}</td>
                 <td>{item.teacher_name}</td>
                 <td onClick={click}>
-                    <i className="fa-regular fa-pen-to-square btn-edit"></i>
+                    {/* <i className="fa-regular fa-pen-to-square btn-edit"></i> */}
                     <i className="fa-regular fa-trash-can btn-delete"></i>
                 </td>
             </tr>
@@ -326,33 +335,44 @@ const SubjectTeacherAdmin = () => {
                 <div>
                     <h3>Manage Subject Teacher</h3>
                 </div>
-                <div className="right-header">
+                <div className="right-header" >
                     <button className="btn-account" onClick={handleAddSubjectTeacher}>Add Subject Teacher</button>
-                    <div className="search-box">
-                        <Dropdown
-                            label="Subject"
-                            options={subjects}
+                    {/* <div className="search-box"> */}
+                    <label style={{width: 300}}>
+                        <Select
+                            className="dropdown-class"
+                            // label="Subject"
+                            classNamePrefix="select"
+                            options={[{ label: "All Subject", value: "All" }, ...subjects]}
+                            // isMulti
                             value={dropValueSubject}
                             onChange={handleChangeSubject}
+                            placeholder="Subject"
+                            maxMenuHeight={200}
+                            // isClearable={true}
+                            isSearchable={true}
                         />
-                        <Dropdown
-                            label="Teacher"
-                            options={teachers}
+                    </label>
+                    <label style={{width: 300}}>
+                        <Select
+                            className="dropdown-class"
+                            // label="Teacher"
+                            classNamePrefix="select"
+                            options={[{ label: "All Teacher", value: "All" }, ...teachers]}
+                            // isMulti
                             value={dropValueTeacher}
                             onChange={handleChangeTeacher}
+                            placeholder="Teacher"
+                            maxMenuHeight={200}
+                            // isClearable={true}
+                            isSearchable={true}
                         />
-                        <button className="btn-account" onClick={handleFilter}>
-                            Search
-                            {/* <FontAwesomeIcon
-                                className="icon-search"
-                                icon={faMagnifyingGlass}
-                            /> */}
-                        </button>
-                    </div>
+                    </label>
+                    {/* </div> */}
                 </div>
             </header>
             <div className="table-content">
-                <TableSubjectTeacher  subjectsTeacher={subjectsTeacher}/>
+                <TableSubjectTeacher  subjectsTeacher={filtered}/>
             </div>
             <footer>
                 <hr></hr>

@@ -55,7 +55,7 @@
 .parents-item .detail-info {
   display: flex;
   flex-wrap: wrap;
-  justify-content: start;
+  justify-content: flex-start;
   gap: 0 30px;
 }
 

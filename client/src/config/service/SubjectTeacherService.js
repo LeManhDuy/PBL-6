@@ -20,12 +20,22 @@ const updateSubjectTeacher = async (id, params) => {
     return await HandleApi.APIPutWithToken(`subject_teacher/${id}`, params);
 };
 
+const addMultipleSubjectTeacher = async (array_params) => {
+    return await HandleApi.APIPostWithToken(`subject_teacher/multi/`, array_params);
+};
+
+const updateMultipleSubjectTeacher = async (id, array_params) => {
+    return await HandleApi.APIPutWithToken(`subject_teacher/multi/${id}`, array_params);
+};
+
 const SubjectTeacherService = {
     getSubjectTeacher,
     addSubjectTeacher,
     deleteSubjectTeacherById,
     getSubjectTeacherById,
-    updateSubjectTeacher
+    updateSubjectTeacher,
+    addMultipleSubjectTeacher,
+    updateMultipleSubjectTeacher
 };
 
 export default SubjectTeacherService;

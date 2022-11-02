@@ -139,7 +139,6 @@ router.post("/", multer().single('scheduleFile'), async (req, res) => {
                 return res.status(400).json({success: false, message: msg})
             } 
             else{
-                try{
                 for(let c of class_name){
                     //delete existed schedule to replace    
                     const existed_schedule = await Schedule.findOne({class_id:existed_class_name[c]})
@@ -164,10 +163,7 @@ router.post("/", multer().single('scheduleFile'), async (req, res) => {
                         await new_period.save()
                     }
                 }
-                }
-                catch(error){
-                    return res.status(500).json({success: false, message: "WRONG: " + error})
-                }
+                
                 return res.status(200).json({ success: true, message:"Add schedule successfully", 
                     forClasses:existed_class_name,periods,classes_teachers})
             }
