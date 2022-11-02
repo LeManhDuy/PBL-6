@@ -22,12 +22,11 @@
     "react-date-picker": "^9.0.0",
     "react-dom": "^18.2.0",
     "react-number-format": "^5.1.0",
+    "react-paginate": "^8.1.3",
     "react-router": "^6.4.2",
     "react-router-dom": "^5.3.3",
     "react-scripts": "5.0.1",
     "react-select": "^5.5.7",
-    "react-select-2": "^2.0.11",
-    "react-select-2z": "^0.2.5-samd",
     "redux": "^4.2.0",
     "select2-react-component": "^6.1.1",
     "web-vitals": "^2.1.4"

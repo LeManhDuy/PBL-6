@@ -75,7 +75,6 @@ router.get("/get-fee-infor-by-parent-id/:personID", async (req, res) => {
             person_id: req.params.personID,
         });
         const getStudentID = await Pupil.find({ parent_id: getParentsID })
-        console.log("student", getStudentID);
         const getFeeInfor = await Fee.find({ pupil_id: getStudentID })
             .populate({
                 path: "fee_category_id",

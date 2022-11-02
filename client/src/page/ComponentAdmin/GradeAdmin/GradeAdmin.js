@@ -12,8 +12,10 @@ import AddGrade from "../../../lib/ModalInput/AddGrade/AddGrade";
 import UpdateGrade from "../../../lib/ModalInput/UpdateGrade/UpdateGrade";
 import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
+import ReactPaginate from 'react-paginate';
+import ReactDOM from 'react-dom';
 
-const GradeAdmin = () => {
+const GradeAdmin = ({ itemsPerPage }) => {
     const [addGradeState, setAddGradeState] = useState(false);
     const [updateGradeState, setUpdateGradeState] = useState(false);
     const [Id, setId] = useState();
@@ -23,6 +25,7 @@ const GradeAdmin = () => {
     const [errorServer, setErrorServer] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
     const [name, setName] = useState();
+
 
     useEffect(() => {
         getGrade();
