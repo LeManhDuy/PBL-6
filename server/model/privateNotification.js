@@ -1,27 +1,30 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const privateNotificationSchema = new Schema({
-    title:{
+const PrivateNotificationSchema = new Schema({
+    title: {
         type: String,
-        require: true
+        require: true,
     },
-    date:{
+    date: {
         type: Date,
-        require: true
+        require: true,
     },
-    content:{
+    content: {
         type: String,
-        require: true
+        require: true,
     },
-    parent_id:{
+    parent_id: {
         type: Schema.Types.ObjectId,
-        ref: 'Parent'
+        ref: "Parent",
     },
-    teacher_id:{
+    teacher_id: {
         type: Schema.Types.ObjectId,
-        ref: 'Teacher'
-    }
-})
+        ref: "Teacher",
+    },
+});
 
-module.exports = mongoose.model('PrivateNofitication',privateNotificationSchema)
+module.exports = mongoose.model(
+    "PrivateNofitication",
+    PrivateNotificationSchema
+);
