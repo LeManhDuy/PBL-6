@@ -46,7 +46,7 @@ const AddGrade = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Grade already exists
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">

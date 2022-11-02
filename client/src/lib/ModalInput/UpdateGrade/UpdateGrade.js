@@ -59,7 +59,7 @@ const UpdateGrade = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Grade already exists
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -67,7 +67,7 @@ const UpdateGrade = (props) => {
                         <h4>Name</h4>
                         <input
                             className="input-content"
-                            type="text"
+                            type="number"
                             name="name"
                             placeholder="Enter name"
                         value={allValuesGrade.name}

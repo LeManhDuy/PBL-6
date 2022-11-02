@@ -28,15 +28,13 @@ const UpdateAccount = (props) => {
     const [allValuesTeacher, setAllValuesTeacher] = useState({
         name: "",
         username: "",
-        dateOfBirth: `${date.split("/")[2]}-${
-            date.split("/")[0] < 10
-                ? "0" + date.split("/")[0]
-                : date.split("/")[0]
-        }-${
-            date.split("/")[1] < 10
+        dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
+            ? "0" + date.split("/")[0]
+            : date.split("/")[0]
+            }-${date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-        }`,
+            }`,
         email: "",
         gender: null,
         phone: "",
@@ -216,12 +214,12 @@ const UpdateAccount = (props) => {
                 }
             );
         } else if (props.dropValue === "teacher") {
-           AccountService.getAccountsTeachersById(props.AccountId).then(
+            AccountService.getAccountsTeachersById(props.AccountId).then(
                 (res) => {
                     !!res.getTeacherInfor[0].person_id.person_image
                         ? setAvatar(
-                              res.getTeacherInfor[0].person_id.person_image
-                          )
+                            res.getTeacherInfor[0].person_id.person_image
+                        )
                         : setAvatar(Logo);
                     setAllValuesTeacher({
                         name: res.getTeacherInfor[0].person_id.person_fullname,
@@ -292,20 +290,11 @@ const UpdateAccount = (props) => {
 
         let check = false;
         if (
-            allValuesPrincipal.name.length > 30 ||
             allValuesPrincipal.name.length < 2
         ) {
             name = true;
             check = true;
         } else name = false;
-
-        if (
-            allValuesPrincipal.username.length > 30 ||
-            allValuesPrincipal.username.length < 2
-        ) {
-            username = true;
-            check = true;
-        } else username = false;
 
         if (validateEmail(allValuesPrincipal.email) === false) {
             email = true;
@@ -414,7 +403,6 @@ const UpdateAccount = (props) => {
 
         let check = false;
         if (
-            allValuesTeacher.name.length > 30 ||
             allValuesTeacher.name.length < 2
         ) {
             name = true;
@@ -441,15 +429,13 @@ const UpdateAccount = (props) => {
 
         let dateNow = new Date().toLocaleDateString();
 
-        let dateConvert = `${dateNow.split("/")[2]}-${
-            dateNow.split("/")[0] < 10
-                ? "0" + dateNow.split("/")[0]
-                : dateNow.split("/")[0]
-        }-${
-            dateNow.split("/")[1] < 10
+        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
+            ? "0" + dateNow.split("/")[0]
+            : dateNow.split("/")[0]
+            }-${dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
-        }`;
+            }`;
 
         if (dateConvert < allValuesTeacher.dateOfBirth) {
             dateOfBirth = true;
@@ -535,20 +521,11 @@ const UpdateAccount = (props) => {
 
         let check = false;
         if (
-            allValuesAffair.name.length > 30 ||
             allValuesAffair.name.length < 2
         ) {
             name = true;
             check = true;
         } else name = false;
-
-        if (
-            allValuesAffair.username.length > 30 ||
-            allValuesAffair.username.length < 2
-        ) {
-            username = true;
-            check = true;
-        } else username = false;
 
         if (validateEmail(allValuesAffair.email) === false) {
             email = true;
@@ -658,7 +635,6 @@ const UpdateAccount = (props) => {
 
         let check = false;
         if (
-            allValuesParents.name.length > 30 ||
             allValuesParents.name.length < 2
         ) {
             name = true;
@@ -810,14 +786,14 @@ const UpdateAccount = (props) => {
 
     const FormAccountPrincipal = (
         <div className="form-admin-content">
-            <h4>Update Principal Account</h4>
+            <h4>Update Admin Account</h4>
             <label
                 className={
                     "error" +
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Update Principal Account Failed.
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -861,7 +837,7 @@ const UpdateAccount = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Name must be less than 30 chars
+                            Name must be greater than 2 chars
                         </label>
                     </div>
                     <div className="type-input">
@@ -883,7 +859,7 @@ const UpdateAccount = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            This username is required   .
+                            This username is not avaiable.
                         </label>
                     </div>
                     <div className="type-input">
@@ -1091,7 +1067,7 @@ const UpdateAccount = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Account already exists
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -1135,7 +1111,7 @@ const UpdateAccount = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Name must be less than 30 chars
+                            Name must be greater than 2 chars
                         </label>
                     </div>
                     <div className="type-input">
@@ -1418,14 +1394,14 @@ const UpdateAccount = (props) => {
 
     const FormAccountAffair = (
         <div className="form-admin-content">
-            <h4>Update Affair Account</h4>
+            <h4>Update Staff Account</h4>
             <label
                 className={
                     "error" +
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Update Affair Account Failed.
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -1469,7 +1445,7 @@ const UpdateAccount = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Name must be less than 30 chars
+                            Name must be greater than 2 chars
                         </label>
                     </div>
                     <div className="type-input">
@@ -1491,7 +1467,7 @@ const UpdateAccount = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            This username is required   .
+                            This username is not avaiable.
                         </label>
                     </div>
                     <div className="type-input">
@@ -1695,14 +1671,14 @@ const UpdateAccount = (props) => {
 
     const FormAccountParents = (
         <div className="form-admin-content">
-            <h4>Update Parents Account</h4>
+            <h4>Update Parent Account</h4>
             <label
                 className={
                     "error" +
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Update Parents Account Failed.
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -1746,7 +1722,7 @@ const UpdateAccount = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Name must be less than 30 chars
+                            Name must be greater than 2 chars
                         </label>
                     </div>
                     <div className="type-input">

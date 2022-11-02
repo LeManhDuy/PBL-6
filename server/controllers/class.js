@@ -1,5 +1,8 @@
 const Class = require("../model/class")
 const Pupil = require("../model/Pupil")
+const Teacher = require("../model/Teacher")
+const Parent = require("../model/Parent")
+const Person = require("../model/Person")
 
 const createClass = async (req, res) => {
     const {
@@ -18,13 +21,19 @@ const createClass = async (req, res) => {
             message: "Please fill in complete information.",
         })
     }
+    const classValidate = await Class.findOne({ class_name, grade_id: grade_id })
+    if (classValidate)
+        return res
+            .status(400)
+            .json({ success: false, message: "Class is already existed." })
+
+    const teacherValidate = await Class.findOne({ homeroom_teacher_id: homeroom_teacher_id });
+    if (teacherValidate)
+        return res
+            .status(400)
+            .json({ success: false, message: "Teacher has class." })
 
     try {
-        const classValidate = await Class.findOne({ class_name })
-        if (classValidate)
-            return res
-                .status(400)
-                .json({ success: false, message: "Class is already existed." })
         const newclass = new Class({
             class_name,
             grade_id,
@@ -106,8 +115,7 @@ const getClassByID = async (req, res) => {
 
 const getStudentByClassID = async (req, res) => {
     try {
-        console.log(req.params.classID);
-        const studentsInfor = await Pupil.find({ class_id: req.params.classID})
+        const studentsInfor = await Pupil.find({ class_id: req.params.classID })
             .select([
                 "pupil_name",
                 "pupil_gender",
@@ -123,7 +131,34 @@ const getStudentByClassID = async (req, res) => {
                     select: ["person_fullname"],
                 }]
             })
-            res.json({ success: true, studentsInfor })
+            .populate({
+                path: "class_id",
+                model: "Class",
+                populate: [
+                    {
+                        path: "grade_id",
+                        model: "Grade",
+                        select: ["grade_name"],
+                    },
+                ],
+            })
+            .populate({
+                path: "class_id",
+                model: "Class",
+                populate: [
+                    {
+                        path: "homeroom_teacher_id",
+                        model: "Teacher",
+                        select: ["_id"],
+                        populate: [{
+                            path: "person_id",
+                            model: "Person",
+                            select: ["person_fullname"],
+                        }]
+                    },
+                ],
+            })
+        res.json({ success: true, studentsInfor })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }
@@ -135,7 +170,6 @@ const updateClassByID = async (req, res) => {
         grade_id,
         homeroom_teacher_id
     } = req.body
-
     if (
         !class_name ||
         !grade_id ||
@@ -147,22 +181,31 @@ const updateClassByID = async (req, res) => {
         })
     }
 
-    try {
-        const classItem = await Class.findById(req.params.classID)
-        
-        if (!classItem)
-            return res
-                .status(400)
-                .json({ success: false, message: "Class is not existed." })
-        const classValidate = await Class.findOne({ class_name })
+    //Check Class And Teacher is in DB
+    const classItem = await Class.findById(req.params.classID)
+    if (!classItem)
+        return res
+            .status(400)
+            .json({ success: false, message: "This class does not existed." })
 
-        if(class_name != classItem.class_name){
-            if (classValidate)
-            return res
-                .status(400)
-                .json({ success: false, message: "Class is already existed." })
+    const classAndGradeValidate = await Class.findOne({ class_name: class_name, grade_id: grade_id })
+    if (classAndGradeValidate)
+        if (classAndGradeValidate._id.toString() !== req.params.classID) {
+            return res.status(400).json({
+                success: false,
+                message: "This class and grade already existed.",
+            });
         }
-        
+    const teacherCheckValidate = await Class.findOne({ homeroom_teacher_id: homeroom_teacher_id })
+    if (teacherCheckValidate)
+        if (teacherCheckValidate._id.toString() !== req.params.classID) {
+            return res.status(400).json({
+                success: false,
+                message: "This teacher already have a class.",
+            });
+        }
+
+    try {
         let updateClass = {
             class_name,
             grade_id,
@@ -202,4 +245,105 @@ const deleteClass = async (req, res) => {
     }
 }
 
-module.exports = { createClass, getClass, getClassByID, updateClassByID, deleteClass, getStudentByClassID };
+const getParentAssociations = async (req, res) => {
+    try {
+        const teacher = await Teacher.find({
+            person_id: req.params.personID
+        })
+        const classInfor = await Class.find({
+            homeroom_teacher_id: teacher[0]._id
+        })
+        const parentId = await Pupil.find({
+            class_id: classInfor[0]._id.toString()
+        }).select('parent_id')
+
+        let parentArray = []
+        parentId.forEach(element => {
+            parentArray.push(element.parent_id)
+        });
+        const parentInfor = await Parent.find().where('_id').in(parentArray)
+            .populate('person_id')
+        res.json({ success: true, parentInfor });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+
+const getStudentByTeacherIdAtTeacherRole = async (req, res) => {
+    try {
+        const teacher = await Teacher.find({
+            person_id: req.params.personID
+        })
+        const classInfor = await Class.find({
+            homeroom_teacher_id: teacher[0]._id
+        })
+        const getPupilsInfor = await Pupil.find({
+            class_id: classInfor[0]._id.toString()
+        }).select([
+            "pupil_name",
+            "pupil_dateofbirth",
+            "pupil_gender",
+            "pupil_image",
+        ])
+        .populate({
+            path: "parent_id",
+            model: "Parent",
+            populate: [
+                {
+                    path: "person_id",
+                    model: "Person",
+                    select: [
+                        "person_fullname",
+                        "person_phonenumber",
+                        "person_address"
+                    ],
+                },
+            ],
+        })
+        .populate({
+            path: "class_id",
+            model: "Class",
+            populate: [
+                {
+                    path: "grade_id",
+                    model: "Grade",
+                    select: ["grade_name"],
+                },
+            ],
+        })
+        .populate({
+            path: "class_id",
+            model: "Class",
+            populate: [
+                {
+                    path: "homeroom_teacher_id",
+                    model: "Teacher",
+                    select: ["_id"],
+                    populate: [
+                        {
+                            path: "person_id",
+                            model: "Person",
+                            select: ["person_fullname"],
+                        },
+                    ],
+                },
+            ],
+        });
+        res.json({ success: true, getPupilsInfor, class_name: classInfor[0].class_name });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+
+module.exports = { 
+    createClass, 
+    getClass, 
+    getClassByID, 
+    updateClassByID, 
+    deleteClass, 
+    getStudentByClassID,
+    getParentAssociations,
+    getStudentByTeacherIdAtTeacherRole
+ };

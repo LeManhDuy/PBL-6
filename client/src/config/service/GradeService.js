@@ -11,6 +11,9 @@ const addGrade = async (params) => {
 const getGradeById = async (id) => {
     return await HandleApi.APIGetWithToken(`grade/${id}`);
 }
+const getClassByGradeId = async (id) => {
+    return await HandleApi.APIGetWithToken(`grade/get-class-by-grade-id/${id}`);
+}
 
 const deleteGradeById = async (id) => {
     return await HandleApi.APIDelete(`grade/${id}`);
@@ -20,10 +23,12 @@ const updateGrade = async (id, params) => {
     return await HandleApi.APIPutWithToken(`grade/${id}`, params);
 };
 
+
 const GradeService = {
     getGrades,
     addGrade,
     getGradeById,
+    getClassByGradeId,
     deleteGradeById,
     updateGrade
 };

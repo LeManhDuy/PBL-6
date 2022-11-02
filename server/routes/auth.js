@@ -1,9 +1,10 @@
-const express = require('express')
-const router = express.Router()
-const argon2 = require('argon2')
-const jwt = require('jsonwebtoken')
-const Account = require("../model/Account")
-
+const express = require("express");
+const router = express.Router();
+const argon2 = require("argon2");
+const jwt = require("jsonwebtoken");
+const Account = require("../model/Account");
+const Person = require("../model/Person");
+const multer = require("multer");
 // @route POST api/auth/register
 // @desc Register user
 // @access Private
@@ -11,24 +12,24 @@ router.post("/register", async (req, res) => {
     const { account_username, account_password, account_role } = req.body;
     //Simple validation
     if (!account_username || !account_password || !account_role)
-        return res
-            .status(400)
-            .json({
-                success: false,
-                message: "Please fill in complete information",
-            });
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information",
+        });
     try {
         // check for existing user
         const accountExisted = await Account.findOne({
             account_username: account_username,
         });
         if (accountExisted)
-            return res.status(400).json({ success: false, message: 'Username is existing' })
+            return res
+                .status(400)
+                .json({ success: false, message: "Username is existing" });
         if (account_password.length < 6) {
             return res.status(400).json({
                 success: false,
                 message: "Password must have at least 6 characters.",
-            })
+            });
         }
         // all good
         const hashPassword = await argon2.hash(account_password);
@@ -59,12 +60,10 @@ router.post("/login", async (req, res) => {
     const { account_username, account_password } = req.body;
     //Simple validation
     if (!account_username || !account_password)
-        return res
-            .status(400)
-            .json({
-                success: false,
-                message: "Please fill in complete information",
-            });
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information",
+        });
 
     try {
         let validatePassword;
@@ -82,16 +81,77 @@ router.post("/login", async (req, res) => {
                 account_password
             );
             if (!validatePassword)
-                return res.status(400).json({ success: false, message: 'Incorrect email or password' })
-            return res.status(200).json({
-                success: true,
-                AccountUserName: checkAcccountUserName.account_username,
-                AccountRole: checkAcccountUserName.account_role,
-                accessToken
-            })
+                return res.status(400).json({
+                    success: false,
+                    message: "Incorrect email or password",
+                });
+            const personId = await Person.find({
+                account_id: checkAcccountUserName._id,
+            });
+            if (personId[0]._id) {
+                return res.status(200).json({
+                    success: true,
+                    AccountUserName: checkAcccountUserName.account_username,
+                    AccountRole: checkAcccountUserName.account_role,
+                    AccountId: personId[0]._id,
+                    accessToken,
+                });
+            } else {
+                return res.status(200).json({
+                    success: true,
+                    AccountUserName: checkAcccountUserName.account_username,
+                    AccountRole: checkAcccountUserName.account_role,
+                    accessToken,
+                });
+            }
+        } else
+            return res.status(400).json({
+                success: false,
+                message: "Incorrect email or password",
+            });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+});
+
+router.put("/:personID", multer().single(), async (req, res) => {
+    const { account_password } = req.body;
+    if (!account_password)
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information",
+        });
+    const personInfor = await Person.findById(req.params.personID);
+    const accountInfor = await Account.findById(personInfor.account_id);
+    if (!accountInfor) {
+        return res.status(400).json({
+            success: false,
+            message: "Account does not exists.",
+        });
+    }
+
+    try {
+        if (account_password.length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: "Password must have at least 6 characters.",
+            });
         }
-        else
-            return res.status(400).json({ success: false, message: 'Incorrect email or password' })
+        const hashPassword = await argon2.hash(account_password);
+        let updateAccount = {
+            account_password: hashPassword,
+        };
+        const postUpdateAccount = { _id: personInfor.account_id };
+        updatedAccount = await Account.findOneAndUpdate(
+            postUpdateAccount,
+            updateAccount,
+            { new: true }
+        );
+        res.json({
+            success: true,
+            message: "Update password successfully.",
+            update_Account: updateAccount,
+        });
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error });
     }

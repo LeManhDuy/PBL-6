@@ -11,15 +11,13 @@ const AddAccount = (props) => {
     const [allValuesPrincipal, setAllValuesPrincipal] = useState({
         name: "",
         username: "",
-        dateOfBirth: `${date.split("/")[2]}-${
-            date.split("/")[0] < 10
+        dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
                 ? "0" + date.split("/")[0]
                 : date.split("/")[0]
-        }-${
-            date.split("/")[1] < 10
+            }-${date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-        }`,
+            }`,
         email: "",
         gender: null,
         phone: "",
@@ -31,15 +29,13 @@ const AddAccount = (props) => {
     const [allValuesTeacher, setAllValuesTeacher] = useState({
         name: "",
         username: "",
-        dateOfBirth: `${date.split("/")[2]}-${
-            date.split("/")[0] < 10
+        dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
                 ? "0" + date.split("/")[0]
                 : date.split("/")[0]
-        }-${
-            date.split("/")[1] < 10
+            }-${date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-        }`,
+            }`,
         email: "",
         gender: null,
         phone: "",
@@ -54,15 +50,13 @@ const AddAccount = (props) => {
     const [allValuesAffair, setAllValuesAffair] = useState({
         name: "",
         username: "",
-        dateOfBirth: `${date.split("/")[2]}-${
-            date.split("/")[0] < 10
+        dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
                 ? "0" + date.split("/")[0]
                 : date.split("/")[0]
-        }-${
-            date.split("/")[1] < 10
+            }-${date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-        }`,
+            }`,
         email: "",
         gender: null,
         phone: "",
@@ -75,15 +69,13 @@ const AddAccount = (props) => {
     const [allValuesParents, setAllValuesParents] = useState({
         name: "",
         username: "",
-        dateOfBirth: `${date.split("/")[2]}-${
-            date.split("/")[0] < 10
+        dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
                 ? "0" + date.split("/")[0]
                 : date.split("/")[0]
-        }-${
-            date.split("/")[1] < 10
+            }-${date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-        }`,
+            }`,
         email: "",
         gender: null,
         phone: "",
@@ -158,10 +150,10 @@ const AddAccount = (props) => {
     const [avatar, setAvatar] = useState(Logo);
 
     const options = [
-        { key: 1, label: "Principal", value: "principal" },
-        { key: 2, label: "Parents", value: "parents" },
+        { key: 1, label: "Admin", value: "principal" },
+        { key: 2, label: "Parent", value: "parents" },
         { key: 3, label: "Teacher", value: "teacher" },
-        { key: 4, label: "Affair", value: "affair" },
+        { key: 4, label: "Staff", value: "affair" },
     ];
 
     const Dropdown = ({ value, options, onChange }) => {
@@ -251,15 +243,13 @@ const AddAccount = (props) => {
 
         let dateNow = new Date().toLocaleDateString();
 
-        let dateConvert = `${dateNow.split("/")[2]}-${
-            dateNow.split("/")[0] < 10
+        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
                 ? "0" + dateNow.split("/")[0]
                 : dateNow.split("/")[0]
-        }-${
-            dateNow.split("/")[1] < 10
+            }-${dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
-        }`;
+            }`;
 
         if (dateConvert < allValuesPrincipal.dateOfBirth) {
             dateOfBirth = true;
@@ -359,15 +349,13 @@ const AddAccount = (props) => {
 
         let dateNow = new Date().toLocaleDateString();
 
-        let dateConvert = `${dateNow.split("/")[2]}-${
-            dateNow.split("/")[0] < 10
+        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
                 ? "0" + dateNow.split("/")[0]
                 : dateNow.split("/")[0]
-        }-${
-            dateNow.split("/")[1] < 10
+            }-${dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
-        }`;
+            }`;
 
         if (dateConvert < allValuesTeacher.dateOfBirth) {
             dateOfBirth = true;
@@ -439,7 +427,6 @@ const AddAccount = (props) => {
         }
     };
 
-
     const handleAddAffairAccount = () => {
         let name = false;
         let username = false;
@@ -489,15 +476,13 @@ const AddAccount = (props) => {
 
         let dateNow = new Date().toLocaleDateString();
 
-        let dateConvert = `${dateNow.split("/")[2]}-${
-            dateNow.split("/")[0] < 10
+        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
                 ? "0" + dateNow.split("/")[0]
                 : dateNow.split("/")[0]
-        }-${
-            dateNow.split("/")[1] < 10
+            }-${dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
-        }`;
+            }`;
 
         if (dateConvert < allValuesAffair.dateOfBirth) {
             dateOfBirth = true;
@@ -630,15 +615,13 @@ const AddAccount = (props) => {
 
         let dateNow = new Date().toLocaleDateString();
 
-        let dateConvert = `${dateNow.split("/")[2]}-${
-            dateNow.split("/")[0] < 10
+        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
                 ? "0" + dateNow.split("/")[0]
                 : dateNow.split("/")[0]
-        }-${
-            dateNow.split("/")[1] < 10
+            }-${dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
-        }`;
+            }`;
 
         if (dateConvert < allValuesParents.dateOfBirth) {
             dateOfBirth = true;
@@ -757,21 +740,22 @@ const AddAccount = (props) => {
 
     const FormAccountPrincipal = (
         <div className="form-admin-content">
-            <h4>Add Principals Account</h4>
+            <h4>Add Admin Account</h4>
             <label
                 className={
                     "error" +
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Account or email already exists
+                {props.errorMessage}
+                {/* Account or email already exists */}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
                     <div className="avatar-teacher">
                         <img src={avatar} alt="avatar" />
                         <label className="choose-file" htmlFor="upload-photo">
-                            Choose image
+                            Choose Image
                         </label>
                         <input
                             id="upload-photo"
@@ -808,7 +792,7 @@ const AddAccount = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Name must be less than 30 chars
+                            Name must be greater than 2 chars
                         </label>
                     </div>
                     <div className="type-input">
@@ -833,7 +817,7 @@ const AddAccount = (props) => {
                         </label>
                     </div>
                     <div className="type-input">
-                        <h4>Date of Birth</h4>
+                        <h4>Date Of Birth</h4>
                         <input
                             className="input-content"
                             type="date"
@@ -1035,14 +1019,15 @@ const AddAccount = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Account already exists
+                {props.errorMessage}
+                {/* Account or email already exists */}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
                     <div className="avatar-teacher">
                         <img src={avatar} alt="avatar" />
                         <label className="choose-file" htmlFor="upload-photo">
-                            Choose image
+                            Choose Image
                         </label>
                         <input
                             id="upload-photo"
@@ -1079,7 +1064,7 @@ const AddAccount = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Name must be less than 30 chars
+                            Name must be greater than 2 chars
                         </label>
                     </div>
                     <div className="type-input">
@@ -1104,7 +1089,7 @@ const AddAccount = (props) => {
                         </label>
                     </div>
                     <div className="type-input">
-                        <h4>Date of Birth</h4>
+                        <h4>Date Of Birth</h4>
                         <input
                             className="input-content"
                             type="date"
@@ -1268,7 +1253,7 @@ const AddAccount = (props) => {
                             className="input-content"
                             type="date"
                             name="working"
-                            placeholder="Enter Date Of Birth"
+                            placeholder="Enter Working Since"
                             value={allValuesTeacher.working}
                             onChange={changeHandlerTeacher}
                         />
@@ -1359,21 +1344,22 @@ const AddAccount = (props) => {
 
     const FormAccountAffair = (
         <div className="form-admin-content">
-            <h4>Add Affair Account</h4>
+            <h4>Add Staff Account</h4>
             <label
                 className={
                     "error" +
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Account or email already exists
+                {props.errorMessage}
+                {/* Account or email already exists */}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
                     <div className="avatar-teacher">
                         <img src={avatar} alt="avatar" />
                         <label className="choose-file" htmlFor="upload-photo">
-                            Choose image
+                            Choose Image
                         </label>
                         <input
                             id="upload-photo"
@@ -1410,7 +1396,7 @@ const AddAccount = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Name must be less than 30 chars
+                            Name must be greater than 2 chars
                         </label>
                     </div>
                     <div className="type-input">
@@ -1431,11 +1417,11 @@ const AddAccount = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            This username is required .
+                            This username is not avaiable.
                         </label>
                     </div>
                     <div className="type-input">
-                        <h4>Date of Birth</h4>
+                        <h4>Date Of Birth</h4>
                         <input
                             className="input-content"
                             type="date"
@@ -1633,21 +1619,22 @@ const AddAccount = (props) => {
 
     const FormAccountParents = (
         <div className="form-admin-content">
-            <h4>Add Parents Account</h4>
+            <h4>Add Parent Account</h4>
             <label
                 className={
                     "error" +
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Account already exists
+                {props.errorMessage}
+                {/* Account or email already exists */}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
                     <div className="avatar-teacher">
                         <img src={avatar} alt="avatar" />
                         <label className="choose-file" htmlFor="upload-photo">
-                            Choose image
+                            Choose Image
                         </label>
                         <input
                             id="upload-photo"
@@ -1684,7 +1671,7 @@ const AddAccount = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Name must be less than 30 chars
+                            Name must be greater than 2 chars
                         </label>
                     </div>
                     <div className="type-input">
@@ -1709,7 +1696,7 @@ const AddAccount = (props) => {
                         </label>
                     </div>
                     <div className="type-input">
-                        <h4>Date of Birth</h4>
+                        <h4>Date Of Birth</h4>
                         <input
                             className="input-content"
                             type="date"
@@ -1971,10 +1958,10 @@ const AddAccount = (props) => {
             {dropValue === "principal"
                 ? FormAccountPrincipal
                 : dropValue === "parents"
-                ? FormAccountParents
-                : dropValue === "teacher"
-                ? FormAccountTeacher
-                : FormAccountAffair}
+                    ? FormAccountParents
+                    : dropValue === "teacher"
+                        ? FormAccountTeacher
+                        : FormAccountAffair}
             <button onClick={props.handleInputCustom} className="btn-cancel">
                 Cancel
             </button>

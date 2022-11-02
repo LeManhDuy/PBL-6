@@ -1,31 +1,33 @@
 import React, { useState, useEffect } from "react";
 import "./UpdateFeeCategory.css";
 import FeeCategoryService from "../../../config/service/FeeCategoryService";
-
+import { NumericFormat } from 'react-number-format';
 const UpdateFeeCategory = (props) => {
     const [allValuesFeeCategory, setAllValuesFeeCategory] = useState({
         name: "",
-        ammount: ""
+        ammount: "",
     });
 
     useEffect(() => {
         getFeeCategoryById();
-    }, [])
+    }, []);
 
     const getFeeCategoryById = () => {
-        FeeCategoryService.getFeeCategoryById(props.FeeCategoryId).then((res) => {
-            console.log(res);
-            setAllValuesFeeCategory({
-                name: res.getFeeCategoryInfor[0].fee_name,
-                ammount: res.getFeeCategoryInfor[0].fee_amount
-            })
-        })
-    }
+        FeeCategoryService.getFeeCategoryById(props.FeeCategoryId).then(
+            (res) => {
+                console.log(res);
+                setAllValuesFeeCategory({
+                    name: res.getFeeCategoryInfor[0].fee_name,
+                    ammount: res.getFeeCategoryInfor[0].fee_amount,
+                });
+            }
+        );
+    };
 
     const [FeeCategoryError, setFeeCategoryError] = useState({
         name: false,
         ammount: false,
-        check: false
+        check: false,
     });
 
     const handleUpdateFeeCategory = () => {
@@ -42,12 +44,12 @@ const UpdateFeeCategory = (props) => {
 
         setFeeCategoryError({
             name: name,
-            ammount: ammount
-        })
+            ammount: ammount,
+        });
         if (!check) {
             props.handleConfirmUpdateFeeCategory(allValuesFeeCategory);
         }
-    }
+    };
 
     const changeHandlerFeeCategory = (e) => {
         setAllValuesFeeCategory({
@@ -55,8 +57,6 @@ const UpdateFeeCategory = (props) => {
             [e.target.name]: e.target.value,
         });
     };
-
-
 
     const FormAddFeeCategory = (
         <div className="form-admin-content">
@@ -67,7 +67,7 @@ const UpdateFeeCategory = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Update failed.
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
@@ -77,7 +77,7 @@ const UpdateFeeCategory = (props) => {
                             className="input-content"
                             type="text"
                             name="name"
-                            placeholder="Enter name"
+                            placeholder="Enter Fee Name"
                             value={allValuesFeeCategory.name}
                             onChange={changeHandlerFeeCategory}
                         />
@@ -92,16 +92,19 @@ const UpdateFeeCategory = (props) => {
                             This field is requied
                         </label>
                     </div>
-
+                </div>
+                <div className="teacher-content-right">
                     <div className="type-input">
                         <h4>Fee Ammount</h4>
-                        <input
+                        <NumericFormat
                             className="input-content"
-                            type="number"
+                            type="text"
                             name="ammount"
-                            placeholder="Enter fee ammount"
+                            placeholder="Enter Fee Ammount"
                             value={allValuesFeeCategory.ammount}
                             onChange={changeHandlerFeeCategory}
+                            allowLeadingZeros
+                            thousandSeparator=","
                         />
                         <label
                             className={
@@ -122,23 +125,24 @@ const UpdateFeeCategory = (props) => {
     const clickUpdate = (e) => {
         e.preventDefault();
         handleUpdateFeeCategory();
-    }
+    };
 
     return (
         <div className="add-account-form">
             <div className="form-add-account">
                 {FormAddFeeCategory}
-                <button onClick={props.handleInputCustom} className="btn-cancel">
+                <button
+                    onClick={props.handleInputCustom}
+                    className="btn-cancel"
+                >
                     Cancel
                 </button>
-                <button type="submit"
-                    onClick={clickUpdate}
-                    className="btn-ok">
+                <button type="submit" onClick={clickUpdate} className="btn-ok">
                     Update
                 </button>
             </div>
         </div>
     );
-}
+};
 
 export default UpdateFeeCategory;

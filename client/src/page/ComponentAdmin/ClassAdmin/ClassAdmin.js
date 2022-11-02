@@ -11,49 +11,136 @@ import ModalInput from "../../../lib/ModalInput/ModalInput";
 import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
 import ClassService from "../../../config/service/ClassService";
+import GradeService from "../../../config/service/GradeService";
 import UpdateClass from "../../../lib/ModalInput/UpdateClass/UpdateClass";
 import ViewClass from "../../../lib/ModalInput/ViewClass/ViewClass";
-
 
 const ClassAdmin = () => {
     const [addClassState, setAddClassState] = useState(false);
     const [updateClassState, setUpdateClassState] = useState(false);
     const [id, setId] = useState("");
     const [name, setName] = useState("");
+    const [keyword, setKeyword] = useState("");
     const [state, setState] = useState(false);
     const [classRooms, setClass] = useState([]);
+    const [grades, setGrade] = useState([]);
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
     const [viewState, setViewState] = useState(false);
+    const [dropValueGrade, setDropValueGrade] = useState("All");
+    const [errorMessage, setErrorMessage] = useState();
 
     useEffect(() => {
         getClass();
+        getGrade();
     }, [state]);
 
     const getClass = () => {
         ClassService.getClass()
             .then((response) => {
-                const dataSources = response.allClass.map(
-                    (item, index) => {
-                        return {
-                            key: index + 1,
-                            id: item._id,
-                            class_name: item.class_name,
-                            homeroomteacher_name: item.homeroom_teacher_id ? item.homeroom_teacher_id.person_id.person_fullname : "Empty",
-                            grade_name: item.grade_id ? item.grade_id.grade_name : "Empty"
-                        }
-                    }
-                );
-                setClass(dataSources);
+                const dataSources = response.allClass.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
+                        class_name: item.class_name,
+                        homeroomteacher_name: item.homeroom_teacher_id
+                            ? item.homeroom_teacher_id.person_id
+                                ? item.homeroom_teacher_id.person_id.person_fullname
+                                : "Empty"
+                            : "Empty",
+                        grade_name: item.grade_id
+                            ? item.grade_id.grade_name
+                            : "Empty",
+                    };
+                });
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.class_name > b.class_name ? 1 : -1,);
+                setClass(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
+            });
+    };
+
+    const getGrade = () => {
+        GradeService.getGrades()
+            .then((response) => {
+                const dataSources = response.allGrade.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
+                        grade_name: item ? item.grade_name : "Empty",
+                    };
+                });
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.grade_name > b.grade_name ? 1 : -1,);
+                setGrade(dataSourcesSorted);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+    const getClassWithFilter = (filter) => {
+        GradeService.getClassByGradeId(filter)
+            .then((response) => {
+                const dataSources = response.getClassByGradeId.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
+                        class_name: item.class_name,
+                        homeroomteacher_name: item.homeroom_teacher_id
+                            ? item.homeroom_teacher_id.person_id
+                                ? item.homeroom_teacher_id.person_id.person_fullname
+                                : "Empty"
+                            : "Empty",
+                        grade_name: item.grade_id
+                            ? item.grade_id.grade_name
+                            : "Empty",
+                    }
+                })
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.class_name > b.class_name ? 1 : -1,);
+                setClass(dataSourcesSorted)
+            })
+            .catch((error) => {
+                console.log(error)
             })
     }
+
+    const Dropdown = ({ value, options, onChange }) => {
+        return (
+            <label>
+                Grade
+                <select
+                    className="dropdown-account"
+                    value={value}
+                    onChange={onChange}
+                >
+                    <option value="All">All</option>
+                    {options.map((option) => (
+                        <option key={option.key} value={option.id}>
+                            {option.grade_name}
+                        </option>
+                    ))}
+                </select>
+            </label>
+        );
+    };
+
+    const handleChangeGrade = (event) => {
+        setDropValueGrade(event.target.value);
+        grades.map((item) => {
+            if (event.target.value === item.id) {
+                getClassWithFilter(item.id);
+            } else if (event.target.value === "All") {
+                getClass();
+            }
+        });
+        setKeyword("");
+    };
 
     const handleInputCustom = () => {
         setAddClassState(false);
         setErrorServer(false);
+        setErrorMessage("");
         setUpdateClassState(false);
         setViewState(false);
     };
@@ -61,42 +148,46 @@ const ClassAdmin = () => {
     // Add Class
     const handleConfirmAddClass = (allValue) => {
         ClassService.addClass({
-            class_name: allValue.name,
+            class_name: allValue.gradeName + '/' + allValue.name.toUpperCase(),
             grade_id: allValue.grade,
-            homeroom_teacher_id: allValue.teacher
+            homeroom_teacher_id: allValue.teacher,
         })
             .then((res) => {
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
+                    setErrorMessage("");
                     setAddClassState(false);
                 } else {
                     setErrorServer(true);
+                    setErrorMessage(res.message);
                     setAddClassState(true);
                 }
             })
             .catch((error) => console.log("error", error));
-    }
+    };
 
     const handleConfirmUpdateClass = (allValue) => {
         ClassService.updateClass(id, {
-            class_name: allValue.name,
+            class_name: allValue.grade_name + '/' + allValue.name.toUpperCase(),
             grade_id: allValue.grade,
-            homeroom_teacher_id: allValue.teacher
+            homeroom_teacher_id: allValue.teacher,
         })
             .then((res) => {
-                console.log(res);
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
                     setUpdateClassState(false);
+                    setErrorMessage("");
+                    setKeyword("");
                 } else {
                     setErrorServer(true);
+                    setErrorMessage(res.message);
                     setUpdateClassState(true);
                 }
             })
             .catch((error) => console.log("error", error));
-    }
+    };
 
     //Component Add Class (Form)
     const DivAddClass = (
@@ -108,6 +199,7 @@ const ClassAdmin = () => {
                     handleInputCustom={handleInputCustom}
                     handleConfirmAddClass={handleConfirmAddClass}
                     errorServer={errorServer}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -123,6 +215,7 @@ const ClassAdmin = () => {
                     handleInputCustom={handleInputCustom}
                     handleConfirmUpdateClass={handleConfirmUpdateClass}
                     errorServer={errorServer}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -133,10 +226,7 @@ const ClassAdmin = () => {
             show={viewState}
             handleInputCustom={handleInputCustom}
             content={
-                <ViewClass
-                    classID={id}
-                    handleInputCustom={handleInputCustom}
-                />
+                <ViewClass classID={id} handleInputCustom={handleInputCustom} />
             }
         />
     );
@@ -144,9 +234,8 @@ const ClassAdmin = () => {
     const handleAddClass = () => {
         setAddClassState(true);
         setErrorServer(false);
-    }
-
-
+        setErrorMessage("");
+    };
 
     const TableClasses = ({ classRooms }) => {
         const classItem = classRooms.map((item) => (
@@ -176,8 +265,7 @@ const ClassAdmin = () => {
             } else if (e.target.className.includes("btn-edit")) {
                 setUpdateClassState(true);
                 setId(id);
-            }
-            else if (e.target.className.includes("btn-view")) {
+            } else if (e.target.className.includes("btn-view")) {
                 setViewState(true);
                 setId(id);
             }
@@ -224,14 +312,37 @@ const ClassAdmin = () => {
         />
     );
 
+    const handleChangeSearch = (e) => {
+        setKeyword(e.target.value);
+    };
+
+    const searchClass = (classroom) => {
+        if (dropValueGrade === "All") {
+            return classroom.filter((classroom) =>
+                classroom.homeroomteacher_name
+                    .toLowerCase()
+                    .includes(keyword.toLowerCase())
+            );
+        } else {
+            return classroom;
+        }
+    };
+
     return (
         <div className="main-container">
             <header>
                 <div>
                     <h3>Manage Class</h3>
                 </div>
+                <Dropdown
+                    options={grades}
+                    value={dropValueGrade}
+                    onChange={handleChangeGrade}
+                />
                 <div className="right-header">
-                    <button className="btn-account" onClick={handleAddClass}>Add Class</button>
+                    <button className="btn-account" onClick={handleAddClass}>
+                        Add Class
+                    </button>
                     <div className="search-box">
                         <button className="btn-search">
                             <FontAwesomeIcon
@@ -240,15 +351,17 @@ const ClassAdmin = () => {
                             />
                         </button>
                         <input
+                            onChange={handleChangeSearch}
                             className="input-search"
                             type="text"
                             placeholder="Search..."
+                            value={keyword}
                         ></input>
                     </div>
                 </div>
             </header>
             <div className="table-content">
-                <TableClasses classRooms={classRooms} />
+                <TableClasses classRooms={searchClass(classRooms)} />
             </div>
             <footer>
                 <hr></hr>

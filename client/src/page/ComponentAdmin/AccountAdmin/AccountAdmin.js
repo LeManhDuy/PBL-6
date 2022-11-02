@@ -27,6 +27,7 @@ function AccountAdmin() {
     const [updateState, setUpdateState] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         getPrincipal();
@@ -36,16 +37,16 @@ function AccountAdmin() {
     }, [state]);
 
     const options = [
-        { key: 1, label: "Principal", value: "principal" },
-        { key: 2, label: "Parents", value: "parents" },
+        { key: 1, label: "Admin", value: "principal" },
+        { key: 2, label: "Parent", value: "parents" },
         { key: 3, label: "Teacher", value: "teacher" },
-        { key: 4, label: "Affair", value: "affair" },
+        { key: 4, label: "Staff", value: "affair" },
     ];
 
     const Dropdown = ({ value, options, onChange }) => {
         return (
             <label>
-                Type of account
+                Type
                 <select
                     className="dropdown-account"
                     value={value}
@@ -66,6 +67,10 @@ function AccountAdmin() {
         setKeyword("");
     };
 
+    const handleChangeSearch = (e) => {
+        setKeyword(e.target.value);
+    };
+
     // Get Account
 
     const getPrincipal = () => {
@@ -78,6 +83,7 @@ function AccountAdmin() {
                             id: item._id,
                             name: item.person_fullname,
                             username: item.account_id.account_username,
+                            role: item.account_id.account_role,
                             birth: item.person_dateofbirth,
                             email: item.person_email,
                             gender: item.person_gender,
@@ -87,7 +93,8 @@ function AccountAdmin() {
                         };
                     }
                 );
-                setPrincipal(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setPrincipal(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -105,6 +112,8 @@ function AccountAdmin() {
                             name: item.person_id.person_fullname,
                             username:
                                 item.person_id.account_id.account_username,
+                            role:
+                                item.person_id.account_id.account_role,
                             birth: item.person_id.person_dateofbirth,
                             email: item.person_id.person_email,
                             gender: item.person_id.person_gender,
@@ -114,7 +123,8 @@ function AccountAdmin() {
                         };
                     }
                 );
-                setParents(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setParents(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -132,6 +142,8 @@ function AccountAdmin() {
                             name: item.person_id.person_fullname,
                             username:
                                 item.person_id.account_id.account_username,
+                            role:
+                                item.person_id.account_id.account_role,
                             birth: item.person_id.person_dateofbirth,
                             email: item.person_id.person_email,
                             gender: item.person_id.person_gender,
@@ -141,7 +153,8 @@ function AccountAdmin() {
                         };
                     }
                 );
-                setTeacher(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setTeacher(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -158,6 +171,7 @@ function AccountAdmin() {
                             id: item._id,
                             name: item.person_fullname,
                             username: item.account_id.account_username,
+                            role: item.account_id.account_role,
                             birth: item.person_dateofbirth,
                             email: item.person_email,
                             gender: item.person_gender,
@@ -167,7 +181,8 @@ function AccountAdmin() {
                         };
                     }
                 );
-                setAffair(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setAffair(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -182,7 +197,7 @@ function AccountAdmin() {
                 <td>{item.username}</td>
                 <td>{item.name}</td>
                 <td>{item.email}</td>
-                <td>{value.toUpperCase()}</td>
+                <td>{item.role.toUpperCase()}</td>
                 <td onClick={click}>
                     <i className="fa-regular fa-pen-to-square btn-edit"></i>
                     <i className="fa-regular fa-trash-can btn-delete"></i>
@@ -217,9 +232,9 @@ function AccountAdmin() {
         ) {
             headerAccount = (
                 <tr>
-                    <th>User name</th>
-                    <th>Full name</th>
-                    <th>Email</th>
+                    <th>User Name</th>
+                    <th>Full Name</th>
+                    <th>Email Address</th>
                     <th>Role</th>
                     <th>Action</th>
                 </tr>
@@ -241,6 +256,7 @@ function AccountAdmin() {
         setAddState(false);
         setUpdateState(false);
         setErrorServer(false);
+        setErrorMessage("");
     };
 
     //Add Account
@@ -267,9 +283,11 @@ function AccountAdmin() {
                         setState(!state);
                         setDropValue(type);
                         setErrorServer(false);
+                        setErrorMessage("");
                         setAddState(false);
                     } else {
                         setErrorServer(true);
+                        setErrorMessage(res.message);
                         setAddState(true);
                     }
                 })
@@ -300,9 +318,11 @@ function AccountAdmin() {
                         setState(!state);
                         setDropValue(type);
                         setErrorServer(false);
+                        setErrorMessage("");
                         setAddState(false);
                     } else {
                         setErrorServer(true);
+                        setErrorMessage(res.message);
                         setAddState(true);
                     }
                 })
@@ -332,9 +352,11 @@ function AccountAdmin() {
                         setState(!state);
                         setDropValue(type);
                         setErrorServer(false);
+                        setErrorMessage("");
                         setAddState(false);
                     } else {
                         setErrorServer(true);
+                        setErrorMessage(res.message);
                         setAddState(true);
                     }
                 })
@@ -362,9 +384,11 @@ function AccountAdmin() {
                         setState(!state);
                         setDropValue(type);
                         setErrorServer(false);
+                        setErrorMessage("");
                         setAddState(false);
                     } else {
                         setErrorServer(true);
+                        setErrorMessage(res.message);
                         setAddState(true);
                     }
                 })
@@ -394,9 +418,11 @@ function AccountAdmin() {
                     if (res.success) {
                         setState(!state);
                         setErrorServer(false);
+                        setErrorMessage("");
                         setUpdateState(false);
                     } else {
                         setErrorServer(true);
+                        setErrorMessage(res.message);
                         setUpdateState(true);
                     }
                 })
@@ -428,9 +454,11 @@ function AccountAdmin() {
                     if (res.success) {
                         setState(!state);
                         setErrorServer(false);
+                        setErrorMessage("");
                         setUpdateState(false);
                     } else {
                         setErrorServer(true);
+                        setErrorMessage(res.message);
                         setUpdateState(true);
                     }
                 })
@@ -459,9 +487,11 @@ function AccountAdmin() {
                     if (res.success) {
                         setState(!state);
                         setErrorServer(false);
+                        setErrorMessage("");
                         setUpdateState(false);
                     } else {
                         setErrorServer(true);
+                        setErrorMessage(res.message);
                         setAddState(true);
                     }
                 })
@@ -490,9 +520,11 @@ function AccountAdmin() {
                     if (res.success) {
                         setState(!state);
                         setErrorServer(false);
+                        setErrorMessage("");
                         setUpdateState(false);
                     } else {
                         setErrorServer(true);
+                        setErrorMessage(res.message);
                         setUpdateState(true);
                     }
                 })
@@ -510,6 +542,7 @@ function AccountAdmin() {
                     handleInputCustom={handleInputCustom}
                     handleConfirmAddAccount={handleConfirmAddAccount}
                     errorServer={errorServer}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -527,6 +560,7 @@ function AccountAdmin() {
                     handleConfirmUpdateAccount={handleConfirmUpdateAccount}
                     errorServer={errorServer}
                     dropValue={dropValue}
+                    errorMessage={errorMessage}
                 />
             }
         />
@@ -534,6 +568,8 @@ function AccountAdmin() {
 
     const handleAddAccount = () => {
         setAddState(true);
+        setErrorServer(false);
+        setErrorMessage("");
     };
 
     // Delete
@@ -566,6 +602,45 @@ function AccountAdmin() {
             });
         }
         setIsDelete(false);
+    };
+
+    //Handle Search
+    const searchAccount = (account) => {
+        if (dropValue === "principal") {
+            return account.filter(
+                (account) =>
+                    account.name
+                        .toLowerCase()
+                        .includes(keyword.toLowerCase()) ||
+                    account.email.toLowerCase().includes(keyword.toLowerCase())
+            );
+        } else if (dropValue === "parents") {
+            return account.filter(
+                (account) =>
+                    account.name
+                        .toLowerCase()
+                        .includes(keyword.toLowerCase()) ||
+                    account.email.toLowerCase().includes(keyword.toLowerCase())
+            );
+        } else if (dropValue === "teacher") {
+            return account.filter(
+                (account) =>
+                    account.name
+                        .toLowerCase()
+                        .includes(keyword.toLowerCase()) ||
+                    account.email.toLowerCase().includes(keyword.toLowerCase())
+            );
+        } else if (dropValue === "affair") {
+            return account.filter(
+                (account) =>
+                    account.name
+                        .toLowerCase()
+                        .includes(keyword.toLowerCase()) ||
+                    account.email.toLowerCase().includes(keyword.toLowerCase())
+            );
+        } else {
+            return account;
+        }
     };
 
     const ConfirmDelete = (
@@ -605,22 +680,36 @@ function AccountAdmin() {
                             />
                         </button>
                         <input
+                            onChange={handleChangeSearch}
                             className="input-search"
                             type="text"
                             placeholder="Search..."
+                            value={keyword}
                         ></input>
                     </div>
                 </div>
             </header>
             <div className="table-content">
                 {dropValue === "principal" ? (
-                    <TableAccounts accounts={principal} value={dropValue} />
+                    <TableAccounts
+                        accounts={searchAccount(principal)}
+                        value={dropValue}
+                    />
                 ) : dropValue === "parents" ? (
-                    <TableAccounts accounts={parents} value={dropValue} />
+                    <TableAccounts
+                        accounts={searchAccount(parents)}
+                        value={dropValue}
+                    />
                 ) : dropValue === "teacher" ? (
-                    <TableAccounts accounts={teacher} value={dropValue} />
+                    <TableAccounts
+                        accounts={searchAccount(teacher)}
+                        value={dropValue}
+                    />
                 ) : (
-                    <TableAccounts accounts={affair} value={dropValue} />
+                    <TableAccounts
+                        accounts={searchAccount(affair)}
+                        value={dropValue}
+                    />
                 )}
             </div>
             <footer>

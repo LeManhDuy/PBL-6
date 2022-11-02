@@ -4,10 +4,11 @@ import Logo from "../../../assets/image/Logo.png";
 import ClassService from "../../../config/service/ClassService";
 import AccountService from "../../../config/service/AccountService";
 import StudentService from "../../../config/service/StudentService";
+import Select from 'react-select';
+
 
 const UpdateStudent = (props) => {
     let date = new Date().toLocaleDateString();
-    const REACT_APP_API_ENDPOINT = "http://localhost:8000/";
     const [classroom, setClassroom] = useState([]);
     const [parent, setParent] = useState([]);
     const [teacher, setTeacher] = useState();
@@ -26,6 +27,9 @@ const UpdateStudent = (props) => {
         img: null,
         parent: "",
         classroom: "",
+
+        parent_name: "",
+        classroom_name: "",
     });
     const [studentsError, setStudentsError] = useState({
         name: false,
@@ -34,6 +38,9 @@ const UpdateStudent = (props) => {
         img: false,
         parent: false,
         classroom: false,
+
+        parent_name: false,
+        classroom_name: false,
     });
 
     const [avatar, setAvatar] = useState(Logo);
@@ -47,137 +54,158 @@ const UpdateStudent = (props) => {
                     res.getPupilInfor[0].pupil_image
                 )
                 : setAvatar(Logo);
-            setTeacher(res.getPupilInfor[0].class_id.homeroom_teacher_id.person_id.person_fullname);
+            if (res.getPupilInfor[0].class_id)
+                setTeacher(res.getPupilInfor[0].class_id
+                    ? res.getPupilInfor[0].class_id.homeroom_teacher_id
+                        ? res.getPupilInfor[0].class_id.homeroom_teacher_id.person_id
+                            ? res.getPupilInfor[0].class_id.homeroom_teacher_id.person_id.person_fullname
+                            : "Empty"
+                        : "Empty"
+                    : "Empty");
             setAllValuesStudent({
                 name: res.getPupilInfor[0].pupil_name,
                 dateOfBirth: res.getPupilInfor[0].pupil_dateofbirth.split("T")[0],
                 gender: `${res.getPupilInfor[0].pupil_gender}`,
-                parent: res.getPupilInfor[0].parent_id._id,
-                classroom: res.getPupilInfor[0].class_id._id,
+                parent: res.getPupilInfor[0]
+                    ? res.getPupilInfor[0].parent_id
+                        ? res.getPupilInfor[0].parent_id._id
+                        : null
+                    : null,
+                classroom: res.getPupilInfor[0]
+                    ? res.getPupilInfor[0].class_id
+                        ? res.getPupilInfor[0].class_id._id
+                        : null
+                    : null,
+                parent_name: res.getPupilInfor[0]
+                    ? res.getPupilInfor[0].parent_id
+                        ? res.getPupilInfor[0].parent_id.person_id
+                            ? res.getPupilInfor[0].parent_id.person_id.person_fullname
+                            : "Empty"
+                        : "Empty"
+                    : "Empty",
+                person_phonenumber: res.getPupilInfor[0]
+                    ? res.getPupilInfor[0].parent_id
+                        ? res.getPupilInfor[0].parent_id.person_id
+                            ? res.getPupilInfor[0].parent_id.person_id.person_phonenumber
+                            : "Empty"
+                        : "Empty"
+                    : "Empty",
+                classroom_name: res.getPupilInfor[0]
+                    ? res.getPupilInfor[0].class_id
+                        ? res.getPupilInfor[0].class_id.class_name
+                        : "Empty"
+                    : "Empty",
             });
         });
     }, []);
 
-    const ParentDropDown = ({ value, options, onChange, parentValue }) => {
-        if (parentValue) {
-            return (
-                <select
-                    className="dropdown-class"
-                    value={value}
-                    onChange={onChange}
-                >
-                    {options.map((option) => (
-                        <option
-                            key={option.key}
-                            value={option.name}
-                            data-key={option.id}
-                            selected={parentValue === option.id}
-                        >
-                            {option.name}
-                        </option>
-                    ))}
-                </select>
-            );
-        } else {
-            return (
-                <select
-                    className="dropdown-class"
-                    value={value}
-                    onChange={onChange}
-                >
-                    <option key={10000} value="Pick">
-                        Parents
-                    </option>
-                    {options.map((option) => (
-                        <option
-                            key={option.key}
-                            value={option.name}
-                            data-key={option.id}
-                        >
-                            {option.name}
-                        </option>
-                    ))}
-                </select>
-            );
-        }
-    };
+    // const ParentDropDown = ({ value, options, onChange, parentValue }) => {
+    //     if (parentValue) {
+    //         return (
+    //             <select
+    //                 className="dropdown-class"
+    //                 value={value}
+    //                 onChange={onChange}
+    //             >
+    //                 {options.map((option) => (
+    //                     <option
+    //                         key={option.key}
+    //                         value={option.name}
+    //                         data-key={option.id}
+    //                         defaultValue={parentValue === option.id}
+    //                     >
+    //                         {option.name}
+    //                     </option>
+    //                 ))}
+    //             </select>
+    //         );
+    //     } else {
+    //         return (
+    //             <select
+    //                 className="dropdown-class"
+    //                 value={value}
+    //                 onChange={onChange}
+    //             >
+    //                 <option key={10000} value="Pick">
+    //                     Parents
+    //                 </option>
+    //                 {options.map((option) => (
+    //                     <option
+    //                         key={option.key}
+    //                         value={option.name}
+    //                         data-key={option.id}
+    //                     >
+    //                         {option.name}
+    //                     </option>
+    //                 ))}
+    //             </select>
+    //         );
+    //     }
+    // };
 
-    const ClassDropDown = ({ value, options, onChange, classValue }) => {
-        if (classValue) {
-            return (
-                <select
-                    className="dropdown-class"
-                    value={value}
-                    onChange={onChange}
-                >
-                    {options.map((option) => (
-                        <option
-                            key={option.key}
-                            value={option.name + " - " + option.grade}
-                            data-key={option.id}
-                            data-teacher={option.teacher}
-                            selected={classValue === option.id}
-                        >
-                            {option.name} - {option.grade}
-                        </option>
-                    ))}
-                </select>
-            );
-        } else {
-            return (
-                <select
-                    className="dropdown-class"
-                    value={value}
-                    onChange={onChange}
-                >
-                    <option key={10000} value="Pick">
-                        Class
-                    </option>
-                    {options.map((option) => (
-                        <option
-                            key={option.key}
-                            value={option.name + " - " + option.grade}
-                            data-key={option.id}
-                            data-teacher={option.teacher}
-                        >
-                            {option.name} - {option.grade}
-                        </option>
-                    ))}
-                </select>
-            );
-        }
-    };
+    // const ClassDropDown = ({ value, options, onChange, classValue }) => {
+    //     if (classValue) {
+    //         return (
+    //             <select
+    //                 className="dropdown-class"
+    //                 value={value}
+    //                 onChange={onChange}
+    //             >
+    //                 {options.map((option) => (
+    //                     <option
+    //                         key={option.key}
+    //                         value={option.grade + " - " + option.name}
+    //                         data-key={option.id}
+    //                         data-teacher={option.teacher}
+    //                         defaultValue={classValue === option.id}
+    //                     >
+    //                         {option.grade}-{option.name}
+    //                     </option>
+    //                 ))}
+    //             </select>
+    //         );
+    //     } else {
+    //         return (
+    //             <select
+    //                 className="dropdown-class"
+    //                 value={value}
+    //                 onChange={onChange}
+    //             >
+    //                 <option key={10000} value="Pick">
+    //                     Class
+    //                 </option>
+    //                 {options.map((option) => (
+    //                     <option
+    //                         key={option.key}
+    //                         value={option.grade + " - " + option.name}
+    //                         data-key={option.id}
+    //                         data-teacher={option.teacher}
+    //                     >
+    //                         {option.grade}-{option.name}
+    //                     </option>
+    //                 ))}
+    //             </select>
+    //         );
+    //     }
+    // };
 
     const handleParentChange = (event) => {
-        setParentDropValue(event.target.value);
-        if (event.target.value !== "Pick") {
-            setAllValuesStudent({
-                ...allValuesStudent,
-                parent: event.target.options[
-                    event.target.selectedIndex
-                ].getAttribute("data-key"),
-            });
-        }
+        setParentDropValue(event);
+        setAllValuesStudent({
+            ...allValuesStudent,
+            parent: event.value
+        });
     };
 
     const handleClassChange = (event) => {
-        setClassDropValue(event.target.value);
-        if (event.target.value !== "Pick") {
-            setAllValuesStudent({
-                ...allValuesStudent,
-                classroom:
-                    event.target.options[
-                        event.target.selectedIndex
-                    ].getAttribute("data-key"),
-            });
-            setTeacher(
-                event.target.options[event.target.selectedIndex].getAttribute(
-                    "data-teacher"
-                )
-            );
-        } else {
-            setTeacher("");
-        }
+        setClassDropValue(event)
+        setAllValuesStudent({
+            ...allValuesStudent,
+            classroom: event.value
+        });
+        setTeacher(
+            event.teacher
+        );
     };
 
     const getParents = () => {
@@ -186,12 +214,13 @@ const UpdateStudent = (props) => {
                 const dataSources = response.getParentsInfor
                     .map((item, index) => {
                         return {
-                            key: index + 1,
-                            id: item._id,
-                            name: item.person_id.person_fullname,
+                            //key: index + 1,
+                            value: item._id,
+                            label: item.person_id.person_fullname + " - " + item.person_id.person_phonenumber,
                         };
                     });
-                setParent(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setParent(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -203,14 +232,24 @@ const UpdateStudent = (props) => {
             .then((response) => {
                 const dataSources = response.allClass.map((item, index) => {
                     return {
-                        key: index + 1,
-                        id: item._id,
-                        name: item.class_name,
-                        grade: item.grade_id.grade_name,
-                        teacher: item.homeroom_teacher_id.person_id.person_fullname,
+                        // key: index + 1,
+                        // id: item._id,
+                        // name: item.class_name,
+                        // // grade: item.grade_id.grade_name,
+                        // grade: item.grade_id ? item.grade_id.grade_name : "Empty",
+                        // teacher: item.homeroom_teacher_id.person_id.person_fullname,
+                        value: item._id,
+                        label: item.class_name,
+                        grade: item.grade_id ? item.grade_id.grade_name : "Empty",
+                        teacher: item.homeroom_teacher_id
+                            ? item.homeroom_teacher_id.person_id
+                                ? item.homeroom_teacher_id.person_id.person_fullname
+                                : "Empty"
+                            : "Empty",
                     };
                 });
-                setClassroom(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
+                setClassroom(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -224,9 +263,11 @@ const UpdateStudent = (props) => {
         let img = false;
         let parent = false;
         let classroom = false;
+
+        let parent_name = false;
+        let classroom_name = false;
         let check = false;
         if (
-            allValuesStudent.name.length > 30 ||
             allValuesStudent.name.length < 2
         ) {
             name = true;
@@ -253,16 +294,17 @@ const UpdateStudent = (props) => {
             check = true;
         } else gender = false;
 
-        if (!!allValuesStudent.img) {
-            let imgList = allValuesStudent.img.name.split(".");
-            if (
-                imgList[imgList.length - 1] != "png" &&
-                imgList[imgList.length - 1] != "jpg"
-            ) {
-                img = true;
-                check = true;
-            } else img = false;
-        }
+        // if (!!allValuesStudent.img) {
+        //     //let imgList = allValuesStudent.img.name.split(".");
+        //     let imgList = allValuesStudent.img.name;
+        //     if (
+        //         imgList[imgList.length - 1] != "png" &&
+        //         imgList[imgList.length - 1] != "jpg"
+        //     ) {
+        //         img = true;
+        //         check = true;
+        //     } else img = false;
+        // }
 
         setStudentsError({
             name: name,
@@ -271,6 +313,9 @@ const UpdateStudent = (props) => {
             img: img,
             parent: parent,
             classroom: classroom,
+
+            parent_name: parent_name,
+            classroom_name: classroom_name,
         });
         if (!check) {
             props.handleConfirmUpdateStudent(allValuesStudent);
@@ -296,9 +341,13 @@ const UpdateStudent = (props) => {
             gender: allValuesStudent.gender,
             img: e.target.files[0],
             parent: allValuesStudent.parent,
-            grade: allValuesStudent.grade,
             classroom: allValuesStudent.classroom,
+            parent_name: allValuesStudent.parent_name,
+            classroom_name: allValuesStudent.classroom_name,
+            //...allValuesStudent,
+            //[e.target.name]: e.target.value,
         });
+        console.log(setAllValuesStudent);
         try {
             setAvatar(URL.createObjectURL(e.target.files[0]));
         } catch (err) {
@@ -315,14 +364,14 @@ const UpdateStudent = (props) => {
                     (props.errorServer ? " error-show" : " error-hidden")
                 }
             >
-                Student already exists
+                {props.errorMessage}
             </label>
             <div className="form-teacher-content">
                 <div className="teacher-content-left">
                     <div className="avatar-teacher">
                         <img src={avatar} />
                         <label className="choose-file" htmlFor="upload-photo">
-                            Choose image
+                            Choose Image
                         </label>
                         <input
                             id="upload-photo"
@@ -359,11 +408,11 @@ const UpdateStudent = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Name must be less than 30 chars
+                            Name must be greater than 2 chars
                         </label>
                     </div>
                     <div className="type-input">
-                        <h4>Date of Birth</h4>
+                        <h4>Date Of Birth</h4>
                         <input
                             className="input-content"
                             type="date"
@@ -383,8 +432,6 @@ const UpdateStudent = (props) => {
                             Invalid birthday
                         </label>
                     </div>
-                </div>
-                <div className="teacher-content-right">
                     <div className="type-input">
                         <h4>Gender</h4>
                         <div className="radio-btn">
@@ -420,22 +467,29 @@ const UpdateStudent = (props) => {
                             </label>
                         </div>
                     </div>
+                </div>
+                <div className="teacher-content-right">
+
                     <div className="type-input">
                         <h4>Parent</h4>
-                        <ParentDropDown
-                            options={parent}
+                        <Select
+                            className="dropdown-class"
                             value={parentDropValue}
                             onChange={handleParentChange}
-                            parentValue={allValuesStudent.parent}
+                            options={parent}
+                            maxMenuHeight={150}
+                            placeholder={allValuesStudent.parent_name}
                         />
                     </div>
                     <div className="type-input">
-                        <h4>Class</h4>
-                        <ClassDropDown
-                            options={classroom}
+                        <h4>Grade-Class</h4>
+                        <Select
+                            className="dropdown-class"
                             value={classDropValue}
                             onChange={handleClassChange}
-                            classValue={allValuesStudent.classroom}
+                            options={classroom}
+                            maxMenuHeight={150}
+                            placeholder={allValuesStudent.classroom_name}
                         />
                     </div>
                     <div className="type-input">
@@ -444,7 +498,7 @@ const UpdateStudent = (props) => {
                             className="input-content"
                             placeholder="Teacher's name..."
                             value={teacher}
-                            readOnly
+                            disabled
                         />
                     </div>
                 </div>
