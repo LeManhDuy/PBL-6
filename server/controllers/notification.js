@@ -102,7 +102,8 @@ const deletePublicNotification = async (req, res) => {
 
 // Private Notification
 const createPrivateNotification = async (req, res) => {
-    let { title, content, parent_id, teacher_id, sender } = req.body;
+    let { title, content, parent_id, teacher_id, teacher_send, parents_send } =
+        req.body;
     let date = now().toString();
     //Validation
     if (!title || !content || !parent_id || !teacher_id)
@@ -125,7 +126,8 @@ const createPrivateNotification = async (req, res) => {
             date,
             parent_id,
             teacher_id,
-            teacher_send: sender,
+            teacher_send,
+            parents_send,
         });
         await privateNotification.save();
         res.status(200).json({

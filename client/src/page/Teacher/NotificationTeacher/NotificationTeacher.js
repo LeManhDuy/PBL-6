@@ -145,10 +145,13 @@ const NotificationTeacher = () => {
                     </div>
                 </div>
                 <div className="btn-function">
-                    <i
-                        onClick={handleChangeNotification}
-                        className="fa-regular fa-pen-to-square btn-edit"
-                    ></i>
+                    {item.sender ? (
+                        <i
+                            onClick={handleChangeNotification}
+                            className="fa-regular fa-pen-to-square btn-edit"
+                        ></i>
+                    ) : null}
+
                     <i
                         onClick={handleChangeNotification}
                         className="fa-regular fa-trash-can btn-delete"
@@ -214,7 +217,7 @@ const NotificationTeacher = () => {
                 content: Values.content,
                 parent_id: Values.parent,
                 teacher_id: Values.teacher,
-                sender: Values.sender,
+                teacher_send: Values.sender,
             })
                 .then((res) => {
                     if (res.success) {
