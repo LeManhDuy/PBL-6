@@ -39,6 +39,7 @@ const SubjectTeacherAdmin = () => {
         label: "All Teacher",
     });
     const [filtered, setFiltered] = useState([]);
+    // const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         getSubjectTeacher();
@@ -170,7 +171,7 @@ const SubjectTeacherAdmin = () => {
     };
 
     const handleChangeSubject = (event) => {
-        // console.log(event.value+ '---'+dropValueTeacher.value)
+        console.log(event.value + "---" + dropValueTeacher.value);
         setDropValueSubject(event);
         let filterST = subjectsTeacher;
         if (event.value !== "All") {
@@ -189,7 +190,7 @@ const SubjectTeacherAdmin = () => {
         // console.log(filtered)
     };
     const handleChangeTeacher = (event) => {
-        console.log(dropValueSubject.value+'---'+ event.value)
+        console.log(dropValueSubject.value + "---" + event.value);
         setDropValueTeacher(event);
         let filterST = subjectsTeacher;
         if (event.value !== "All") {

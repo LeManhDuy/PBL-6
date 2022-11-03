@@ -1,0 +1,162 @@
+@import "../../../assets/css/variables.css";
+@import "../../../assets/css/custom.css";
+
+.notification-teacher {
+  margin: 50px;
+  padding: 0 10vh;
+}
+
+.notification-teacher h2{
+  margin-bottom: 30px;
+  background-color: var(--primary-color);
+  border-radius: 6px;
+  padding: 10px;
+  color: #fff
+}
+
+.notification-teacher .public {
+  background-color: var(--primary-color)
+}
+
+.notification-teacher .private {
+  background-color:  var(--text-color);
+}
+
+
+.notification-teacher p{
+  margin: 0;
+  padding: 0;
+}
+
+.main-content-teacher{
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  padding: 20px;
+  border-radius: 10px;
+  /* background-color: var(--text-color); */
+  /* background-color: #001b3a; */
+}
+
+.main-content-teacher.public {
+  background-color: var(--primary-color);
+}
+
+.main-content-teacher.private {
+  background-color: var(--text-color);
+}
+
+.main-content-teacher .header-notification-teacher {
+ display: flex;
+ justify-content: space-between;
+ border-bottom: 1px solid #ddd;
+}
+
+.header-notification-teacher button{
+  font-size: 20px;
+}
+
+.header-notification-teacher .btn-lists .btn-public-active{
+  border: 2px solid #fff;
+  background-color: var(--text-color);
+  color: #fff
+
+}
+
+.header-notification-teacher .btn-lists .btn-public{
+  background-color: var(--text-color);
+  color: #fff
+}
+
+.header-notification-teacher .btn-lists .btn-public:hover{
+  background-color: var(--primary-color)
+}
+
+.header-notification-teacher .btn-lists .btn-private-active{
+  border: 2px solid #fff;
+  background-color: var(--primary-color);
+  color: #fff
+  
+}
+
+.header-notification-teacher .btn-lists .btn-private{
+  background-color: var(--primary-color);
+  color: #fff
+}
+
+.header-notification-teacher .btn-lists .btn-private:hover{
+  background-color: var(--text-color)
+}
+
+.main-content-teacher .content-notification-teacher{
+  margin: 20px 10px
+}
+
+.content-notification-teacher .notification-item{
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(44, 65, 73, 0.154) 0px 2px 16px 0px;
+  margin: 20px 0;
+  border-radius:6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  text-align: left;
+  background-color: white;
+}
+
+.notification-item .notification-content {
+  width: 80%;
+  font-size: 20px;
+}
+
+.notification-item .notification-content .title-content{
+  display: flex;
+  gap: 10px;
+}
+
+.notification-item .notification-content .title-content .date{
+  color: var(--error-color)
+}
+
+.notification-item .notification-content .title-content .title{
+  color: var(--info-color);
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.notification-item .notification-content .title-to {
+  color: var(--info-color);
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.notification-item .btn-function .fa-regular{
+  margin-right: 0;
+  margin-left: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.notification-item .btn-function .fa-regular{
+  margin-right: 0;
+  margin-left: 20px;
+  font-size: 24px;
+}
+
+.btn-edit{
+  color: var(--info-color)
+}
+
+.btn-delete {
+  color: var(--error-color);
+}
+
+#create-notification {
+  background-color: var(--text-color);
+  color: #fff;
+  border: 2px solid #fff;
+}
+
+#create-notification:hover {
+  background-color: #2765ab;
+  color: #fff;
+}
+

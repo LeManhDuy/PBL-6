@@ -102,7 +102,8 @@ const deletePublicNotification = async (req, res) => {
 
 // Private Notification
 const createPrivateNotification = async (req, res) => {
-    let { title, content, parent_id, teacher_id } = req.body;
+    let { title, content, parent_id, teacher_id, teacher_send, parents_send } =
+        req.body;
     let date = now().toString();
     //Validation
     if (!title || !content || !parent_id || !teacher_id)
@@ -110,6 +111,14 @@ const createPrivateNotification = async (req, res) => {
             success: false,
             message: "Please fill in complete information.",
         });
+    const teacherInfor = await Teacher.findById(teacher_id);
+    if (!teacherInfor) {
+        const teacherInfor = await Teacher.find({ person_id: teacher_id });
+        teacher_id = teacherInfor[0]._id;
+    } else {
+        const parentsInfor = await Parent.find({ person_id: parent_id });
+        parent_id = parentsInfor[0]._id;
+    }
     try {
         const privateNotification = new PrivateNotification({
             title,
@@ -117,6 +126,8 @@ const createPrivateNotification = async (req, res) => {
             date,
             parent_id,
             teacher_id,
+            teacher_send,
+            parents_send,
         });
         await privateNotification.save();
         res.status(200).json({
@@ -142,6 +153,15 @@ const getPrivateNotificationForTeacher = async (req, res) => {
     try {
         const privateNotifications = await PrivateNotification.find({
             teacher_id: teacherInfor[0]._id,
+        }).populate({
+            path: "parent_id",
+            model: "Parent",
+            populate: [
+                {
+                    path: "person_id",
+                    model: "Person",
+                },
+            ],
         });
         res.status(200).json({
             success: true,
@@ -165,10 +185,33 @@ const getPrivateNotificationForParents = async (req, res) => {
     try {
         const privateNotifications = await PrivateNotification.find({
             parent_id: parentsInfor[0]._id,
+        }).populate({
+            path: "teacher_id",
+            model: "Teacher",
+            populate: [
+                {
+                    path: "person_id",
+                    model: "Person",
+                },
+            ],
         });
         res.status(200).json({
             success: true,
             privateNotifications,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+const getPrivateNotificationById = async (req, res) => {
+    try {
+        const privateNotification = await PrivateNotification.findById(
+            req.params.notificationID
+        );
+        res.status(200).json({
+            success: true,
+            privateNotification,
         });
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error });
@@ -238,6 +281,7 @@ module.exports = {
     createPrivateNotification,
     getPrivateNotificationForTeacher,
     getPrivateNotificationForParents,
+    getPrivateNotificationById,
     updatePrivateNotification,
     deletePrivateNotification,
 };

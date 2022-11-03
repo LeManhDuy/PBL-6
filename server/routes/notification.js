@@ -42,6 +42,12 @@ router.get(
     NotificationController.getPrivateNotificationForParents
 );
 
+//get private notification by ID
+router.get(
+    "/private/get-by-id/:notificationID",
+    NotificationController.getPrivateNotificationById
+);
+
 //update private notification
 router.put(
     "/private/:notificationID",
