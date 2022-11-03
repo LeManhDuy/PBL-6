@@ -1,6 +1,8 @@
 const express = require("express")
 const router = express.Router()
 const Fee = require("../model/Fee")
+const Pupil = require("../model/Pupil")
+const Parent = require("../model/Parent")
 const FeeCategory = require("../model/FeeCategory")
 
 // @route GET api/fee
@@ -58,6 +60,48 @@ router.get("/:feeID", async (req, res) => {
                 ],
             })
         res.json({ success: true, getfeeInfor })
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
+// @route GET api/fee
+// @desc GET fee by Id
+// @access Private Only Admin
+router.get("/get-fee-infor-by-parent-id/:personID", async (req, res) => {
+    try {
+        // Return token
+        const getParentsID = await Parent.find({
+            person_id: req.params.personID,
+        });
+        const getStudentID = await Pupil.find({ parent_id: getParentsID })
+        console.log("student", getStudentID);
+        const getFeeInfor = await Fee.find({ pupil_id: getStudentID })
+            .populate({
+                path: "fee_category_id",
+                model: "FeeCategory",
+                select: ["fee_name", "fee_amount"],
+            })
+            .populate({
+                path: "pupil_id",
+                model: "Pupil",
+                select: ["pupil_name", "pupil_image"],
+                populate: [
+                    {
+                        path: "class_id",
+                        model: "Class",
+                        select: ["class_name"],
+                        populate: [
+                            {
+                                path: "grade_id",
+                                model: "Grade",
+                                select: ["grade_name"],
+                            }
+                        ]
+                    },
+                ],
+            })
+        res.json({ success: true, getFeeInfor })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }

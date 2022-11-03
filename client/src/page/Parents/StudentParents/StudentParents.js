@@ -45,7 +45,8 @@ const StudentParents = () => {
                         };
                     }
                 );
-                setStudents(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setStudents(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
@@ -93,7 +94,7 @@ const StudentParents = () => {
                             </div>
                         </div>
                         <div className="item-content">
-                            <i class="fa fa-solid fa-calendar-days"></i>
+                            <i class="fa fa-solid fa-school"></i>
                             <div className="detail-item-content">
                                 <h4>Grade</h4>
                                 <p>{`${item.grade}`}</p>
