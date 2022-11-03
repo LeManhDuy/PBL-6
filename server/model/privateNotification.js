@@ -22,6 +22,10 @@ const PrivateNotificationSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Teacher",
     },
+    teacher_send: {
+        type: Schema.Types.Boolean,
+        default: false,
+    },
 });
 
 module.exports = mongoose.model(

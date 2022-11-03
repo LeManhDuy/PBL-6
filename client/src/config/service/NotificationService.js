@@ -18,6 +18,12 @@ const getNotificationsById = async (id) => {
     return await HandleApi.APIGetWithToken(`notification/${id}`);
 };
 
+const getPrivateNotificationsById = async (id) => {
+    return await HandleApi.APIGetWithToken(
+        `notification/private/get-by-id/${id}`
+    );
+};
+
 const createPublicNotification = async (params) => {
     return await HandleApi.APIPostWithToken(`notification`, params);
 };
@@ -56,6 +62,7 @@ const NotificationService = {
     updatePrivateNotification,
     deletePublicNotification,
     deletePrivateNotification,
+    getPrivateNotificationsById,
 };
 
 export default NotificationService;
