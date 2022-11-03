@@ -18,11 +18,12 @@ router.post("/", multer().single('scheduleFile'), async (req, res) => {
         try{
             let scheduleFile = null
             // Validation
+            // return res.status(400).json({ success: false, message: " A File does not exist!" , body:[req.file]})
             if (req.file){
                 scheduleFile = Buffer.from(req.file.buffer)
             }
             else{
-                return res.status(400).json({ success: false, message: "File does not exist!" })
+                return res.status(400).json({ success: false, message: "File does not exist!" , body:req.file})
             }
             const schedule = excelToJson({
                 source: scheduleFile,
@@ -172,6 +173,11 @@ router.post("/", multer().single('scheduleFile'), async (req, res) => {
         }
         
     })
+
+
+//
+//
+//
 router.get("/",multer().single(), async (req,res) =>{
     try{
         const schedule = await Schedule.find().select()

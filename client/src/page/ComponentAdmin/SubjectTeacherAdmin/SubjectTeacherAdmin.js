@@ -26,6 +26,7 @@ const SubjectTeacherAdmin = () => {
     const [subjectsTeacher, setSubjectTeacher] = useState([]);
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(false);
     const [name, setName] = useState();
     const [subjects, setSubject] = useState([]);
     const [teachers, setTeacher] = useState([]);
@@ -152,7 +153,7 @@ const SubjectTeacherAdmin = () => {
     };
 
     const handleChangeSubject = (event) => {
-        console.log(event.value+ '---'+dropValueTeacher.value)
+        // console.log(event.value+ '---'+dropValueTeacher.value)
         setDropValueSubject(event);
         let filterST = subjectsTeacher
         if(event.value!=='All'){
@@ -167,7 +168,7 @@ const SubjectTeacherAdmin = () => {
         // console.log(filtered)
       };
     const handleChangeTeacher = (event) => {
-        console.log(dropValueSubject.value+'---'+ event.value)
+        // console.log(dropValueSubject.value+'---'+ event.value)
         setDropValueTeacher(event);
         let filterST = subjectsTeacher
         if(event.value!=='All'){
