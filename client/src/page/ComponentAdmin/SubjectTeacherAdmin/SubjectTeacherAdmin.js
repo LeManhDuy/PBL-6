@@ -26,6 +26,7 @@ const SubjectTeacherAdmin = () => {
     const [subjectsTeacher, setSubjectTeacher] = useState([]);
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(false);
     const [name, setName] = useState();
     const [subjects, setSubject] = useState([]);
     const [teachers, setTeacher] = useState([]);
@@ -38,7 +39,7 @@ const SubjectTeacherAdmin = () => {
         label: "All Teacher",
     });
     const [filtered, setFiltered] = useState([]);
-    const [errorMessage, setErrorMessage] = useState("");
+    // const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         getSubjectTeacher();

@@ -78,6 +78,20 @@ function APIPostWithTokenIMG(url, params) {
     }).then((response) => response.json());
 }
 
+function APIPostWithTokenFile(url, file) {
+    url = REACT_APP_API_ENDPOINT + "api/" + url;
+    const formData = new FormData();
+    formData.append('scheduleFile',file)
+    return fetch(url, {
+        method: "POST",
+        headers: {
+            Authorization: getToken(),
+        },
+        body: formData,
+        redirect: "follow",
+    }).then((response) => response.json());
+}
+
 function APIPutWithToken(url, params) {
     url = REACT_APP_API_ENDPOINT + "api/" + url;
     return fetch(url, {
@@ -122,6 +136,7 @@ const HandleApi = {
     APIPutWithTokenIMG,
     APIPutWithToken,
     APIGetPublic,
+    APIPostWithTokenFile
 };
 
 export default HandleApi;

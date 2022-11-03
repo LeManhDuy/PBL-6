@@ -1,0 +1,120 @@
+@import "../../../assets/css/variables.css";
+@import "../../../assets/css/custom.css";
+
+.add-account-form {
+  background: #fff;
+  border-radius: 8px;
+  padding: 30px;
+}
+
+.choose-account label {
+  display: block;
+}
+
+.choose-account .dropdown-account {
+  height: 35px;
+  margin-left: 10px;
+  width: 100px;
+  border: 1px solid var(--text-color);
+  border-radius: 4px;
+  margin: 20px;
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.form-admin-content {
+  display: block;
+}
+
+.form-admin-content input {
+  display: block;
+  height: 44px;
+  margin: 10px;
+  width: 400px;
+}
+
+.form-add-account .fa-circle-left {
+  font-size: 30px;
+  text-align: left;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.form-add-account .fa-circle-left:hover {
+  color: var(--primary-color);
+}
+
+.form-admin-content .error-hidden {
+  display: none;
+  opacity: 0;
+}
+
+.form-admin-content .error-show {
+  display: block;
+  opacity: 1;
+}
+
+.form-teacher-content {
+  display: flex;
+  width: 900px;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+.form-teacher-content input {
+  width: 300px;
+  margin: 10px 0;
+}
+
+.form-teacher-content h4 {
+  text-align: left;
+}
+.form-teacher-content .period-content-left {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.type-input .radio-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  width: 300px;
+  gap: 20px;
+}
+
+.radio-btn .radio label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.radio-btn .radio label input {
+  width: 20px;
+  margin-right: 10px;
+  height: 20px;
+}
+
+.avatar-teacher img {
+  height: 150px;
+}
+
+.form-teacher-content .period-content-right {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.form-admin-content .dropdown-class {
+  width: 400px;
+  height: 44px;
+  display: block;
+  margin: auto;
+  color: var(--text-color);
+  border-radius: 4px;
+}
