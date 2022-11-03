@@ -257,7 +257,7 @@ const deletePrivateNotification = async (req, res) => {
             message: "Notification not found!",
         });
     try {
-        const deletedNoti = await PrivateNotification.findOneAndDelete(
+        const deletedNoti = await PrivateNotification.findByIdAndDelete(
             req.params.notificationID
         );
         res.status(200).json({

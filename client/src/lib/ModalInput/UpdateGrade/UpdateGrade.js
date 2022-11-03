@@ -9,10 +9,10 @@ const UpdateGrade = (props) => {
 
     useEffect(() => {
         getGradeById();
-    },[])
+    }, [])
 
     const getGradeById = () => {
-        GradeService.getGradeById(props.GradeId).then((res)=>{
+        GradeService.getGradeById(props.GradeId).then((res) => {
             setAllValuesGrade({
                 name: res.getGradeInfor[0].grade_name
             })
@@ -67,11 +67,11 @@ const UpdateGrade = (props) => {
                         <h4>Name</h4>
                         <input
                             className="input-content"
-                            type="number"
+                            type="text"
                             name="name"
                             placeholder="Enter name"
-                        value={allValuesGrade.name}
-                        onChange={changeHandlerGrade}
+                            value={allValuesGrade.name}
+                            onChange={changeHandlerGrade}
                         />
                         <label
                             className={
@@ -102,7 +102,7 @@ const UpdateGrade = (props) => {
                     Cancel
                 </button>
                 <button type="submit"
-                    onClick={clickUpdate} 
+                    onClick={clickUpdate}
                     className="btn-ok">
                     Update
                 </button>
