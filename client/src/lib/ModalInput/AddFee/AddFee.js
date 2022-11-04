@@ -43,6 +43,7 @@ const AddFee = (props) => {
         grade: "",
         gradeName: "",
         classroom: "",
+        fee_amount: "",
     })
     const [FeeError, setFeeError] = useState({
         fee_status: false,
@@ -53,6 +54,7 @@ const AddFee = (props) => {
         pupil: false,
         grade: false,
         classroom: false,
+        fee_amount: false,
     })
 
     useEffect(() => {
@@ -68,9 +70,9 @@ const AddFee = (props) => {
                 const dataSources = response.allFeeCategory.map(
                     (item, index) => {
                         return {
-                            //key: index + 1,
                             value: item._id,
                             label: item.fee_name,
+                            fee_amount: item.fee_amount
                         }
                     }
                 )
@@ -88,10 +90,8 @@ const AddFee = (props) => {
                 const dataSources = response.studentsInfor.map((item, index) => {
                     return {
                         //key: index + 1,
-                        value: item._id,
-                        label: item.class_id
-                            ? item.pupil_name + " - " + item.class_id.class_name
-                            : item.pupil_name + " - " + "Empty"
+                        value: item ? item._id : null,
+                        label: item ? item.pupil_name : null
                     }
                 })
                 const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
@@ -154,9 +154,9 @@ const AddFee = (props) => {
         setFeeCategoryDropValue(event)
         setAllValuesFee({
             ...allValuesFee,
-            fee_category: event.value
+            fee_category: event.value,
+            fee_amount: event.fee_amount
         })
-        getPupil()
     }
 
     const handlePupilChange = (event) => {
@@ -202,7 +202,7 @@ const AddFee = (props) => {
             >
                 {props.errorMessage}
             </label>
-            <div className="form-teacher-content-fee" style={{ height: 350 }}>
+            <div className="form-teacher-content-fee" style={{ height: 500 }}>
                 <div className="teacher-content-left-fee">
                     <div className="type-input">
                         <h4>Start Date</h4>
@@ -329,7 +329,7 @@ const AddFee = (props) => {
                             onChange={handleClassChange}
                             options={classroom}
                             placeholder="Grade - Class"
-                            maxMenuHeight={135}
+                            maxMenuHeight={200}
                         />
                         <label
                             className={
@@ -342,8 +342,6 @@ const AddFee = (props) => {
                             Invalid Class
                         </label>
                     </div>
-                </div>
-                <div className="teacher-content-right-fee">
                     <div className="type-input">
                         <h4>Fee Category</h4>
                         <Select
@@ -366,6 +364,17 @@ const AddFee = (props) => {
                         </label>
                     </div>
                     <div className="type-input">
+                        <h4>Fee Ammount</h4>
+                        <input
+                            className="input-content-fee"
+                            placeholder="Fee Ammount"
+                            value={allValuesFee.fee_amount}
+                            disabled
+                        />
+                    </div>
+                </div>
+                <div className="teacher-content-right-fee">
+                    <div className="type-input">
                         <h4>Pupil</h4>
                         <Select
                             className="dropdown-class"
@@ -374,6 +383,7 @@ const AddFee = (props) => {
                             options={pupil}
                             placeholder="Name - Class"
                             maxMenuHeight={135}
+                            //isMulti={true}
                         />
                         <label
                             className={
@@ -386,6 +396,7 @@ const AddFee = (props) => {
                             Invalid Pupil
                         </label>
                     </div>
+
                 </div>
             </div>
         </div>

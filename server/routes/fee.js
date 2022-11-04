@@ -64,6 +64,42 @@ router.get("/:feeID", async (req, res) => {
         return res.status(500).json({ success: false, message: "" + error })
     }
 })
+// // @route GET api/fee
+// // @desc GET fee by Id
+// // @access Private Only Admin
+router.get("/get-fee-status/:feeStatus", async (req, res) => {
+    try {
+        // Return token
+        const getfeeInfor = await Fee.find({ fee_status: req.params.feeStatus })
+            .populate({
+                path: "fee_category_id",
+                model: "FeeCategory",
+                select: ["fee_name", "fee_amount"],
+            })
+            .populate({
+                path: "pupil_id",
+                model: "Pupil",
+                select: ["pupil_name"],
+                populate: [
+                    {
+                        path: "class_id",
+                        model: "Class",
+                        select: ["class_name"],
+                        populate: [
+                            {
+                                path: "grade_id",
+                                model: "Grade",
+                                select: ["grade_name"],
+                            }
+                        ]
+                    },
+                ],
+            })
+        res.json({ success: true, getfeeInfor })
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
 
 // @route GET api/fee
 // @desc GET fee by Id
