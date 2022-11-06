@@ -18,7 +18,7 @@ const classRouter = require("./routes/class.js");
 const pupilRouter = require("./routes/pupil.js");
 const scheduleRouter = require("./routes/schedule.js");
 const notificationRoute = require("./routes/notification.js");
-
+ 
 const app = express();
 app.use(express.json());
 
