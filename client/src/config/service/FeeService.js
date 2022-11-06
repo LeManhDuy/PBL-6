@@ -14,6 +14,9 @@ const getFeeById = async (id) => {
 const getFeeInforByParentId = async (id) => {
     return await HandleApi.APIGetWithToken(`fee/get-fee-infor-by-parent-id/${id}`);
 }
+const getFeeStatus = async (status) => {
+    return await HandleApi.APIGetWithToken(`fee/get-fee-status/${status}`);
+}
 
 const deleteFeeById = async (id) => {
     return await HandleApi.APIDelete(`fee/${id}`);
@@ -29,7 +32,8 @@ const FeeService = {
     getFeeById,
     deleteFeeById,
     updateFee,
-    getFeeInforByParentId
+    getFeeInforByParentId,
+    getFeeStatus
 };
 
 export default FeeService;

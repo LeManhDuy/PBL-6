@@ -24,6 +24,7 @@ const FeeAdmin = () => {
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [dropValueStatus, setDropValueStatus] = useState("All");
 
     useEffect(() => {
         getFee();
@@ -56,6 +57,81 @@ const FeeAdmin = () => {
             .catch((error) => {
                 console.log(error);
             });
+    };
+
+
+
+    const getFeeStatus = (status) => {
+        FeeService.getFeeStatus(status)
+            .then((response) => {
+                const dataSources = response.getfeeInfor.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
+                        fee_name: item.fee_category_id
+                            ? item.fee_category_id.fee_name
+                            : "Empty",
+                        pupil_name: item.pupil_id
+                            ? item.pupil_id.pupil_name
+                            : "Empty",
+                        start_date: item.start_date.split("T")[0],
+                        end_date: item.end_date.split("T")[0],
+                        paid_date: item.paid_date
+                            ? item.paid_date.split("T")[0]
+                            : "YYYY-MM-DD",
+                        fee_status: item.fee_status ? "PAID" : "UNPAID",
+                    };
+                });
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.fee_name > b.fee_name ? 1 : -1,);
+                setFee(dataSourcesSorted);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+    const Dropdown = ({ value, options, onChange }) => {
+        return (
+            <label>
+                Status
+                <select
+                    className="dropdown-account"
+                    value={value}
+                    onChange={onChange}
+                >
+                    <option value="All">All</option>
+                    {options.map((option) => (
+                        <option key={option.key} value={option.fee_status}>
+                            {option.fee_status}
+                        </option>
+                    ))}
+                </select>
+            </label>
+        );
+    };
+
+    const handleChangeFee = (event) => {
+        setDropValueStatus(event.target.value);
+        fees.map((item) => {
+            if (event.target.value === item.fee_status) {
+                if (item.fee_status === "PAID")
+                    getFeeStatus(true);
+                if (item.fee_status === "UNPAID")
+                    getFeeStatus(false);
+            }
+            if (event.target.value === "All") {
+                getFee();
+            }
+            // if (event.target.value === item.fee_status) {
+            //     if (item.fee_status === "PAID")
+            //         getFeeStatus(true);
+            //     else if (item.fee_status === "UNPAID")
+            //         getFeeStatus(false);
+            // } else if (event.target.value === "All") {
+            //     getFee();
+            // }
+        });
+        setKeyword("");
     };
 
     const handleInputCustom = () => {
@@ -169,6 +245,7 @@ const FeeAdmin = () => {
     const TableFee = ({ fees }) => {
         const feeItem = fees.map((item) => (
             <tr data-key={item.id} key={item.id}>
+                <td><input type="checkbox" id={item.id} /></td>
                 <td>{item.fee_name}</td>
                 <td>{item.start_date}</td>
                 <td>{item.end_date}</td>
@@ -201,6 +278,7 @@ const FeeAdmin = () => {
 
         const headerFee = (
             <tr>
+                <th>Select</th>
                 <th>Fee's Name</th>
                 <th>Start date</th>
                 <th>End date</th>
@@ -250,9 +328,17 @@ const FeeAdmin = () => {
                 <div>
                     <h3>Manage Fee</h3>
                 </div>
+                <Dropdown
+                    options={fees}
+                    value={dropValueStatus}
+                    onChange={handleChangeFee}
+                />
                 <div className="right-header">
                     <button className="btn-account" onClick={handleAddFee}>
                         Add Fee
+                    </button>
+                    <button className="btn-account"     >
+                        Update Status
                     </button>
                     <div className="search-box">
                         <button className="btn-search">

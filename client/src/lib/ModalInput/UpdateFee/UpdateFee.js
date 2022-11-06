@@ -49,6 +49,7 @@ const UpdateFee = (props) => {
         gradeName: "",
         classroom: "",
         class_name: "",
+        fee_amount: "",
     });
     const [FeeError, setFeeError] = useState({
         fee_status: false,
@@ -64,6 +65,7 @@ const UpdateFee = (props) => {
         classroom: false,
         gradeName: false,
         class_name: false,
+        fee_amount: false,
     });
 
     useEffect(() => {
@@ -93,6 +95,11 @@ const UpdateFee = (props) => {
                 fee_category_name: res.getfeeInfor[0]
                     ? res.getfeeInfor[0].fee_category_id
                         ? res.getfeeInfor[0].fee_category_id.fee_name
+                        : "Empty"
+                    : "Empty",
+                fee_amount: res.getfeeInfor[0]
+                    ? res.getfeeInfor[0].fee_category_id
+                        ? res.getfeeInfor[0].fee_category_id.fee_amount
                         : "Empty"
                     : "Empty",
                 pupil_name: res.getfeeInfor[0]
@@ -129,6 +136,7 @@ const UpdateFee = (props) => {
                             key: index + 1,
                             value: item._id,
                             label: item.fee_name,
+                            fee_amount: item.fee_amount
                         };
                     }
                 );
@@ -146,10 +154,8 @@ const UpdateFee = (props) => {
                 const dataSources = response.studentsInfor.map((item, index) => {
                     return {
                         //key: index + 1,
-                        value: item._id,
-                        label: item.class_id
-                            ? item.pupil_name + " - " + item.class_id.class_name
-                            : item.pupil_name + " - " + "Empty"
+                        value: item ? item._id : null,
+                        label: item ? item.pupil_name : null
                     }
                 })
                 const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,);
@@ -305,7 +311,7 @@ const UpdateFee = (props) => {
             >
                 {props.errorMessage}
             </label>
-            <div className="form-teacher-content-fee" style={{ height: 350 }}>
+            <div className="form-teacher-content-fee" style={{ height: 500 }}>
                 <div className="teacher-content-left-fee">
                     <div className="type-input">
                         <h4>Start Date</h4>
@@ -462,16 +468,8 @@ const UpdateFee = (props) => {
                             Invalid Class
                         </label>
                     </div>
-                </div>
-                <div className="teacher-content-right-fee">
                     <div className="type-input">
                         <h4>Fee Category</h4>
-                        {/* <FeeCategoryDropDown
-                            options={feeCategory}
-                            value={feeCategoryDropValue}
-                            onChange={handleFeeCategoryChange}
-                            feecategoryValue={allValuesFee.fee_category}
-                        /> */}
                         <Select
                             className="dropdown-class"
                             value={feeCategoryDropValue}
@@ -491,6 +489,17 @@ const UpdateFee = (props) => {
                             Invalid Fee Category
                         </label>
                     </div>
+                    <div className="type-input">
+                        <h4>Fee Ammount</h4>
+                        <input
+                            className="input-content-fee"
+                            placeholder="Fee Ammount"
+                            value={allValuesFee.fee_amount}
+                            disabled
+                        />
+                    </div>
+                </div>
+                <div className="teacher-content-right-fee">
                     <div className="type-input">
                         <h4>Pupil</h4>
                         <Select
