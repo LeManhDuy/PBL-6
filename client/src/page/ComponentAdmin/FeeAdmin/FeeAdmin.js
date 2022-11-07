@@ -239,7 +239,7 @@ const FeeAdmin = () => {
     const TableFee = ({ fees }) => {
         const feeItem = fees.map((item) => (
             <tr data-key={item.id} key={item.id}>
-                <td><input type="checkbox" checked={listFee[item.id]}
+                <td><input type="checkbox" checked={listFee[item.id]} name="fee"
                     onChange={() => {
                         setListFee({
                             ...listFee,
@@ -277,9 +277,12 @@ const FeeAdmin = () => {
             }
         }
 
+
+
         const headerFee = (
             <tr>
-                <th>Select</th>
+                <th><input type="checkbox" onClick={toggle}
+                /> Select</th>
                 <th>Fee's Name</th>
                 <th>Start date</th>
                 <th>End date</th>
@@ -296,7 +299,19 @@ const FeeAdmin = () => {
             </table>
         );
     };
-
+    const toggle = (event) => {
+        var checkboxes = document.getElementsByName('fee');
+        if (event.target.checked) {
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = true;
+            }
+        }
+        else {
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = false;
+            }
+        }
+    }
     const ConfirmDelete = (
         <ModalCustom
             show={isDelete}
