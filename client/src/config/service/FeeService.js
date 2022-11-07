@@ -21,7 +21,9 @@ const getFeeStatus = async (status) => {
 const deleteFeeById = async (id) => {
     return await HandleApi.APIDelete(`fee/${id}`);
 };
-
+const updateMultipleStatus = async (array_params) => {
+    return await HandleApi.APIPostWithToken(`fee/multi/`, array_params);
+};
 const updateFee = async (id, params) => {
     return await HandleApi.APIPutWithToken(`fee/${id}`, params);
 };
@@ -33,7 +35,8 @@ const FeeService = {
     deleteFeeById,
     updateFee,
     getFeeInforByParentId,
-    getFeeStatus
+    getFeeStatus,
+    updateMultipleStatus
 };
 
 export default FeeService;

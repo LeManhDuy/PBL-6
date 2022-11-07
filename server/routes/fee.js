@@ -239,6 +239,60 @@ router.put("/:feeId", async (req, res) => {
     }
 })
 
+
+router.post("/multi", async (req, res) => {
+    const { fee_list } = req.body
+    // return res.status(400).json({
+    //     success: false,
+    //     subject_list
+    // })
+    if (!fee_list)
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information.",
+        })
+    try {
+        //validate teacher id
+        // const existed_fee = await Fee.findOne({ _id: fee_id })
+        // if (!existed_fee) {
+        //     return res.status(400).json({ success: false, message: "Fee Id doesn't exist!" })
+        // }
+        for (const [key, value] of Object.entries(fee_list)) {
+            //validate fee id
+            const existed_fee = await Fee.findOne({ _id: key })
+            if (!existed_fee) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Fee dont exist",
+                })
+            }
+            let new_fee = {
+                //...existed_fee,
+                start_date: existed_fee.start_date,
+                end_date: existed_fee.end_date,
+                paid_date: !existed_fee.fee_status ? Date.now() : null,
+                fee_category_id: existed_fee.fee_category_id,
+                pupil_id: existed_fee.pupil_id,
+                fee_status: !existed_fee.fee_status
+            }
+
+            const updateFee = await Fee.findOneAndUpdate({ _id: existed_fee._id }, new_fee, { new: true })
+            // if (existed_fee && value == true) {
+            //     const updateFee = await Fee.findByIdAndUpdate({ fee_status: value })
+            // } else if (existed_subject && value == false) {
+            //     const updateFee = await Fee.findByIdAndUpdate({ fee_status: value })
+            // }
+        }
+        return res.status(200).json({
+            success: true, message: "Update Fee Status Successfully!",
+        })
+
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
 // // @route DELETE api/fee
 // // @desc delete fee
 // // @access Private

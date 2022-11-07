@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./FeeAdmin.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { 
+import {
     faMagnifyingGlass,
     faArrowLeftLong,
     faArrowRightLong,
@@ -24,11 +24,18 @@ const FeeAdmin = () => {
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [dropValueStatus, setDropValueStatus] = useState("All");
+    const [listFee, setListFee] = useState([])
+    const [dropValue, setDropValue] = useState("All");
 
     useEffect(() => {
         getFee();
     }, [state]);
+
+    const options = [
+        { key: 1, label: "All", value: "all" },
+        { key: 2, label: "Paid", value: "paid" },
+        { key: 3, label: "UnPaid", value: "unpaid" },
+    ];
 
     const getFee = () => {
         FeeService.getFee()
@@ -99,10 +106,9 @@ const FeeAdmin = () => {
                     value={value}
                     onChange={onChange}
                 >
-                    <option value="All">All</option>
                     {options.map((option) => (
-                        <option key={option.key} value={option.fee_status}>
-                            {option.fee_status}
+                        <option key={option.key} value={option.value}>
+                            {option.label}
                         </option>
                     ))}
                 </select>
@@ -110,27 +116,15 @@ const FeeAdmin = () => {
         );
     };
 
-    const handleChangeFee = (event) => {
-        setDropValueStatus(event.target.value);
-        fees.map((item) => {
-            if (event.target.value === item.fee_status) {
-                if (item.fee_status === "PAID")
-                    getFeeStatus(true);
-                if (item.fee_status === "UNPAID")
-                    getFeeStatus(false);
-            }
-            if (event.target.value === "All") {
-                getFee();
-            }
-            // if (event.target.value === item.fee_status) {
-            //     if (item.fee_status === "PAID")
-            //         getFeeStatus(true);
-            //     else if (item.fee_status === "UNPAID")
-            //         getFeeStatus(false);
-            // } else if (event.target.value === "All") {
-            //     getFee();
-            // }
-        });
+    const handleChange = (event) => {
+        setDropValue(event.target.value);
+        if (event.target.value === "paid")
+            getFeeStatus(true);
+        if (event.target.value === "unpaid")
+            getFeeStatus(false);
+        if (event.target.value === "all") {
+            getFee();
+        }
         setKeyword("");
     };
 
@@ -245,7 +239,14 @@ const FeeAdmin = () => {
     const TableFee = ({ fees }) => {
         const feeItem = fees.map((item) => (
             <tr data-key={item.id} key={item.id}>
-                <td><input type="checkbox" id={item.id} /></td>
+                <td><input type="checkbox" checked={listFee[item.id]}
+                    onChange={() => {
+                        setListFee({
+                            ...listFee,
+                            [item.id]: !listFee[item.id]
+                        })
+                    }}
+                /></td>
                 <td>{item.fee_name}</td>
                 <td>{item.start_date}</td>
                 <td>{item.end_date}</td>
@@ -322,6 +323,28 @@ const FeeAdmin = () => {
         setKeyword(e.target.value);
     };
 
+    const resetListFee = () => {
+        Object.keys(listFee).forEach(v => listFee[v] = false)
+    }
+
+    const handleUpdateStatus = () => {
+        FeeService.updateMultipleStatus({
+            fee_list: listFee,
+        })
+            .then((res) => {
+                if (res.success) {
+                    setState(!state);
+                    setErrorServer(false);
+                    resetListFee()
+                    setErrorMessage("");
+                } else {
+                    setErrorServer(true);
+                    setErrorMessage(res.message);
+                }
+            })
+            .catch((error) => console.log("error", error));
+    };
+
     return (
         <div className="main-container">
             <header>
@@ -329,17 +352,20 @@ const FeeAdmin = () => {
                     <h3>Manage Fee</h3>
                 </div>
                 <Dropdown
-                    options={fees}
-                    value={dropValueStatus}
-                    onChange={handleChangeFee}
+                    options={options}
+                    value={dropValue}
+                    onChange={handleChange}
                 />
                 <div className="right-header">
                     <button className="btn-account" onClick={handleAddFee}>
                         Add Fee
                     </button>
-                    <button className="btn-account"     >
+                    <button className="btn-account" onClick={handleUpdateStatus}>
                         Update Status
                     </button>
+                    {/* <button className="btn-account" onClick={handleUpdateStatus(listFee)}>
+                        Update Status
+                    </button> */}
                     <div className="search-box">
                         <button className="btn-search">
                             <FontAwesomeIcon
