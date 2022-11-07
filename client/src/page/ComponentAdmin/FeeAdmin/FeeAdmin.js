@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./FeeAdmin.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
+import { 
     faMagnifyingGlass,
     faArrowLeftLong,
     faArrowRightLong,
