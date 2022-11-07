@@ -1,2 +1,15 @@
 @import "../../../assets/css/variables.css";
 @import "../../../assets/css/custom.css";
+
+
+.previous-btn {
+    position: absolute;
+    left: 0;
+    width: 120px;
+}
+
+.next-btn {
+    position: absolute;
+    right: 0;
+    width: 120px;
+}

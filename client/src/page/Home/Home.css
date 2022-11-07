@@ -5823,7 +5823,7 @@ input[type="button"].btn-block {
   color: #6c757d;
 }
 
-.pagination {
+/* .pagination {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -5842,9 +5842,9 @@ input[type="button"].btn-block {
   color: #444;
   background-color: transparent;
   border: 2px solid #dee2e6;
-}
+} */
 
-.page-link:hover {
+/* .page-link:hover {
   z-index: 2;
   color: #212529;
   text-decoration: none;
@@ -5904,9 +5904,9 @@ input[type="button"].btn-block {
   padding: 0rem 0rem;
   font-size: 0.875rem;
   line-height: 1.5;
-}
+} */
 
-.pagination-sm .page-item:first-child .page-link {
+/* .pagination-sm .page-item:first-child .page-link {
   border-top-left-radius: 0.2rem;
   border-bottom-left-radius: 0.2rem;
 }
@@ -5914,7 +5914,7 @@ input[type="button"].btn-block {
 .pagination-sm .page-item:last-child .page-link {
   border-top-right-radius: 0.2rem;
   border-bottom-right-radius: 0.2rem;
-}
+} */
 
 .badge {
   display: inline-block;
@@ -12371,7 +12371,7 @@ hr {
   opacity: 1;
 }
 
-.pagination .page-item {
+/* .pagination .page-item {
   margin: 0 4px;
 }
 
@@ -12418,7 +12418,7 @@ hr {
 .pagination.pagination-lg .page-item:last-child a {
   line-height: 47px;
   font-size: 14px;
-}
+} */
 
 .progress {
   position: relative;
