@@ -25,6 +25,7 @@ const FeeAdmin = () => {
     const [errorServer, setErrorServer] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [listFee, setListFee] = useState([])
+    const [selectAll, setSelectAll] = useState(false)
     const [dropValue, setDropValue] = useState("All");
 
     useEffect(() => {
@@ -199,7 +200,8 @@ const FeeAdmin = () => {
                     setState(!state);
                     setErrorServer(false);
                     setErrorMessage("");
-                    setUpdateFeeState(false);
+                    setUpdateFeeState(false)
+                    //setDropValue(all);
                     setKeyword("");
                 } else {
                     setErrorServer(true);
@@ -239,7 +241,12 @@ const FeeAdmin = () => {
     const TableFee = ({ fees }) => {
         const feeItem = fees.map((item) => (
             <tr data-key={item.id} key={item.id}>
-                <td><input type="checkbox" checked={listFee[item.id]} name="fee"
+                <td></td>
+                <td><input
+                    className="check-input"
+                    type="checkbox"
+                    checked={listFee[item.id]}
+                    name="fee"
                     onChange={() => {
                         setListFee({
                             ...listFee,
@@ -276,13 +283,17 @@ const FeeAdmin = () => {
                 setId(id);
             }
         }
-
-
-
         const headerFee = (
             <tr>
-                <th><input type="checkbox" onClick={toggle}
-                /> Select</th>
+                <th>
+                    <input
+                        className="check-input"
+                        type="checkbox"
+                        onChange={toggle}
+                        checked={selectAll} />
+                </th>
+                <th>
+                    Select</th>
                 <th>Fee's Name</th>
                 <th>Start date</th>
                 <th>End date</th>
@@ -301,15 +312,23 @@ const FeeAdmin = () => {
     };
     const toggle = (event) => {
         var checkboxes = document.getElementsByName('fee');
+        var hash = {};
         if (event.target.checked) {
             for (var i = 0, n = checkboxes.length; i < n; i++) {
                 checkboxes[i].checked = true;
             }
+            const arrFeeID = fees.map(e => e.id);
+            for (var i = 0; i < arrFeeID.length; i++)
+                hash[arrFeeID[i]] = true;
+            setListFee(hash)
+            setSelectAll(true)
         }
         else {
             for (var i = 0, n = checkboxes.length; i < n; i++) {
                 checkboxes[i].checked = false;
             }
+            setSelectAll(false)
+            resetListFee();
         }
     }
     const ConfirmDelete = (
@@ -339,7 +358,7 @@ const FeeAdmin = () => {
     };
 
     const resetListFee = () => {
-        Object.keys(listFee).forEach(v => listFee[v] = false)
+        setListFee({})
     }
 
     const handleUpdateStatus = () => {
@@ -351,6 +370,7 @@ const FeeAdmin = () => {
                     setState(!state);
                     setErrorServer(false);
                     resetListFee()
+                    setSelectAll(false)
                     setErrorMessage("");
                 } else {
                     setErrorServer(true);

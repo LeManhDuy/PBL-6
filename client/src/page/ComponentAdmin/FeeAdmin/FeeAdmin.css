@@ -2,3 +2,15 @@
 .th-content {
     text-align: center;
 }
+
+.check-input {
+    width: 15px;
+    height: 15px;
+}
+
+.check-input:checked {
+    width: 15px;
+    height: 15px;
+}
+
+.header-input {}
