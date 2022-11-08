@@ -24,6 +24,8 @@ const FeeAdmin = () => {
     const [fees, setFee] = useState([]);
     const [feeCategory, setFeeCategory] = useState([]);
     const [isDelete, setIsDelete] = useState(false);
+    const [isMultiDelete, setIsMultiDelete] = useState(false);
+    const [isMultiUpdate, setIsMultiUpdate] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [listFee, setListFee] = useState([])
@@ -346,6 +348,7 @@ const FeeAdmin = () => {
 
     const handleCloseModalCustom = () => {
         setIsDelete(false);
+        setIsMultiDelete(false);
     };
 
     const handleDelete = () => {
@@ -471,6 +474,9 @@ const FeeAdmin = () => {
     const resetListFee = () => {
         setListFee({})
     }
+    const checkClickUpdate = () => {
+        setIsMultiUpdate(true);
+    }
 
     const handleUpdateStatus = () => {
         FeeService.updateMultipleStatus({
@@ -494,7 +500,27 @@ const FeeAdmin = () => {
                 }
             })
             .catch((error) => console.log("error", error));
+        setIsMultiUpdate(false);
     };
+
+    const ConfirmMultiUpdate = (
+        <ModalCustom
+            show={isMultiUpdate}
+            content={
+                <ConfirmAlert
+                    handleCloseModalCustom={handleCloseModalCustom}
+                    handleDelete={handleUpdateStatus}
+                    title={`Do you want to update status?`}
+                />
+            }
+            handleCloseModalCustom={handleCloseModalCustom}
+        />
+    );
+
+    const checkClickDelete = () => {
+        setIsMultiDelete(true);
+    }
+
     const handleMultiDelete = () => {
         FeeService.deleteMultiFee({
             fee_list: listFee,
@@ -517,7 +543,23 @@ const FeeAdmin = () => {
                 }
             })
             .catch((error) => console.log("error", error));
+        setIsMultiDelete(false);
     };
+
+    const ConfirmMultiDelete = (
+        <ModalCustom
+            show={isMultiDelete}
+            content={
+                <ConfirmAlert
+                    handleCloseModalCustom={handleCloseModalCustom}
+                    handleDelete={handleMultiDelete}
+                    title={`Do you want to delete?`}
+                />
+            }
+            handleCloseModalCustom={handleCloseModalCustom}
+        />
+    );
+
     return (
         <div className="main-container">
             <header>
@@ -538,10 +580,10 @@ const FeeAdmin = () => {
                     <button className="btn-account" onClick={handleAddFee}>
                         Add
                     </button>
-                    <button className="btn-account update" onClick={handleUpdateStatus}>
+                    <button className="btn-account update" onClick={checkClickUpdate}>
                         Update Status
                     </button>
-                    <button className="btn-account delete" onClick={handleMultiDelete}>
+                    <button className="btn-account delete" onClick={checkClickDelete}>
                         Delete
                     </button>
                     {/* <button className="btn-account" onClick={handleUpdateStatus(listFee)}>
@@ -595,6 +637,8 @@ const FeeAdmin = () => {
                     </button>
                     {updateFeeState ? DivUpdateFee : null}
                     {isDelete ? ConfirmDelete : null}
+                    {isMultiDelete ? ConfirmMultiDelete : null}
+                    {isMultiUpdate ? ConfirmMultiUpdate : null}
                     {addFeeState ? DivAddFee : null}
                 </div>
             </footer>
