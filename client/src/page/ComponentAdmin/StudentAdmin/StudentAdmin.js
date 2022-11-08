@@ -234,19 +234,19 @@ const StudentAdmin = () => {
         setKeyword("");
     };
 
-    function PaginatedItems({ itemsPerPage }) {
+    function PaginatedItems({ itemsPerPage, searchStudent }) {
         const [itemOffset, setItemOffset] = useState(0);
         const endOffset = itemOffset + itemsPerPage;
-        const currentItems = student.slice(itemOffset, endOffset);
-        const pageCount = Math.ceil(student.length / itemsPerPage);
+        const currentItems = searchStudent.slice(itemOffset, endOffset);
+        const pageCount = Math.ceil(searchStudent.length / itemsPerPage);
         const handlePageClick = (event) => {
-            const newOffset = (event.selected * itemsPerPage) % student.length;
+            const newOffset = (event.selected * itemsPerPage) % searchStudent.length;
             setItemOffset(newOffset);
         };
         return (
             <>
                 <div className="table-content">
-                    <TableStudent students={searchStudent(currentItems)} />
+                    <TableStudent students={currentItems} />
                 </div>
                 <footer>
                     <hr></hr>
@@ -497,7 +497,7 @@ const StudentAdmin = () => {
                     </div>
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={5} />
+            <PaginatedItems itemsPerPage={5} searchStudent={searchStudent(student)}/>
             {/* <div className="table-content">
                 <TableStudent students={searchStudent(student)} />
             </div>
@@ -533,6 +533,9 @@ const StudentAdmin = () => {
                 {addState ? DivAddStudent : null}
                 {updateState ? DivUpdateStudent : null}
             </footer> */}
+            {isDelete ? ConfirmDelete : null}
+            {addState ? DivAddStudent : null}
+            {updateState ? DivUpdateStudent : null}
         </div>
     );
 };
