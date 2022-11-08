@@ -44,6 +44,7 @@ const createSubjectScore = async (req, res) => {
 
     const existed_score = await Score.find({
         subject_id: req.params.subjectID,
+        pupil_id: pupil_id,
     });
 
     if (existed_score[0]) {

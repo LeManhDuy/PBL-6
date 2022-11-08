@@ -159,6 +159,7 @@ const FormSubject = (props) => {
                 pupil_id: props.id,
             })
                 .then((res) => {
+                    console.log(res);
                     if (res.success) {
                         setState(!state);
                         setIsUpdate(false);
