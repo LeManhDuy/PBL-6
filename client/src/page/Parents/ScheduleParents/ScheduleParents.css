@@ -6,7 +6,7 @@
     align-items: center;
 }
 
-.main-teacher-container {
+.main-student-container {
     display: flex;
     flex-direction: column;
     text-align: center;

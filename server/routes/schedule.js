@@ -10,6 +10,8 @@ const Subject_Teacher = require("../model/SubjectTeacher")
 const multer = require("multer")
 const excelToJson = require('convert-excel-to-json');
 const fs = require('fs');
+const Parent = require("../model/Parent")
+const Pupil = require("../model/Pupil")
 
 // @route POST api/schedule
 // @desc Create Schedule using excel file
@@ -256,6 +258,49 @@ router.get("/home-room-teacher/:personID" ,multer().single(), async (req,res) =>
         }
         return res.status(200).json({success:true, message:"Get Schedule successfully!", 
         schedules})
+    }
+    catch(error){
+        return res.status(500).json({success: false, message: "" + error})
+    }
+});
+
+router.get("/pupil/:pupilID" ,multer().single(), async (req,res) => {
+    try{
+        const getPupilInfor = await Pupil.find({
+            _id: req.params.pupilID,
+        });
+        const classInfor = await Class.findById(getPupilInfor[0].class_id);
+        const schedule = await Schedule.find({class_id: classInfor._id.toString()}).select()
+            .populate({
+                path:'class_id',
+                model: 'Class',
+                select: ['class_name']
+            })
+        let schedules = []
+        for(let s of schedule){
+            const periods = await Period.find({schedule_id:s._id}).select()
+            .populate({
+                path: 'subject_teacher_id',
+                model: 'SubjectTeacher',
+                populate: [{
+                    path: "subject_id",
+                    model: "Subject",
+                    select: ["subject_name"]
+                },{
+                    path: "teacher_id",
+                    model: "Teacher",
+                    select: ["person_id"],
+                    populate:[{
+                        path: "person_id",
+                        model: "Person",
+                        select: ["person_fullname"]
+                    }]
+                }]
+            })
+            schedules.push({schedule:s,periods})
+        }
+        return res.status(200).json({success:true, message:"Get Schedule successfully!", 
+        schedules, name_pupil: getPupilInfor[0].pupil_name})
     }
     catch(error){
         return res.status(500).json({success: false, message: "" + error})
