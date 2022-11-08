@@ -39,6 +39,8 @@ const FeeCategoryAdmin = () => {
                             id: item._id,
                             name: item.fee_name,
                             ammount: item.fee_amount,
+                            start_date: item.start_date.split("T")[0],
+                            end_date: item.end_date.split("T")[0],
                         };
                     }
                 );
@@ -51,9 +53,12 @@ const FeeCategoryAdmin = () => {
     };
 
     const handleConfirmAddFeeCategory = (allValue) => {
+        console.log(allValue);
         FeeCategoryService.addFeeCategory({
             fee_name: allValue.name,
             fee_amount: allValue.ammount,
+            start_date: allValue.start_date,
+            end_date: allValue.end_date,
         })
             .then((res) => {
                 if (res.success) {
@@ -91,9 +96,12 @@ const FeeCategoryAdmin = () => {
     );
 
     const handleConfirmUpdateFeeCategory = (allValue) => {
+        console.log(allValue);
         FeeCategoryService.updateFeeCategory(Id, {
             fee_name: allValue.name,
             fee_amount: allValue.ammount,
+            start_date: allValue.start_date,
+            end_date: allValue.end_date,
         })
             .then((res) => {
                 if (res.success) {
@@ -168,6 +176,8 @@ const FeeCategoryAdmin = () => {
             <tr data-key={item.id} key={item.id}>
                 <td>{item.name}</td>
                 <td>{item.ammount}</td>
+                <td>{item.start_date}</td>
+                <td>{item.end_date}</td>
                 <td onClick={click}>
                     <i className="fa-regular fa-pen-to-square btn-edit"></i>
                     <i className="fa-regular fa-trash-can btn-delete"></i>
@@ -196,6 +206,8 @@ const FeeCategoryAdmin = () => {
             <tr>
                 <th>Name</th>
                 <th>Amount</th>
+                <th>Start Date</th>
+                <th>End Date</th>
                 <th>Action</th>
             </tr>
         );

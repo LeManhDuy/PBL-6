@@ -1,14 +1,22 @@
 const mongoose = require("mongoose");
 
 const feeCategorySchema = new mongoose.Schema({
-    fee_name:{
+    fee_name: {
         type: String,
         require: true
     },
-    fee_amount:{
+    start_date: {
+        type: Date,
+        require: true
+    },
+    end_date: {
+        type: Date,
+        require: true
+    },
+    fee_amount: {
         type: String,
         require: true
     }
 })
 
-module.exports = mongoose.model('FeeCategory',feeCategorySchema)
+module.exports = mongoose.model('FeeCategory', feeCategorySchema)

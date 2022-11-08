@@ -13,4 +13,18 @@
     height: 15px;
 }
 
-.header-input {}
+.btn-account.delete {
+    background-color: var(--error-color);
+}
+
+.btn-account.delete:hover {
+    background-color: #cf3e3e;
+}
+
+.btn-account.update {
+    background-color: var(--success-color);
+}
+
+.btn-account.update:hover {
+    background-color: #317f3e;
+}

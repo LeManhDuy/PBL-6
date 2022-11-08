@@ -11,6 +11,7 @@ import ModalInput from "../../../lib/ModalInput/ModalInput";
 import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
 import FeeService from "../../../config/service/FeeService";
+import FeeCategoryService from "../../../config/service/FeeCategoryService";
 import UpdateFee from "../../../lib/ModalInput/UpdateFee/UpdateFee";
 
 const FeeAdmin = () => {
@@ -21,20 +22,23 @@ const FeeAdmin = () => {
     const [keyword, setKeyword] = useState("");
     const [state, setState] = useState(false);
     const [fees, setFee] = useState([]);
+    const [feeCategory, setFeeCategory] = useState([]);
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [listFee, setListFee] = useState([])
     const [selectAll, setSelectAll] = useState(false)
     const [dropValue, setDropValue] = useState("All");
+    const [dropValueFeeCateogory, setDropValueFeeCateogory] = useState("All");
 
     useEffect(() => {
         getFee();
+        getFeeCategory();
     }, [state]);
 
     const options = [
         { key: 1, label: "All", value: "all" },
-        { key: 2, label: "Paid", value: "paid" },
+        { key: 2, label: "Paided", value: "paided" },
         { key: 3, label: "UnPaid", value: "unpaid" },
     ];
 
@@ -51,12 +55,16 @@ const FeeAdmin = () => {
                         pupil_name: item.pupil_id
                             ? item.pupil_id.pupil_name
                             : "Empty",
-                        start_date: item.start_date.split("T")[0],
-                        end_date: item.end_date.split("T")[0],
+                        start_date: item.fee_category_id.start_date
+                            ? item.fee_category_id.start_date.split("T")[0]
+                            : "YYYY-MM-DD",
+                        end_date: item.fee_category_id.end_date
+                            ? item.fee_category_id.end_date.split("T")[0]
+                            : "YYYY-MM-DD",
                         paid_date: item.paid_date
                             ? item.paid_date.split("T")[0]
                             : "YYYY-MM-DD",
-                        fee_status: item.fee_status ? "PAID" : "UNPAID",
+                        fee_status: item.fee_status ? "PAIDED" : "UNPAID",
                     };
                 });
                 const dataSourcesSorted = [...dataSources].sort((a, b) => a.fee_name > b.fee_name ? 1 : -1,);
@@ -66,8 +74,6 @@ const FeeAdmin = () => {
                 console.log(error);
             });
     };
-
-
 
     const getFeeStatus = (status) => {
         FeeService.getFeeStatus(status)
@@ -82,12 +88,16 @@ const FeeAdmin = () => {
                         pupil_name: item.pupil_id
                             ? item.pupil_id.pupil_name
                             : "Empty",
-                        start_date: item.start_date.split("T")[0],
-                        end_date: item.end_date.split("T")[0],
+                        start_date: item.fee_category_id.start_date
+                            ? item.fee_category_id.start_date.split("T")[0]
+                            : "YYYY-MM-DD",
+                        end_date: item.fee_category_id.end_date
+                            ? item.fee_category_id.end_date.split("T")[0]
+                            : "YYYY-MM-DD",
                         paid_date: item.paid_date
                             ? item.paid_date.split("T")[0]
                             : "YYYY-MM-DD",
-                        fee_status: item.fee_status ? "PAID" : "UNPAID",
+                        fee_status: item.fee_status ? "PAIDED" : "UNPAID",
                     };
                 });
                 const dataSourcesSorted = [...dataSources].sort((a, b) => a.fee_name > b.fee_name ? 1 : -1,);
@@ -97,6 +107,59 @@ const FeeAdmin = () => {
                 console.log(error);
             });
     };
+
+    const getFeeCategory = () => {
+        FeeCategoryService.getFeeCategory()
+            .then((response) => {
+                const dataSources = response.allFeeCategory.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            name: item.fee_name,
+                        };
+                    }
+                );
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setFeeCategory(dataSourcesSorted);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+    const getFeeByFeeCategoryId = (filter) => {
+        FeeService.getFeeByFeeCategoryId(filter)
+            .then((response) => {
+                const dataSources = response.getfeeInfor.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
+                        fee_name: item.fee_category_id
+                            ? item.fee_category_id.fee_name
+                            : "Empty",
+                        pupil_name: item.pupil_id
+                            ? item.pupil_id.pupil_name
+                            : "Empty",
+                        start_date: item.fee_category_id.start_date
+                            ? item.fee_category_id.start_date.split("T")[0]
+                            : "YYYY-MM-DD",
+                        end_date: item.fee_category_id.end_date
+                            ? item.fee_category_id.end_date.split("T")[0]
+                            : "YYYY-MM-DD",
+                        paid_date: item.paid_date
+                            ? item.paid_date.split("T")[0]
+                            : "YYYY-MM-DD",
+                        fee_status: item.fee_status ? "PAIDED" : "UNPAID",
+                    }
+                })
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.class_name > b.class_name ? 1 : -1,);
+                setFee(dataSourcesSorted)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
 
     const Dropdown = ({ value, options, onChange }) => {
         return (
@@ -116,15 +179,57 @@ const FeeAdmin = () => {
             </label>
         );
     };
+    const DropdownFeeCategory = ({ value, options, onChange }) => {
+        return (
+            <label>
+                Type
+                <select
+                    className="dropdown-account"
+                    value={value}
+                    onChange={onChange}
+                >
+                    <option value="All">All</option>
+                    {options.map((option) => (
+                        <option key={option.key} value={option.id}>
+                            {option.name}
+                        </option>
+                    ))}
+                </select>
+            </label>
+        );
+    };
+    const handleFeeCategoryChange = (event) => {
+        setDropValueFeeCateogory(event.target.value);
+        feeCategory.map((item) => {
+            if (event.target.value === item.id) {
+                getFeeByFeeCategoryId(item.id);
+            } else if (event.target.value === "All") {
+                getFee();
+                setDropValue("All")
+            }
+        });
+        setKeyword("");
+    };
 
     const handleChange = (event) => {
         setDropValue(event.target.value);
-        if (event.target.value === "paid")
-            getFeeStatus(true);
-        if (event.target.value === "unpaid")
-            getFeeStatus(false);
+        if (event.target.value === "paided") {
+            const feesArray = fees.filter(
+                (fee) =>
+                    fee.fee_status.toLowerCase().includes("paided")
+            );
+            setFee(feesArray)
+        }
+        if (event.target.value === "unpaid") {
+            const feesArray = fees.filter(
+                (fee) =>
+                    fee.fee_status.toLowerCase().includes("unpaid")
+            );
+            setFee(feesArray)
+        }
         if (event.target.value === "all") {
             getFee();
+            setDropValueFeeCateogory("All")
         }
         setKeyword("");
     };
@@ -141,8 +246,6 @@ const FeeAdmin = () => {
             allValue.paid_date = null;
         }
         FeeService.addFee({
-            start_date: allValue.start_date,
-            end_date: allValue.end_date,
             paid_date: allValue.paid_date,
             fee_status: allValue.fee_status,
             fee_category_id: allValue.fee_category,
@@ -155,10 +258,14 @@ const FeeAdmin = () => {
                     setErrorMessage("");
                     setAddFeeState(false);
                     setKeyword("");
+                    setDropValue("All")
+                    setDropValueFeeCateogory("All")
                 } else {
                     setErrorServer(true);
                     setErrorMessage(res.message);
                     setAddFeeState(true);
+                    setDropValue("All")
+                    setDropValueFeeCateogory("All")
                 }
             })
             .catch((error) => console.log("error", error));
@@ -188,8 +295,6 @@ const FeeAdmin = () => {
             allValue.paid_date = null;
         }
         FeeService.updateFee(id, {
-            start_date: allValue.start_date,
-            end_date: allValue.end_date,
             paid_date: allValue.paid_date,
             fee_status: allValue.fee_status,
             fee_category_id: allValue.fee_category,
@@ -201,12 +306,15 @@ const FeeAdmin = () => {
                     setErrorServer(false);
                     setErrorMessage("");
                     setUpdateFeeState(false)
-                    //setDropValue(all);
                     setKeyword("");
+                    setDropValue("All")
+                    setDropValueFeeCateogory("All")
                 } else {
                     setErrorServer(true);
                     setErrorMessage(res.message);
                     setUpdateFeeState(true);
+                    setDropValue("All")
+                    setDropValueFeeCateogory("All")
                 }
             })
             .catch((error) => console.log("error", error));
@@ -262,7 +370,6 @@ const FeeAdmin = () => {
                 <td>{item.fee_status}</td>
                 <td onClick={click}>
                     <i className="fa-regular fa-pen-to-square btn-edit"></i>
-                    <i className="fa-regular fa-trash-can btn-delete"></i>
                 </td>
             </tr>
         ));
@@ -270,15 +377,7 @@ const FeeAdmin = () => {
         function click(e) {
             const id =
                 e.target.parentElement.parentElement.getAttribute("data-key");
-            if (e.target.className.includes("btn-delete")) {
-                setIsDelete(true);
-                setId(id);
-                setName(
-                    e.target.parentElement.parentElement.querySelectorAll(
-                        "td"
-                    )[0].textContent
-                );
-            } else if (e.target.className.includes("btn-edit")) {
+            if (e.target.className.includes("btn-edit")) {
                 setUpdateFeeState(true);
                 setId(id);
             }
@@ -338,7 +437,7 @@ const FeeAdmin = () => {
                 <ConfirmAlert
                     handleCloseModalCustom={handleCloseModalCustom}
                     handleDelete={handleDelete}
-                    title={`Do you want to delete the ${name}?`}
+                    title={`Do you want to delete?`}
                 />
             }
             handleCloseModalCustom={handleCloseModalCustom}
@@ -349,7 +448,8 @@ const FeeAdmin = () => {
         return fees.filter(
             (fee) =>
                 fee.fee_name.toLowerCase().includes(keyword.toLowerCase()) ||
-                fee.pupil_name.toLowerCase().includes(keyword.toLowerCase())
+                fee.pupil_name.toLowerCase().includes(keyword.toLowerCase()) ||
+                fee.fee_status.toLowerCase().includes(keyword.toLowerCase())
         );
     };
 
@@ -372,20 +472,52 @@ const FeeAdmin = () => {
                     resetListFee()
                     setSelectAll(false)
                     setErrorMessage("");
+                    setDropValue("All")
+                    setDropValueFeeCateogory("All")
                 } else {
                     setErrorServer(true);
                     setErrorMessage(res.message);
+                    setDropValue("All")
+                    resetListFee()
+                    setDropValueFeeCateogory("All")
                 }
             })
             .catch((error) => console.log("error", error));
     };
-
+    const handleMultiDelete = () => {
+        FeeService.deleteMultiFee({
+            fee_list: listFee,
+        })
+            .then((res) => {
+                if (res.success) {
+                    setState(!state);
+                    setErrorServer(false);
+                    resetListFee()
+                    setSelectAll(false)
+                    setErrorMessage("");
+                    setDropValue("All")
+                    setDropValueFeeCateogory("All")
+                } else {
+                    setErrorServer(true);
+                    setErrorMessage(res.message);
+                    setDropValue("All")
+                    setDropValueFeeCateogory("All")
+                    resetListFee()
+                }
+            })
+            .catch((error) => console.log("error", error));
+    };
     return (
         <div className="main-container">
             <header>
                 <div>
                     <h3>Manage Fee</h3>
                 </div>
+                <DropdownFeeCategory
+                    options={feeCategory}
+                    value={dropValueFeeCateogory}
+                    onChange={handleFeeCategoryChange}
+                />
                 <Dropdown
                     options={options}
                     value={dropValue}
@@ -393,10 +525,13 @@ const FeeAdmin = () => {
                 />
                 <div className="right-header">
                     <button className="btn-account" onClick={handleAddFee}>
-                        Add Fee
+                        Add
                     </button>
-                    <button className="btn-account" onClick={handleUpdateStatus}>
-                        Update Status
+                    <button className="btn-account update" onClick={handleUpdateStatus}>
+                        Update
+                    </button>
+                    <button className="btn-account delete" onClick={handleMultiDelete}>
+                        Delete
                     </button>
                     {/* <button className="btn-account" onClick={handleUpdateStatus(listFee)}>
                         Update Status
