@@ -3,6 +3,7 @@ import "./UpdateScore.css";
 import ScoreService from "../../../../../config/service/ScoreService";
 
 const UpdateScore = (props) => {
+    const [type, setType] = useState("PUT");
     const [score, setScore] = useState({
         name: "",
         midterm_score: "",
@@ -18,13 +19,17 @@ const UpdateScore = (props) => {
     }, []);
 
     const getScoreByID = () => {
-        ScoreService.getScoreByID(props.id).then((res) => {
-            setScore({
-                midterm_score: res.scoreInfor.midterm_score,
-                final_score: res.scoreInfor.final_score,
-                name: res.scoreInfor.subject_id.subject_name,
+        if (props.id) {
+            ScoreService.getScoreByID(props.id).then((res) => {
+                setScore({
+                    midterm_score: res.scoreInfor.midterm_score,
+                    final_score: res.scoreInfor.final_score,
+                    name: res.scoreInfor.subject_id.subject_name,
+                });
             });
-        });
+        } else {
+            setType("POST");
+        }
     };
 
     const changeHandler = (e) => {
@@ -64,7 +69,7 @@ const UpdateScore = (props) => {
         });
 
         if (!check) {
-            props.handleConfirmUpdateScore(score);
+            props.handleConfirmUpdateScore(score, type);
         }
     };
 

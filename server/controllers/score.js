@@ -27,22 +27,30 @@ const createSubjectScore = async (req, res) => {
             message: "final_score:invalid format",
         });
 
-    const existed_student = await Pupil.findOne({ _id: pupil_id });
-
+    const existed_student = await Pupil.findById(pupil_id);
     if (!existed_student) {
         return res
             .status(400)
             .json({ success: false, message: "Pupil does not found." });
     }
 
-    const existed_subject = await Subject.findOne({
-        _id: req.params.subjectID,
-    });
+    const existed_subject = await Subject.findById(req.params.subjectID);
 
     if (!existed_subject) {
         return res
             .status(400)
             .json({ success: false, message: "Subject does not found!" });
+    }
+
+    const existed_score = await Score.find({
+        subject_id: req.params.subjectID,
+    });
+
+    if (existed_score[0]) {
+        return res.status(400).json({
+            success: false,
+            message: "This subject already has point.",
+        });
     }
 
     //all good
@@ -89,7 +97,7 @@ const getScoreByPupilId = async (req, res) => {
         const pupilScore = await Score.find({
             pupil_id: req.params.studentID,
         })
-            .select(["midterm_score", "final_score"])
+            .select(["midterm_score", "final_score", "result"])
             .populate({ path: "subject_id", model: "Subject" });
         res.status(200).json({
             success: true,

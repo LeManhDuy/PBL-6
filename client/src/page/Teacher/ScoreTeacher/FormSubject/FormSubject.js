@@ -9,6 +9,7 @@ const FormSubject = (props) => {
     const [id, setId] = useState("");
     const [isUpdate, setIsUpdate] = useState(false);
     const [state, setState] = useState(false);
+    const [subjectID, setSubjectID] = useState("");
 
     useEffect(() => {
         getSubjectByPupilID();
@@ -16,53 +17,59 @@ const FormSubject = (props) => {
 
     const getSubjectByPupilID = async () => {
         let dataSources = [];
+        let scoreSources = [];
         await ScoreService.getSubjectByPupilID(props.id)
             .then((res) => {
                 dataSources = res.subjects.map((item, index) => {
                     return {
                         key: index + 1,
-                        id: item._id,
+                        subject_id: item._id,
                         name: item.subject_name,
+                        score_id: "",
+                        midterm_score: "",
+                        final_score: "",
+                        result: "",
                     };
                 });
             })
             .catch((error) => {
                 console.log(error);
             });
-        let dataNew = [];
-        for (let itemOutside of dataSources) {
-            await ScoreService.getAllScoreByPupilID(props.id).then((res) => {
-                const detail = res.pupilScore.map((item) => {
+        await ScoreService.getAllScoreByPupilID(props.id)
+            .then((res) => {
+                scoreSources = res.pupilScore.map((item) => {
                     return {
-                        _id:
-                            item.subject_id._id === itemOutside.id
-                                ? item._id
-                                : "",
-                        midterm_score:
-                            item.subject_id._id === itemOutside.id
-                                ? item.midterm_score
-                                : "",
-                        final_score:
-                            item.subject_id._id === itemOutside.id
-                                ? item.final_score
-                                : "",
+                        _id: item._id,
+                        midterm_score: item.midterm_score,
+                        final_score: item.final_score,
+                        result: item.result,
+                        subject_id: item.subject_id._id,
                     };
                 });
-                let subject = {
-                    key: itemOutside.key,
-                    id: itemOutside.id,
-                    name: itemOutside.name,
-                    detail: detail,
-                };
-                dataNew.push(subject);
+            })
+            .catch((error) => {
+                console.log(error);
             });
+        for (let item of scoreSources) {
+            for (let subject of dataSources) {
+                if (subject.subject_id === item.subject_id) {
+                    subject.score_id = item._id;
+                    subject.midterm_score = item.midterm_score;
+                    subject.final_score = item.final_score;
+                    subject.result = item.result;
+                }
+            }
         }
-        setSubject(dataNew);
+        setSubject(dataSources);
     };
 
     const TableSubject = ({ subjects }) => {
         const subjectItem = subjects.map((item) => (
-            <tr key={item.key} data-key={item.detail[0]._id}>
+            <tr
+                key={item.key}
+                data-key={item.score_id}
+                data-sub={item.subject_id}
+            >
                 <td>{item.name}</td>
                 <td className="th-content">
                     <input
@@ -70,11 +77,7 @@ const FormSubject = (props) => {
                         min="0"
                         max="10"
                         disabled={true}
-                        value={
-                            !!item.detail[0].midterm_score
-                                ? item.detail[0].midterm_score.toString()
-                                : ""
-                        }
+                        value={item.midterm_score}
                     ></input>
                 </td>
                 <td className="th-content">
@@ -83,14 +86,10 @@ const FormSubject = (props) => {
                         min="0"
                         max="10"
                         disabled={true}
-                        value={
-                            !!item.detail[0].final_score
-                                ? item.detail[0].final_score.toString()
-                                : ""
-                        }
+                        value={item.final_score}
                     ></input>
                 </td>
-                <td>A</td>
+                <td>{item.result}</td>
                 <td>
                     <i
                         onClick={click}
@@ -103,9 +102,12 @@ const FormSubject = (props) => {
         function click(e) {
             const id =
                 e.target.parentElement.parentElement.getAttribute("data-key");
+            const subject =
+                e.target.parentElement.parentElement.getAttribute("data-sub");
             if (e.target.className.includes("btn-edit")) {
                 setIsUpdate(true);
                 setId(id);
+                setSubjectID(subject);
             }
         }
 
@@ -133,23 +135,41 @@ const FormSubject = (props) => {
         setIsUpdate(false);
     };
 
-    const handleConfirmUpdateScore = (score) => {
-        console.log(score);
-        ScoreService.updateScoreByID(id, {
-            midterm_score: score.midterm_score,
-            final_score: score.final_score,
-        })
-            .then((res) => {
-                if (res.success) {
-                    setState(!state);
-                    setIsUpdate(false);
-                } else {
-                    setIsUpdate(true);
-                }
+    const handleConfirmUpdateScore = (score, type) => {
+        if (type === "PUT") {
+            ScoreService.updateScoreByID(id, {
+                midterm_score: score.midterm_score,
+                final_score: score.final_score,
             })
-            .catch((err) => {
-                console.log(err);
-            });
+                .then((res) => {
+                    if (res.success) {
+                        setState(!state);
+                        setIsUpdate(false);
+                    } else {
+                        setIsUpdate(true);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } else {
+            ScoreService.createSubjectScore(subjectID, {
+                midterm_score: score.midterm_score,
+                final_score: score.final_score,
+                pupil_id: props.id,
+            })
+                .then((res) => {
+                    if (res.success) {
+                        setState(!state);
+                        setIsUpdate(false);
+                    } else {
+                        setIsUpdate(true);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
     };
 
     const DivUpdateScoreTeacher = (
