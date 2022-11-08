@@ -90,6 +90,11 @@ function UserHeader() {
             label: "Fee",
             link: ROUTES.PARENTS_PAGE.PARENTS_FEE_PATH,
         },
+        {
+            key: 7,
+            label: "Schedule",
+            link: ROUTES.PARENTS_PAGE.PARENTS_SCHEDULE_PATH,
+        },
     ];
 
     const optionsTeacher = [

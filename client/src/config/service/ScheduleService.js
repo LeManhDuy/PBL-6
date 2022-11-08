@@ -6,6 +6,10 @@ const getSchedule = async () => {
 
 const getScheduleByHomeRoomTeacher = async (id) =>{
     return await HandleApi.APIGetWithToken(`schedule/home-room-teacher/${id}`)
+}
+
+const getScheduleByPupilID = async (id) =>{
+    return await HandleApi.APIGetWithToken(`schedule/pupil/${id}`)
 } 
 
 const AddScheduleByFile = async (file) => {
@@ -18,6 +22,7 @@ const DeleteScheduleById = async (id) =>{
 const ScheduleService = {
     getSchedule,
     getScheduleByHomeRoomTeacher,
+    getScheduleByPupilID,
     AddScheduleByFile,
     DeleteScheduleById
 };

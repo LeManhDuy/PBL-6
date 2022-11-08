@@ -392,7 +392,7 @@ router.get("/get-pupil-by-parent/:personID", async (req, res) => {
     try {
         // Return token
         const getParentsInfor = await Parent.find({
-            account_id: req.params.personID,
+            person_id: req.params.personID,
         });
         const getPupilInfor = await Pupil.find({
             parent_id: getParentsInfor[0]._id.toString(),

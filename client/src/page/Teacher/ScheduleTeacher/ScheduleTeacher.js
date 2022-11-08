@@ -4,7 +4,7 @@ import ScheduleService from "../../../config/service/ScheduleService";
 import ModalInput from "../../../lib/ModalInput/ModalInput";
 import ShowPeriod from "../../../lib/ModalInput/ShowPeriod/ShowPeriod";
 
-const ScheduleAdmin = () => {
+const ScheduleTeacher = () => {
     const [state,setState] = useState(false)
     const [tableContent, setTableContent] = useState({
         key: "",
@@ -170,7 +170,7 @@ const ScheduleAdmin = () => {
     );
 
     return (
-        <div className="main-container">
+        <div className="main-teacher-container">
             <header>
                 <div>
                     <h3>Show Schedule { tableContent.class_name } </h3>
@@ -188,4 +188,4 @@ const ScheduleAdmin = () => {
     );
 };
 
-export default ScheduleAdmin;
+export default ScheduleTeacher;
