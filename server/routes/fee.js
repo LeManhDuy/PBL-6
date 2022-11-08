@@ -20,6 +20,13 @@ router.get("/", async (req, res) => {
                 path: "pupil_id",
                 model: "Pupil",
                 select: ["pupil_name"],
+                populate: [
+                    {
+                        path: "class_id",
+                        model: "Class",
+                        select: ["class_name"],
+                    },
+                ],
             })
         res.json({ success: true, allFee })
     }
@@ -180,35 +187,47 @@ router.get("/get-fee-infor-by-parent-id/:personID", async (req, res) => {
 // // @desc post fee
 // // @access Private
 router.post("/", async (req, res) => {
-    const { paid_date, fee_category_id, pupil_id } = req.body
-    if (!fee_category_id || !pupil_id)
+    const { list_pupil, paid_date, fee_category_id } = req.body
+    if (!list_pupil || !fee_category_id)
         return res.status(400).json({
             success: false,
             message: "Please fill in complete information.",
         })
-    const feeValidate = await Fee.findOne({ fee_category_id, pupil_id })
-    if (feeValidate)
-        return res
-            .status(400)
-            .json({ success: false, message: "Fee for this pupil is already existed." })
-
-
-
     try {
-        let checkStatus = false
-        if (paid_date)
-            checkStatus = true
-        const newFee = new Fee({
-            fee_status: checkStatus,
-            paid_date,
-            fee_category_id,
-            pupil_id
-        })
-        await newFee.save()
-        res.json({
-            success: true,
-            message: "Create Fee Successfully.",
-            newFee,
+        for (const [key, value] of Object.entries(list_pupil)) {
+            if (value == true) {
+                const feeValidate = await Fee.findOne({ fee_category_id, pupil_id: key })
+                    .populate({
+                        path: "pupil_id",
+                        model: "Pupil",
+                        select: ["pupil_name"],
+                    })
+                if (feeValidate)
+                    return res
+                        .status(400)
+                        .json({ success: false, message: "Fee for " + feeValidate.pupil_id.pupil_name + " is already existed " })
+                let checkStatus = false
+                if (paid_date)
+                    checkStatus = true
+                //validate fee id
+                const existed_puil = await Pupil.findOne({ _id: key })
+                if (!existed_puil) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "Pupil dont exist",
+                    })
+                }
+                let newFee = new Fee({
+                    fee_status: checkStatus,
+                    paid_date,
+                    fee_category_id,
+                    pupil_id: key
+                })
+                await newFee.save()
+            }
+        }
+        return res.status(200).json({
+            success: true, message: "Update Fee Status Successfully!",
         })
     }
     catch (error) {
@@ -271,10 +290,6 @@ router.put("/:feeId", async (req, res) => {
 
 router.post("/multi", async (req, res) => {
     const { fee_list } = req.body
-    // return res.status(400).json({
-    //     success: false,
-    //     subject_list
-    // })
     if (!fee_list)
         return res.status(400).json({
             success: false,
@@ -315,7 +330,6 @@ router.post("/multi", async (req, res) => {
         return res.status(200).json({
             success: true, message: "Update Fee Status Successfully!",
         })
-
     }
     catch (error) {
         return res.status(500).json({ success: false, message: "" + error })

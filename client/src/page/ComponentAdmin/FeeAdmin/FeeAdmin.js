@@ -55,6 +55,11 @@ const FeeAdmin = () => {
                         pupil_name: item.pupil_id
                             ? item.pupil_id.pupil_name
                             : "Empty",
+                        class_name: item.pupil_id
+                            ? item.pupil_id.class_id
+                                ? item.pupil_id.class_id.class_name
+                                : "Empty"
+                            : "Empty",
                         start_date: item.fee_category_id.start_date
                             ? item.fee_category_id.start_date.split("T")[0]
                             : "YYYY-MM-DD",
@@ -67,7 +72,7 @@ const FeeAdmin = () => {
                         fee_status: item.fee_status ? "PAIDED" : "UNPAID",
                     };
                 });
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.fee_name > b.fee_name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) => a.class_name > b.class_name ? 1 : -1,);
                 setFee(dataSourcesSorted);
             })
             .catch((error) => {
@@ -141,6 +146,11 @@ const FeeAdmin = () => {
                         pupil_name: item.pupil_id
                             ? item.pupil_id.pupil_name
                             : "Empty",
+                        class_name: item.pupil_id
+                            ? item.pupil_id.class_id
+                                ? item.pupil_id.class_id.class_name
+                                : "Empty"
+                            : "Empty",
                         start_date: item.fee_category_id.start_date
                             ? item.fee_category_id.start_date.split("T")[0]
                             : "YYYY-MM-DD",
@@ -208,7 +218,6 @@ const FeeAdmin = () => {
                 setDropValue("All")
             }
         });
-        setKeyword("");
     };
 
     const handleChange = (event) => {
@@ -231,7 +240,6 @@ const FeeAdmin = () => {
             getFee();
             setDropValueFeeCateogory("All")
         }
-        setKeyword("");
     };
 
     const handleInputCustom = () => {
@@ -241,15 +249,15 @@ const FeeAdmin = () => {
         setUpdateFeeState(false);
     };
 
-    const handleConfirmAddFee = (allValue) => {
+    const handleConfirmAddFee = (allValue, list_pupil) => {
         if (allValue.fee_status === "false" || allValue.fee_status == "") {
             allValue.paid_date = null;
         }
         FeeService.addFee({
+            list_pupil: list_pupil,
             paid_date: allValue.paid_date,
             fee_status: allValue.fee_status,
             fee_category_id: allValue.fee_category,
-            pupil_id: allValue.pupil,
         })
             .then((res) => {
                 if (res.success) {
@@ -367,6 +375,7 @@ const FeeAdmin = () => {
                 <td>{item.end_date}</td>
                 <td>{item.paid_date}</td>
                 <td>{item.pupil_name}</td>
+                <td>{item.class_name}</td>
                 <td>{item.fee_status}</td>
                 <td onClick={click}>
                     <i className="fa-regular fa-pen-to-square btn-edit"></i>
@@ -398,6 +407,7 @@ const FeeAdmin = () => {
                 <th>End date</th>
                 <th>Paid date</th>
                 <th>Student's Name</th>
+                <th>Class Name</th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>
@@ -449,7 +459,8 @@ const FeeAdmin = () => {
             (fee) =>
                 fee.fee_name.toLowerCase().includes(keyword.toLowerCase()) ||
                 fee.pupil_name.toLowerCase().includes(keyword.toLowerCase()) ||
-                fee.fee_status.toLowerCase().includes(keyword.toLowerCase())
+                fee.fee_status.toLowerCase().includes(keyword.toLowerCase()) ||
+                fee.class_name.toLowerCase().includes(keyword.toLowerCase())
         );
     };
 
@@ -528,7 +539,7 @@ const FeeAdmin = () => {
                         Add
                     </button>
                     <button className="btn-account update" onClick={handleUpdateStatus}>
-                        Update
+                        Update Status
                     </button>
                     <button className="btn-account delete" onClick={handleMultiDelete}>
                         Delete

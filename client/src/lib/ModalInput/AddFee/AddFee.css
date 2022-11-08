@@ -169,3 +169,21 @@
 .input-content.date {
   width: 300px;
 }
+
+.check-input:checked {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.check-input {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.type-header {
+  display: flex;
+}
+
+.type-header.input {
+  margin-right: 10px;
+}

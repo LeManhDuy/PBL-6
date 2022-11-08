@@ -198,51 +198,6 @@ const UpdateFee = (props) => {
         }
     };
 
-    // const FeeCategoryDropDown = ({
-    //     value,
-    //     options,
-    //     onChange,
-    //     feecategoryValue,
-    // }) => {
-    //     return (
-    //         <select className="dropdown-Fee" value={value} onChange={onChange}>
-    //             <option key={10000} value="Pick">
-    //                 FeeCategory
-    //             </option>
-    //             {options.map((option) => (
-    //                 <option
-    //                     key={option.key}
-    //                     value={option.fee_category}
-    //                     data-key={option.id}
-    //                     selected={feecategoryValue === option.id}
-    //                 >
-    //                     {option.fee_category}
-    //                 </option>
-    //             ))}
-    //         </select>
-    //     );
-    // };
-
-    // const PupilDropDown = ({ value, options, onChange, pupilValue }) => {
-    //     return (
-    //         <select className="dropdown-Fee" value={value} onChange={onChange}>
-    //             <option key={10000} value="Pick">
-    //                 Pupils
-    //             </option>
-    //             {options.map((option) => (
-    //                 <option
-    //                     key={option.key}
-    //                     value={option.pupil}
-    //                     data-key={option.id}
-    //                     selected={pupilValue === option.id}
-    //                 >
-    //                     {option.pupil}
-    //                 </option>
-    //             ))}
-    //         </select>
-    //     );
-    // };
-
     const handleFeeCategoryChange = (event) => {
         setFeeCategoryDropValue(event);
         setAllValuesFee({
