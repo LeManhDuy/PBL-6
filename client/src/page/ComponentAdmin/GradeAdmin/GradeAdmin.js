@@ -12,6 +12,7 @@ import AddGrade from "../../../lib/ModalInput/AddGrade/AddGrade";
 import UpdateGrade from "../../../lib/ModalInput/UpdateGrade/UpdateGrade";
 import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
+import ReactPaginate from "react-paginate";
 
 const GradeAdmin = () => {
     const [addGradeState, setAddGradeState] = useState(false);
@@ -23,6 +24,7 @@ const GradeAdmin = () => {
     const [errorServer, setErrorServer] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
     const [name, setName] = useState();
+    const [keyword, setKeyword] = useState("");
 
     useEffect(() => {
         getGrade();
@@ -157,6 +159,59 @@ const GradeAdmin = () => {
         setErrorMessage("");
     };
 
+    const searchGrade = (grades) => {
+        return grades.filter(
+            (grade) =>
+                grade.name.toLowerCase().includes(keyword.toLowerCase())
+        );
+    };
+
+    const handleChangeSearch = (e) => {
+        setKeyword(e.target.value);
+    };
+
+    function PaginatedItems({ itemsPerPage, searchGrade }) {
+        const [itemOffset, setItemOffset] = useState(0);
+        const endOffset = itemOffset + itemsPerPage;
+        const currentItems = searchGrade.slice(itemOffset, endOffset);
+        const pageCount = Math.ceil(searchGrade.length / itemsPerPage);
+        const handlePageClick = (event) => {
+            const newOffset = (event.selected * itemsPerPage) % searchGrade.length;
+            setItemOffset(newOffset);
+        };
+        return (
+            <>
+                <div className="table-content">
+                    <TableGrade grades={currentItems} />
+                </div>
+                <footer>
+                    <hr></hr>
+                    <ReactPaginate
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        breakLabel="..."
+                        breakClassName="page-item"
+                        breakLinkClassName="page-link"
+                        pageCount={pageCount}
+                        pageRangeDisplayed={4}
+                        marginPagesDisplayed={2}
+                        onPageChange={handlePageClick}
+                        containerClassName="pagination justify-content-center"
+                        pageClassName="page-item mr-2 ml-2"
+                        pageLinkClassName="page-link"
+                        previousClassName="previous-btn page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="next-btn page-item"
+                        nextLinkClassName="page-link"
+                        activeClassName="active"
+                        hrefAllControls
+                    />
+                </footer>
+
+            </>
+        );
+    }
+
     const TableGrade = ({ grades }) => {
         const gradeItem = grades.map((item) => (
             <tr data-key={item.id} key={item.id}>
@@ -208,7 +263,7 @@ const GradeAdmin = () => {
                     <button className="btn-account" onClick={handleAddGrade}>
                         Add Grade
                     </button>
-                    {/* <div className="search-box">
+                    <div className="search-box">
                         <button className="btn-search">
                             <FontAwesomeIcon
                                 className="icon-search"
@@ -216,17 +271,20 @@ const GradeAdmin = () => {
                             />
                         </button>
                         <input
+                            onChange={handleChangeSearch}
                             className="input-search"
                             type="text"
                             placeholder="Search..."
+                            value={keyword}
                         ></input>
-                    </div> */}
+                    </div>
                 </div>
             </header>
-            <div className="table-content">
-                <TableGrade grades={grades} />
-            </div>
-            <footer>
+            <PaginatedItems itemsPerPage={2} searchGrade={searchGrade(grades)}/>
+            {/* <div className="table-content">
+                <TableGrade grades={searchGrade(grades)} />
+            </div> */}
+            {/* <footer>
                 <hr></hr>
                 <div className="paging">
                     <button className="previous">
@@ -256,7 +314,10 @@ const GradeAdmin = () => {
                 {addGradeState ? DivAddGrade : null}
                 {updateGradeState ? DivUpdateGrade : null}
                 {isDelete ? ConfirmDelete : null}
-            </footer>
+            </footer> */}
+            {addGradeState ? DivAddGrade : null}
+            {updateGradeState ? DivUpdateGrade : null}
+            {isDelete ? ConfirmDelete : null}
         </div>
     );
 };

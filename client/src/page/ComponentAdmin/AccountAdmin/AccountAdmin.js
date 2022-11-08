@@ -12,6 +12,7 @@ import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
 import AddAccount from "../../../lib/ModalInput/AddAccount/AddAccount";
 import UpdateAccount from "../../../lib/ModalInput/UpdateAccount/UpdateAccount";
+import ReactPaginate from "react-paginate";
 
 function AccountAdmin() {
     const [parents, setParents] = useState([]);
@@ -190,6 +191,48 @@ function AccountAdmin() {
     };
 
     //
+
+    function PaginatedItems({ itemsPerPage, searchAccount }) {
+        const [itemOffset, setItemOffset] = useState(0);
+        const endOffset = itemOffset + itemsPerPage;
+        const currentItems = searchAccount.slice(itemOffset, endOffset);
+        const pageCount = Math.ceil(searchAccount.length / itemsPerPage);
+        const handlePageClick = (event) => {
+            const newOffset = (event.selected * itemsPerPage) % searchAccount.length;
+            setItemOffset(newOffset);
+        };
+        return (
+            <>
+                <div className="table-content">
+                    <TableAccounts accounts={currentItems} />
+                </div>
+                <footer>
+                    <hr></hr>
+                    <ReactPaginate
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        breakLabel="..."
+                        breakClassName="page-item"
+                        breakLinkClassName="page-link"
+                        pageCount={pageCount}
+                        pageRangeDisplayed={4}
+                        marginPagesDisplayed={2}
+                        onPageChange={handlePageClick}
+                        containerClassName="pagination justify-content-center"
+                        pageClassName="page-item mr-2 ml-2"
+                        pageLinkClassName="page-link"
+                        previousClassName="previous-btn page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="next-btn page-item"
+                        nextLinkClassName="page-link"
+                        activeClassName="active"
+                        hrefAllControls
+                    />
+                </footer>
+
+            </>
+        );
+    }
 
     const TableAccounts = ({ accounts, value }) => {
         const accountItem = accounts.map((item) => (
@@ -689,30 +732,34 @@ function AccountAdmin() {
                     </div>
                 </div>
             </header>
-            <div className="table-content">
+            {/* <div className="table-content"> */}
                 {dropValue === "principal" ? (
-                    <TableAccounts
-                        accounts={searchAccount(principal)}
-                        value={dropValue}
-                    />
+                    // <TableAccounts
+                    //     accounts={searchAccount(principal)}
+                    //     value={dropValue}
+                    // />
+                    <PaginatedItems itemsPerPage={2} searchAccount={searchAccount(principal)} />    
                 ) : dropValue === "parents" ? (
-                    <TableAccounts
-                        accounts={searchAccount(parents)}
-                        value={dropValue}
-                    />
+                    // <TableAccounts
+                    //     accounts={searchAccount(parents)}
+                    //     value={dropValue}
+                    // />
+                    <PaginatedItems itemsPerPage={2} searchAccount={searchAccount(parents)} />
                 ) : dropValue === "teacher" ? (
-                    <TableAccounts
-                        accounts={searchAccount(teacher)}
-                        value={dropValue}
-                    />
+                    // <TableAccounts
+                    //     accounts={searchAccount(teacher)}
+                    //     value={dropValue}
+                    // />
+                    <PaginatedItems itemsPerPage={2} searchAccount={searchAccount(teacher)} />
                 ) : (
-                    <TableAccounts
-                        accounts={searchAccount(affair)}
-                        value={dropValue}
-                    />
+                    // <TableAccounts
+                    //     accounts={searchAccount(affair)}
+                    //     value={dropValue}
+                    // />
+                    <PaginatedItems itemsPerPage={2} searchAccount={searchAccount(affair)} />
                 )}
-            </div>
-            <footer>
+            {/* </div> */}
+            {/* <footer>
                 <hr></hr>
                 <div className="paging">
                     <button className="previous">
@@ -742,7 +789,10 @@ function AccountAdmin() {
                 {isDelete ? ConfirmDelete : null}
                 {addState ? DivAddAccount : null}
                 {updateState ? DivUpdateAccount : null}
-            </footer>
+            </footer> */}
+            {isDelete ? ConfirmDelete : null}
+            {addState ? DivAddAccount : null}
+            {updateState ? DivUpdateAccount : null}
         </div>
     );
 }

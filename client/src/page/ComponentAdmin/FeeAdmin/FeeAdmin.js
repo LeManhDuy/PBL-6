@@ -13,6 +13,7 @@ import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
 import FeeService from "../../../config/service/FeeService";
 import FeeCategoryService from "../../../config/service/FeeCategoryService";
 import UpdateFee from "../../../lib/ModalInput/UpdateFee/UpdateFee";
+import ReactPaginate from "react-paginate";
 
 const FeeAdmin = () => {
     const [addFeeState, setAddFeeState] = useState(false);
@@ -357,6 +358,49 @@ const FeeAdmin = () => {
         );
         setIsDelete(false);
     };
+
+    function PaginatedItems({ itemsPerPage, searchFee }) {
+        const [itemOffset, setItemOffset] = useState(0);
+        const endOffset = itemOffset + itemsPerPage;
+        const currentItems = searchFee.slice(itemOffset, endOffset);
+        const pageCount = Math.ceil(searchFee.length / itemsPerPage);
+        const handlePageClick = (event) => {
+            const newOffset = (event.selected * itemsPerPage) % searchFee.length;
+            setItemOffset(newOffset);
+        };
+        return (
+            <>
+                <div className="table-content">
+                    <TableFee fees={currentItems} />
+                </div>
+                <footer>
+                    <hr></hr>
+                    <ReactPaginate
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        breakLabel="..."
+                        breakClassName="page-item"
+                        breakLinkClassName="page-link"
+                        pageCount={pageCount}
+                        pageRangeDisplayed={4}
+                        marginPagesDisplayed={2}
+                        onPageChange={handlePageClick}
+                        containerClassName="pagination justify-content-center"
+                        pageClassName="page-item mr-2 ml-2"
+                        pageLinkClassName="page-link"
+                        previousClassName="previous-btn page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="next-btn page-item"
+                        nextLinkClassName="page-link"
+                        activeClassName="active"
+                        hrefAllControls
+                    />
+                </footer>
+
+            </>
+        );
+    }
+
     const TableFee = ({ fees }) => {
         const feeItem = fees.map((item) => (
             <tr data-key={item.id} key={item.id}>
@@ -606,7 +650,8 @@ const FeeAdmin = () => {
                     </div>
                 </div>
             </header>
-            <div className="table-content">
+            <PaginatedItems itemsPerPage={2} searchFee={searchFee(fees)}/>
+            {/* <div className="table-content">
                 <TableFee fees={searchFee(fees)} />
             </div>
             <footer>
@@ -641,7 +686,13 @@ const FeeAdmin = () => {
                     {isMultiUpdate ? ConfirmMultiUpdate : null}
                     {addFeeState ? DivAddFee : null}
                 </div>
-            </footer>
+            </footer> */}
+
+            {updateFeeState ? DivUpdateFee : null}
+            {isDelete ? ConfirmDelete : null}
+            {isMultiDelete ? ConfirmMultiDelete : null}
+            {isMultiUpdate ? ConfirmMultiUpdate : null}
+            {addFeeState ? DivAddFee : null}
         </div>
     );
 };
