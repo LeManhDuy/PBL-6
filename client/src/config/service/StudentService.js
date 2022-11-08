@@ -4,7 +4,6 @@ const getPupils = async () => {
     return await HandleApi.APIGetWithToken("pupil/");
 };
 
-
 const addPupil = async (classID, parentID, params) => {
     return await HandleApi.APIPostWithTokenIMG(
         `pupil/${classID}&${parentID}`,
