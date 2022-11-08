@@ -47,9 +47,20 @@ const createSubjectScore = async (req, res) => {
 
     //all good
     try {
+        let result = "";
+        if (final_score >= 9) {
+            result = "Excellent";
+        } else if (final_score >= 7 && final_score < 9) {
+            result = "Very good";
+        } else if (final_score >= 5 && final_score < 7) {
+            result = "Good";
+        } else {
+            result = "Average";
+        }
         const newSubjectScore = new Score({
             midterm_score,
             final_score,
+            result,
             pupil_id,
             subject_id: req.params.subjectID,
         });
@@ -140,16 +151,29 @@ const updateScore = async (req, res) => {
 
     //all good
     try {
-        const updateScore = await Score.findByIdAndUpdate(
+        let result = "";
+        if (final_score >= 9) {
+            result = "Excellent";
+        } else if (final_score >= 7 && final_score < 9) {
+            result = "Very good";
+        } else if (final_score >= 5 && final_score < 7) {
+            result = "Good";
+        } else {
+            result = "Average";
+        }
+        const updateScore = {
+            midterm_score,
+            final_score,
+            result,
+        };
+        const updatedScore = await Score.findByIdAndUpdate(
             req.params.scoreID,
-            {
-                $set: req.body,
-            },
+            updateScore,
             { new: true }
         );
         res.status(200).json({
             success: true,
-            updateScore,
+            updatedScore,
         });
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error });
