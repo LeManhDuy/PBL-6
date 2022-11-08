@@ -18,6 +18,7 @@ const classRouter = require("./routes/class.js");
 const pupilRouter = require("./routes/pupil.js");
 const scheduleRouter = require("./routes/schedule.js");
 const notificationRoute = require("./routes/notification.js");
+const scoreRoute = require("./routes/score.js");
 
 const app = express();
 app.use(express.json());
@@ -71,6 +72,8 @@ app.use("/api/schedule", scheduleRouter);
 app.use("/api/period", periodRouter);
 //notification
 app.use("/api/notification", notificationRoute);
+//score
+app.use("/api/score", scoreRoute);
 
 //port
 app.listen(process.env.PORT || 8000, function () {
