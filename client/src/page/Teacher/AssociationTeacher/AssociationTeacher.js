@@ -12,7 +12,7 @@ import "./AssociationTeacher.css";
 const AssociationTeacher = () => {
     const [parents, setParent] = useState([]);
     const [state, setState] = useState(false);
-    const [id, setId] = useState("");
+    const [className, setClassName] = useState("");
     const [keyword, setKeyword] = useState("");
 
     useEffect(() => {
@@ -36,6 +36,7 @@ const AssociationTeacher = () => {
                     };
                 });
                 const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                setClassName(response.class_name);
                 setParent(dataSourcesSorted);
             }).catch((error) => {
                 console.log(error);
@@ -119,7 +120,7 @@ const AssociationTeacher = () => {
             <div className="class-teacher-header">
                 <header>
                     <div className="title">
-                        <h3>Manage Parent Association</h3>
+                        <h3>Manage Parent Association Class { className }</h3>
                         <div className="right-header">
                             <div className="search-box">
                                 <button className="btn-search">
