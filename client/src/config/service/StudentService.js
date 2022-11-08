@@ -4,9 +4,6 @@ const getPupils = async () => {
     return await HandleApi.APIGetWithToken("pupil/");
 };
 
-const getPupilsByPages = async (page) => {
-    return await HandleApi.APIGetWithToken(`pupil?page=${page}`);
-}
 
 const addPupil = async (classID, parentID, params) => {
     return await HandleApi.APIPostWithTokenIMG(
@@ -47,7 +44,6 @@ const getStudentByStudentId = async (id) => {
 
 const PupilService = {
     getPupils,
-    getPupilsByPages,
     addPupil,
     deletePupilById,
     getPupilById,
