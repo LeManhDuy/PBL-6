@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "./FormSubject.css";
 import ScoreService from "../../../../config/service/ScoreService";
+import ModalInput from "../../../../lib/ModalInput/ModalInput";
+import UpdateScore from "./UpdateScore/UpdateScore";
 
 const FormSubject = (props) => {
     const [subject, setSubject] = useState([]);
     const [id, setId] = useState("");
     const [isUpdate, setIsUpdate] = useState(false);
+    const [state, setState] = useState(false);
 
     useEffect(() => {
         getSubjectByPupilID();
-    }, []);
+    }, [state]);
 
     const getSubjectByPupilID = async () => {
         let dataSources = [];
@@ -126,6 +129,43 @@ const FormSubject = (props) => {
         );
     };
 
+    const handleInputCustom = () => {
+        setIsUpdate(false);
+    };
+
+    const handleConfirmUpdateScore = (score) => {
+        console.log(score);
+        ScoreService.updateScoreByID(id, {
+            midterm_score: score.midterm_score,
+            final_score: score.final_score,
+        })
+            .then((res) => {
+                if (res.success) {
+                    setState(!state);
+                    setIsUpdate(false);
+                } else {
+                    setIsUpdate(true);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    const DivUpdateScoreTeacher = (
+        <ModalInput
+            show={isUpdate ? true : false}
+            handleInputCustom={handleInputCustom}
+            content={
+                <UpdateScore
+                    handleInputCustom={handleInputCustom}
+                    handleConfirmUpdateScore={handleConfirmUpdateScore}
+                    id={id}
+                />
+            }
+        />
+    );
+
     return (
         <div className="show-student-form">
             <header>
@@ -136,6 +176,7 @@ const FormSubject = (props) => {
             <div className="table-content">
                 <TableSubject subjects={subject} />
             </div>
+            {isUpdate ? DivUpdateScoreTeacher : null}
         </div>
     );
 };

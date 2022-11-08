@@ -12,8 +12,12 @@ const getAllScoreByPupilID = async (id) => {
     return await HandleApi.APIGetWithToken(`score/get-score/${id}`);
 };
 
-const updateScoreByID = async (id) => {
-    return await HandleApi.APIPutWithToken(`score/${id}`);
+const updateScoreByID = async (id, params) => {
+    return await HandleApi.APIPutWithToken(`score/${id}`, params);
+};
+
+const getScoreByID = async (id) => {
+    return await HandleApi.APIGetWithToken(`score/get-detail-score/${id}`);
 };
 
 const ScoreService = {
@@ -21,6 +25,7 @@ const ScoreService = {
     createSubjectScore,
     getAllScoreByPupilID,
     updateScoreByID,
+    getScoreByID,
 };
 
 export default ScoreService;

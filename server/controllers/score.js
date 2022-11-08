@@ -89,6 +89,28 @@ const getScoreByPupilId = async (req, res) => {
     }
 };
 
+const getScoreById = async (req, res) => {
+    //Validation
+    try {
+        const scoreInfor = await Score.findById(req.params.scoreID).populate({
+            path: "subject_id",
+            model: "Subject",
+        });
+        if (!scoreInfor) {
+            res.status(400).json({
+                success: false,
+                message: "Score does not found!",
+            });
+        }
+        res.status(200).json({
+            success: true,
+            scoreInfor,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
 const updateScore = async (req, res) => {
     //Validation
     let { midterm_score, final_score } = req.body;
@@ -191,4 +213,5 @@ module.exports = {
     getScoreByPupilId,
     updateScore,
     getAllSubjectByPupilId,
+    getScoreById,
 };

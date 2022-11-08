@@ -19,4 +19,7 @@ router.put("/:scoreID", ScoreController.updateScore);
 // Get all subject by pupilID
 router.get("/:studentID", ScoreController.getAllSubjectByPupilId);
 
+// Get score by ID
+router.get("/get-detail-score/:scoreID", ScoreController.getScoreById);
+
 module.exports = router;
