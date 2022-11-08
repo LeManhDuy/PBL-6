@@ -207,7 +207,7 @@ const SubjectTeacherAdmin = () => {
         // console.log(filterST)
         setFiltered(filterST);
         // console.log(filtered)
-    };
+    }; 
 
     // Add Subject Teacher
     const handleConfirmAddSubjectTeacher = (teacher_id, subject_list) => {

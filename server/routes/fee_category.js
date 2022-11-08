@@ -33,8 +33,8 @@ router.get("/:feeCategoryID", async (req, res) => {
 // @desc post FeeCategory
 // @access Private
 router.post("/", async (req, res) => {
-    const { fee_name, fee_amount } = req.body
-    if (!fee_name || !fee_amount)
+    const { start_date, end_date, fee_name, fee_amount } = req.body
+    if (!start_date || !end_date || !fee_name || !fee_amount)
         return res.status(400).json({
             success: false,
             message: "Please fill in complete information.",
@@ -46,6 +46,8 @@ router.post("/", async (req, res) => {
                 .status(400)
                 .json({ success: false, message: "Fee Category is already existed." })
         const newFeeCategory = new FeeCategory({
+            start_date,
+            end_date,
             fee_name,
             fee_amount,
         })
@@ -65,8 +67,8 @@ router.post("/", async (req, res) => {
 // @desc put grade
 // @access Private
 router.put("/:feeCategoryId", async (req, res) => {
-    const { fee_name, fee_amount } = req.body
-    if (!fee_name || !fee_amount)
+    const { start_date, end_date, fee_name, fee_amount } = req.body
+    if (!start_date || !end_date || !fee_name || !fee_amount)
         return res.status(400).json({
             success: false,
             message: "Please fill in complete information.",
@@ -83,6 +85,8 @@ router.put("/:feeCategoryId", async (req, res) => {
         //         .status(400)
         //         .json({ success: false, message: "Fee Category is already existed." })
         let updateFeeCategory = {
+            start_date,
+            end_date,
             fee_name,
             fee_amount,
         }
