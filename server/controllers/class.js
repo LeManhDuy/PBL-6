@@ -263,7 +263,7 @@ const getParentAssociations = async (req, res) => {
         });
         const parentInfor = await Parent.find().where('_id').in(parentArray)
             .populate('person_id')
-        res.json({ success: true, parentInfor });
+        res.json({ success: true, parentInfor, class_name: classInfor[0].class_name });
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error });
     }
