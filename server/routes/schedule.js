@@ -216,6 +216,55 @@ router.get("/",multer().single(), async (req,res) =>{
         return res.status(500).json({success: false, message: "" + error})
     }
 })
+
+router.get("/home-room-teacher/:personID" ,multer().single(), async (req,res) => {
+    try{
+        const teacher = await Teacher.find({
+            person_id: req.params.personID
+        })
+        const classInfor = await Class.find({
+            homeroom_teacher_id: teacher[0]._id
+        })
+        const schedule = await Schedule.find({class_id: classInfor[0]._id.toString()}).select()
+            .populate({
+                path:'class_id',
+                model: 'Class',
+                select: ['class_name']
+            })
+        let schedules = []
+        for(let s of schedule){
+            const periods = await Period.find({schedule_id:s._id}).select()
+            .populate({
+                path: 'subject_teacher_id',
+                model: 'SubjectTeacher',
+                populate: [{
+                    path: "subject_id",
+                    model: "Subject",
+                    select: ["subject_name"]
+                },{
+                    path: "teacher_id",
+                    model: "Teacher",
+                    select: ["person_id"],
+                    populate:[{
+                        path: "person_id",
+                        model: "Person",
+                        select: ["person_fullname"]
+                    }]
+                }]
+            })
+            schedules.push({schedule:s,periods})
+        }
+        return res.status(200).json({success:true, message:"Get Schedule successfully!", 
+        schedules})
+    }
+    catch(error){
+        return res.status(500).json({success: false, message: "" + error})
+    }
+});
+
+
+
+
 router.get("/class/:classId",multer().single(), async (req,res) => {
     //validate classID
     try{
