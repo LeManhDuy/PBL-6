@@ -6,14 +6,6 @@ const feeSchema = new Schema({
         type: Boolean,
         require: true
     },
-    start_date: {
-        type: Date,
-        require: true
-    },
-    end_date: {
-        type: Date,
-        require: true
-    },
     paid_date: {
         type: Date,
     },
