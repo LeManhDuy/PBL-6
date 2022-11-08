@@ -14,7 +14,7 @@ import ModalInput from "../../../lib/ModalInput/ModalInput";
 import AddStudent from "../../../lib/ModalInput/AddStudent/AddStudent";
 import UpdateStudent from "../../../lib/ModalInput/UpdateStudent/UpdateStudent";
 import GradeService from "../../../config/service/GradeService";
-
+import ReactPaginate from 'react-paginate';
 
 const StudentAdmin = () => {
     const [student, setStudent] = useState([]);
@@ -233,6 +233,48 @@ const StudentAdmin = () => {
         });
         setKeyword("");
     };
+
+    function PaginatedItems({ itemsPerPage, searchStudent }) {
+        const [itemOffset, setItemOffset] = useState(0);
+        const endOffset = itemOffset + itemsPerPage;
+        const currentItems = searchStudent.slice(itemOffset, endOffset);
+        const pageCount = Math.ceil(searchStudent.length / itemsPerPage);
+        const handlePageClick = (event) => {
+            const newOffset = (event.selected * itemsPerPage) % searchStudent.length;
+            setItemOffset(newOffset);
+        };
+        return (
+            <>
+                <div className="table-content">
+                    <TableStudent students={currentItems} />
+                </div>
+                <footer>
+                    <hr></hr>
+                    <ReactPaginate
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        breakLabel="..."
+                        breakClassName="page-item"
+                        breakLinkClassName="page-link"
+                        pageCount={pageCount}
+                        pageRangeDisplayed={4}
+                        marginPagesDisplayed={2}
+                        onPageChange={handlePageClick}
+                        containerClassName="pagination justify-content-center"
+                        pageClassName="page-item mr-2 ml-2"
+                        pageLinkClassName="page-link"
+                        previousClassName="previous-btn page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="next-btn page-item"
+                        nextLinkClassName="page-link"
+                        activeClassName="active"
+                        hrefAllControls
+                    />
+                </footer>
+
+            </>
+        );
+    }
 
     const TableStudent = ({ students }) => {
         const studentItem = students.map((item) => (
@@ -455,11 +497,13 @@ const StudentAdmin = () => {
                     </div>
                 </div>
             </header>
-            <div className="table-content">
+            <PaginatedItems itemsPerPage={5} searchStudent={searchStudent(student)}/>
+            {/* <div className="table-content">
                 <TableStudent students={searchStudent(student)} />
             </div>
             <footer>
                 <hr></hr>
+                
                 <div className="paging">
                     <button className="previous">
                         <FontAwesomeIcon
@@ -488,7 +532,10 @@ const StudentAdmin = () => {
                 {isDelete ? ConfirmDelete : null}
                 {addState ? DivAddStudent : null}
                 {updateState ? DivUpdateStudent : null}
-            </footer>
+            </footer> */}
+            {isDelete ? ConfirmDelete : null}
+            {addState ? DivAddStudent : null}
+            {updateState ? DivUpdateStudent : null}
         </div>
     );
 };

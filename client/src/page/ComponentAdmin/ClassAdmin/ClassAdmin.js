@@ -14,6 +14,7 @@ import ClassService from "../../../config/service/ClassService";
 import GradeService from "../../../config/service/GradeService";
 import UpdateClass from "../../../lib/ModalInput/UpdateClass/UpdateClass";
 import ViewClass from "../../../lib/ModalInput/ViewClass/ViewClass";
+import ReactPaginate from "react-paginate";
 
 const ClassAdmin = () => {
     const [addClassState, setAddClassState] = useState(false);
@@ -237,6 +238,48 @@ const ClassAdmin = () => {
         setErrorMessage("");
     };
 
+    function PaginatedItems({ itemsPerPage, searchClassRoom }) {
+        const [itemOffset, setItemOffset] = useState(0);
+        const endOffset = itemOffset + itemsPerPage;
+        const currentItems = searchClassRoom.slice(itemOffset, endOffset);
+        const pageCount = Math.ceil(searchClassRoom.length / itemsPerPage);
+        const handlePageClick = (event) => {
+            const newOffset = (event.selected * itemsPerPage) % searchClassRoom.length;
+            setItemOffset(newOffset);
+        };
+        return (
+            <>
+                <div className="table-content">
+                    <TableClasses classRooms={currentItems} />
+                </div>
+                <footer>
+                    <hr></hr>
+                    <ReactPaginate
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        breakLabel="..."
+                        breakClassName="page-item"
+                        breakLinkClassName="page-link"
+                        pageCount={pageCount}
+                        pageRangeDisplayed={4}
+                        marginPagesDisplayed={2}
+                        onPageChange={handlePageClick}
+                        containerClassName="pagination justify-content-center"
+                        pageClassName="page-item mr-2 ml-2"
+                        pageLinkClassName="page-link"
+                        previousClassName="previous-btn page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="next-btn page-item"
+                        nextLinkClassName="page-link"
+                        activeClassName="active"
+                        hrefAllControls
+                    />
+                </footer>
+
+            </>
+        );
+    }
+
     const TableClasses = ({ classRooms }) => {
         const classItem = classRooms.map((item) => (
             <tr data-key={item.id} key={item.id}>
@@ -360,7 +403,8 @@ const ClassAdmin = () => {
                     </div>
                 </div>
             </header>
-            <div className="table-content">
+            <PaginatedItems itemsPerPage={2} searchClassRoom={searchClass(classRooms)}/>
+            {/* <div className="table-content">
                 <TableClasses classRooms={searchClass(classRooms)} />
             </div>
             <footer>
@@ -394,7 +438,11 @@ const ClassAdmin = () => {
                 {updateClassState ? DivUpdateClass : null}
                 {isDelete ? ConfirmDelete : null}
                 {viewState ? DivViewClass : null}
-            </footer>
+            </footer> */}
+            {addClassState ? DivAddClass : null}
+            {updateClassState ? DivUpdateClass : null}
+            {isDelete ? ConfirmDelete : null}
+            {viewState ? DivViewClass : null}
         </div>
     );
 };
