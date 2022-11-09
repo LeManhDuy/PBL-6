@@ -350,6 +350,7 @@ const FeeAdmin = () => {
     const handleCloseModalCustom = () => {
         setIsDelete(false);
         setIsMultiDelete(false);
+        setIsMultiUpdate(false);
     };
 
     const handleDelete = () => {
@@ -400,11 +401,11 @@ const FeeAdmin = () => {
             </>
         );
     }
- 
+
     const TableFee = ({ fees }) => {
         const feeItem = fees.map((item) => (
             <tr data-key={item.id} key={item.id}>
-                <td></td> 
+                <td></td>
                 <td><input
                     className="check-input"
                     type="checkbox"
@@ -650,7 +651,7 @@ const FeeAdmin = () => {
                     </div>
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={2} searchFee={searchFee(fees)}/>
+            <PaginatedItems itemsPerPage={2} searchFee={searchFee(fees)} />
             {/* <div className="table-content">
                 <TableFee fees={searchFee(fees)} />
             </div>
