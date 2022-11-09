@@ -18,6 +18,7 @@ const ListPupils = ({}) => {
     const getPupilsInfo = async () => {
         const account_data = JSON.parse(await AsyncStorage.getItem('@Login'))
         if(account_data){
+        console.log(account_data.AccountId)
         await StudentService.getPupilByParentId(account_data.AccountId)
             .then((response) => {
                 const dataSources = response.getPupilInfor.map(
@@ -30,7 +31,7 @@ const ListPupils = ({}) => {
                                 item.pupil_dateofbirth
                             ).toLocaleDateString(),
                             gender: item.pupil_gender,
-                            image: item.pupil_image ? item.pupil_image : Logo,
+                            image: item.pupil_image ? item.pupil_image : null,
                             parent: item.parent_id
                                 ? item.parent_id.person_id.person_fullname
                                 : "Empty",
@@ -57,44 +58,6 @@ const ListPupils = ({}) => {
             });
         }
     };
-    const styles = StyleSheet.create({
-        infoContainer:{
-            padding: 20,
-            width:"75%",
-            alignSelf:'center',
-            alignItems:'center'
-        },
-        circleImg:{
-            width: 250, height: 250, borderRadius: 250/ 2
-        },
-        infoContainer2:{
-            padding:30,
-            // backgroundColor: COLORS.gray,
-            width: "100%",
-            justifyContent:'center'
-        },
-        infoLine:{
-            padding: 10,
-            flexDirection: 'row',
-            marginBottom: 20,
-            // backgroundColor: `#ff7f50`,
-            borderBottomWidth: 2,
-            borderColor: `#000000`
-        },
-        infoText:{
-            marginLeft: 20,
-            fontSize: SIZES.extraLarge,
-        },
-        infoHeaderText:{
-            marginLeft: 25,
-            fontSize: SIZES.medium,
-            opacity: 0.5
-        },
-        icon:{
-            alignSelf:'center'
-        }
-    })
-    console.log('s',pupilsInfo)
     if(pupilsInfo){
 
         return (
