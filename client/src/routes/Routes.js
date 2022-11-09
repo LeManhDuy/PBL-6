@@ -25,6 +25,7 @@ import StudentParents from "../page/Parents/StudentParents/StudentParents";
 import ScoreParents from "../page/Parents/ScoreParents/ScoreParents";
 import NotificationParents from "../page/Parents/NotificationParents/NotificationParents";
 import FeeParents from "../page/Parents/FeeParents/FeeParents";
+import ScheduleParents from "../page/Parents/ScheduleParents/ScheduleParents";
 //Affair
 import AffairRoute from "./AffairRoute/AffairRoute";
 import HomeAffair from "../page/ComponentAffair/HomeAffair/HomeAffair";
@@ -146,6 +147,12 @@ const Routes = () => {
                         component={FeeParents}
                         exact
                         path={ROUTES.PARENTS_PAGE.PARENTS_FEE_PATH}
+                    />
+
+                    <ParentsRoute
+                        component={ScheduleParents}
+                        exact
+                        path={ROUTES.PARENTS_PAGE.PARENTS_SCHEDULE_PATH}
                     />
 
                     {/* Teacher Route */}

@@ -4,7 +4,7 @@ import ScheduleService from "../../../config/service/ScheduleService";
 import ModalInput from "../../../lib/ModalInput/ModalInput";
 import ShowPeriod from "../../../lib/ModalInput/ShowPeriod/ShowPeriod";
 
-const ScheduleAdmin = () => {
+const ScheduleTeacher = () => {
     const [state,setState] = useState(false)
     const [tableContent, setTableContent] = useState({
         key: "",
@@ -28,6 +28,11 @@ const ScheduleAdmin = () => {
         const personID = JSON.parse(localStorage.getItem("@Login")).AccountId;
         ScheduleService.getScheduleByHomeRoomTeacher(personID)
             .then((response) => {
+                if (!response.success) {
+                    setIsLoading(false);
+                    setTableContent(null);
+                    return;
+                }
                 const dataSources = response.schedules.map(
                     (item, index) => {
                         return {
@@ -170,10 +175,10 @@ const ScheduleAdmin = () => {
     );
 
     return (
-        <div className="main-container">
+        <div className="main-teacher-container">
             <header>
                 <div>
-                    <h3>Show Schedule { tableContent.class_name } </h3>
+                    <h3>Show Schedule {tableContent ? tableContent.class_name : '' } </h3>
                 </div>
             </header>
             {errorMessage!==""?<label style={{color:'red'}}>{errorMessage}</label>: null}
@@ -188,4 +193,4 @@ const ScheduleAdmin = () => {
     );
 };
 
-export default ScheduleAdmin;
+export default ScheduleTeacher;
