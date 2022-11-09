@@ -1,0 +1,102 @@
+.main-container-edit {
+    margin: 30px 40px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.table-content-edit {
+    text-align: left;
+    margin: 30px 0;
+    border-radius: 8px;
+    box-shadow: rgb(0 0 0 / 10%) 0px 4px 12px;
+    overflow: auto;
+    width: 50%;
+}
+
+.first {
+    text-align: right;
+}
+
+.mid {
+    text-align: center;
+    padding: 0px;
+}
+
+.last {
+    text-align: left;
+}
+
+.table-average-cell {
+    background-color: #5b8dc5;
+    text-align: center;
+    color: white;
+    width: 50px;
+}
+
+.table-comment-cell {
+    background-color: #2c5d96;
+    text-align: center;
+    color: white;
+    width: 120px;
+}
+
+.table-content-cell {
+    text-align: center;
+    background-color: #2c5d96;
+    color: white;
+    width: 50px;
+    margin: 0 6px;
+}
+
+.btn-back {
+    width: 100px;
+    height: 50px;
+    background-color: #fff;
+    color: var(--text-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-save:hover {
+    width: 100px;
+    height: 50px;
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.btn-position {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.right-column {
+    width: 30%;
+    float: right;
+}
+
+.left-column {
+    width: 70%;
+    float: left;
+}
+
+.flex-container {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.flex-container > div {
+    width: 50%;
+    margin: 10px 45px;
+    text-align: center;
+    font-size: 22px;
+}
+
+.score-item-parent{
+    margin: 30px;
+    background-color: #fff;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    border-radius: 10px;
+    padding: 20px;
+}

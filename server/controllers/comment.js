@@ -23,9 +23,8 @@ const createComment = async (req, res) => {
         })
             .select(["midterm_score", "final_score", "result"])
             .populate({ path: "subject_id", model: "Subject" });
-        if (pupilScore) {
+        if (pupilScore[0]) {
             pupilScore.map((item) => {
-                console.log(item.final_score === null);
                 if (item.final_score === null) {
                     none = true;
                 }
@@ -39,6 +38,8 @@ const createComment = async (req, res) => {
                     check = "Very Good";
                 }
             });
+        } else {
+            check = "-";
         }
         if (none) {
             check = "-";
