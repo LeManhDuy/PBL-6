@@ -17,6 +17,7 @@ const createComment = async (req, res) => {
     //all good
     try {
         let check = "Excellent";
+        let none = false;
         const pupilScore = await Score.find({
             pupil_id: req.params.pupilID,
         })
@@ -24,6 +25,10 @@ const createComment = async (req, res) => {
             .populate({ path: "subject_id", model: "Subject" });
         if (pupilScore) {
             pupilScore.map((item) => {
+                console.log(item.final_score === null);
+                if (item.final_score === null) {
+                    none = true;
+                }
                 if (item.final_score < 5) {
                     check = "Average";
                 }
@@ -34,6 +39,9 @@ const createComment = async (req, res) => {
                     check = "Very Good";
                 }
             });
+        }
+        if (none) {
+            check = "-";
         }
         //Validate
         const commentBefore = await Comment.find({

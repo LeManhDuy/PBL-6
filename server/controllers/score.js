@@ -10,7 +10,7 @@ const createSubjectScore = async (req, res) => {
     let { midterm_score, final_score, pupil_id } = req.body;
     //Validation
 
-    if (!midterm_score || !final_score) {
+    if (!midterm_score) {
         return res.status(400).json({
             success: false,
             message: "Please fill in the score.",
@@ -57,14 +57,16 @@ const createSubjectScore = async (req, res) => {
     //all good
     try {
         let result = "";
-        if (final_score >= 9) {
-            result = "Excellent";
-        } else if (final_score >= 7 && final_score < 9) {
-            result = "Very good";
-        } else if (final_score >= 5 && final_score < 7) {
-            result = "Good";
-        } else {
-            result = "Average";
+        if (final_score) {
+            if (final_score >= 9) {
+                result = "Excellent";
+            } else if (final_score >= 7 && final_score < 9) {
+                result = "Very good";
+            } else if (final_score >= 5 && final_score < 7) {
+                result = "Good";
+            } else {
+                result = "Average";
+            }
         }
         const newSubjectScore = new Score({
             midterm_score,
@@ -134,7 +136,7 @@ const getScoreById = async (req, res) => {
 const updateScore = async (req, res) => {
     //Validation
     let { midterm_score, final_score } = req.body;
-    if (!midterm_score || !final_score) {
+    if (!midterm_score) {
         return res.status(400).json({
             success: false,
             message: "Please fill in the score.",
@@ -161,14 +163,16 @@ const updateScore = async (req, res) => {
     //all good
     try {
         let result = "";
-        if (final_score >= 9) {
-            result = "Excellent";
-        } else if (final_score >= 7 && final_score < 9) {
-            result = "Very good";
-        } else if (final_score >= 5 && final_score < 7) {
-            result = "Good";
-        } else {
-            result = "Average";
+        if (final_score) {
+            if (final_score >= 9) {
+                result = "Excellent";
+            } else if (final_score >= 7 && final_score < 9) {
+                result = "Very good";
+            } else if (final_score >= 5 && final_score < 7) {
+                result = "Good";
+            } else {
+                result = "Average";
+            }
         }
         const updateScore = {
             midterm_score,

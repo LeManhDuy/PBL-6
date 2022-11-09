@@ -54,11 +54,7 @@ const UpdateScore = (props) => {
             check = true;
         } else midterm_score = false;
 
-        if (
-            score.final_score.length === 0 ||
-            Number(score.final_score) < 0 ||
-            Number(score.final_score) > 10
-        ) {
+        if (Number(score.final_score) < 0 || Number(score.final_score) > 10) {
             final_score = true;
             check = true;
         } else final_score = false;
