@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ClassService from "../../../config/service/ClassService";
 import "./AssociationTeacher.css";
-
+import ReactPaginate from "react-paginate";
 
 const AssociationTeacher = () => {
     const [parents, setParent] = useState([]);
@@ -65,6 +65,48 @@ const AssociationTeacher = () => {
                     .toLowerCase()
                     .includes(keyword.toLowerCase()) ||
                 parents.mail.toLowerCase().includes(keyword.toLowerCase())
+        );
+    }
+
+    function PaginatedItems({ itemsPerPage, searchParent }) {
+        const [itemOffset, setItemOffset] = useState(0);
+        const endOffset = itemOffset + itemsPerPage;
+        const currentItems = searchParent.slice(itemOffset, endOffset);
+        const pageCount = Math.ceil(searchParent.length / itemsPerPage);
+        const handlePageClick = (event) => {
+            const newOffset = (event.selected * itemsPerPage) % searchParent.length;
+            setItemOffset(newOffset);
+        };
+        return (
+            <>
+                <div className="table-content">
+                    <TableParents parents={currentItems} />
+                </div>
+                <footer>
+                    <hr></hr>
+                    <ReactPaginate
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        breakLabel="..."
+                        breakClassName="page-item"
+                        breakLinkClassName="page-link"
+                        pageCount={pageCount}
+                        pageRangeDisplayed={4}
+                        marginPagesDisplayed={2}
+                        onPageChange={handlePageClick}
+                        containerClassName="pagination justify-content-center"
+                        pageClassName="page-item mr-2 ml-2"
+                        pageLinkClassName="page-link"
+                        previousClassName="previous-btn ml-5 page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="next-btn mr-5 page-item"
+                        nextLinkClassName="page-link"
+                        activeClassName="active"
+                        hrefAllControls
+                    />
+                </footer>
+
+            </>
         );
     }
 
@@ -141,7 +183,8 @@ const AssociationTeacher = () => {
                     </div>
                 </header>
             </div>
-            <div className="table-content">
+            <PaginatedItems itemsPerPage={2} searchParent={searchParent(parents)}/>
+            {/* <div className="table-content">
                 <TableParents parents={searchParent(parents)} />
             </div>
             <footer>
@@ -171,7 +214,7 @@ const AssociationTeacher = () => {
                         />
                     </button>
                 </div>
-            </footer>
+            </footer> */}
         </div>
     );
 }

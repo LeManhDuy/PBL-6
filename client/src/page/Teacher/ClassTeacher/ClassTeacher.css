@@ -13,6 +13,13 @@
     position: relative;
 }
 
+.paging {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--text-color);
+}
+
 .right-header .btn-search {
     background: none;
     position: absolute;

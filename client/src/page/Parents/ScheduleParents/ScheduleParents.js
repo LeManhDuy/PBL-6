@@ -213,7 +213,7 @@ const ScheduleParents = () => {
         <div className="main-student-container">
             <header>
                 <div>
-                    <h3>Show Schedule Class {tableContent.class_name} </h3>
+                    <h3>Show Schedule Class {tableContent ? tableContent.class_name : ''} </h3>
                 </div>
                 <div className="right-header">
                     <span className="h5">Student: </span>
