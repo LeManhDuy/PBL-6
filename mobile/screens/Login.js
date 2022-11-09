@@ -1,18 +1,28 @@
 import React,  { useEffect, useState } from "react";
 import { SafeAreaView, Text, View, StyleSheet} from "react-native"
 import { TextInput, Title } from "react-native-paper";
-import { Formik } from "formik"
 import { CustomButton } from "../components";
 import AuthenticationService from "../config/service/AuthenticationService";
 // import AsyncStorageManager from "../config/service/AsyncStorageManager";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { COLORS } from "../constants";
 
 
 
 const Login = ({navigation}) => {
     const [userInfo, setUserInfo] = useState({username:"",password:""});
     const [secureTextEntry, setSecureTextEntry] = useState(true)
+    const [isLogin, setIsLogin] = useState(false)
+    const [state, setState] = useState(false)
+
+    useEffect(()=>{
+        checkLogin()
+    }, [state])
+
+    const checkLogin = async () => {
+        const i = await AsyncStorage.getItem("@Login")
+        setIsLogin(i!==null)
+    }
+
 
     const handleLogin =  async (navigation) => {
         // console.log(userInfo)
@@ -25,7 +35,9 @@ const Login = ({navigation}) => {
                 if(response.success && response.AccountRole==="Parents"){
                     await AsyncStorage.setItem('@Login',JSON.stringify(response))
                     setUserInfo({username:"",password:""})
+                    // setState(!state)
                     navigation.navigate('Home',{screen: 'Details'})
+             
                 }
                 else{
                     alert("Incorrect email or password")
@@ -53,6 +65,10 @@ const Login = ({navigation}) => {
             fontSize: 50,
         }
     })
+    if(isLogin){
+        navigation.navigate('Home',{screen: 'Details'})
+    }
+    else{
 
     return (
       <SafeAreaView>
@@ -90,6 +106,7 @@ const Login = ({navigation}) => {
             </View>
       </SafeAreaView>
     );
+    }
   };
   
 export default Login

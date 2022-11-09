@@ -1,17 +1,51 @@
 import { SafeAreaView, View, StyleSheet, Image } from "react-native"
-import React from "react";
-import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
+import React, {useState, useEffect} from "react";
+import { Title } from "react-native-paper";
 import { assets, COLORS, FONTS, SIZES } from "../constants";
-import {useState, useEffect} from 'react'
 import AccountService from "../config/service/AccountService";
-// import AsyncStorageManager from "../config/service/AsyncStorageManager";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Details = ({parentInfo}) => {
+const Details = () => {
+    const [parentInfo, setParentInfo] = useState()
+    const [state, setState] = useState(true)
 
-    // useEffect(()=>{
-    //     console.log('PPP',parentInfo)
-    // }, [])
+    useEffect(()=>{
+        getParentInfo()
+    }, [state])
+
+    const getParentInfo = async () => {
+        const account_data = JSON.parse(await AsyncStorage.getItem('@Login'))
+        if(account_data){
+            console.log('log',account_data)
+            AccountService.GetParentsInformation(account_data.AccountId)
+            .then((response) => {
+                // console.log('2',response.getParentInfor)
+                const item = response.getParentInfor[0]
+                // console.log('3',item.person_id)
+                const dataSources = {
+                            key: 1,
+                            id: item._id,
+                            name: item.person_id.person_fullname,
+                            username:
+                                item.person_id.account_id.account_username,
+                            role:
+                                item.person_id.account_id.account_role,
+                            birth: item.person_id.person_dateofbirth.split('T')[0],
+                            email: item.person_id.person_email,
+                            gender: item.person_id.person_gender,
+                            phone: item.person_id.person_phonenumber,
+                            address: item.person_id.person_address,
+                            job: item.parent_job,
+                            img: item.person_id.person_image,
+                        }
+                console.log('d',dataSources)
+                setParentInfo(dataSources);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        }
+    }
 
     const styles = StyleSheet.create({
         infoContainer:{
