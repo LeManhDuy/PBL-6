@@ -53,7 +53,7 @@ const PupilCard = ({data}) => {
         <View style={styles.container}>
             <View style={styles.imgContainer}>
                 <Image 
-                    source={{uri:data.image}}
+                    source={data.image?{uri:data.image}:assets.account}
                     resizeMode='cover'
                     style={styles.circleImg}
                 />
