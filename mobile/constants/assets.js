@@ -6,6 +6,9 @@ import account from "../assets/icons/account.png";
 import phone from '../assets/icons/phone.png'
 import calendar from '../assets/icons/calendar-range.png'
 import email from '../assets/icons/email.png'
+import teacher from '../assets/icons/teacher.png'
+import classes from '../assets/icons/class.png'
+
 
 export default {
   badge,
@@ -15,5 +18,7 @@ export default {
   account,
   phone,
   calendar,
-  email
+  email,
+  teacher,
+  classes
 };

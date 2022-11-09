@@ -1,9 +1,6 @@
-
-import FocusedStatusBar from './FocusedStatusBar';    
-import StoryCard from './StoryCard';
-import CustomButton from './CustomButton'; 
+import PupilCard from './PupilCard';
 
 
 export {
-    StoryCard, FocusedStatusBar, CustomButton
+    PupilCard,
 }
