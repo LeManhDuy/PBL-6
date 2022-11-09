@@ -22,17 +22,19 @@ const createComment = async (req, res) => {
         })
             .select(["midterm_score", "final_score", "result"])
             .populate({ path: "subject_id", model: "Subject" });
-        pupilScore.map((item) => {
-            if (item.final_score < 5) {
-                check = "Average";
-            }
-            if (item.final_score < 7 && item.final_score >= 5) {
-                check = "Good";
-            }
-            if (item.final_score >= 7 && item.final_score < 9) {
-                check = "Very Good";
-            }
-        });
+        if (pupilScore) {
+            pupilScore.map((item) => {
+                if (item.final_score < 5) {
+                    check = "Average";
+                }
+                if (item.final_score < 7 && item.final_score >= 5) {
+                    check = "Good";
+                }
+                if (item.final_score >= 7 && item.final_score < 9) {
+                    check = "Very Good";
+                }
+            });
+        }
         //Validate
         const commentBefore = await Comment.find({
             pupil_id: req.params.pupilID,

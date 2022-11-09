@@ -3,6 +3,7 @@ import "./FormSubject.css";
 import ScoreService from "../../../../config/service/ScoreService";
 import ModalInput from "../../../../lib/ModalInput/ModalInput";
 import UpdateScore from "./UpdateScore/UpdateScore";
+import CommentService from "../../../../config/service/CommentService";
 
 const FormSubject = (props) => {
     const [subject, setSubject] = useState([]);
@@ -10,6 +11,11 @@ const FormSubject = (props) => {
     const [isUpdate, setIsUpdate] = useState(false);
     const [state, setState] = useState(false);
     const [subjectID, setSubjectID] = useState("");
+    const [summary, setSummary] = useState({
+        id: "",
+        content: "",
+        pupil_id: "",
+    });
 
     useEffect(() => {
         getSubjectByPupilID();
@@ -61,6 +67,13 @@ const FormSubject = (props) => {
             }
         }
         setSubject(dataSources);
+        await CommentService.createPupilComment(props.id).then((res) => {
+            setSummary({
+                id: res.commentBefore[0]._id,
+                content: res.commentBefore[0].comment_content,
+                pupil_id: res.commentBefore[0].pupil_id,
+            });
+        });
     };
 
     const TableSubject = ({ subjects }) => {
@@ -191,11 +204,38 @@ const FormSubject = (props) => {
         <div className="show-student-form">
             <header>
                 <div>
-                    <h3>List Students Of Class</h3>
+                    <h3>List Subjects Of Pupil</h3>
                 </div>
             </header>
             <div className="table-content">
                 <TableSubject subjects={subject} />
+            </div>
+            <div className="table-content-edit-teacher">
+                <table id="table">
+                    <thead>
+                        <tr>
+                            <th className="th-content">Behavior</th>
+                            <th className="th-content">Perfomance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {!!summary ? (
+                            <tr>
+                                <td className="th-content">
+                                    {summary.content}
+                                </td>
+                                <td className="th-content">
+                                    {summary.content}
+                                </td>
+                            </tr>
+                        ) : (
+                            <tr>
+                                <td className="th-content">-</td>
+                                <td className="th-content">-</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
             </div>
             {isUpdate ? DivUpdateScoreTeacher : null}
         </div>

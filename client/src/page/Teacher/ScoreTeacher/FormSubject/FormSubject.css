@@ -1,0 +1,10 @@
+.table-content-edit-teacher{
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    overflow: hidden;
+    width: 50%;
+    margin-left: 25px;
+    display: flex;
+    justify-content:right;
+    
+}
