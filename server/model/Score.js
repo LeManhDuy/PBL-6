@@ -10,6 +10,10 @@ const scoreSchema = new Schema({
         type: Number,
         require: true,
     },
+    result: {
+        type: String,
+        require: true,
+    },
     subject_id: {
         type: Schema.Types.ObjectId,
         ref: "Subject",

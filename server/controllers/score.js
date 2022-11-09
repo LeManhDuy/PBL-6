@@ -10,7 +10,7 @@ const createSubjectScore = async (req, res) => {
     let { midterm_score, final_score, pupil_id } = req.body;
     //Validation
 
-    if (!midterm_score || !final_score) {
+    if (!midterm_score) {
         return res.status(400).json({
             success: false,
             message: "Please fill in the score.",
@@ -27,17 +27,14 @@ const createSubjectScore = async (req, res) => {
             message: "final_score:invalid format",
         });
 
-    const existed_student = await Pupil.findOne({ _id: pupil_id });
-
+    const existed_student = await Pupil.findById(pupil_id);
     if (!existed_student) {
         return res
             .status(400)
             .json({ success: false, message: "Pupil does not found." });
     }
 
-    const existed_subject = await Subject.findOne({
-        _id: req.params.subjectID,
-    });
+    const existed_subject = await Subject.findById(req.params.subjectID);
 
     if (!existed_subject) {
         return res
@@ -45,11 +42,36 @@ const createSubjectScore = async (req, res) => {
             .json({ success: false, message: "Subject does not found!" });
     }
 
+    const existed_score = await Score.find({
+        subject_id: req.params.subjectID,
+        pupil_id: pupil_id,
+    });
+
+    if (existed_score[0]) {
+        return res.status(400).json({
+            success: false,
+            message: "This subject already has point.",
+        });
+    }
+
     //all good
     try {
+        let result = "";
+        if (final_score) {
+            if (final_score >= 9) {
+                result = "Excellent";
+            } else if (final_score >= 7 && final_score < 9) {
+                result = "Very good";
+            } else if (final_score >= 5 && final_score < 7) {
+                result = "Good";
+            } else {
+                result = "Average";
+            }
+        }
         const newSubjectScore = new Score({
             midterm_score,
             final_score,
+            result,
             pupil_id,
             subject_id: req.params.subjectID,
         });
@@ -78,7 +100,7 @@ const getScoreByPupilId = async (req, res) => {
         const pupilScore = await Score.find({
             pupil_id: req.params.studentID,
         })
-            .select(["midterm_score", "final_score"])
+            .select(["midterm_score", "final_score", "result"])
             .populate({ path: "subject_id", model: "Subject" });
         res.status(200).json({
             success: true,
@@ -89,10 +111,32 @@ const getScoreByPupilId = async (req, res) => {
     }
 };
 
+const getScoreById = async (req, res) => {
+    //Validation
+    try {
+        const scoreInfor = await Score.findById(req.params.scoreID).populate({
+            path: "subject_id",
+            model: "Subject",
+        });
+        if (!scoreInfor) {
+            res.status(400).json({
+                success: false,
+                message: "Score does not found!",
+            });
+        }
+        res.status(200).json({
+            success: true,
+            scoreInfor,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
 const updateScore = async (req, res) => {
     //Validation
     let { midterm_score, final_score } = req.body;
-    if (!midterm_score || !final_score) {
+    if (!midterm_score) {
         return res.status(400).json({
             success: false,
             message: "Please fill in the score.",
@@ -118,16 +162,31 @@ const updateScore = async (req, res) => {
 
     //all good
     try {
-        const updateScore = await Score.findByIdAndUpdate(
+        let result = "";
+        if (final_score) {
+            if (final_score >= 9) {
+                result = "Excellent";
+            } else if (final_score >= 7 && final_score < 9) {
+                result = "Very good";
+            } else if (final_score >= 5 && final_score < 7) {
+                result = "Good";
+            } else {
+                result = "Average";
+            }
+        }
+        const updateScore = {
+            midterm_score,
+            final_score,
+            result,
+        };
+        const updatedScore = await Score.findByIdAndUpdate(
             req.params.scoreID,
-            {
-                $set: req.body,
-            },
+            updateScore,
             { new: true }
         );
         res.status(200).json({
             success: true,
-            updateScore,
+            updatedScore,
         });
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error });
@@ -191,4 +250,5 @@ module.exports = {
     getScoreByPupilId,
     updateScore,
     getAllSubjectByPupilId,
+    getScoreById,
 };

@@ -19,6 +19,7 @@ const pupilRouter = require("./routes/pupil.js");
 const scheduleRouter = require("./routes/schedule.js");
 const notificationRoute = require("./routes/notification.js");
 const scoreRoute = require("./routes/score.js");
+const commentRoute = require("./routes/comment.js");
 
 const app = express();
 app.use(express.json());
@@ -74,6 +75,8 @@ app.use("/api/period", periodRouter);
 app.use("/api/notification", notificationRoute);
 //score
 app.use("/api/score", scoreRoute);
+//comment
+app.use("/api/comment", commentRoute);
 
 //port
 app.listen(process.env.PORT || 8000, function () {
