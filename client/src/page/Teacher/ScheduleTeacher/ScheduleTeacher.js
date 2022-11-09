@@ -28,6 +28,11 @@ const ScheduleTeacher = () => {
         const personID = JSON.parse(localStorage.getItem("@Login")).AccountId;
         ScheduleService.getScheduleByHomeRoomTeacher(personID)
             .then((response) => {
+                if (!response.success) {
+                    setIsLoading(false);
+                    setTableContent(null);
+                    return;
+                }
                 const dataSources = response.schedules.map(
                     (item, index) => {
                         return {
@@ -173,7 +178,7 @@ const ScheduleTeacher = () => {
         <div className="main-teacher-container">
             <header>
                 <div>
-                    <h3>Show Schedule { tableContent.class_name } </h3>
+                    <h3>Show Schedule {tableContent ? tableContent.class_name : '' } </h3>
                 </div>
             </header>
             {errorMessage!==""?<label style={{color:'red'}}>{errorMessage}</label>: null}
