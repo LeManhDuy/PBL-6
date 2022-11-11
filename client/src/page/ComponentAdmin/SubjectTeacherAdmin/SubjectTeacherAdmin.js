@@ -475,7 +475,7 @@ const SubjectTeacherAdmin = () => {
                     {/* </div> */}
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={3} subjectsTeacher={filtered}/>
+            <PaginatedItems itemsPerPage={10} subjectsTeacher={filtered}/>
             {/* <div className="table-content">
                 <TableSubjectTeacher subjectsTeacher={filtered} />
             </div>

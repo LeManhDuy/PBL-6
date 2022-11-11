@@ -403,7 +403,7 @@ const ClassAdmin = () => {
                     </div>
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={2} searchClassRoom={searchClass(classRooms)}/>
+            <PaginatedItems itemsPerPage={10} searchClassRoom={searchClass(classRooms)}/>
             {/* <div className="table-content">
                 <TableClasses classRooms={searchClass(classRooms)} />
             </div>

@@ -183,7 +183,7 @@ const AssociationTeacher = () => {
                     </div>
                 </header>
             </div>
-            <PaginatedItems itemsPerPage={2} searchParent={searchParent(parents)}/>
+            <PaginatedItems itemsPerPage={10} searchParent={searchParent(parents)}/>
             {/* <div className="table-content">
                 <TableParents parents={searchParent(parents)} />
             </div>

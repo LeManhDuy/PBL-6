@@ -285,7 +285,7 @@ const SubjectAdmin = () => {
                     </div>
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={5} searchSubject={searchSubject(subjects)}/>
+            <PaginatedItems itemsPerPage={10} searchSubject={searchSubject(subjects)}/>
             {/* <div className="table-content">
                 <TableSubject subjects={subjects} />
             </div>
