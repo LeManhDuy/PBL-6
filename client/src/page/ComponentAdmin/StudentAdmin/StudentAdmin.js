@@ -369,7 +369,6 @@ const StudentAdmin = () => {
             const arrFeeID = student.map(e => e.id);
             for (var i = 0; i < arrFeeID.length; i++)
                 hash[arrFeeID[i]] = true;
-            console.log(hash);
             setSelectAll(true);
             setListPupil(hash)
         }
@@ -506,10 +505,11 @@ const StudentAdmin = () => {
         PupilService.AddStudentByFile(pupilFile)
             .then((res) => {
                 if (res.success) {
-                    setErrorServer(false);
                     setIsChange(!isChange)
+                    setErrorServer(false);
                     setIsLoading(false)
                     setErrorMessage("")
+                    setKeyword("");
                     setSelectAll(false)
                 } else {
                     setErrorMessage(res.message)
@@ -647,7 +647,7 @@ const StudentAdmin = () => {
                     </div>
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={9} searchStudent={searchStudent(student)}/>
+            <PaginatedItems itemsPerPage={9} searchStudent={searchStudent(student)} />
             {isDelete ? ConfirmDelete : null}
             {addState ? DivAddStudent : null}
             {addExcelState ? DivAddStudentExcel : null}
