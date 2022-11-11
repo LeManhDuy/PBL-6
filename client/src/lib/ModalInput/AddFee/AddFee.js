@@ -180,7 +180,7 @@ const AddFee = (props) => {
 
     const CheckList = ({ options }) => {
         return (
-            <div>
+            <div className="div-scroll">
                 {options.map(option => (
                     <div key={option.key}>
                         <input
