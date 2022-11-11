@@ -664,7 +664,7 @@ const FeeAdmin = () => {
                     </div>
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={10} searchFee={searchFee(fees)}/>
+            <PaginatedItems itemsPerPage={9} searchFee={searchFee(fees)}/>
             {updateFeeState ? DivUpdateFee : null}
             {isDelete ? ConfirmDelete : null}
             {isMultiDelete ? ConfirmMultiDelete : null}
