@@ -280,7 +280,7 @@ const GradeAdmin = () => {
                     </div>
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={2} searchGrade={searchGrade(grades)}/>
+            <PaginatedItems itemsPerPage={10} searchGrade={searchGrade(grades)}/>
             {/* <div className="table-content">
                 <TableGrade grades={searchGrade(grades)} />
             </div> */}

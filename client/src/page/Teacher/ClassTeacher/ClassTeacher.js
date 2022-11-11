@@ -200,7 +200,7 @@ const ClassTeacher = () => {
                     </div>
                 </header>
             </div>
-            <PaginatedItems itemsPerPage={2} searchStudent={searchStudent(students)}/>
+            <PaginatedItems itemsPerPage={10} searchStudent={searchStudent(students)}/>
             
             {/* <div className="table-content">
                 <TableStudents students={searchStudent(students)} />

@@ -650,7 +650,7 @@ const FeeAdmin = () => {
                     </div>
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={2} searchFee={searchFee(fees)}/>
+            <PaginatedItems itemsPerPage={10} searchFee={searchFee(fees)}/>
             {/* <div className="table-content">
                 <TableFee fees={searchFee(fees)} />
             </div>
