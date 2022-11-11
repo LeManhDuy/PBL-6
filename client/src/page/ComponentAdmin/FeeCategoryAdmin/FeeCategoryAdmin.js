@@ -302,7 +302,7 @@ const FeeCategoryAdmin = () => {
                     </div>
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={2} searchFeeCategory={searchFeeCategory(feecategories)}/>
+            <PaginatedItems itemsPerPage={10} searchFeeCategory={searchFeeCategory(feecategories)}/>
             {/* <div className="table-content">
                 <TableFeeCategory
                     feecategories={searchFeeCategory(feecategories)}

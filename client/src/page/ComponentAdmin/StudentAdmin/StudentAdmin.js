@@ -497,7 +497,7 @@ const StudentAdmin = () => {
                     </div>
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={5} searchStudent={searchStudent(student)}/>
+            <PaginatedItems itemsPerPage={10} searchStudent={searchStudent(student)}/>
             {/* <div className="table-content">
                 <TableStudent students={searchStudent(student)} />
             </div>
