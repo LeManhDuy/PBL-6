@@ -8,3 +8,8 @@
     justify-content:right;
     
 }
+
+.text-center-error {
+    text-align: center;
+    color: red;
+}

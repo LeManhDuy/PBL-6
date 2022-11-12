@@ -136,6 +136,9 @@ const getScoreById = async (req, res) => {
 const updateScore = async (req, res) => {
     //Validation
     let { midterm_score, final_score } = req.body;
+    if (!final_score) {
+        final_score = "";
+    }
     if (!midterm_score) {
         return res.status(400).json({
             success: false,
@@ -195,6 +198,7 @@ const updateScore = async (req, res) => {
 
 const getAllSubjectByPupilId = async (req, res) => {
     try {
+        let result = [];
         const student_id = req.params.studentID;
         //validate student
         const existed_student = await Pupil.findOne({ _id: student_id });
@@ -209,12 +213,18 @@ const getAllSubjectByPupilId = async (req, res) => {
             class_id: existed_student.class_id,
         });
         if (!schedule) {
-            return res.status(400).json({ success: false, message: "Sc" });
+            return res.status(400).json({
+                success: false,
+                message: "Schedule not found!",
+                result,
+            });
         }
 
         const periods = await Period.find({ schedule_id: schedule._id });
         if (periods.length === 0) {
-            return res.status(400).json({ success: false, message: "P" });
+            return res
+                .status(400)
+                .json({ success: false, message: "Period not found!" });
         }
 
         let subject_teachers = [];
@@ -239,7 +249,32 @@ const getAllSubjectByPupilId = async (req, res) => {
             subjects.push(subject);
         }
 
-        res.json({ success: true, subjects });
+        //todo
+        for (let item of subjects) {
+            let detail;
+            const scoreSubjectPupil = await Score.find({
+                subject_id: item._id,
+                pupil_id: student_id,
+            });
+            if (scoreSubjectPupil[0]) {
+                detail = scoreSubjectPupil[0].set(
+                    "subject_name",
+                    item.subject_name,
+                    { strict: false }
+                );
+            } else {
+                detail = {
+                    subject_id: item._id,
+                    subject_name: item.subject_name,
+                    _id: "",
+                    midterm_score: "",
+                    final_score: "",
+                    result: "",
+                };
+            }
+            result.push(detail);
+        }
+        res.json({ success: true, result });
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error });
     }
