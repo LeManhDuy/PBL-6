@@ -1,52 +1,69 @@
-import { View, Image, Text, StyleSheet } from 'react-native'
+import { View, Image, Text, StyleSheet, Dimensions } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import { COLORS, SIZES, SHADOWS, assets, FONTS } from '../constants'
 import React from 'react'
 const PupilCard = ({data}) => {
     const navigation = useNavigation();
-
+    const windowWidth = Dimensions.get('window').width;
+    const windowHeight = Dimensions.get('window').height;
     const styles = StyleSheet.create({
         container:{
-            width:"90%",
+            width: "90%",
             alignSelf:'center',
             flexDirection: 'row',
             justifyContent: 'center',
             backgroundColor: COLORS.white,
-            padding:20,
-            margin:20,
-            marginBottom: 20,
-            height: 350,    
+            padding:"5%",
+            margin:"3%",
+            // marginBottom: "5%",
+            aspectRatio: 16/9,
+            // height: "35%",    
             borderRadius: 14,
             ...SHADOWS.dark
         },
         imgContainer:{
-            width: 150, height: 150,
-            alignSelf:'center',
+            width: "50%", 
+            aspectRatio: 1,
+            alignSelf:'center', 
+            // backgroundColor: COLORS.gray,
+            justifyContent: 'center'
         },
         infoContainer:{
             alignSelf:'center',
-            paddingLeft: 40,
-            // borderLeftWidth: 2
+            paddingLeft: "5%",
+            width: "60%",
+            aspectRatio: 1,
+            // marginLeft: "10%",
+            // backgroundColor: COLORS.gray,
+            borderLeftWidth: 2,
+            justifyContent: 'space-evenly'
         },
         infoLine:{
             flexDirection: 'row',
+            height: "15%",
             marginBottom: 20,
+            // backgroundColor: COLORS.gray
         },
         circleImg:{
-            width: 150, height: 150, borderRadius: 150/ 2
+            width: "80%", 
+            aspectRatio: 1, 
+            borderRadius: 150, 
+            alignSelf: 'center'
         },
         infoText:{
-            marginLeft: 20,
-            fontSize: SIZES.large,
+            marginLeft: windowWidth/35,
+            fontSize: windowWidth/35,
         },
         infoHeaderText:{
-            marginLeft: 25,
-            fontSize: SIZES.medium,
+            marginLeft: windowWidth/35,
+            fontSize: windowWidth/50,
             opacity: 0.5
         },
         icon:{
-            alignSelf:'center'
+            alignSelf:'center',
+            height: "100%",
+            resizeMode: 'contain'
         }
     })
     return (
@@ -60,21 +77,21 @@ const PupilCard = ({data}) => {
             </View>
             <View style={styles.infoContainer}>
                 <View style={styles.infoLine}>
-                    <Image size={40} source={assets.account} style={styles.icon}/>
+                    <Image source={assets.account} style={styles.icon}/>
                     <View>
                         <Text style={styles.infoHeaderText}>Full Name</Text>
                         <Text style={styles.infoText}> {data.name} </Text>
                     </View> 
                 </View>
                 <View style={styles.infoLine}>
-                    <Image size={40} source={assets.classes} style={styles.icon}/>
+                    <Image source={assets.classes} style={styles.icon}/>
                     <View>
                         <Text style={styles.infoHeaderText}>Class</Text>
                         <Text style={styles.infoText}> {data.class} </Text>
                     </View> 
                 </View>
                 <View style={styles.infoLine}>
-                    <Image size={40} source={assets.teacher} style={styles.icon}/>
+                    <Image source={assets.teacher} style={styles.icon}/>
                     <View>
                         <Text style={styles.infoHeaderText}>Hoomroom Teacher</Text>
                         <Text style={styles.infoText}> {data.teacher} </Text>
