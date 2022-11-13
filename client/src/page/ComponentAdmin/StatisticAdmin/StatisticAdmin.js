@@ -137,9 +137,6 @@ const StatisticAdmin = () => {
                 <div>
                     <h3>Statistics</h3>
                 </div>
-                <Dropdown1 />
-                <Dropdown2 />
-                <Dropdown3 />
             </header>
             <div className="table-content">
                 <Statistics />

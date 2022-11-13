@@ -48,6 +48,7 @@ const createComment = async (req, res) => {
         const commentBefore = await Comment.find({
             pupil_id: req.params.pupilID,
         });
+        //console.log(commentBefore[0]);
         if (commentBefore[0]) {
             commentBefore[0].comment_content = check;
             await commentBefore[0].save();
