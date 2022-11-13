@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./StatisticAdmin.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faMagnifyingGlass,
-    faArrowLeftLong,
-    faArrowRightLong,
-} from "@fortawesome/free-solid-svg-icons";
 import { Bar } from 'react-chartjs-2';
+import ModalInput from "../../../lib/ModalInput/ModalInput";
+import ChooseStatistic from "../../../lib/ModalInput/ChooseStatistic/ChooseStatistic";
+
 import {
     Chart,
     CategoryScale,
@@ -24,6 +21,10 @@ Chart.register(CategoryScale,
     Legend);
 
 const StatisticAdmin = () => {
+    const [addState, setAddState] = useState(false);
+    const [errorServer, setErrorServer] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
     const options = [
         { key: 1, label: "Admin", value: "principal" },
         { key: 2, label: "Parent", value: "parents" },
@@ -45,49 +46,6 @@ const StatisticAdmin = () => {
                     </option>
                     <option key="1" value="Grade 3">
                         Grade 1
-                    </option>
-                </select>
-            </label>
-        );
-    };
-    const Dropdown2 = () => {
-        return (
-            <label>
-                Class
-                <select
-                    className="dropdown-account"
-                >
-                    <option key="1" value="Grade 1">
-                        All
-                    </option>
-                    <option key="1" value="Grade 1">
-                        Class 1
-                    </option>
-                    <option key="1" value="Grade 2">
-                        Class 2
-                    </option>
-                    <option key="1" value="Grade 3">
-                        Class 3
-                    </option>
-                </select>
-            </label>
-        );
-    };
-    const Dropdown3 = () => {
-        return (
-            <label>
-                Subject
-                <select
-                    className="dropdown-account"
-                >
-                    <option key="1" value="Grade 1">
-                        Subject 1
-                    </option>
-                    <option key="1" value="Grade 2">
-                        Subject 2
-                    </option>
-                    <option key="1" value="Grade 3">
-                        Subject 3
                     </option>
                 </select>
             </label>
@@ -131,6 +89,31 @@ const StatisticAdmin = () => {
         );
     };
 
+    const handleInputCustom = () => {
+        setAddState(false);
+        setErrorServer(false);
+        setErrorMessage("");
+    };
+    const handleStatistic = () => {
+        setAddState(true);
+        setErrorServer(false);
+        setErrorMessage("");
+    };
+    const DivStatistic = (
+        <ModalInput
+            show={addState}
+            handleInputCustom={handleInputCustom}
+            content={
+                <ChooseStatistic
+                    handleInputCustom={handleInputCustom}
+                    handleStatistic={handleStatistic}
+                    errorServer={errorServer}
+                    errorMessage={errorMessage}
+                />
+            }
+        />
+    );
+
     return (
         <div className="main-container">
             <header>
@@ -138,9 +121,14 @@ const StatisticAdmin = () => {
                     <h3>Statistics</h3>
                 </div>
             </header>
-            <div className="table-content">
-                <Statistics />
+            <div className="right-header">
+                <button className="btn-account" onClick={handleStatistic}>
+                    Choose Type Statistic
+                </button>
             </div>
+
+            {/* <Statistics /> */}
+            {addState ? DivStatistic : null}
         </div>
     )
 

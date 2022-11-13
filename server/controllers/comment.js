@@ -89,7 +89,7 @@ const getCommentByPupilID = async (req, res) => {
             success: true,
             pupilComment,
         });
-    } catch (error) {}
+    } catch (error) { }
 };
 
 module.exports = {
