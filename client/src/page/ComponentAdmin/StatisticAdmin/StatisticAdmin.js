@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./StatisticAdmin.css";
-import { Bar } from 'react-chartjs-2';
+import { Bar, Doughnut } from 'react-chartjs-2';
 import ModalInput from "../../../lib/ModalInput/ModalInput";
 import ChooseStatistic from "../../../lib/ModalInput/ChooseStatistic/ChooseStatistic";
+import StatisticService from "../../../config/service/StatisticService";
 
 import {
     Chart,
+    ArcElement,
     CategoryScale,
     LinearScale,
     BarElement,
@@ -15,15 +17,20 @@ import {
 } from 'chart.js'
 Chart.register(CategoryScale,
     LinearScale,
+    ArcElement,
     BarElement,
     Title,
     Tooltip,
     Legend);
 
-const StatisticAdmin = () => {
+const StatisticAdmin = (props) => {
     const [addState, setAddState] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+
+    const [label, setLabel] = useState([]);
+    const [data, setData] = useState([]);
+    const [legend, setLegend] = useState("");
 
     const options = [
         { key: 1, label: "Admin", value: "principal" },
@@ -52,40 +59,56 @@ const StatisticAdmin = () => {
         );
     };
 
-    const data = {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    const option = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+                labels: {
+                    font: {
+                        size: 16
+                    }
+                }
+            },
+            title: {
+                display: true,
+                text: legend,
+                font: {
+                    size: 24
+                }
+            },
+
+        },
+    }
+
+    const dataScore = {
+        labels: label,
         datasets: [
             {
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
+                data: data,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
                     'rgba(255, 206, 86, 0.2)',
                     'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
                 ],
                 borderColor: [
                     'rgba(255, 99, 132, 1)',
                     'rgba(54, 162, 235, 1)',
                     'rgba(255, 206, 86, 1)',
                     'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
                 ],
-                borderWidth: 1,
             },
         ],
     };
 
     const Statistics = () => {
         return (
-            <table id="table">
-                {/* <thead>{headerClass}</thead>
-                <tbody>{classItem}</tbody> */}
-                <Bar data={data} />
-            </table>
+            <div className="father-chart">
+                <div className="chart">
+                    <Doughnut options={option} data={dataScore} />
+                </div>
+            </div>
         );
     };
 
@@ -99,12 +122,46 @@ const StatisticAdmin = () => {
         setErrorServer(false);
         setErrorMessage("");
     };
+    const handleShowScore = (dropValueGrade, dropValueClass, dropValueSubject) => {
+        if (dropValueGrade && dropValueClass.value != "0" && dropValueSubject.value == "0") {
+            console.log(dropValueClass.label);
+            StatisticService.getCommentByClassId(dropValueClass.value).then((response) => {
+                setLabel(Object.keys(response))
+                console.log(Object.values(response));
+                setData(Object.values(response))
+                setLegend("Statistical results of all subjects of class " + dropValueClass.label)
+            })
+        }
+        else if (dropValueGrade && dropValueClass.value != "0" && dropValueSubject.value != "0") {
+            StatisticService.getScoreByClassSubjectId(dropValueClass.value, dropValueSubject.value).then((response) => {
+                setLabel(Object.keys(response))
+                setData(Object.values(response))
+                setLegend("Statistical results of " + dropValueSubject.label + " of class " + dropValueClass.label)
+            })
+        }
+        else if (dropValueGrade && dropValueClass.value == "0" && dropValueSubject.value == "0") {
+            StatisticService.getCommentByGradeId(dropValueGrade.value).then((response) => {
+                setLabel(Object.keys(response))
+                setData(Object.values(response))
+                setLegend("Statistical results of all subjects of grade " + dropValueGrade.label)
+            })
+        }
+        else if (dropValueGrade && dropValueClass.value == "0" && dropValueSubject.value != "0") {
+            StatisticService.getCommentByGradeSubjectId(dropValueGrade.value, dropValueSubject.value).then((response) => {
+                setLabel(Object.keys(response))
+                setData(Object.values(response))
+                setLegend("Statistical results of " + dropValueSubject.label + " of grade " + dropValueGrade.label)
+            })
+        }
+        setAddState(false)
+    }
     const DivStatistic = (
         <ModalInput
             show={addState}
             handleInputCustom={handleInputCustom}
             content={
                 <ChooseStatistic
+                    handleShowScore={handleShowScore}
                     handleInputCustom={handleInputCustom}
                     handleStatistic={handleStatistic}
                     errorServer={errorServer}
@@ -113,7 +170,6 @@ const StatisticAdmin = () => {
             }
         />
     );
-
     return (
         <div className="main-container">
             <header>
@@ -126,8 +182,7 @@ const StatisticAdmin = () => {
                     Choose Type Statistic
                 </button>
             </div>
-
-            {/* <Statistics /> */}
+            {legend ? <Statistics /> : null}
             {addState ? DivStatistic : null}
         </div>
     )

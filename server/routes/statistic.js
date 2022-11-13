@@ -35,7 +35,7 @@ router.get("/get-comment-by-class-id/:classID", async (req, res) => {
             if (getCommentByPupilID[0].comment_content === "Excellent")
                 Excellent = Excellent + 1
         }
-        res.json({ success: true, Average, Good, VeryGood, Excellent })
+        res.status(200).json({ "Average(0-4)": Average, "Good(5-6)": Good, "VeryGood(7-8)": VeryGood, "Excellent(9-10)": Excellent })
     }
     catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
@@ -70,7 +70,7 @@ router.get("/get-score-by-class-subject-id/:classID&:subjectID", async (req, res
             if (getScoreByPupilID[0].result === "Excellent")
                 Excellent = Excellent + 1
         }
-        res.json({ success: true, Average, Good, VeryGood, Excellent })
+        res.status(200).json({ "Average(0-4)": Average, "Good(5-6)": Good, "VeryGood(7-8)": VeryGood, "Excellent(9-10)": Excellent })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }
@@ -113,7 +113,7 @@ router.get("/get-comment-by-grade-id/:gradeID", async (req, res) => {
             if (item.comment_content === "Excellent")
                 Excellent = Excellent + 1
         }
-        res.json({ success: true, Average, Good, VeryGood, Excellent })
+        res.status(200).json({ "Average(0-4)": Average, "Good(5-6)": Good, "VeryGood(7-8)": VeryGood, "Excellent(9-10)": Excellent })
     }
     catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
@@ -158,7 +158,7 @@ router.get("/get-score-by-grade-subjcet-id/:gradeID&:subjectID", async (req, res
             if (item.result === "Excellent")
                 Excellent = Excellent + 1
         }
-        res.json({ success: true, Average, Good, VeryGood, Excellent })
+        res.status(200).json({ "Average(0-4)": Average, "Good(5-6)": Good, "VeryGood(7-8)": VeryGood, "Excellent(9-10)": Excellent })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }

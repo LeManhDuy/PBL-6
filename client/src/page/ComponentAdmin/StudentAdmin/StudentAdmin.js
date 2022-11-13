@@ -126,7 +126,7 @@ const StudentAdmin = () => {
                     return {
                         key: index + 1,
                         id: item._id,
-                        class_name: item.class_name,
+                        class_name: item.class_name ? item.class_name : "Empty",
                         homeroomteacher_name: item.homeroom_teacher_id
                             ? item.homeroom_teacher_id.person_id
                                 ? item.homeroom_teacher_id.person_id.person_fullname
@@ -231,6 +231,7 @@ const StudentAdmin = () => {
 
     const handleChangeGrade = (event) => {
         setDropValueGrade(event.target.value);
+        setDropValueClass(null)
         grades.map((item) => {
             if (event.target.value === item.id) {
                 getClassWithFilter(item.id);

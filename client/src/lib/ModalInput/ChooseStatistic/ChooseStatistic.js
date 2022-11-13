@@ -70,7 +70,7 @@ const ChooseStatistic = (props) => {
     return (
         <div className="add-account-form">
             {isShowType ? FormShowTypeStatistic : null}
-            {isShowScore ? <FormShowScore handleInputCustom={handleInputCustom} /> : null}
+            {isShowScore ? <FormShowScore handleInputCustom={handleInputCustom} handleShowScore={props.handleShowScore} /> : null}
             {isShowFee ? <FormShowFee handleInputCustom={handleInputCustom} /> : null}
         </div>
     );

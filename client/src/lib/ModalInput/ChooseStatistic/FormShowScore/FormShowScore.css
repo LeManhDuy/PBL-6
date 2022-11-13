@@ -71,7 +71,8 @@
 .form-teacher-content h4 {
   text-align: left;
 }
-.form-teacher-content .teacher-content-left {
+
+.form-teacher-content .teacher-content-left-show-score {
   width: 50%;
   display: flex;
   align-items: center;
@@ -87,7 +88,7 @@
   gap: 20px;
 }
 
-.radio-btn .radio{
+.radio-btn .radio {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -105,18 +106,18 @@
   width: 150px;
   border-radius: 50%;
   object-fit: cover;
-  background:#000;
+  background: #000;
   border: 4px solid var(--primary-hover-color)
 }
 
-.form-teacher-content .teacher-content-right {
+.form-teacher-content .teacher-content-right-show-fee {
   width: 50%;
   display: flex;
   align-items: center;
   flex-direction: column;
 }
 
-#upload-photo{
+#upload-photo {
   opacity: 0;
   position: absolute;
   z-index: -1;
@@ -133,4 +134,12 @@
 
 .avatar-teacher label.choose-file:hover {
   background-color: var(--primary-hover-color);
+}
+
+.type-input.class {
+  margin-top: 30px !important;
+}
+
+.dropdown-class.score {
+  margin-bottom: 20px !important;
 }
