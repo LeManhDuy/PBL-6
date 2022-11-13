@@ -16,25 +16,28 @@ const PupilCard = ({data}) => {
             padding:20,
             margin:20,
             marginBottom: 20,
-            height: 350,    
+            aspectRatio: 4/3,
+            // height: "35%",    
             borderRadius: 14,
             ...SHADOWS.dark
         },
         imgContainer:{
-            width: 150, height: 150,
+            width: "50%", aspectRatio: 1,
             alignSelf:'center',
         },
         infoContainer:{
             alignSelf:'center',
-            paddingLeft: 40,
-            // borderLeftWidth: 2
+            paddingLeft: "5%",
+            width: "60%",
+            marginLeft: "10%",
+            borderLeftWidth: 2
         },
         infoLine:{
             flexDirection: 'row',
             marginBottom: 20,
         },
         circleImg:{
-            width: 150, height: 150, borderRadius: 150/ 2
+            width: "80%", aspectRatio: 1, borderRadius: 150
         },
         infoText:{
             marginLeft: 20,

@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Details from './Details';
 import ListPupils from './ListPupils';
+import Notifications from './Notifications';
 import { DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -41,6 +42,7 @@ const Home = () => {
         }}>
           <Drawer.Screen name="Details" component={Details} />
           <Drawer.Screen name="Pupils" component={ListPupils} />
+          <Drawer.Screen name="Notification" component={Notifications} />
       </Drawer.Navigator>
     )
   }

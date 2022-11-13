@@ -1,4 +1,4 @@
-import { SafeAreaView, View, StyleSheet, Image } from "react-native"
+import { SafeAreaView, View, StyleSheet, Image, ScrollView } from "react-native"
 import React, {useState, useEffect} from "react";
 import { Title } from "react-native-paper";
 import { assets, COLORS, FONTS, SIZES } from "../constants";
@@ -50,49 +50,57 @@ const Details = () => {
     const styles = StyleSheet.create({
         infoContainer:{
             padding: 20,
-            width:"75%",
+            width:"80%",
             alignSelf:'center',
-            alignItems:'center'
+            alignItems:'center',
+        },
+        imgContainer:{
+            // borderWidth: 2,
+            width: "75%",
+            aspectRatio: 1
+            // backgroundColor: COLORS.gray,
         },
         circleImg:{
-            width: 250, height: 250, borderRadius: 250/ 2
+            width: "100%", height: "100%", borderRadius: 200,
         },
         infoContainer2:{
-            padding:30,
-            // backgroundColor: COLORS.gray,
+            padding:"10%",
             width: "100%",
             justifyContent:'center'
         },
         infoLine:{
-            padding: 10,
+            padding: "5%",
             flexDirection: 'row',
-            marginBottom: 20,
+            marginBottom: "10%",
             // backgroundColor: `#ff7f50`,
             borderBottomWidth: 2,
             borderColor: `#000000`
         },
         infoText:{
-            marginLeft: 20,
+            marginLeft: "10%",
             fontSize: SIZES.extraLarge,
         },
         infoHeaderText:{
-            marginLeft: 25,
+            marginLeft: "12%",
             fontSize: SIZES.medium,
             opacity: 0.5
         },
         icon:{
-            alignSelf:'center'
+            alignSelf:'center'  
         }
     })
     if(parentInfo){
 
         return (
-            <SafeAreaView>
+            <ScrollView>
                 <View style={styles.infoContainer}>
-                <Image 
-                    source={parentInfo?{uri:parentInfo.img}:assets.account  }
-                    style={styles.circleImg} 
-                    />
+                    <View style={styles.imgContainer}>
+                        <Image 
+                        source={parentInfo?{uri:parentInfo.img}:assets.account}
+                        style={styles.circleImg} 
+                        />
+                    </View>
+                
                 <View style={styles.infoContainer2}>
                     <View style={styles.infoLine}>
                         <Image size={40} source={assets.account} style={styles.icon}/>
@@ -125,7 +133,7 @@ const Details = () => {
                     
                 </View>
             </View>
-            </SafeAreaView>
+            </ScrollView>
         )
     }
 }

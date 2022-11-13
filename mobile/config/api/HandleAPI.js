@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const REACT_APP_API_ENDPOINT="http://192.168.1.133:8000/"
+
+// const REACT_APP_API_ENDPOINT="http://192.168.40.106:8000/"
+const REACT_APP_API_ENDPOINT = 'http://192.168.91.134:8000/'
 
 async function getToken() {
     const data = await AsyncStorage.getItem("@Login")
