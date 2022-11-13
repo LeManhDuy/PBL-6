@@ -204,7 +204,7 @@ function AccountAdmin() {
         return (
             <>
                 <div className="table-content">
-                    <TableAccounts accounts={currentItems} />
+                    <TableAccounts accounts={currentItems} value={dropValue}/>
                 </div>
                 <footer>
                     <hr></hr>
@@ -738,25 +738,25 @@ function AccountAdmin() {
                     //     accounts={searchAccount(principal)}
                     //     value={dropValue}
                     // />
-                    <PaginatedItems itemsPerPage={2} searchAccount={searchAccount(principal)} />    
+                    <PaginatedItems itemsPerPage={10} searchAccount={searchAccount(principal)} />    
                 ) : dropValue === "parents" ? (
                     // <TableAccounts
                     //     accounts={searchAccount(parents)}
                     //     value={dropValue}
                     // />
-                    <PaginatedItems itemsPerPage={2} searchAccount={searchAccount(parents)} />
+                    <PaginatedItems itemsPerPage={10} searchAccount={searchAccount(parents)} />
                 ) : dropValue === "teacher" ? (
                     // <TableAccounts
                     //     accounts={searchAccount(teacher)}
                     //     value={dropValue}
                     // />
-                    <PaginatedItems itemsPerPage={2} searchAccount={searchAccount(teacher)} />
+                    <PaginatedItems itemsPerPage={10} searchAccount={searchAccount(teacher)} />
                 ) : (
                     // <TableAccounts
                     //     accounts={searchAccount(affair)}
                     //     value={dropValue}
                     // />
-                    <PaginatedItems itemsPerPage={2} searchAccount={searchAccount(affair)} />
+                    <PaginatedItems itemsPerPage={10} searchAccount={searchAccount(affair)} />
                 )}
             {/* </div> */}
             {/* <footer>

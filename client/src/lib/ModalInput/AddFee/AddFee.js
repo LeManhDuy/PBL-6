@@ -180,14 +180,15 @@ const AddFee = (props) => {
 
     const CheckList = ({ options }) => {
         return (
-            <div>
+            <div className="div-scroll">
                 {options.map(option => (
                     <div key={option.key}>
                         <input
                             name="pupil"
                             type="checkbox"
                             className="btn-check"
-                            id={option.key} autoComplete="off"
+                            id={option.key}
+                            //autoComplete="off"
                             checked={listPupil[option.value]}
                             onChange={() => {
                                 setListPupil({
@@ -214,7 +215,27 @@ const AddFee = (props) => {
     const resetListPupil = () => {
         setListPupil({})
     }
-
+    const toggle = (event) => {
+        var checkboxes = document.getElementsByName('pupil');
+        var hash = {};
+        if (event.target.checked) {
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = true;
+            }
+            const arrFeeID = pupil.map(e => e.value);
+            for (var i = 0; i < arrFeeID.length; i++)
+                hash[arrFeeID[i]] = true;
+            setListPupil(hash)
+            setSelectAll(true)
+        }
+        else {
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = false;
+            }
+            setSelectAll(false)
+            resetListPupil();
+        }
+    }
     const FormFee = (
         <div className="form-admin-content">
             <h4>Add Fee</h4>
@@ -360,6 +381,12 @@ const AddFee = (props) => {
                     <div className="type-input">
                         <div className="type-header">
                             <h4 className="type-header input">Pupil </h4>
+
+                            <input
+                                className="check-input"
+                                type="checkbox"
+                                onChange={toggle}
+                                checked={selectAll} />
                         </div>
                         <CheckList
                             options={pupil}

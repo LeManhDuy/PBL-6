@@ -4,8 +4,10 @@ const jwt = require("jsonwebtoken");
 const Pupil = require("../model/Pupil");
 const multer = require("multer");
 const Parent = require("../model/Parent");
+const Person = require("../model/Person");
 const Classroom = require("../model/class");
 const FirebaseStorage = require("multer-firebase-storage");
+const excelToJson = require('convert-excel-to-json');
 const fs = require("fs");
 
 const fileFilter = (req, file, cb) => {
@@ -87,6 +89,82 @@ router.post(
         }
     }
 );
+
+// @route POST api/schedule
+// @desc Create Schedule using excel file
+// @access Private
+router.post("/add-multi-pupil", multer().single('file'), async (req, res) => {
+    try {
+        let pupilFile = null
+        if (req.file) {
+            pupilFile = Buffer.from(req.file.buffer)
+        }
+        else {
+            return res.status(400).json({ success: false, message: "File does not exist!", body: req.file })
+        }
+        const pupil = excelToJson({
+            source: pupilFile,
+            header: {
+                rows: 1
+            },
+            columnToKey: {
+                '*': '{{columnHeader}}'
+            },
+            sheetStubs: true
+        });
+        for (let c of pupil["Sheet1"]) {
+            const classValidate = await Classroom.findOne({ class_name: c["Class Name"] })
+            if (!classValidate) {
+                return res
+                    .status(400)
+                    .json({ success: false, message: "Class does not exist." })
+            }
+            const emailValidate = await Person.findOne({ person_email: c["Parent's Email"] });
+            if (!emailValidate) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Email does not exist.",
+                });
+            }
+            const emailParentValidate = await Parent.findOne({ person_id: emailValidate._id })
+            if (!emailParentValidate) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Email Parent does not exist.",
+                });
+            }
+            if (c["Gender"] != "Male" && c["Gender"] != "Female") {
+                return res.status(400).json({
+                    success: false,
+                    message: "Gender dont correct format.",
+                });
+            }
+            try {
+                DateOfBirth = Date.parse(c["Date Of Birth"])
+            } catch (error) {
+                return res.status(500).json({ success: false, message: "Date format error: " + error })
+            }
+            let newPupil = new Pupil({
+                pupil_name: c["Full Name"],
+                pupil_dateofbirth: Date.parse(c["Date Of Birth"]),
+                pupil_gender: c["Gender"] == "Male" ? true : false,
+                pupil_image: c["Image"],
+                parent_id: emailParentValidate._id,
+                class_id: classValidate._id,
+            });
+            newPupil.save()
+        }
+        //return token
+        res.json({
+            success: true,
+            message: "Create pupil successfully",
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Something's wrong: " + error })
+    }
+
+})
+
 
 // // @route GET api/admin/parent
 // // @desc GET parent
@@ -386,7 +464,25 @@ router.delete("/:pupilID", async (req, res) => {
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
-
+//delete multip pupil
+router.post("/multi/delete", async (req, res) => {
+    const { pupil_list } = req.body
+    if (!pupil_list)
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information.",
+        })
+    try {
+        for (const [key] of Object.entries(pupil_list)) {
+            const deletedPupil = await Pupil.findOneAndDelete(
+                { _id: key }
+            )
+        }
+        res.json({ success: true, message: "Deleted Fee Successfully!" })
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
 //Get pupul by ParentID
 router.get("/get-pupil-by-parent/:personID", async (req, res) => {
     try {

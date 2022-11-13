@@ -50,78 +50,69 @@ const ScoreParents = () => {
             });
         let dataNew = [];
         for (let item of studentsInfo) {
+            let checkSubject = false;
             let dataSources = [];
-            let scoreSources = [];
+            let detail = {};
             let summary = {
                 id: "",
                 content: "",
             };
             await ScoreService.getSubjectByPupilID(item.id)
                 .then((res) => {
-                    dataSources = res.subjects.map((item, index) => {
+                    if (!res.success) {
+                        checkSubject = true;
+                    }
+                    dataSources = res.result.map((item, index) => {
                         return {
                             key: index + 1,
-                            subject_id: item._id,
-                            name: item.subject_name,
-                            score_id: "",
-                            midterm_score: "",
-                            final_score: "",
-                            result: "",
+                            subject_id: item.subject_id ? item.subject_id : "",
+                            name: item.subject_name ? item.subject_name : "",
+                            score_id: item._id ? item._id : "",
+                            midterm_score: item.midterm_score
+                                ? item.midterm_score
+                                : "",
+                            final_score: item.final_score
+                                ? item.final_score
+                                : "",
+                            result: item.result ? item.result : "",
                         };
                     });
                 })
                 .catch((error) => {
                     console.log(error);
                 });
-            await ScoreService.getAllScoreByPupilID(item.id)
-                .then((res) => {
-                    scoreSources = res.pupilScore.map((item) => {
-                        return {
-                            _id: item._id,
-                            midterm_score: item.midterm_score,
-                            final_score: item.final_score,
-                            result: item.result,
-                            subject_id: item.subject_id._id,
+            if (!checkSubject) {
+                await CommentService.getCommentByPupilID(item.id)
+                    .then((res) => {
+                        summary = {
+                            id: res.pupilComment[0]
+                                ? res.pupilComment[0]._id
+                                : "",
+                            content: res.pupilComment[0]
+                                ? res.pupilComment[0].comment_content
+                                : "-",
                         };
+                    })
+                    .catch((err) => {
+                        console.log(err);
                     });
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-            for (let item of scoreSources) {
-                for (let subject of dataSources) {
-                    if (subject.subject_id === item.subject_id) {
-                        subject.score_id = item._id;
-                        subject.midterm_score = item.midterm_score;
-                        subject.final_score = item.final_score;
-                        subject.result = item.result;
-                    }
-                }
+                detail = {
+                    key: item.key,
+                    student: item,
+                    score: dataSources,
+                    summary: summary,
+                    check: checkSubject,
+                };
+            } else {
+                detail = {
+                    key: item.key,
+                    student: item,
+                    check: checkSubject,
+                };
             }
-            await CommentService.getCommentByPupilID(item.id)
-                .then((res) => {
-                    summary = {
-                        id: res.pupilComment[0]
-                            ? res.pupilComment[0]._id
-                            : null,
-                        content: res.pupilComment[0]
-                            ? res.pupilComment[0].comment_content
-                            : "-",
-                    };
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-            let detail = {
-                key: item.key,
-                student: item,
-                score: dataSources,
-                summary: summary,
-            };
             dataNew.push(detail);
         }
         setStudents(dataNew);
-        console.log(dataNew);
         setIsLoading(false);
     };
 
@@ -177,6 +168,11 @@ const ScoreParents = () => {
                     </div>
                 </div>
 
+                {item.check ? (
+                    <div className="text-center-error">
+                        This pupil currently has no subjects.
+                    </div>
+                ) : null}
                 <div className="table-content">
                     <table id="table">
                         <thead>
@@ -190,7 +186,7 @@ const ScoreParents = () => {
                         <tbody>
                             {!!item.score
                                 ? item.score.map((item) => (
-                                      <tr>
+                                      <tr key={item.key}>
                                           <td className="th-content">
                                               {item.name}
                                           </td>

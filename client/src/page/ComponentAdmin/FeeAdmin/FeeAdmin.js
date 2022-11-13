@@ -33,6 +33,7 @@ const FeeAdmin = () => {
     const [selectAll, setSelectAll] = useState(false)
     const [dropValue, setDropValue] = useState("All");
     const [dropValueFeeCateogory, setDropValueFeeCateogory] = useState("All");
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         getFee();
@@ -253,6 +254,7 @@ const FeeAdmin = () => {
     };
 
     const handleConfirmAddFee = (allValue, list_pupil) => {
+        setIsLoading(true)
         if (allValue.fee_status === "false" || allValue.fee_status == "") {
             allValue.paid_date = null;
         }
@@ -266,6 +268,7 @@ const FeeAdmin = () => {
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
+                    setIsLoading(false)
                     setErrorMessage("");
                     setAddFeeState(false);
                     setKeyword("");
@@ -274,6 +277,7 @@ const FeeAdmin = () => {
                 } else {
                     setErrorServer(true);
                     setErrorMessage(res.message);
+                    setIsLoading(false)
                     setAddFeeState(true);
                     setDropValue("All")
                     setDropValueFeeCateogory("All")
@@ -350,6 +354,7 @@ const FeeAdmin = () => {
     const handleCloseModalCustom = () => {
         setIsDelete(false);
         setIsMultiDelete(false);
+        setIsMultiUpdate(false);
     };
 
     const handleDelete = () => {
@@ -371,7 +376,7 @@ const FeeAdmin = () => {
         return (
             <>
                 <div className="table-content">
-                    <TableFee fees={currentItems} />
+                    <TableFee isLoading={isLoading} fees={currentItems} />
                 </div>
                 <footer>
                     <hr></hr>
@@ -401,7 +406,7 @@ const FeeAdmin = () => {
         );
     }
 
-    const TableFee = ({ fees }) => {
+    const TableFee = ({ isLoading, fees }) => {
         const feeItem = fees.map((item) => (
             <tr data-key={item.id} key={item.id}>
                 <td></td>
@@ -460,10 +465,13 @@ const FeeAdmin = () => {
             </tr>
         );
         return (
-            <table id="table">
-                <thead>{headerFee}</thead>
-                <tbody>{feeItem}</tbody>
-            </table>
+            <>
+                <h4 hidden={!isLoading} style={{ color: 'red' }}>Loading...</h4>
+                <table hidden={isLoading} id="table">
+                    <thead>{headerFee}</thead>
+                    <tbody>{feeItem}</tbody>
+                </table>
+            </>
         );
     };
     const toggle = (event) => {
@@ -523,6 +531,7 @@ const FeeAdmin = () => {
     }
 
     const handleUpdateStatus = () => {
+        setIsLoading(true);
         FeeService.updateMultipleStatus({
             fee_list: listFee,
         })
@@ -530,6 +539,7 @@ const FeeAdmin = () => {
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
+                    setIsLoading(false);
                     resetListFee()
                     setSelectAll(false)
                     setErrorMessage("");
@@ -537,6 +547,7 @@ const FeeAdmin = () => {
                     setDropValueFeeCateogory("All")
                 } else {
                     setErrorServer(true);
+                    setIsLoading(false);
                     setErrorMessage(res.message);
                     setDropValue("All")
                     resetListFee()
@@ -566,12 +577,14 @@ const FeeAdmin = () => {
     }
 
     const handleMultiDelete = () => {
+        setIsLoading(true);
         FeeService.deleteMultiFee({
             fee_list: listFee,
         })
             .then((res) => {
                 if (res.success) {
                     setState(!state);
+                    setIsLoading(false);
                     setErrorServer(false);
                     resetListFee()
                     setSelectAll(false)
@@ -580,6 +593,7 @@ const FeeAdmin = () => {
                     setDropValueFeeCateogory("All")
                 } else {
                     setErrorServer(true);
+                    setIsLoading(false);
                     setErrorMessage(res.message);
                     setDropValue("All")
                     setDropValueFeeCateogory("All")
@@ -650,44 +664,7 @@ const FeeAdmin = () => {
                     </div>
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={2} searchFee={searchFee(fees)}/>
-            {/* <div className="table-content">
-                <TableFee fees={searchFee(fees)} />
-            </div>
-            <footer>
-                <hr></hr>
-                <div className="paging">
-                    <button className="previous">
-                        <FontAwesomeIcon
-                            className="icon icon-previous"
-                            icon={faArrowLeftLong}
-                        />
-                        Previous
-                    </button>
-                    <div className="list-number">
-                        <button>1</button>
-                        <button>2</button>
-                        <button>3</button>
-                        <button>...</button>
-                        <button>4</button>
-                        <button>5</button>
-                        <button>6</button>
-                    </div>
-                    <button className="next">
-                        Next
-                        <FontAwesomeIcon
-                            className="icon icon-next"
-                            icon={faArrowRightLong}
-                        />
-                    </button>
-                    {updateFeeState ? DivUpdateFee : null}
-                    {isDelete ? ConfirmDelete : null}
-                    {isMultiDelete ? ConfirmMultiDelete : null}
-                    {isMultiUpdate ? ConfirmMultiUpdate : null}
-                    {addFeeState ? DivAddFee : null}
-                </div>
-            </footer> */}
-
+            <PaginatedItems itemsPerPage={9} searchFee={searchFee(fees)}/>
             {updateFeeState ? DivUpdateFee : null}
             {isDelete ? ConfirmDelete : null}
             {isMultiDelete ? ConfirmMultiDelete : null}

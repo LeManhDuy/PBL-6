@@ -5,6 +5,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import StudentService from "../../../config/service/StudentService";
 import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import FormSubject from "./FormSubject/FormSubject";
+import ReactPaginate from "react-paginate";
 
 const ScoreTeacher = () => {
     const [students, setStudents] = useState([]);
@@ -71,6 +72,48 @@ const ScoreTeacher = () => {
             students.student_name.toLowerCase().includes(keyword.toLowerCase())
         );
     };
+
+    function PaginatedItems({ itemsPerPage, searchStudent }) {
+        const [itemOffset, setItemOffset] = useState(0);
+        const endOffset = itemOffset + itemsPerPage;
+        const currentItems = searchStudent.slice(itemOffset, endOffset);
+        const pageCount = Math.ceil(searchStudent.length / itemsPerPage);
+        const handlePageClick = (event) => {
+            const newOffset = (event.selected * itemsPerPage) % searchStudent.length;
+            setItemOffset(newOffset);
+        };
+        return (
+            <>
+                <div className="table-content">
+                    <TableAccounts students={currentItems} />
+                </div>
+                <footer>
+                    <hr></hr>
+                    <ReactPaginate
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        breakLabel="..."
+                        breakClassName="page-item"
+                        breakLinkClassName="page-link"
+                        pageCount={pageCount}
+                        pageRangeDisplayed={4}
+                        marginPagesDisplayed={2}
+                        onPageChange={handlePageClick}
+                        containerClassName="pagination justify-content-center"
+                        pageClassName="page-item mr-2 ml-2"
+                        pageLinkClassName="page-link"
+                        previousClassName="previous-btn ml-5 page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="next-btn mr-5 page-item"
+                        nextLinkClassName="page-link"
+                        activeClassName="active"
+                        hrefAllControls
+                    />
+                </footer>
+
+            </>
+        );
+    }
 
     const TableAccounts = ({ students }) => {
         const accountItem = students.map((item) => (
@@ -149,9 +192,10 @@ const ScoreTeacher = () => {
                     </div>
                 </header>
             </div>
-            <div className="table-content">
+            {/* <div className="table-content">
                 <TableAccounts students={searchStudent(students)} />
-            </div>
+            </div> */}
+            <PaginatedItems itemsPerPage={10} searchStudent={searchStudent(students)}/>
             {isMark ? DivFormSubject : null}
         </div>
     );

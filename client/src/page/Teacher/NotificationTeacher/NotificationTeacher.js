@@ -152,10 +152,10 @@ const NotificationTeacher = () => {
                         ></i>
                     ) : null}
 
-                    <i
+                    {/* <i
                         onClick={handleChangeNotification}
                         className="fa-regular fa-trash-can btn-delete"
-                    ></i>
+                    ></i> */}
                 </div>
             </div>
         ));

@@ -81,7 +81,7 @@ function APIPostWithTokenIMG(url, params) {
 function APIPostWithTokenFile(url, file) {
     url = REACT_APP_API_ENDPOINT + "api/" + url;
     const formData = new FormData();
-    formData.append('scheduleFile',file)
+    formData.append('file',file)
     return fetch(url, {
         method: "POST",
         headers: {

@@ -16,58 +16,42 @@ const FormSubject = (props) => {
         content: "",
         pupil_id: "",
     });
+    const [notHaveSchedule, setNotHaveSchedule] = useState("false");
 
     useEffect(() => {
         getSubjectByPupilID();
     }, [state]);
 
-    const getSubjectByPupilID = async () => {
+    const getSubjectByPupilID = () => {
         let dataSources = [];
         let scoreSources = [];
-        await ScoreService.getSubjectByPupilID(props.id)
+        ScoreService.getSubjectByPupilID(props.id)
             .then((res) => {
-                dataSources = res.subjects.map((item, index) => {
-                    return {
-                        key: index + 1,
-                        subject_id: item._id,
-                        name: item.subject_name,
-                        score_id: "",
-                        midterm_score: "",
-                        final_score: "",
-                        result: "",
-                    };
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        await ScoreService.getAllScoreByPupilID(props.id)
-            .then((res) => {
-                scoreSources = res.pupilScore.map((item) => {
-                    return {
-                        _id: item._id,
-                        midterm_score: item.midterm_score,
-                        final_score: item.final_score,
-                        result: item.result,
-                        subject_id: item.subject_id._id,
-                    };
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        for (let item of scoreSources) {
-            for (let subject of dataSources) {
-                if (subject.subject_id === item.subject_id) {
-                    subject.score_id = item._id;
-                    subject.midterm_score = item.midterm_score;
-                    subject.final_score = item.final_score;
-                    subject.result = item.result;
+                if (!res.success) {
+                    setNotHaveSchedule("true");
+                } else {
+                    dataSources = res.result.map((item, index) => {
+                        return {
+                            key: index + 1,
+                            subject_id: item.subject_id ? item.subject_id : "",
+                            name: item.subject_name ? item.subject_name : "",
+                            score_id: item._id ? item._id : "",
+                            midterm_score: item.midterm_score
+                                ? item.midterm_score
+                                : "",
+                            final_score: item.final_score
+                                ? item.final_score
+                                : "",
+                            result: item.result ? item.result : "",
+                        };
+                    });
                 }
-            }
-        }
-        setSubject(dataSources);
-        await CommentService.createPupilComment(props.id).then((res) => {
+                setSubject(dataSources);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        CommentService.createPupilComment(props.id).then((res) => {
             setSummary({
                 id: res.commentBefore[0]._id,
                 content: res.commentBefore[0].comment_content,
@@ -77,41 +61,43 @@ const FormSubject = (props) => {
     };
 
     const TableSubject = ({ subjects }) => {
-        const subjectItem = subjects.map((item) => (
-            <tr
-                key={item.key}
-                data-key={item.score_id}
-                data-sub={item.subject_id}
-            >
-                <td>{item.name}</td>
-                <td className="th-content">
-                    <input
-                        type="number"
-                        min="0"
-                        max="10"
-                        disabled={true}
-                        value={item.midterm_score}
-                    ></input>
-                </td>
-                <td className="th-content">
-                    <input
-                        type="number"
-                        min="0"
-                        max="10"
-                        disabled={true}
-                        value={item.final_score}
-                    ></input>
-                </td>
-                <td>{item.result}</td>
-                <td>
-                    <i
-                        onClick={click}
-                        className="fa-regular fa-pen-to-square btn-edit"
-                    ></i>
-                </td>
-            </tr>
-        ));
-
+        let subjectItem;
+        if (notHaveSchedule === "false") {
+            subjectItem = subjects.map((item) => (
+                <tr
+                    key={item.key}
+                    data-key={item.score_id}
+                    data-sub={item.subject_id}
+                >
+                    <td>{item.name}</td>
+                    <td className="th-content">
+                        <input
+                            type="number"
+                            min="0"
+                            max="10"
+                            disabled={true}
+                            value={item.midterm_score}
+                        ></input>
+                    </td>
+                    <td className="th-content">
+                        <input
+                            type="number"
+                            min="0"
+                            max="10"
+                            disabled={true}
+                            value={item.final_score}
+                        ></input>
+                    </td>
+                    <td>{item.result}</td>
+                    <td>
+                        <i
+                            onClick={click}
+                            className="fa-regular fa-pen-to-square btn-edit"
+                        ></i>
+                    </td>
+                </tr>
+            ));
+        }
         function click(e) {
             const id =
                 e.target.parentElement.parentElement.getAttribute("data-key");
@@ -208,6 +194,11 @@ const FormSubject = (props) => {
                 </div>
             </header>
             <div className="table-content">
+                {notHaveSchedule === "true" ? (
+                    <div className="text-center-error">
+                        This student does not have any subject.
+                    </div>
+                ) : null}
                 <TableSubject subjects={subject} />
             </div>
             <div className="table-content-edit-teacher">

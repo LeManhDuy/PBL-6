@@ -20,7 +20,7 @@ const createClass = async (req, res) => {
             success: false,
             message: "Please fill in complete information.",
         })
-    }
+    } 
     const classValidate = await Class.findOne({ class_name, grade_id: grade_id })
     if (classValidate)
         return res
