@@ -51,6 +51,13 @@ const FormSubject = (props) => {
             .catch((error) => {
                 console.log(error);
             });
+        CommentService.createPupilComment(props.id).then((res) => {
+            setSummary({
+                id: res.commentBefore[0]._id,
+                content: res.commentBefore[0].comment_content,
+                pupil_id: res.commentBefore[0].pupil_id,
+            });
+        });
     };
 
     const TableSubject = ({ subjects }) => {
