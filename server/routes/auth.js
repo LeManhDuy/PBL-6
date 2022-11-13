@@ -94,6 +94,7 @@ router.post("/login", async (req, res) => {
                     AccountUserName: checkAcccountUserName.account_username,
                     AccountRole: checkAcccountUserName.account_role,
                     AccountId: personId[0]._id,
+                    AccountImage: personId[0].person_image,
                     accessToken,
                 });
             } else {
