@@ -335,7 +335,7 @@ router.put("/:teacherID", upload.single("person_image"), async (req, res) => {
     }
     let person_image = null;
     if (req.file) {
-        person_image = req.file.path;
+        person_image = req.file.publicUrl;
     }
     const teacherInfor = await Teacher.findById(req.params.teacherID)
         .populate("person_id", ["person_id"])

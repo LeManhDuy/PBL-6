@@ -17,6 +17,8 @@ import GradeService from "../../../config/service/GradeService";
 import ReactPaginate from 'react-paginate';
 import AddStudentExcel from "../../../lib/ModalInput/AddStudentExcel/AddStudentExcel";
 import PupilService from "../../../config/service/StudentService";
+import Loading from "../../../lib/Loading/Loading";
+
 
 const StudentAdmin = () => {
     const [student, setStudent] = useState([]);
@@ -126,7 +128,7 @@ const StudentAdmin = () => {
                     return {
                         key: index + 1,
                         id: item._id,
-                        class_name: item.class_name ? item.class_name : "Empty",
+                        class_name: item.class_name,
                         homeroomteacher_name: item.homeroom_teacher_id
                             ? item.homeroom_teacher_id.person_id
                                 ? item.homeroom_teacher_id.person_id.person_fullname
@@ -231,7 +233,6 @@ const StudentAdmin = () => {
 
     const handleChangeGrade = (event) => {
         setDropValueGrade(event.target.value);
-        setDropValueClass(null)
         grades.map((item) => {
             if (event.target.value === item.id) {
                 getClassWithFilter(item.id);
@@ -352,11 +353,11 @@ const StudentAdmin = () => {
         }
         return (
             <>
-                <h4 hidden={!isLoading} style={{ color: 'red' }}>Loading...</h4>
-                <table hidden={isLoading} id="table">
+                <table id="table">
                     <thead className="table-head-row">{headerStudent}</thead>
                     <tbody className="table-row">{studentItem}</tbody>
                 </table>
+                {/* <h4 hidden={!isLoading} style={{ color: 'red' }}>Loading...</h4> */}
             </>
         );
     };
@@ -647,6 +648,7 @@ const StudentAdmin = () => {
                         ></input>
                     </div>
                 </div>
+                <Loading isLoading={isLoading} />
             </header>
             <PaginatedItems itemsPerPage={9} searchStudent={searchStudent(student)} />
             {isDelete ? ConfirmDelete : null}
