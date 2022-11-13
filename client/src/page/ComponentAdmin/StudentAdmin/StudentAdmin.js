@@ -179,6 +179,40 @@ const StudentAdmin = () => {
                 console.log(error);
             });
     };
+    const getStudentWithGradeId = (filter) => {
+        PupilService.getPupilByGradeId(filter)
+            .then((response) => {
+                const dataSources = response.studentsInfor.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            name: item.pupil_name,
+                            gender: item.pupil_gender,
+                            parent: item.parent_id
+                                ? item.parent_id.person_id.person_fullname
+                                : "Empty",
+                            class: item.class_id
+                                ? item.class_id.class_name
+                                : "Empty",
+                            teacher: item.class_id
+                                ? item.class_id.homeroom_teacher_id.person_id
+                                    .person_fullname
+                                : "Empty",
+                            grade: item.class_id.grade_id
+                                ? item.class_id.grade_id.grade_name
+                                : "Empty",
+                        };
+                    }
+                );
+                setStudent(dataSources);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+
 
     const Dropdown = ({ value, options, onChange }) => {
         return (
@@ -235,8 +269,10 @@ const StudentAdmin = () => {
         setDropValueGrade(event.target.value);
         grades.map((item) => {
             if (event.target.value === item.id) {
+                getStudentWithGradeId(item.id)
                 getClassWithFilter(item.id);
             } else if (event.target.value === "All") {
+                getStudent();
                 getClass();
             }
         });
