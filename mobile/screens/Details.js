@@ -1,4 +1,4 @@
-import { SafeAreaView, View, StyleSheet, Image } from "react-native"
+import { SafeAreaView, View, StyleSheet, Image, ScrollView } from "react-native"
 import React, {useState, useEffect} from "react";
 import { Title } from "react-native-paper";
 import { assets, COLORS, FONTS, SIZES } from "../constants";
@@ -87,7 +87,7 @@ const Details = () => {
     if(parentInfo){
 
         return (
-            <SafeAreaView>
+            <ScrollView>
                 <View style={styles.infoContainer}>
                 <Image 
                     source={parentInfo?{uri:parentInfo.img}:assets.account  }
@@ -125,7 +125,7 @@ const Details = () => {
                     
                 </View>
             </View>
-            </SafeAreaView>
+            </ScrollView>
         )
     }
 }
