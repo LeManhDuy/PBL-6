@@ -1,4 +1,4 @@
-const Class = require("../model/class")
+const Class = require("../model/Class")
 const Pupil = require("../model/Pupil")
 const Teacher = require("../model/Teacher")
 const Parent = require("../model/Parent")

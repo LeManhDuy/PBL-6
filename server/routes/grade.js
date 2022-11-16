@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const Grade = require("../model/Grade")
-const Class = require("../model/class")
+const Class = require("../model/Class")
 const multer = require("multer")
 
 // @route GET api/admin/grade

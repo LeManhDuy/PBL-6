@@ -1,11 +1,11 @@
-const Class = require("../model/class");
+const Class = require("../model/Class");
 const Pupil = require("../model/Pupil");
 const Teacher = require("../model/Teacher");
 const Parent = require("../model/Parent");
 const Person = require("../model/Person");
 const PublicNotification = require("../model/PublicNotification");
 const { now } = require("mongoose");
-const PrivateNotification = require("../model/PrivateNotification");
+const PrivateNotification = require("../model/privateNotification");
 
 const createPublicNotification = async (req, res) => {
     let { title, content } = req.body;
