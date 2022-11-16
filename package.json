@@ -22,5 +22,8 @@
   "homepage": "https://github.com/LeManhDuy/PBL-6#readme",
   "publishConfig": {
     "registry": "http://localhost:8081/repository/npm-hosted-all/"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
   }
 }
