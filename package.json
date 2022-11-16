@@ -1,1 +1,26 @@
-{}
+{
+  "name": "pbl-6",
+  "description": "Stand with me! Star if u're watching this",
+  "version": "1.0.0",
+  "main": "index.js",
+  "workspaces": [
+    "server"
+  ],
+  "scripts": {
+    "start": "npm start -w server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeManhDuy/PBL-6.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LeManhDuy/PBL-6/issues"
+  },
+  "homepage": "https://github.com/LeManhDuy/PBL-6#readme",
+  "publishConfig": {
+    "registry": "http://localhost:8081/repository/npm-hosted-all/"
+  }
+}
