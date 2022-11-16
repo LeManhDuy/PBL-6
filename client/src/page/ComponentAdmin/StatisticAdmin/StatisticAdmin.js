@@ -32,33 +32,6 @@ const StatisticAdmin = (props) => {
     const [data, setData] = useState([]);
     const [legend, setLegend] = useState("");
 
-    const options = [
-        { key: 1, label: "Admin", value: "principal" },
-        { key: 2, label: "Parent", value: "parents" },
-        { key: 3, label: "Teacher", value: "teacher" },
-        { key: 4, label: "Staff", value: "affair" },
-    ];
-    const Dropdown1 = () => {
-        return (
-            <label>
-                Grade
-                <select
-                    className="dropdown-account"
-                >
-                    <option key="1" value="Grade 1">
-                        Grade 1
-                    </option>
-                    <option key="1" value="Grade 2">
-                        Grade 1
-                    </option>
-                    <option key="1" value="Grade 3">
-                        Grade 1
-                    </option>
-                </select>
-            </label>
-        );
-    };
-
     const option = {
         responsive: true,
         plugins: {
@@ -124,7 +97,6 @@ const StatisticAdmin = (props) => {
     };
     const handleShowScore = (dropValueGrade, dropValueClass, dropValueSubject) => {
         if (dropValueGrade && dropValueClass.value != "0" && dropValueSubject.value == "0") {
-            console.log(dropValueClass.label);
             StatisticService.getCommentByClassId(dropValueClass.value).then((response) => {
                 setLabel(Object.keys(response))
                 console.log(Object.values(response));
@@ -155,6 +127,13 @@ const StatisticAdmin = (props) => {
         }
         setAddState(false)
     }
+
+    const handleShowFee = (dropValueGrade, dropValueClass, dropValueFee) => {
+        console.log("1", dropValueGrade);
+        console.log("2", dropValueClass);
+        console.log("3", dropValueFee);
+        setAddState(false)
+    }
     const DivStatistic = (
         <ModalInput
             show={addState}
@@ -162,6 +141,7 @@ const StatisticAdmin = (props) => {
             content={
                 <ChooseStatistic
                     handleShowScore={handleShowScore}
+                    handleShowFee={handleShowFee}
                     handleInputCustom={handleInputCustom}
                     handleStatistic={handleStatistic}
                     errorServer={errorServer}

@@ -16,7 +16,7 @@ const ChooseStatistic = (props) => {
     const Dropdown = ({ value, options, onChange }) => {
         return (
             <label>
-                Type of statistic
+                Type
                 <select
                     className="dropdown-account"
                     value={value}
@@ -53,7 +53,7 @@ const ChooseStatistic = (props) => {
     };
     const FormShowTypeStatistic = (
         <div className="choose-account">
-            <h5>Please select the type of statistic you want to show!</h5>
+            <h5>Please Select The Type Of Statistic!</h5>
             <Dropdown
                 options={options}
                 value={dropValue}
@@ -71,7 +71,7 @@ const ChooseStatistic = (props) => {
         <div className="add-account-form">
             {isShowType ? FormShowTypeStatistic : null}
             {isShowScore ? <FormShowScore handleInputCustom={handleInputCustom} handleShowScore={props.handleShowScore} /> : null}
-            {isShowFee ? <FormShowFee handleInputCustom={handleInputCustom} /> : null}
+            {isShowFee ? <FormShowFee handleInputCustom={handleInputCustom} handleShowFee={props.handleShowFee} /> : null}
         </div>
     );
 };
