@@ -78,6 +78,9 @@ app.use("/api/score", scoreRoute);
 //comment
 app.use("/api/comment", commentRoute);
 
+const port = process.env.PORT || "8000";
+app.set("port", port);
+
 //port
 app.listen(process.env.PORT || 8000, function () {
     console.log(
