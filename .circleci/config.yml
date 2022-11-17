@@ -1,9 +1,8 @@
 version: 2.1
 
 slack-fail-post-step: &slack-fail-post-step
-  docker:
-    - image: 'cimg/base:stable'
   post-steps:
+    - run: docker pull cimg/base:stable
     - slack/notify:
         template: basic_fail_1
         event: fail
