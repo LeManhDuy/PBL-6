@@ -15,7 +15,6 @@ chai.use(chaiHttp);
 //Our parent block
 describe("Classes", () => {
     beforeEach((done) => {
-        //Before each test we empty the database in your case
         done();
     });
     /*
@@ -49,3 +48,4 @@ describe("Classes", () => {
         });
     });
 });
+
