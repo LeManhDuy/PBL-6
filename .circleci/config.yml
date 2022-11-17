@@ -8,6 +8,7 @@ jobs:
     docker:
       - image: 'cimg/base:stable'
     steps:
+      - run: echo "Sending status"
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -19,4 +20,6 @@ workflows:
   heroku_deploy:
     jobs:
       - heroku/deploy-via-git
-      - notify
+      - notify:
+          requires:
+            - heroku/deploy-via-git
