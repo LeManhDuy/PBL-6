@@ -31,6 +31,6 @@ workflows:
     jobs:
       - heroku/deploy-via-git:
           <<: *slack-fail-post-step
-      - notify
+      - notify:
           requires:
             - heroku/deploy-via-git
