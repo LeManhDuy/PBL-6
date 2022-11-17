@@ -11,10 +11,10 @@ jobs:
       - heroku/deploy-via-git
       - run: echo "Sending status"
       - slack/notify:
-          # event: fail
+          event: fail
           template: basic_fail_1
       - slack/notify:
-          # event: pass
+          event: pass
           template: success_tagged_deploy_1
 
 workflows:
