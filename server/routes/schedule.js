@@ -16,7 +16,7 @@ const Pupil = require("../model/Pupil")
 // @route POST api/schedule
 // @desc Create Schedule using excel file
 // @access Private
-router.post("/", multer().single('file'), async (req, res) => {
+router.post("/", multer().single('file'), async (req, res, next) => {
     try {
         let scheduleFile = null
         // Validation
@@ -173,7 +173,10 @@ router.post("/", multer().single('file'), async (req, res) => {
             })
         }
     } catch (error) {
-        return res.status(500).json({ success: false, message: "Something's wrong: " + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });  
     }
 
 })
@@ -182,7 +185,7 @@ router.post("/", multer().single('file'), async (req, res) => {
 //
 //
 //
-router.get("/", multer().single(), async (req, res) => {
+router.get("/", multer().single(), async (req, res, next) => {
     try {
         const schedule = await Schedule.find().select()
             .populate({
@@ -219,11 +222,14 @@ router.get("/", multer().single(), async (req, res) => {
         })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });  
     }
 })
 
-router.get("/home-room-teacher/:personID", multer().single(), async (req, res) => {
+router.get("/home-room-teacher/:personID", multer().single(), async (req, res, next) => {
     try {
         const teacher = await Teacher.find({
             person_id: req.params.personID
@@ -266,11 +272,14 @@ router.get("/home-room-teacher/:personID", multer().single(), async (req, res) =
         })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });  
     }
 });
 
-router.get("/pupil/:pupilID", multer().single(), async (req, res) => {
+router.get("/pupil/:pupilID", multer().single(), async (req, res, next) => {
     try {
         const getPupilInfor = await Pupil.find({
             _id: req.params.pupilID,
@@ -311,14 +320,17 @@ router.get("/pupil/:pupilID", multer().single(), async (req, res) => {
         })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });  
     }
 });
 
 
 
 
-router.get("/class/:classId", multer().single(), async (req, res) => {
+router.get("/class/:classId", multer().single(), async (req, res, next) => {
     //validate classID
     try {
         const existed_class = await Class.findOne({ _id: req.params.classId })
@@ -337,11 +349,14 @@ router.get("/class/:classId", multer().single(), async (req, res) => {
         })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });  
     }
 })
 
-router.get("/teacher/:teacherId", multer().single(), async (req, res) => {
+router.get("/teacher/:teacherId", multer().single(), async (req, res, next) => {
     //validate teacherID
     try {
         const existed_teacher = await Teacher.find({ _id: req.params.teacherId })
@@ -362,17 +377,23 @@ router.get("/teacher/:teacherId", multer().single(), async (req, res) => {
         })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });  
     }
 })
 
-router.delete("/:scheduleId", multer().single(), async (req, res) => {
+router.delete("/:scheduleId", multer().single(), async (req, res, next) => {
     try {
         await Period.deleteMany({ schedule_id: req.params.scheduleId })
         await Schedule.deleteOne({ _id: req.params.scheduleId })
         return res.status(200).json({ success: true, message: "Delete successfully!" })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });  
     }
 })
 

@@ -8,7 +8,7 @@ const FeeCategory = require("../model/FeeCategory")
 // @route GET api/fee
 // @desc Get fee
 // @access Private
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
     try {
         const allFee = await Fee.find()
             .populate({
@@ -31,14 +31,17 @@ router.get("/", async (req, res) => {
         res.json({ success: true, allFee })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
 // // @route GET api/fee
 // // @desc GET fee by Id
 // // @access Private Only Admin
-router.get("/:feeID", async (req, res) => {
+router.get("/:feeID", async (req, res, next) => {
     try {
         // Return token
         const getfeeInfor = await Fee.find({ _id: req.params.feeID })
@@ -68,10 +71,13 @@ router.get("/:feeID", async (req, res) => {
             })
         res.json({ success: true, getfeeInfor })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
-router.get("/get-fee-by-category-id/:feeCategoryID", async (req, res) => {
+router.get("/get-fee-by-category-id/:feeCategoryID", async (req, res, next) => {
     try {
         // Return token
         const getfeeInfor = await Fee.find({ fee_category_id: req.params.feeCategoryID })
@@ -101,13 +107,16 @@ router.get("/get-fee-by-category-id/:feeCategoryID", async (req, res) => {
             })
         res.json({ success: true, getfeeInfor })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 // // @route GET api/fee
 // // @desc GET fee by Id
 // // @access Private Only Admin
-router.get("/get-fee-status/:feeStatus", async (req, res) => {
+router.get("/get-fee-status/:feeStatus", async (req, res, next) => {
     try {
         // Return token
         const getfeeInfor = await Fee.find({ fee_status: req.params.feeStatus })
@@ -137,14 +146,17 @@ router.get("/get-fee-status/:feeStatus", async (req, res) => {
             })
         res.json({ success: true, getfeeInfor })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
 // @route GET api/fee
 // @desc GET fee by Id
 // @access Private Only Admin
-router.get("/get-fee-infor-by-parent-id/:personID", async (req, res) => {
+router.get("/get-fee-infor-by-parent-id/:personID", async (req, res, next) => {
     try {
         // Return token
         const getParentsID = await Parent.find({
@@ -179,14 +191,17 @@ router.get("/get-fee-infor-by-parent-id/:personID", async (req, res) => {
             })
         res.json({ success: true, getFeeInfor })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
 // // @route POST api/fee
 // // @desc post fee
 // // @access Private
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
     const { list_pupil, paid_date, fee_category_id } = req.body
     if (!list_pupil || !fee_category_id)
         return res.status(400).json({
@@ -231,14 +246,17 @@ router.post("/", async (req, res) => {
         })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
 // // @route PUT api/admin/grade
 // // @desc put grade
 // // @access Private
-router.put("/:feeId", async (req, res) => {
+router.put("/:feeId", async (req, res, next) => {
     const { paid_date, fee_category_id, pupil_id } = req.body
     if (!fee_category_id || !pupil_id)
         return res.status(400).json({
@@ -283,12 +301,15 @@ router.put("/:feeId", async (req, res) => {
         })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
 
-router.post("/multi", async (req, res) => {
+router.post("/multi", async (req, res, next) => {
     const { fee_list } = req.body
     if (!fee_list)
         return res.status(400).json({
@@ -332,24 +353,30 @@ router.post("/multi", async (req, res) => {
         })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
 // // @route DELETE api/fee
 // // @desc delete fee
 // // @access Private
-router.delete("/:feeId", async (req, res) => {
+router.delete("/:feeId", async (req, res, next) => {
     try {
         const deletedFee = await Fee.findOneAndDelete(
             { _id: req.params.feeId }
         )
         res.json({ success: true, message: "Deleted Fee Successfully!", fee: deletedFee })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
-router.post("/multi/delete", async (req, res) => {
+router.post("/multi/delete", async (req, res, next) => {
     const { fee_list } = req.body
     if (!fee_list)
         return res.status(400).json({
@@ -364,7 +391,10 @@ router.post("/multi/delete", async (req, res) => {
         }
         res.json({ success: true, message: "Deleted Fee Successfully!" })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 

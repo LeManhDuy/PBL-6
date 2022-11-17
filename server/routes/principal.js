@@ -36,7 +36,7 @@ const upload = multer({
 // @route POST api/admin/principal
 // @desc Create principal user
 // @access Private
-router.post("/", upload.single("person_image"), async (req, res) => {
+router.post("/", upload.single("person_image"), async (req, res, next) => {
     const {
         account_username,
         account_password,
@@ -133,6 +133,9 @@ router.post("/", upload.single("person_image"), async (req, res) => {
             accessToken,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
@@ -140,7 +143,7 @@ router.post("/", upload.single("person_image"), async (req, res) => {
 // @route GET api/admin/principal
 // @desc GET principal
 // @access Private Only Admin
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
     try {
         // Return token
         const allPrincipal = await Account.find({
@@ -165,6 +168,9 @@ router.get("/", async (req, res) => {
             .populate("account_id", ["account_username", "account_role"]);
         res.json({ success: true, getPrincipalInfor });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
@@ -172,7 +178,7 @@ router.get("/", async (req, res) => {
 // @route GET api/admin/principal
 // @desc GET principal by Id
 // @access Private Only Admin
-router.get("/:personID", async (req, res) => {
+router.get("/:personID", async (req, res, next) => {
     try {
         // Return token
         const getPrincipalInfor = await Person.find({
@@ -190,6 +196,9 @@ router.get("/:personID", async (req, res) => {
             .populate("account_id", ["account_username", "account_role"]);
         res.json({ success: true, getPrincipalInfor });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
@@ -197,7 +206,7 @@ router.get("/:personID", async (req, res) => {
 // @route PUT api/admin/principal
 // @desc PUT principal
 // @access Private Only Admin
-router.put("/:personID", upload.single("person_image"), async (req, res) => {
+router.put("/:personID", upload.single("person_image"), async (req, res, next) => {
     const {
         account_password,
         person_fullname,
@@ -326,6 +335,9 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
             person: getPrincipalInfor,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
@@ -333,7 +345,7 @@ router.put("/:personID", upload.single("person_image"), async (req, res) => {
 // @route PUT api/admin/principal
 // @desc DELETE principal
 // @access Private Only Admin
-router.delete("/:personID", async (req, res) => {
+router.delete("/:personID", async (req, res, next) => {
     try {
         const person = await Person.findById(req.params.personID);
         // if (person.person_image) {
@@ -366,6 +378,9 @@ router.delete("/:personID", async (req, res) => {
             person: deletedPerson,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });

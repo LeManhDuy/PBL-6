@@ -5,7 +5,7 @@ const Subject = require("../model/Subject");
 const Comment = require("../model/Comment");
 const Score = require("../model/Score");
 
-const createComment = async (req, res) => {
+const createComment = async (req, res, next) => {
     const existed_student = await Pupil.findOne({ _id: req.params.pupilID });
 
     if (!existed_student) {
@@ -67,11 +67,14 @@ const createComment = async (req, res) => {
             });
         }
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
 
-const getCommentByPupilID = async (req, res) => {
+const getCommentByPupilID = async (req, res, next) => {
     const existed_student = await Pupil.findOne({ _id: req.params.pupilID });
 
     if (!existed_student) {
@@ -88,7 +91,12 @@ const getCommentByPupilID = async (req, res) => {
             success: true,
             pupilComment,
         });
-    } catch (error) {}
+    } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
+    }
 };
 
 module.exports = {
