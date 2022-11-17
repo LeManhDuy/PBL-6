@@ -5,7 +5,6 @@ slack-fail-post-step: &slack-fail-post-step
     - run: docker pull cimg/base:stable
     - slack/notify:
         template: basic_fail_1
-        event: fail
 
 orbs:
   heroku: circleci/heroku@1.2.6
