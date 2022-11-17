@@ -1,9 +1,17 @@
 version: 2.1
 orbs:
   heroku: circleci/heroku@1.2.6
+# workflows:
+#   heroku_deploy:
+#     jobs:
+#       - heroku/deploy-via-git
+#   send-notification:
+#     jobs:
+#       - notify:
+#           context: slack-secrets
+
 workflows:
-  heroku_deploy:
+  send-notification:
     jobs:
-      - heroku/deploy-via-git
       - notify:
           context: slack-secrets
