@@ -10,7 +10,7 @@ const upload = multer().any()
 // @route GET api/subject
 // @desc Get subject
 // @access Private
-router.get("/", async(req,res) => {
+router.get("/", async(req, res, next) => {
     try{
         const allSubjectTeacher = await Subject_Teacher.find()
             .select()
@@ -29,11 +29,14 @@ router.get("/", async(req,res) => {
         res.json({ success: true, allSubjectTeacher })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
-// router.get("/:subjectTeacherID", async (req, res) => {
+// router.get("/:subjectTeacherID", async (req, res, next) => {
 //     try {
 //         // Return token
 //         const getSubjectTeacherInfor = await Subject_Teacher.find({ _id: req.params.subjectTeacherID })
@@ -52,11 +55,14 @@ router.get("/", async(req,res) => {
 //             })
 //         res.json({ success: true, getSubjectTeacherInfor })
 //     } catch (error) {
-//         return res.status(500).json({ success: false, message: "" + error })
+//         const err = new Error('Internal Server Error');
+//         err.status = 500;
+//         next(err)
+//         return res.status(500).json({ success: false, message: "" + error });
 //     }
 // })
 
-router.get("/search", async (req, res) => {
+router.get("/search", async (req, res, next) => {
     try {
         // Return token
         let match = {}
@@ -80,14 +86,17 @@ router.get("/search", async (req, res) => {
             })
         res.json({ success: true, allSubjectTeacher })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
 // @route POST api/subject
 // @desc post subject
 // @access Private
-router.post("/",multer().single(), async(req,res) =>{
+router.post("/",multer().single(), async(req, res, next) =>{
     const {subject_id, teacher_id} = req.body
     if (!subject_id || !teacher_id)
     return res.status(400).json({
@@ -112,14 +121,17 @@ router.post("/",multer().single(), async(req,res) =>{
         })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
 // @route PUT api/subject
 // @desc put subject
 // @access Private
-router.put("/:subjectTeacherID",multer().single(), async(req,res) =>{
+router.put("/:subjectTeacherID",multer().single(), async(req, res, next) =>{
     const {subject_id, teacher_id} = req.body
     if (!subject_id || !teacher_id)
     return res.status(400).json({
@@ -164,14 +176,17 @@ router.put("/:subjectTeacherID",multer().single(), async(req,res) =>{
         })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
 // @route DELETE api/subject
 // @desc delete subject
 // @access Private
-router.delete("/:subjectTeacherID", async (req, res) => {
+router.delete("/:subjectTeacherID", async (req, res, next) => {
     try {
         const deletedSubjectTeacher = await Subject_Teacher.findOneAndDelete(
             {_id: req.params.subjectTeacherID}
@@ -179,11 +194,14 @@ router.delete("/:subjectTeacherID", async (req, res) => {
 
         res.json({ success: true, message: "Deleted subject successfully!", subjectTeacher: deletedSubjectTeacher })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
-router.post("/multi",multer().single(), async(req,res) =>{
+router.post("/multi",multer().single(), async(req, res, next) =>{
     const {teacher_id, subject_list} = req.body
     // return res.status(400).json({
     //     success: false,
@@ -225,11 +243,14 @@ router.post("/multi",multer().single(), async(req,res) =>{
 
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
-router.put("/multi/:teacherID",multer().single(), async(req,res) =>{
+router.put("/multi/:teacherID",multer().single(), async(req, res, next) =>{
     const {teacher_id, subject_list} = req.body
     return res.status(400).json({
         success: false,
@@ -276,7 +297,10 @@ router.put("/multi/:teacherID",multer().single(), async(req,res) =>{
 
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 

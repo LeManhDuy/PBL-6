@@ -7,7 +7,7 @@ const PublicNotification = require("../model/PublicNotification");
 const { now } = require("mongoose");
 const PrivateNotification = require("../model/privateNotification");
 
-const createPublicNotification = async (req, res) => {
+const createPublicNotification = async (req, res, next) => {
     let { title, content } = req.body;
     //Validation
     if (!title && !content)
@@ -29,11 +29,14 @@ const createPublicNotification = async (req, res) => {
             newPublicNotification,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
 
-const getAllPublicNotification = async (req, res) => {
+const getAllPublicNotification = async (req, res, next) => {
     try {
         const publicNotifications = await PublicNotification.find({});
         res.status(200).json({
@@ -41,11 +44,14 @@ const getAllPublicNotification = async (req, res) => {
             publicNotifications,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
 
-const getPublicNotificationById = async (req, res) => {
+const getPublicNotificationById = async (req, res, next) => {
     try {
         const publicNotification = await PublicNotification.findById(
             req.params.notificationID
@@ -55,11 +61,14 @@ const getPublicNotificationById = async (req, res) => {
             publicNotification,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
 
-const updatePublicNotification = async (req, res) => {
+const updatePublicNotification = async (req, res, next) => {
     let { title, content } = req.body;
     let date = now().toString();
     //Validation
@@ -81,11 +90,14 @@ const updatePublicNotification = async (req, res) => {
         );
         res.status(200).json({ success: true, updatedNotification });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
 
-const deletePublicNotification = async (req, res) => {
+const deletePublicNotification = async (req, res, next) => {
     try {
         const deleteNotification = await PublicNotification.findByIdAndDelete(
             req.params.notificationID
@@ -96,12 +108,15 @@ const deletePublicNotification = async (req, res) => {
             deleteNotification,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
 
 // Private Notification
-const createPrivateNotification = async (req, res) => {
+const createPrivateNotification = async (req, res, next) => {
     let { title, content, parent_id, teacher_id, teacher_send, parents_send } =
         req.body;
     let date = now().toString();
@@ -136,11 +151,14 @@ const createPrivateNotification = async (req, res) => {
             privateNotification,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
 
-const getPrivateNotificationForTeacher = async (req, res) => {
+const getPrivateNotificationForTeacher = async (req, res, next) => {
     const teacherInfor = await Teacher.find({
         person_id: req.params.teacherID,
     });
@@ -168,11 +186,14 @@ const getPrivateNotificationForTeacher = async (req, res) => {
             privateNotifications,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
 
-const getPrivateNotificationForParents = async (req, res) => {
+const getPrivateNotificationForParents = async (req, res, next) => {
     const parentsInfor = await Parent.find({
         person_id: req.params.parentsID,
     });
@@ -200,11 +221,14 @@ const getPrivateNotificationForParents = async (req, res) => {
             privateNotifications,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
 
-const getPrivateNotificationById = async (req, res) => {
+const getPrivateNotificationById = async (req, res, next) => {
     try {
         const privateNotification = await PrivateNotification.findById(
             req.params.notificationID
@@ -214,11 +238,14 @@ const getPrivateNotificationById = async (req, res) => {
             privateNotification,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
 
-const updatePrivateNotification = async (req, res) => {
+const updatePrivateNotification = async (req, res, next) => {
     let { title, content } = req.body;
     let date = now().toString();
     if (!title || !content)
@@ -243,11 +270,14 @@ const updatePrivateNotification = async (req, res) => {
             updateNotification,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
 
-const deletePrivateNotification = async (req, res) => {
+const deletePrivateNotification = async (req, res, next) => {
     const notificationInfo = await PrivateNotification.findById(
         req.params.notificationID
     );
@@ -266,6 +296,9 @@ const deletePrivateNotification = async (req, res) => {
             deletedNoti,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };

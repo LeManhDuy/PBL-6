@@ -39,7 +39,7 @@ const upload = multer({
 // @route POST api/admin/parent
 // @desc Create parent user
 // @access Private
-router.post("/", upload.single("person_image"), async (req, res) => {
+router.post("/", upload.single("person_image"), async (req, res, next) => {
     const {
         account_username,
         account_password,
@@ -152,6 +152,9 @@ router.post("/", upload.single("person_image"), async (req, res) => {
             accessToken,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
@@ -159,7 +162,7 @@ router.post("/", upload.single("person_image"), async (req, res) => {
 // @route GET api/admin/parent
 // @desc GET parent
 // @access Private Only Admin
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
     try {
         const getParentsInfor = await Parent.find()
             .select([
@@ -181,6 +184,9 @@ router.get("/", async (req, res) => {
             });
         res.json({ success: true, getParentsInfor });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
@@ -188,7 +194,7 @@ router.get("/", async (req, res) => {
 // @route GET api/admin/parent
 // @desc GET parent by Id
 // @access Private Only Admin
-router.get("/:parentID", async (req, res) => {
+router.get("/:parentID", async (req, res, next) => {
     try {
         // Return token
         const getParentInfor = await Parent.find({
@@ -213,6 +219,9 @@ router.get("/:parentID", async (req, res) => {
             });
         res.json({ success: true, getParentInfor });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
@@ -220,7 +229,7 @@ router.get("/:parentID", async (req, res) => {
 // @route PUT api/admin/parent
 // @desc PUT parent
 // @access Private Only Admin
-router.put("/:parentID", upload.single("person_image"), async (req, res) => {
+router.put("/:parentID", upload.single("person_image"), async (req, res, next) => {
     const {
         account_username,
         account_password,
@@ -372,6 +381,9 @@ router.put("/:parentID", upload.single("person_image"), async (req, res) => {
             person: getParentInfor,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
@@ -379,7 +391,7 @@ router.put("/:parentID", upload.single("person_image"), async (req, res) => {
 // @route PUT api/admin/parent
 // @desc DELETE parent
 // @access Private Only Admin
-router.delete("/:parentID", async (req, res) => {
+router.delete("/:parentID", async (req, res, next) => {
     try {
         const parent = await Parent.findById(req.params.parentID);
         const person = await Person.findById(parent.person_id.toString());
@@ -419,11 +431,14 @@ router.delete("/:parentID", async (req, res) => {
             message: "Deleted parent successfully!",
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
 
-router.get("/get-parents-info/:personID", async (req, res) => {
+router.get("/get-parents-info/:personID", async (req, res, next) => {
     try {
         // Return token
         const personInfor = await Person.findById(req.params.personID);
@@ -449,11 +464,14 @@ router.get("/get-parents-info/:personID", async (req, res) => {
             });
         res.json({ success: true, getParentInfor });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
 
-router.get("/change-is-association/:parentID", async(req, res) => {
+router.get("/change-is-association/:parentID", async(req, res, next) => {
     try {
         const parentInfor = await Parent.findById(req.params.parentID);
         parentInfor.is_in_association = !parentInfor.is_in_association;
@@ -461,6 +479,9 @@ router.get("/change-is-association/:parentID", async(req, res) => {
         res.json({ success: true, message: 'Change is association success' });
         // res.json({ success: true, message: "Change is Association Success" });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });

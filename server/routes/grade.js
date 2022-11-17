@@ -7,7 +7,7 @@ const multer = require("multer")
 // @route GET api/admin/grade
 // @desc Get subject
 // @access Private
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
     try {
         const allGrade = await Grade.find()
             .select([
@@ -17,14 +17,17 @@ router.get("/", async (req, res) => {
         res.json({ success: true, allGrade })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
 // @route GET api/admin/principle
 // @desc GET principal by Id
 // @access Private Only Admin
-router.get("/:gradeID", async (req, res) => {
+router.get("/:gradeID", async (req, res, next) => {
     try {
         // Return token
         const getGradeInfor = await Grade.find({ _id: req.params.gradeID })
@@ -33,14 +36,17 @@ router.get("/:gradeID", async (req, res) => {
             ])
         res.json({ success: true, getGradeInfor })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
 // @route GET api/admin/principle
 // @desc GET class in grade
 // @access Private Only Admin
-router.get("/get-class-by-grade-id/:gradeID", async (req, res) => {
+router.get("/get-class-by-grade-id/:gradeID", async (req, res, next) => {
     try {
         // Return token
         const getClassByGradeId = await Class.find({ grade_id: req.params.gradeID })
@@ -66,14 +72,17 @@ router.get("/get-class-by-grade-id/:gradeID", async (req, res) => {
             })
         res.json({ success: true, getClassByGradeId })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
 // @route POST api/admin/grade
 // @desc post subject
 // @access Private
-router.post("/", multer().single(), async (req, res) => {
+router.post("/", multer().single(), async (req, res, next) => {
     const { grade_name } = req.body
     if (!grade_name)
         return res.status(400).json({
@@ -97,14 +106,17 @@ router.post("/", multer().single(), async (req, res) => {
         })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
 // @route PUT api/admin/grade
 // @desc put grade
 // @access Private
-router.put("/:gradeID", multer().single(), async (req, res) => {
+router.put("/:gradeID", multer().single(), async (req, res, next) => {
     const { grade_name } = req.body
     if (!grade_name) {
         return res.status(400).json({
@@ -139,14 +151,17 @@ router.put("/:gradeID", multer().single(), async (req, res) => {
         })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
 // @route DELETE api/subject
 // @desc delete subject
 // @access Private
-router.delete("/:gradeID", async (req, res) => {
+router.delete("/:gradeID", async (req, res, next) => {
     try {
         const deletedGrade = await Grade.findOneAndDelete(
             { _id: req.params.gradeID }
@@ -160,7 +175,10 @@ router.delete("/:gradeID", async (req, res) => {
         }
         res.json({ success: true, message: "Deleted grade successfully!", grade: deletedGrade })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 

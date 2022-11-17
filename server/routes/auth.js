@@ -8,7 +8,7 @@ const multer = require("multer");
 // @route POST api/auth/register
 // @desc Register user
 // @access Private
-router.post("/register", async (req, res) => {
+router.post("/register", async (req, res, next) => {
     const { account_username, account_password, account_role } = req.body;
     //Simple validation
     if (!account_username || !account_password || !account_role)
@@ -49,6 +49,9 @@ router.post("/register", async (req, res) => {
             accessToken,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
@@ -56,7 +59,7 @@ router.post("/register", async (req, res) => {
 // @route GET api/auth/
 // @desc Login user
 // @access Public
-router.post("/login", async (req, res) => {
+router.post("/login", async (req, res, next) => {
     const { account_username, account_password } = req.body;
     //Simple validation
     if (!account_username || !account_password)
@@ -111,11 +114,14 @@ router.post("/login", async (req, res) => {
                 message: "Incorrect email or password",
             });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
 
-router.put("/:personID", multer().single(), async (req, res) => {
+router.put("/:personID", multer().single(), async (req, res, next) => {
     const { account_password } = req.body;
     if (!account_password)
         return res.status(400).json({
@@ -154,6 +160,9 @@ router.put("/:personID", multer().single(), async (req, res) => {
             update_Account: updateAccount,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
