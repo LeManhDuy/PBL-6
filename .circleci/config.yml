@@ -7,7 +7,6 @@ jobs:
   notify:
     docker:
       - image: 'cimg/base:stable'
-    context: slack-secrets
     steps:
       - slack/notify:
           event: fail
