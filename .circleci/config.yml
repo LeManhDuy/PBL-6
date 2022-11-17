@@ -5,7 +5,7 @@ orbs:
   slack: circleci/slack@4.0
 
 jobs:
-  test:
+  unit_test:
     steps:
       - run: npm test
 
@@ -20,10 +20,10 @@ jobs:
 workflows:
   heroku_deploy:
     jobs:
-      - test
+      - unit_test
       - heroku/deploy-via-git:
           requires:
-            - test
+            - unit_test
       - notify:
           requires:
             - heroku/deploy-via-git
