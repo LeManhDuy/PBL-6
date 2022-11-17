@@ -5,6 +5,10 @@ orbs:
   slack: circleci/slack@4.0
 
 jobs:
+  test:
+    steps:
+      - run: npm test
+
   notify:
     docker:
       - image: 'cimg/base:stable'
@@ -16,7 +20,10 @@ jobs:
 workflows:
   heroku_deploy:
     jobs:
-      - heroku/deploy-via-git
+      - test
+      - heroku/deploy-via-git:
+          requires:
+            - test
       - notify:
           requires:
             - heroku/deploy-via-git
