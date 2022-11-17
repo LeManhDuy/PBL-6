@@ -8,7 +8,6 @@ jobs:
   unit_test:
     steps:
       - run: npm test
-
   notify:
     docker:
       - image: 'cimg/base:stable'
