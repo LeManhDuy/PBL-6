@@ -29,5 +29,8 @@
   },
   "devDependencies": {
     "@types/convert-excel-to-json": "^1.7.1"
+  },
+  "publishConfig": {
+    "registry": "http://localhost:8081/repository/npm-hosted-all/"
   }
 }
