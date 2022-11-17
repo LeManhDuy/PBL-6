@@ -1,11 +1,5 @@
 version: 2.1
 
-slack-fail-post-step: &slack-fail-post-step
-  post-steps:
-    - run: docker pull cimg/base:stable
-    - slack/notify:
-        template: basic_fail_1
-
 orbs:
   heroku: circleci/heroku@1.2.6
   slack: circleci/slack@4.0
@@ -15,20 +9,14 @@ jobs:
     docker:
       - image: 'cimg/base:stable'
     steps:
-      # - heroku/deploy-via-git
-      - run: echo "Sending status"
-      # - slack/notify:
-      #     event: fail
-      #     template: basic_fail_1
+      - run: echo "Sending slack notification"
       - slack/notify:
-          # event: pass
           template: success_tagged_deploy_1
 
 workflows:
   heroku_deploy:
     jobs:
-      - heroku/deploy-via-git:
-          <<: *slack-fail-post-step
+      - heroku/deploy-via-git
       - notify:
           requires:
             - heroku/deploy-via-git
