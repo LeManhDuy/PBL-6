@@ -17,8 +17,8 @@ const FormShowFee = (props) => {
     const [allValuesFee, setAllValuesFee] = useState({
         fee_amount: "",
     })
-    const [dropValueGrade, setDropValueGrade] = useState("All")
-    const [dropValueFee, setDropValueFee] = useState("All")
+    const [dropValueGrade, setDropValueGrade] = useState({ value: "0", label: "All" })
+    const [dropValueFee, setDropValueFee] = useState({ value: "0", label: "All" })
     const [dropValueClass, setDropValueClass] = useState({ value: "0", label: "All" })
 
     useEffect(() => {
@@ -36,6 +36,7 @@ const FormShowFee = (props) => {
                     }
                 })
                 const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,)
+                dataSourcesSorted.unshift({ value: "0", label: "All" })
                 setGrade(dataSourcesSorted)
             })
             .catch((error) => {
@@ -89,6 +90,7 @@ const FormShowFee = (props) => {
                     }
                 })
                 const dataSourcesSorted = [...dataSources].sort((a, b) => a.label > b.label ? 1 : -1,)
+                dataSourcesSorted.unshift({ value: "0", label: "All" })
                 setFee(dataSourcesSorted)
             })
             .catch((error) => {

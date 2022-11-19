@@ -99,7 +99,6 @@ const StatisticAdmin = (props) => {
         if (dropValueGrade && dropValueClass.value != "0" && dropValueSubject.value == "0") {
             StatisticService.getCommentByClassId(dropValueClass.value).then((response) => {
                 setLabel(Object.keys(response))
-                console.log(Object.values(response));
                 setData(Object.values(response))
                 setLegend("Statistical results of all subjects of class " + dropValueClass.label)
             })
@@ -129,9 +128,48 @@ const StatisticAdmin = (props) => {
     }
 
     const handleShowFee = (dropValueGrade, dropValueClass, dropValueFee) => {
-        console.log("1", dropValueGrade);
-        console.log("2", dropValueClass);
-        console.log("3", dropValueFee);
+        if (dropValueGrade.value != "0" && dropValueClass.value != "0" && dropValueFee.value != "0") {
+            StatisticService.getFeeByFeeCategoryAndClassId(dropValueFee.value, dropValueClass.value).then((response) => {
+                setLabel(Object.keys(response))
+                setData(Object.values(response))
+                setLegend("Statistical fee status: " + dropValueFee.label + " of class " + dropValueClass.label)
+            })
+        }
+        if (dropValueGrade.value != "0" && dropValueClass.value != "0" && dropValueFee.value == "0") {
+            StatisticService.getFeeByClassId(dropValueClass.value).then((response) => {
+                setLabel(Object.keys(response))
+                setData(Object.values(response))
+                setLegend("Statistical fee status of class:" + dropValueClass.label)
+            })
+        }
+        if (dropValueGrade.value != "0" && dropValueClass.value == "0" && dropValueFee.value != "0") {
+            StatisticService.getFeeByFeeCategoryAndGradeId(dropValueFee.value, dropValueGrade.value).then((response) => {
+                setLabel(Object.keys(response))
+                setData(Object.values(response))
+                setLegend("Statistical fee status: " + dropValueFee.label + " of grade " + dropValueGrade.label)
+            })
+        }
+        if (dropValueGrade.value != "0" && dropValueClass.value == "0" && dropValueFee.value == "0") {
+            StatisticService.getFeeByGradeId(dropValueGrade.value).then((response) => {
+                setLabel(Object.keys(response))
+                setData(Object.values(response))
+                setLegend("Statistical fee status of grade:" + dropValueGrade.label)
+            })
+        }
+        if (dropValueGrade.value == "0" && dropValueClass.value == "0" && dropValueFee.value != "0") {
+            StatisticService.getFeeByFeeCategoryId(dropValueFee.value).then((response) => {
+                setLabel(Object.keys(response))
+                setData(Object.values(response))
+                setLegend("Statistical status of fee:" + dropValueFee.label)
+            })
+        }
+        if (dropValueGrade.value == "0" && dropValueClass.value == "0" && dropValueFee.value == "0") {
+            StatisticService.getFee().then((response) => {
+                setLabel(Object.keys(response))
+                setData(Object.values(response))
+                setLegend("Statistical fee status of all school")
+            })
+        }
         setAddState(false)
     }
     const DivStatistic = (
