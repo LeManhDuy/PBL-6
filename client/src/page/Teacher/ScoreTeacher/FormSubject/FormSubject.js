@@ -15,6 +15,7 @@ const FormSubject = (props) => {
         id: "",
         content: "",
         pupil_id: "",
+        behavior: "",
     });
     const [notHaveSchedule, setNotHaveSchedule] = useState("false");
 
@@ -43,6 +44,9 @@ const FormSubject = (props) => {
                                 ? item.final_score
                                 : "",
                             result: item.result ? item.result : "",
+                            last_update: item.last_update
+                                ? item.last_update.split("T")[0]
+                                : "YYYY-MM-DD",
                         };
                     });
                 }
@@ -56,6 +60,14 @@ const FormSubject = (props) => {
                 id: res.commentBefore[0]._id,
                 content: res.commentBefore[0].comment_content,
                 pupil_id: res.commentBefore[0].pupil_id,
+                behavior: res.commentBefore[0]
+                    ? res.commentBefore[0].comment_content === "Excellent" ||
+                      res.commentBefore[0].comment_content === "Good"
+                        ? "Good"
+                        : res.commentBefore[0].comment_content === "Passed"
+                        ? "Passed"
+                        : "Need to try more."
+                    : "-",
             });
         });
     };
@@ -89,6 +101,7 @@ const FormSubject = (props) => {
                         ></input>
                     </td>
                     <td>{item.result}</td>
+                    <td>{item.last_update}</td>
                     <td>
                         <i
                             onClick={click}
@@ -118,6 +131,7 @@ const FormSubject = (props) => {
                     <th>Mid-term</th>
                     <th>Final</th>
                     <th>Result</th>
+                    <th>Last Update</th>
                     <th>Action</th>
                 </tr>
             );
@@ -213,7 +227,7 @@ const FormSubject = (props) => {
                         {!!summary ? (
                             <tr>
                                 <td className="th-content">
-                                    {summary.content}
+                                    {summary.behavior}
                                 </td>
                                 <td className="th-content">
                                     {summary.content}

@@ -9,7 +9,7 @@ const Score = require("../model/Score");
 const createSubjectScore = async (req, res, next) => {
     let { midterm_score, final_score, pupil_id } = req.body;
     //Validation
-
+    let date = Date.now();
     if (!midterm_score) {
         return res.status(400).json({
             success: false,
@@ -61,11 +61,11 @@ const createSubjectScore = async (req, res, next) => {
             if (final_score >= 9) {
                 result = "Excellent";
             } else if (final_score >= 7 && final_score < 9) {
-                result = "Very Good";
-            } else if (final_score >= 5 && final_score < 7) {
                 result = "Good";
+            } else if (final_score >= 5 && final_score < 7) {
+                result = "Passed";
             } else {
-                result = "Average";
+                result = "Failed";
             }
         }
         const newSubjectScore = new Score({
@@ -74,6 +74,7 @@ const createSubjectScore = async (req, res, next) => {
             result,
             pupil_id,
             subject_id: req.params.subjectID,
+            last_update: date,
         });
         await newSubjectScore.save();
         res.status(200).json({
@@ -82,9 +83,9 @@ const createSubjectScore = async (req, res, next) => {
             newSubjectScore,
         });
     } catch (error) {
-        const err = new Error('Internal Server Error');
+        const err = new Error("Internal Server Error");
         err.status = 500;
-        next(err)
+        next(err);
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
@@ -103,16 +104,16 @@ const getScoreByPupilId = async (req, res, next) => {
         const pupilScore = await Score.find({
             pupil_id: req.params.studentID,
         })
-            .select(["midterm_score", "final_score", "result"])
+            .select(["midterm_score", "final_score", "result"], ["last_update"])
             .populate({ path: "subject_id", model: "Subject" });
         res.status(200).json({
             success: true,
             pupilScore,
         });
     } catch (error) {
-        const err = new Error('Internal Server Error');
+        const err = new Error("Internal Server Error");
         err.status = 500;
-        next(err)
+        next(err);
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
@@ -135,9 +136,9 @@ const getScoreById = async (req, res, next) => {
             scoreInfor,
         });
     } catch (error) {
-        const err = new Error('Internal Server Error');
+        const err = new Error("Internal Server Error");
         err.status = 500;
-        next(err)
+        next(err);
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
@@ -145,6 +146,7 @@ const getScoreById = async (req, res, next) => {
 const updateScore = async (req, res, next) => {
     //Validation
     let { midterm_score, final_score } = req.body;
+    let date = Date.now();
     if (!final_score) {
         final_score = "";
     }
@@ -179,17 +181,18 @@ const updateScore = async (req, res, next) => {
             if (final_score >= 9) {
                 result = "Excellent";
             } else if (final_score >= 7 && final_score < 9) {
-                result = "Very Good";
-            } else if (final_score >= 5 && final_score < 7) {
                 result = "Good";
+            } else if (final_score >= 5 && final_score < 7) {
+                result = "Passed";
             } else {
-                result = "Average";
+                result = "Failed";
             }
         }
         const updateScore = {
             midterm_score,
             final_score,
             result,
+            last_update: date,
         };
         const updatedScore = await Score.findByIdAndUpdate(
             req.params.scoreID,
@@ -201,9 +204,9 @@ const updateScore = async (req, res, next) => {
             updatedScore,
         });
     } catch (error) {
-        const err = new Error('Internal Server Error');
+        const err = new Error("Internal Server Error");
         err.status = 500;
-        next(err)
+        next(err);
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
@@ -288,9 +291,9 @@ const getAllSubjectByPupilId = async (req, res, next) => {
         }
         res.json({ success: true, result });
     } catch (error) {
-        const err = new Error('Internal Server Error');
+        const err = new Error("Internal Server Error");
         err.status = 500;
-        next(err)
+        next(err);
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
