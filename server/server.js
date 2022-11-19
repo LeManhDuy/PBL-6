@@ -21,6 +21,7 @@ const scheduleRouter = require("./routes/schedule.js");
 const notificationRoute = require("./routes/notification.js");
 const scoreRoute = require("./routes/score.js");
 const commentRoute = require("./routes/comment.js");
+const statisticRoute = require("./routes/statistic.js");
 
 const app = express();
 app.use(express.json());
@@ -78,6 +79,8 @@ app.use("/api/notification", notificationRoute);
 app.use("/api/score", scoreRoute);
 //comment
 app.use("/api/comment", commentRoute);
+//statistic
+app.use("/api/statistic", statisticRoute);
 
 const port = process.env.PORT || "8000";
 app.set("port", port);

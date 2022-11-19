@@ -352,6 +352,61 @@ router.get("/get-pupil-by-teacher-id/:teacherID", async (req, res, next) => {
         return res.status(500).json({ success: false, message: "" + error });  
     }
 });
+// // @route GET api/admin/pupil
+// // @desc GET pupil by grade Id
+// // @access Private Only Admin
+router.get("/get-pupil-by-grade-id/:gradeID", async (req, res) => {
+    try {
+        // Return token
+        const getClassId = await Classroom.find({ grade_id: req.params.gradeID })
+        const studentsInfor = await Pupil.find({ class_id: getClassId })
+            .select([
+                "pupil_name",
+                "pupil_gender",
+                "pupil_dateofbirth",
+                "parent_id",
+            ])
+            .populate({
+                path: "parent_id",
+                model: "Parent",
+                populate: [{
+                    path: "person_id",
+                    model: "Person",
+                    select: ["person_fullname", "person_phonenumber"],
+                }]
+            })
+            .populate({
+                path: "class_id",
+                model: "Class",
+                populate: [
+                    {
+                        path: "grade_id",
+                        model: "Grade",
+                        select: ["grade_name"],
+                    },
+                ],
+            })
+            .populate({
+                path: "class_id",
+                model: "Class",
+                populate: [
+                    {
+                        path: "homeroom_teacher_id",
+                        model: "Teacher",
+                        select: ["_id"],
+                        populate: [{
+                            path: "person_id",
+                            model: "Person",
+                            select: ["person_fullname"],
+                        }]
+                    },
+                ],
+            })
+        res.json({ success: true, studentsInfor })
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+});
 
 // // @route PUT api/admin/parent
 // // @desc PUT parent

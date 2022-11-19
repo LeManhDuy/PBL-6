@@ -14,6 +14,7 @@ import FeeService from "../../../config/service/FeeService";
 import FeeCategoryService from "../../../config/service/FeeCategoryService";
 import UpdateFee from "../../../lib/ModalInput/UpdateFee/UpdateFee";
 import ReactPaginate from "react-paginate";
+import Loading from "../../../lib/Loading/Loading";
 
 const FeeAdmin = () => {
     const [addFeeState, setAddFeeState] = useState(false);
@@ -466,7 +467,8 @@ const FeeAdmin = () => {
         );
         return (
             <>
-                <h4 hidden={!isLoading} style={{ color: 'red' }}>Loading...</h4>
+                {/* <h4 hidden={!isLoading} style={{ color: 'red' }}>Loading...</h4> */}
+                <Loading isLoading={isLoading} />
                 <table hidden={isLoading} id="table">
                     <thead>{headerFee}</thead>
                     <tbody>{feeItem}</tbody>
@@ -664,7 +666,7 @@ const FeeAdmin = () => {
                     </div>
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={9} searchFee={searchFee(fees)}/>
+            <PaginatedItems itemsPerPage={9} searchFee={searchFee(fees)} />
             {updateFeeState ? DivUpdateFee : null}
             {isDelete ? ConfirmDelete : null}
             {isMultiDelete ? ConfirmMultiDelete : null}

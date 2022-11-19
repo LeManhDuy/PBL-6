@@ -22,10 +22,10 @@ const FormSubject = (props) => {
         getSubjectByPupilID();
     }, [state]);
 
-    const getSubjectByPupilID = () => {
+    const getSubjectByPupilID = async () => {
         let dataSources = [];
         let scoreSources = [];
-        ScoreService.getSubjectByPupilID(props.id)
+        await ScoreService.getSubjectByPupilID(props.id)
             .then((res) => {
                 if (!res.success) {
                     setNotHaveSchedule("true");
@@ -51,7 +51,7 @@ const FormSubject = (props) => {
             .catch((error) => {
                 console.log(error);
             });
-        CommentService.createPupilComment(props.id).then((res) => {
+        await CommentService.createPupilComment(props.id).then((res) => {
             setSummary({
                 id: res.commentBefore[0]._id,
                 content: res.commentBefore[0].comment_content,

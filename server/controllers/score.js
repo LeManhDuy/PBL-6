@@ -61,7 +61,7 @@ const createSubjectScore = async (req, res, next) => {
             if (final_score >= 9) {
                 result = "Excellent";
             } else if (final_score >= 7 && final_score < 9) {
-                result = "Very good";
+                result = "Very Good";
             } else if (final_score >= 5 && final_score < 7) {
                 result = "Good";
             } else {
@@ -179,7 +179,7 @@ const updateScore = async (req, res, next) => {
             if (final_score >= 9) {
                 result = "Excellent";
             } else if (final_score >= 7 && final_score < 9) {
-                result = "Very good";
+                result = "Very Good";
             } else if (final_score >= 5 && final_score < 7) {
                 result = "Good";
             } else {

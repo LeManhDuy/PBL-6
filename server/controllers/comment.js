@@ -48,6 +48,7 @@ const createComment = async (req, res, next) => {
         const commentBefore = await Comment.find({
             pupil_id: req.params.pupilID,
         });
+        //console.log(commentBefore[0]);
         if (commentBefore[0]) {
             commentBefore[0].comment_content = check;
             await commentBefore[0].save();
@@ -91,12 +92,7 @@ const getCommentByPupilID = async (req, res, next) => {
             success: true,
             pupilComment,
         });
-    } catch (error) {
-        const err = new Error('Internal Server Error');
-        err.status = 500;
-        next(err)
-        return res.status(500).json({ success: false, message: "" + error });
-    }
+    } catch (error) {}
 };
 
 module.exports = {
