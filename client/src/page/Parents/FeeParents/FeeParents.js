@@ -46,12 +46,14 @@ const FeeParents = () => {
                                 : "Empty",
                             fee_status: item.fee_status ? "Paid" : "UnPaid",
 
-                            start_date: new Date(
-                                item.start_date
-                            ).toLocaleDateString(),
-                            end_date: new Date(
-                                item.end_date
-                            ).toLocaleDateString(),
+                            start_date: item.fee_category_id
+                                ?
+                                new Date(item.fee_category_id.start_date).toLocaleDateString()
+                                : "Empty",
+                            end_date: item.fee_category_id
+                                ?
+                                new Date(item.fee_category_id.end_date).toLocaleDateString()
+                                : "Empty",
                             paid_date: item.paid_date ?
                                 new Date(item.paid_date).toLocaleDateString()
                                 : "Empty",
