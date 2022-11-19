@@ -6,7 +6,7 @@ const SubjectTeacher = require("../model/SubjectTeacher");
 const Subject = require("../model/Subject");
 const Score = require("../model/Score");
 
-const createSubjectScore = async (req, res) => {
+const createSubjectScore = async (req, res, next) => {
     let { midterm_score, final_score, pupil_id } = req.body;
     //Validation
 
@@ -82,11 +82,14 @@ const createSubjectScore = async (req, res) => {
             newSubjectScore,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
 
-const getScoreByPupilId = async (req, res) => {
+const getScoreByPupilId = async (req, res, next) => {
     const existed_student = await Pupil.findOne({ _id: req.params.studentID });
 
     if (!existed_student) {
@@ -107,11 +110,14 @@ const getScoreByPupilId = async (req, res) => {
             pupilScore,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
 
-const getScoreById = async (req, res) => {
+const getScoreById = async (req, res, next) => {
     //Validation
     try {
         const scoreInfor = await Score.findById(req.params.scoreID).populate({
@@ -129,11 +135,14 @@ const getScoreById = async (req, res) => {
             scoreInfor,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
 
-const updateScore = async (req, res) => {
+const updateScore = async (req, res, next) => {
     //Validation
     let { midterm_score, final_score } = req.body;
     if (!final_score) {
@@ -192,11 +201,14 @@ const updateScore = async (req, res) => {
             updatedScore,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
 
-const getAllSubjectByPupilId = async (req, res) => {
+const getAllSubjectByPupilId = async (req, res, next) => {
     try {
         let result = [];
         const student_id = req.params.studentID;
@@ -276,6 +288,9 @@ const getAllSubjectByPupilId = async (req, res) => {
         }
         res.json({ success: true, result });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 };

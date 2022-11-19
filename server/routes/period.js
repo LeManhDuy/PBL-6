@@ -5,13 +5,13 @@ const Period = require("../model/Period")
 const Subject = require("../model/Subject")
 const Teacher = require("../model/Teacher")
 const Person = require("../model/Person")
-const Class = require("../model/class")
+const Class = require("../model/Class")
 const Subject_Teacher = require("../model/SubjectTeacher")
 const multer = require("multer")
 const excelToJson = require('convert-excel-to-json');
 const fs = require('fs');
 
-router.get("/",multer().single(), async (req,res) => {
+router.get("/",multer().single(), async (req, res, next) => {
     try{
         const periods = await Period.find().select()
         .populate({
@@ -41,11 +41,14 @@ router.get("/",multer().single(), async (req,res) => {
             n: periods.length, periods})
     }
     catch(error){
-        return res.status(500).json({success: false, message: "" + error})
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
-router.get("/:periodId",multer().single(), async (req,res) => {
+router.get("/:periodId",multer().single(), async (req, res, next) => {
     try{
         const period = await Period.findOne({_id:req.params.periodId}).select()
         .populate({
@@ -69,11 +72,14 @@ router.get("/:periodId",multer().single(), async (req,res) => {
         return res.status(200).json({success:true, message:"Get Period successfully!", period})
     }
     catch(error){
-        return res.status(500).json({success: false, message: "" + error})
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
-router.post("/",multer().single(), async (req,res) => {
+router.post("/",multer().single(), async (req, res, next) => {
     const {period_date, period_number, subject_teacher_id, schedule_id} = req.body
     //validate
     if (!period_date || !period_number || !subject_teacher_id || !schedule_id)
@@ -128,11 +134,14 @@ router.post("/",multer().single(), async (req,res) => {
         return res.status(200).json({success:true, message:"Add period successfully!", new_period})
     }
     catch(error){
-        return res.status(500).json({success: false, message: "" + error})
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
-router.put("/:periodId",multer().single(), async (req,res)=>{
+router.put("/:periodId",multer().single(), async (req, res, next)=>{
     const {period_date, period_number, subject_teacher_id, schedule_id} = req.body
     //validate
     if (!period_date || !period_number || !subject_teacher_id || !schedule_id)
@@ -190,11 +199,14 @@ router.put("/:periodId",multer().single(), async (req,res)=>{
         return res.status(200).json({success:true, message:"Update period successfully!", updatedPeriod})
     }
     catch(error){
-        return res.status(500).json({success: false, message: "" + error})
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
-router.delete("/schedule/:scheduleId",multer().single(), async (req,res) => {
+router.delete("/schedule/:scheduleId",multer().single(), async (req, res, next) => {
     try{
         const schedule_id = req.params.scheduleId
         // const periods = await Period.find()
@@ -202,11 +214,14 @@ router.delete("/schedule/:scheduleId",multer().single(), async (req,res) => {
         return res.status(200).json({success:true, message:"Delete successfully!"})
     }
     catch(error){
-        return res.status(500).json({success: false, message: "" + error})
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 
-router.delete("/:periodId",multer().single(), async (req,res) => {
+router.delete("/:periodId",multer().single(), async (req, res, next) => {
     try{
         // const schedule_id = req.params.scheduleId
         // const periods = await Period.find()
@@ -214,7 +229,10 @@ router.delete("/:periodId",multer().single(), async (req,res) => {
         return res.status(200).json({success:true, message:"Delete successfully!"})
     }
     catch(error){
-        return res.status(500).json({success: false, message: "" + error})
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 

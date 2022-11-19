@@ -1,10 +1,10 @@
-const Class = require("../model/class")
+const Class = require("../model/Class")
 const Pupil = require("../model/Pupil")
 const Teacher = require("../model/Teacher")
 const Parent = require("../model/Parent")
 const Person = require("../model/Person")
 
-const createClass = async (req, res) => {
+const createClass = async (req, res, next) => {
     const {
         class_name,
         grade_id,
@@ -47,11 +47,14 @@ const createClass = async (req, res) => {
         })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 }
 
-const getClass = async (req, res) => {
+const getClass = async (req, res, next) => {
     try {
         const allClass = await Class.find()
             .select([
@@ -78,11 +81,14 @@ const getClass = async (req, res) => {
         res.json({ success: true, allClass })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 }
 
-const getClassByID = async (req, res) => {
+const getClassByID = async (req, res, next) => {
     try {
         // Return token
         const getClassInfor = await Class.find({ _id: req.params.classID })
@@ -109,11 +115,14 @@ const getClassByID = async (req, res) => {
             })
         res.json({ success: true, getClassInfor })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 }
 
-const getStudentByClassID = async (req, res) => {
+const getStudentByClassID = async (req, res, next) => {
     try {
         const studentsInfor = await Pupil.find({ class_id: req.params.classID })
             .select([
@@ -160,11 +169,14 @@ const getStudentByClassID = async (req, res) => {
             })
         res.json({ success: true, studentsInfor })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 }
 
-const updateClassByID = async (req, res) => {
+const updateClassByID = async (req, res, next) => {
     const {
         class_name,
         grade_id,
@@ -229,11 +241,14 @@ const updateClassByID = async (req, res) => {
         })
     }
     catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });    
     }
 }
 
-const deleteClass = async (req, res) => {
+const deleteClass = async (req, res, next) => {
     try {
         const deletedClass = await Class.findOneAndDelete(
             { _id: req.params.classID }
@@ -241,11 +256,14 @@ const deleteClass = async (req, res) => {
 
         res.json({ success: true, message: "Deleted class successfully!", grade: deletedClass })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });   
     }
 }
 
-const getParentAssociations = async (req, res) => {
+const getParentAssociations = async (req, res, next) => {
     try {
         const teacher = await Teacher.find({
             person_id: req.params.personID
@@ -265,12 +283,15 @@ const getParentAssociations = async (req, res) => {
             .populate('person_id')
         res.json({ success: true, parentInfor, class_name: classInfor[0].class_name });
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error });
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });   
     }
 };
 
 
-const getStudentByTeacherIdAtTeacherRole = async (req, res) => {
+const getStudentByTeacherIdAtTeacherRole = async (req, res, next) => {
     try {
         const teacher = await Teacher.find({
             person_id: req.params.personID
@@ -332,7 +353,10 @@ const getStudentByTeacherIdAtTeacherRole = async (req, res) => {
         });
         res.json({ success: true, getPupilsInfor, class_name: classInfor[0].class_name });
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error });
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });   
     }
 };
 

@@ -5,7 +5,7 @@ const Pupil = require("../model/Pupil");
 const multer = require("multer");
 const Parent = require("../model/Parent");
 const Person = require("../model/Person");
-const Classroom = require("../model/class");
+const Classroom = require("../model/Class");
 const FirebaseStorage = require("multer-firebase-storage");
 const excelToJson = require('convert-excel-to-json');
 const fs = require("fs");
@@ -40,7 +40,7 @@ const upload = multer({
 router.post(
     "/:classID&:parentID",
     upload.single("pupil_image"),
-    async (req, res) => {
+    async (req, res, next) => {
         const { pupil_name, pupil_dateofbirth, pupil_gender } = req.body;
         const { classID, parentID } = req.params;
         // Validation
@@ -83,9 +83,10 @@ router.post(
                 studentFullName: newPupil,
             });
         } catch (error) {
-            return res
-                .status(500)
-                .json({ success: false, message: "" + error });
+            const err = new Error('Internal Server Error');
+            err.status = 500;
+            next(err)
+            return res.status(500).json({ success: false, message: "" + error });  
         }
     }
 );
@@ -93,7 +94,7 @@ router.post(
 // @route POST api/schedule
 // @desc Create Schedule using excel file
 // @access Private
-router.post("/add-multi-pupil", multer().single('file'), async (req, res) => {
+router.post("/add-multi-pupil", multer().single('file'), async (req, res, next) => {
     try {
         let pupilFile = null
         if (req.file) {
@@ -160,7 +161,10 @@ router.post("/add-multi-pupil", multer().single('file'), async (req, res) => {
             message: "Create pupil successfully",
         });
     } catch (error) {
-        return res.status(500).json({ success: false, message: "Something's wrong: " + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });  
     }
 
 })
@@ -169,7 +173,7 @@ router.post("/add-multi-pupil", multer().single('file'), async (req, res) => {
 // // @route GET api/admin/parent
 // // @desc GET parent
 // // @access Private Only Admin
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
     try {
         const getPuilInfor = await Pupil.find()
             .select([
@@ -220,6 +224,9 @@ router.get("/", async (req, res) => {
             });
         res.json({ success: true, getPuilInfor });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
@@ -227,7 +234,7 @@ router.get("/", async (req, res) => {
 // // @route GET api/admin/pupil
 // // @desc GET pupil by Id
 // // @access Private Only Admin
-router.get("/:pupilID", async (req, res) => {
+router.get("/:pupilID", async (req, res, next) => {
     try {
         // Return token
         const getPupilInfor = await Pupil.find({
@@ -280,6 +287,9 @@ router.get("/:pupilID", async (req, res) => {
             });
         res.json({ success: true, getPupilInfor });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
@@ -287,7 +297,7 @@ router.get("/:pupilID", async (req, res) => {
 // // @route GET api/admin/pupil
 // // @desc GET pupil by teacher Id
 // // @access Private Only Admin
-router.get("/get-pupil-by-teacher-id/:teacherID", async (req, res) => {
+router.get("/get-pupil-by-teacher-id/:teacherID", async (req, res, next) => {
     try {
         // Return token
         const getClassId = await Classroom.find({ homeroom_teacher_id: req.params.teacherID })
@@ -336,7 +346,10 @@ router.get("/get-pupil-by-teacher-id/:teacherID", async (req, res) => {
             })
         res.json({ success: true, studentsInfor })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });  
     }
 });
 // // @route GET api/admin/pupil
@@ -398,7 +411,7 @@ router.get("/get-pupil-by-grade-id/:gradeID", async (req, res) => {
 // // @route PUT api/admin/parent
 // // @desc PUT parent
 // // @access Private Only Admin
-router.put("/:pupilID", upload.single("pupil_image"), async (req, res) => {
+router.put("/:pupilID", upload.single("pupil_image"), async (req, res, next) => {
     const { pupil_name, pupil_dateofbirth, pupil_gender, parent_id, class_id } =
         req.body;
     // Validation
@@ -492,6 +505,9 @@ router.put("/:pupilID", upload.single("pupil_image"), async (req, res) => {
             person: getPupilInfor,
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
@@ -499,7 +515,7 @@ router.put("/:pupilID", upload.single("pupil_image"), async (req, res) => {
 // // @route PUT api/admin/parent
 // // @desc DELETE parent
 // // @access Private Only Admin
-router.delete("/:pupilID", async (req, res) => {
+router.delete("/:pupilID", async (req, res, next) => {
     try {
         //const pupil = await Pupil.findById(req.params.pupilID)
         //delete Pupil
@@ -516,11 +532,14 @@ router.delete("/:pupilID", async (req, res) => {
             message: "Deleted pupil successfully!",
         });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
 //delete multip pupil
-router.post("/multi/delete", async (req, res) => {
+router.post("/multi/delete", async (req, res, next) => {
     const { pupil_list } = req.body
     if (!pupil_list)
         return res.status(400).json({
@@ -535,11 +554,14 @@ router.post("/multi/delete", async (req, res) => {
         }
         res.json({ success: true, message: "Deleted Fee Successfully!" })
     } catch (error) {
-        return res.status(500).json({ success: false, message: "" + error })
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
+        return res.status(500).json({ success: false, message: "" + error });
     }
 })
 //Get pupul by ParentID
-router.get("/get-pupil-by-parent/:personID", async (req, res) => {
+router.get("/get-pupil-by-parent/:personID", async (req, res, next) => {
     try {
         // Return token
         const getParentsInfor = await Parent.find({
@@ -596,6 +618,9 @@ router.get("/get-pupil-by-parent/:personID", async (req, res) => {
             });
         res.json({ success: true, getPupilInfor });
     } catch (error) {
+        const err = new Error('Internal Server Error');
+        err.status = 500;
+        next(err)
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
