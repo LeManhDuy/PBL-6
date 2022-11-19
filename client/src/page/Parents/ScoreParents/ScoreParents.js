@@ -94,6 +94,14 @@ const ScoreParents = () => {
                             content: res.pupilComment[0]
                                 ? res.pupilComment[0].comment_content
                                 : "-",
+                            behavior: res.pupilComment[0]
+                                ? res.pupilComment[0] === "Excellent" ||
+                                  res.pupilComment[0] === "Good"
+                                    ? "Good"
+                                    : res.pupilComment[0] === "Passed"
+                                    ? "Passed"
+                                    : "Need to try more."
+                                : "-",
                         };
                     })
                     .catch((err) => {
@@ -144,9 +152,7 @@ const ScoreParents = () => {
                         <table id="table">
                             <thead>
                                 <tr>
-                                    <th className="th-content">
-                                        Average Score
-                                    </th>
+                                    <th className="th-content">Behavior</th>
                                     <th className="th-content">Perfomance</th>
                                 </tr>
                             </thead>
@@ -154,7 +160,7 @@ const ScoreParents = () => {
                                 {!!item.summary ? (
                                     <tr>
                                         <td className="th-content">
-                                            {item.summary.content}
+                                            {item.summary.behavior}
                                         </td>
                                         <td className="th-content">
                                             {item.summary.content}

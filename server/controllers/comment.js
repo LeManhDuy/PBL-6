@@ -29,13 +29,13 @@ const createComment = async (req, res, next) => {
                     none = true;
                 }
                 if (item.final_score < 5) {
-                    check = "Average";
+                    check = "Failed";
                 }
                 if (item.final_score < 7 && item.final_score >= 5) {
-                    check = "Good";
+                    check = "Passed";
                 }
                 if (item.final_score >= 7 && item.final_score < 9) {
-                    check = "Very Good";
+                    check = "Good";
                 }
             });
         } else {
@@ -68,9 +68,9 @@ const createComment = async (req, res, next) => {
             });
         }
     } catch (error) {
-        const err = new Error('Internal Server Error');
+        const err = new Error("Internal Server Error");
         err.status = 500;
-        next(err)
+        next(err);
         return res.status(500).json({ success: false, message: "" + error });
     }
 };
