@@ -75,6 +75,9 @@ const ScoreParents = () => {
                                 ? item.final_score
                                 : "",
                             result: item.result ? item.result : "",
+                            last_update: item.last_update
+                                ? item.last_update.split("T")[0]
+                                : "YYYY-MM-DD",
                         };
                     });
                 })
@@ -181,6 +184,7 @@ const ScoreParents = () => {
                                 <th className="th-content">Midterm Score</th>
                                 <th className="th-content">Final Score</th>
                                 <th className="th-content">Average</th>
+                                <th className="th-content">Last Update</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -209,6 +213,13 @@ const ScoreParents = () => {
                                                   className="table-comment-cell"
                                                   disabled={true}
                                                   value={item.result}
+                                              ></input>
+                                          </td>
+                                          <td className="table-body-cell mid">
+                                              <input
+                                                  className="table-update-cell"
+                                                  disabled={true}
+                                                  value={item.last_update}
                                               ></input>
                                           </td>
                                       </tr>

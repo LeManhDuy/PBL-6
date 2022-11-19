@@ -43,6 +43,9 @@ const FormSubject = (props) => {
                                 ? item.final_score
                                 : "",
                             result: item.result ? item.result : "",
+                            last_update: item.last_update
+                                ? item.last_update.split("T")[0]
+                                : "YYYY-MM-DD",
                         };
                     });
                 }
@@ -89,6 +92,7 @@ const FormSubject = (props) => {
                         ></input>
                     </td>
                     <td>{item.result}</td>
+                    <td>{item.last_update}</td>
                     <td>
                         <i
                             onClick={click}
@@ -118,6 +122,7 @@ const FormSubject = (props) => {
                     <th>Mid-term</th>
                     <th>Final</th>
                     <th>Result</th>
+                    <th>Last Update</th>
                     <th>Action</th>
                 </tr>
             );
