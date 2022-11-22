@@ -14,6 +14,10 @@ const scoreSchema = new Schema({
         type: String,
         require: true,
     },
+    last_update: {
+        type: Date,
+        require: false,
+    },
     subject_id: {
         type: Schema.Types.ObjectId,
         ref: "Subject",

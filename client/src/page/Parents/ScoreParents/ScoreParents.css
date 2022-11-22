@@ -43,6 +43,13 @@
     width: 120px;
 }
 
+.table-update-cell {
+    background-color: #2c5d96;
+    text-align: center;
+    color: white;
+    width: 150px;
+}
+
 .table-content-cell {
     text-align: center;
     background-color: #2c5d96;

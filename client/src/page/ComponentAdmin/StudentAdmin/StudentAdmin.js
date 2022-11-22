@@ -17,6 +17,8 @@ import GradeService from "../../../config/service/GradeService";
 import ReactPaginate from 'react-paginate';
 import AddStudentExcel from "../../../lib/ModalInput/AddStudentExcel/AddStudentExcel";
 import PupilService from "../../../config/service/StudentService";
+import Loading from "../../../lib/Loading/Loading";
+
 
 const StudentAdmin = () => {
     const [student, setStudent] = useState([]);
@@ -177,6 +179,40 @@ const StudentAdmin = () => {
                 console.log(error);
             });
     };
+    const getStudentWithGradeId = (filter) => {
+        PupilService.getPupilByGradeId(filter)
+            .then((response) => {
+                const dataSources = response.studentsInfor.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            name: item.pupil_name,
+                            gender: item.pupil_gender,
+                            parent: item.parent_id
+                                ? item.parent_id.person_id.person_fullname
+                                : "Empty",
+                            class: item.class_id
+                                ? item.class_id.class_name
+                                : "Empty",
+                            teacher: item.class_id
+                                ? item.class_id.homeroom_teacher_id.person_id
+                                    .person_fullname
+                                : "Empty",
+                            grade: item.class_id.grade_id
+                                ? item.class_id.grade_id.grade_name
+                                : "Empty",
+                        };
+                    }
+                );
+                setStudent(dataSources);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+
 
     const Dropdown = ({ value, options, onChange }) => {
         return (
@@ -233,8 +269,10 @@ const StudentAdmin = () => {
         setDropValueGrade(event.target.value);
         grades.map((item) => {
             if (event.target.value === item.id) {
+                getStudentWithGradeId(item.id)
                 getClassWithFilter(item.id);
             } else if (event.target.value === "All") {
+                getStudent();
                 getClass();
             }
         });
@@ -351,11 +389,11 @@ const StudentAdmin = () => {
         }
         return (
             <>
-                <h4 hidden={!isLoading} style={{ color: 'red' }}>Loading...</h4>
-                <table hidden={isLoading} id="table">
+                <table id="table">
                     <thead className="table-head-row">{headerStudent}</thead>
                     <tbody className="table-row">{studentItem}</tbody>
                 </table>
+                {/* <h4 hidden={!isLoading} style={{ color: 'red' }}>Loading...</h4> */}
             </>
         );
     };
@@ -646,6 +684,7 @@ const StudentAdmin = () => {
                         ></input>
                     </div>
                 </div>
+                <Loading isLoading={isLoading} />
             </header>
             <PaginatedItems itemsPerPage={9} searchStudent={searchStudent(student)} />
             {isDelete ? ConfirmDelete : null}

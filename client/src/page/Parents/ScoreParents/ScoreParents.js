@@ -75,6 +75,9 @@ const ScoreParents = () => {
                                 ? item.final_score
                                 : "",
                             result: item.result ? item.result : "",
+                            last_update: item.last_update
+                                ? item.last_update.split("T")[0]
+                                : "YYYY-MM-DD",
                         };
                     });
                 })
@@ -90,6 +93,14 @@ const ScoreParents = () => {
                                 : "",
                             content: res.pupilComment[0]
                                 ? res.pupilComment[0].comment_content
+                                : "-",
+                            behavior: res.pupilComment[0]
+                                ? res.pupilComment[0] === "Excellent" ||
+                                  res.pupilComment[0] === "Good"
+                                    ? "Good"
+                                    : res.pupilComment[0] === "Passed"
+                                    ? "Passed"
+                                    : "Need to try more."
                                 : "-",
                         };
                     })
@@ -141,9 +152,7 @@ const ScoreParents = () => {
                         <table id="table">
                             <thead>
                                 <tr>
-                                    <th className="th-content">
-                                        Average Score
-                                    </th>
+                                    <th className="th-content">Behavior</th>
                                     <th className="th-content">Perfomance</th>
                                 </tr>
                             </thead>
@@ -151,7 +160,7 @@ const ScoreParents = () => {
                                 {!!item.summary ? (
                                     <tr>
                                         <td className="th-content">
-                                            {item.summary.content}
+                                            {item.summary.behavior}
                                         </td>
                                         <td className="th-content">
                                             {item.summary.content}
@@ -181,6 +190,7 @@ const ScoreParents = () => {
                                 <th className="th-content">Midterm Score</th>
                                 <th className="th-content">Final Score</th>
                                 <th className="th-content">Average</th>
+                                <th className="th-content">Last Update</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -209,6 +219,13 @@ const ScoreParents = () => {
                                                   className="table-comment-cell"
                                                   disabled={true}
                                                   value={item.result}
+                                              ></input>
+                                          </td>
+                                          <td className="table-body-cell mid">
+                                              <input
+                                                  className="table-update-cell"
+                                                  disabled={true}
+                                                  value={item.last_update}
                                               ></input>
                                           </td>
                                       </tr>

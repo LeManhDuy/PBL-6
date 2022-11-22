@@ -109,7 +109,7 @@ function SideBar() {
                                 className={
                                     "item" +
                                     (window.location.pathname ===
-                                    "/admin/account"
+                                        "/admin/account"
                                         ? " active"
                                         : "")
                                 }
@@ -123,7 +123,7 @@ function SideBar() {
                                 <FontAwesomeIcon
                                     className={
                                         window.location.pathname ===
-                                        "/admin/account"
+                                            "/admin/account"
                                             ? " show"
                                             : " arrow"
                                     }
@@ -137,7 +137,7 @@ function SideBar() {
                                 className={
                                     "item" +
                                     (window.location.pathname ===
-                                    "/admin/student"
+                                        "/admin/student"
                                         ? " active"
                                         : "")
                                 }
@@ -147,11 +147,11 @@ function SideBar() {
                                     className="icon"
                                     icon={faPeopleGroup}
                                 />
-                                <p>Student</p>
+                                <p>Pupil</p>
                                 <FontAwesomeIcon
                                     className={
                                         window.location.pathname ===
-                                        "/admin/student"
+                                            "/admin/student"
                                             ? " show"
                                             : " arrow"
                                     }
@@ -178,7 +178,7 @@ function SideBar() {
                                 <FontAwesomeIcon
                                     className={
                                         window.location.pathname ===
-                                        "/admin/class"
+                                            "/admin/class"
                                             ? " show"
                                             : " arrow"
                                     }
@@ -206,7 +206,7 @@ function SideBar() {
                                 <FontAwesomeIcon
                                     className={
                                         window.location.pathname ===
-                                        "/admin/grade"
+                                            "/admin/grade"
                                             ? " show"
                                             : " arrow"
                                     }
@@ -221,7 +221,7 @@ function SideBar() {
                                 className={
                                     "item" +
                                     (window.location.pathname ===
-                                    "/admin/subject"
+                                        "/admin/subject"
                                         ? " active"
                                         : "")
                                 }
@@ -235,7 +235,7 @@ function SideBar() {
                                 <FontAwesomeIcon
                                     className={
                                         window.location.pathname ===
-                                        "/admin/subject"
+                                            "/admin/subject"
                                             ? " show"
                                             : " arrow"
                                     }
@@ -249,7 +249,7 @@ function SideBar() {
                                 className={
                                     "item" +
                                     (window.location.pathname ===
-                                    "/admin/schedule"
+                                        "/admin/schedule"
                                         ? " active"
                                         : "")
                                 }
@@ -263,7 +263,7 @@ function SideBar() {
                                 <FontAwesomeIcon
                                     className={
                                         window.location.pathname ===
-                                        "/admin/schedule"
+                                            "/admin/schedule"
                                             ? " show"
                                             : " arrow"
                                     }
@@ -290,7 +290,7 @@ function SideBar() {
                                 <FontAwesomeIcon
                                     className={
                                         window.location.pathname ===
-                                        "/admin/fee"
+                                            "/admin/fee"
                                             ? " show"
                                             : " arrow"
                                     }
@@ -304,7 +304,7 @@ function SideBar() {
                                 className={
                                     "item" +
                                     (window.location.pathname ===
-                                    "/admin/feecategory"
+                                        "/admin/feecategory"
                                         ? " active"
                                         : "")
                                 }
@@ -318,7 +318,7 @@ function SideBar() {
                                 <FontAwesomeIcon
                                     className={
                                         window.location.pathname ===
-                                        "/admin/feecategory"
+                                            "/admin/feecategory"
                                             ? " show"
                                             : " arrow"
                                     }
@@ -332,7 +332,7 @@ function SideBar() {
                                 className={
                                     "item" +
                                     (window.location.pathname ===
-                                    "/admin/statistic"
+                                        "/admin/statistic"
                                         ? " active"
                                         : "")
                                 }
@@ -346,7 +346,7 @@ function SideBar() {
                                 <FontAwesomeIcon
                                     className={
                                         window.location.pathname ===
-                                        "/admin/statistic"
+                                            "/admin/statistic"
                                             ? " show"
                                             : " arrow"
                                     }

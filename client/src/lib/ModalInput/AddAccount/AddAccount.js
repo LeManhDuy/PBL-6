@@ -1012,7 +1012,7 @@ const AddAccount = (props) => {
 
     const FormAccountTeacher = (
         <div className="form-admin-content">
-            <h4>Add Teacher account</h4>
+            <h4>Add Teacher Account</h4>
             <label
                 className={
                     "error" +
