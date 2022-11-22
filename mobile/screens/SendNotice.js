@@ -5,11 +5,10 @@ import { scale } from 'react-native-size-matters';
 import { SearchDropDown } from '../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import StudentService from "../config/service/StudentService";
-import { Dimensions } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import NotificationService from '../config/service/NotificationService';
-const windowHeight = Dimensions.get('window').height;
-const SendNotice = () => {
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+
+const SendNotice = ({navigation}) => {
 
   const [privateNotification, setPrivateNotification] = useState({
     title: "",
@@ -76,6 +75,34 @@ const SendNotice = () => {
         });
 }; 
   
+onSwipePerformed = (action) => {
+  /// action : 'left' for left swipe
+  /// action : 'right' for right swipe
+  /// action : 'up' for up swipe
+  /// action : 'down' for down swipe
+  
+  switch(action){
+    case 'left':{
+      console.log('left Swipe performed');
+      break;
+    }
+     case 'right':{
+      console.log('right Swipe performed');
+      break;
+    }
+     case 'up':{
+      console.log('up Swipe performed');
+      break;
+    }
+     case 'down':{
+      console.log('down Swipe performed');
+      break;
+    }
+     default : {
+     console.log('Undeteceted action');
+     }
+  }
+}
 
 
 
@@ -108,7 +135,7 @@ const SendNotice = () => {
     // alert(id)
     setPrivateNotification({
       ...privateNotification,
-      teacher: item.id
+      teacher: item.teacherId
     })
     setSearchText(item.teacher)
     setSearching(false)
@@ -128,7 +155,13 @@ const SendNotice = () => {
         parents_send: privateNotification.sender,
       })
         .then((res) => {
-          console.log(res)
+          if(res.success){
+            alert('Notification Sent!')
+            navigation.navigate('Notifications')
+          }
+          else{
+            alert('Failed to send notification!')
+          }
         })
         .catch((error) => console.log("error", error));
     }

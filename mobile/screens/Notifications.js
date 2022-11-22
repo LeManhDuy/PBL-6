@@ -6,7 +6,7 @@ import { NotificationCard, NotificationModal } from "../components";
 import { COLORS, SIZES, assets } from "../constants";
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { scale } from 'react-native-size-matters';
-
+import { useFocusEffect } from '@react-navigation/native';
 const Notifications = ({navigation}) => {
     const [isPublic, setIsPublic] = useState(true);
     const [notifications, setNotifications] = useState([]);
@@ -14,13 +14,18 @@ const Notifications = ({navigation}) => {
     const [state, setState] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [modalData, setModalData] = useState();
-    const [addNotificationState, setAddNotificationState] = useState(false)
-
     useEffect(() => {
         getNotifications();
         getNotificationsParents();
     }, [state]);
-
+    useFocusEffect(
+      React.useCallback(() => {
+        getNotifications();
+        getNotificationsParents();
+        // alert('Screen was focused');
+        // setState(!state)
+      }, [])
+    );
     const getNotifications = () => {
         NotificationService.getNotifications()
             .then((response) => {
