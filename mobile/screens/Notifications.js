@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View, FlatList, SafeAreaView } from "react-native";
+import { StyleSheet, Text, Pressable, View, FlatList, SafeAreaView, TouchableOpacity, ScrollView } from "react-native";
 import NotificationService from "../config/service/NotificationService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NotificationCard, NotificationCardHeader } from "../components";
-import { COLORS, SIZES } from "../constants";
+import { NotificationCard, NotificationModal } from "../components";
+import { COLORS, SIZES, assets } from "../constants";
+import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
+import { scale } from 'react-native-size-matters';
 
-const Notifications = () => {
+const Notifications = ({navigation}) => {
     const [isPublic, setIsPublic] = useState(true);
     const [notifications, setNotifications] = useState([]);
     const [notificationsPrivate, setNotificationsPrivate] = useState([]);
-    const [isUpdate, setIsUpdate] = useState(false);
-    const [isCreate, setIsCreate] = useState(false);
     const [state, setState] = useState(false);
-    const [id, setId] = useState("");
-    const [isDelete, setIsDelete] = useState(false);
-    const [errorService, setErrorServer] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalData, setModalData] = useState();
+    const [addNotificationState, setAddNotificationState] = useState(false)
 
     useEffect(() => {
         getNotifications();
@@ -78,95 +77,77 @@ const Notifications = () => {
                 console.log(error);
             });
     };
+    const handleChangeModal = () => {
+      setModalVisible(!modalVisible)
+    }
   return (
-        <SafeAreaView>
+        <View style={styles.centeredView} blurRadius={4}>
+            <NotificationModal 
+              data={modalData} 
+              show={modalVisible}
+              isPublic={isPublic} 
+              handleChange={handleChangeModal} />
             <View style={styles.buttonContainer}>
                 <Pressable style={isPublic?[styles.button, styles.buttonOpen]:[styles.button, styles.buttonClose]}
                     onPress={() => setIsPublic(true)}
                 >
-                    <Text style={styles.buttonText}>Public Notification</Text>
+                    <Text
+                      style={styles.buttonText}>
+                      Public Notification
+                    </Text>
                 </Pressable>
                 <Pressable style={!isPublic?[styles.button, styles.buttonOpen]:[styles.button, styles.buttonClose]}
                     onPress={() => setIsPublic(false)}
                 >
-                    <Text style={styles.buttonText}>Private Notification</Text>
+                    {/* <Text style={styles.buttonText}>Private Notification</Text> */}
+                    <Text
+                      style={styles.buttonText}>
+                      Private Notification
+                    </Text>
                 </Pressable>
             </View>
-            <View style={{ zIndex: 1, marginBottom: 200 }}>
+            <View style={styles.flatlistContainer}>
             <FlatList
                 data={isPublic ? notifications : notificationsPrivate}
-                renderItem={({item})=> <NotificationCard data={item} isPublic={isPublic}/>}
+                renderItem={({item})=> 
+                  <NotificationCard 
+                    data={item} 
+                    isPublic={isPublic}
+                    handleShowDetail={()=>{
+                      setModalData(item)
+                      setModalVisible(true)
+                    }}
+                    />
+                }
                 keyExtractor={(item) => item.id}
                 showsHorizontalScrollIndicator={false}
             />
+            <TouchableOpacity onPress={() => {
+              // console.log("this")
+                navigation.navigate('SendNotice')
+              }} style={styles.floatButton}>
+              <Text style={styles.floatButtonIcon}>+</Text>
+            </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
-{/*     const [modalVisible, setModalVisible] = useState(false); 
-<View style={styles.centeredView}>
-      <Modal
-        animationType="slide"
-        useNativeDriver={true}
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-      <Pressable
-        style={[styles.button, styles.buttonOpen]}
-        onPress={() => setModalVisible(true)}
-      >
-        <Text style={styles.textStyle}>Show Modal</Text>
-      </Pressable>
-    </View>
-   */}
+
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
   },
   buttonContainer:{
+    flex: 1/2,
     marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    paddingBottom: 20
+    marginBottom: 20,
   },
   button: {
+    flex: 2/5,
     borderRadius: 20,
     padding: 10,
-    elevation: 2
   },
   buttonOpen: {
     backgroundColor: "#002e64",
@@ -174,22 +155,30 @@ const styles = StyleSheet.create({
   buttonClose: {
     backgroundColor: "#83acdc",
   },
-  onHoverIn: {
-    backgroundColor: "#002e64",
+  flatlistContainer: {
+    flex: 4,
+    // marginBottom: 200,
   },
   buttonText:{
     color: COLORS.white,
     fontWeight: 'bold',
-    fontSize: SIZES.extraLarge
+    fontSize: scale(16)
   },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
+  floatButton: {
+    position: 'absolute',
+    width: scale(50),
+    height: scale(50),
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 40,
+    bottom: 40,
+    backgroundColor: '#83acdc',
+    borderRadius: 100,
+    elevation: 8
   },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center"
+  floatButtonIcon: {
+    fontSize: scale(25),
+    color: 'white'
   }
 });
 

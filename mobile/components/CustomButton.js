@@ -3,7 +3,6 @@ import { FONTS } from "../constants";
 import styled from "styled-components/native";
 
 const CustomButton = ({...props}) => {
-    // console.log(props)
     const ButtonContainer = styled.TouchableOpacity`
         width: 90%;
         height: 60px;
@@ -17,7 +16,6 @@ const CustomButton = ({...props}) => {
         `;
 
     const ButtonText = styled.Text`
-        font-family: ${FONTS.semiBold};
         font-size: 20px;
         color: ${props => props.textColor};
         text-align: center;

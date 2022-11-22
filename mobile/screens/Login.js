@@ -35,9 +35,7 @@ const Login = ({navigation}) => {
                 if(response.success && response.AccountRole==="Parents"){
                     await AsyncStorage.setItem('@Login',JSON.stringify(response))
                     setUserInfo({username:"",password:""})
-                    // setState(!state)
                     navigation.navigate('Home',{screen: 'Details'})
-             
                 }
                 else{
                     alert("Incorrect email or password")
@@ -65,14 +63,9 @@ const Login = ({navigation}) => {
             fontSize: 50,
         }
     })
-    if(isLogin){
-        navigation.navigate('Home',{screen: 'Details'})
-    }
-    else{
 
     return (
       <SafeAreaView>
-            
             <View style={styles.container}>
             <Title style={styles.header}>LOGIN</Title>
                 <TextInput 
@@ -106,7 +99,6 @@ const Login = ({navigation}) => {
             </View>
       </SafeAreaView>
     );
-    }
   };
   
 export default Login
