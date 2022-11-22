@@ -1,9 +1,9 @@
-import { SafeAreaView, View, StyleSheet, Image, ScrollView } from "react-native"
+import { SafeAreaView, View, StyleSheet, Image, ScrollView, Text } from "react-native"
 import React, {useState, useEffect} from "react";
-import { Title } from "react-native-paper";
-import { assets, COLORS, FONTS, SIZES } from "../constants";
+import { assets, SIZES } from "../constants";
 import AccountService from "../config/service/AccountService";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { scale } from 'react-native-size-matters';
 
 const Details = () => {
     const [parentInfo, setParentInfo] = useState()
@@ -49,39 +49,40 @@ const Details = () => {
 
     const styles = StyleSheet.create({
         infoContainer:{
-            padding: 20,
-            width:"75%",
+            padding: scale(20),
+            width:"80%",
             alignSelf:'center',
-            alignItems:'center'
+            alignItems:'center',
+        },
+        imgContainer:{
+            width: "75%",
+            aspectRatio: 1
         },
         circleImg:{
-            width: 250, height: 250, borderRadius: 250/ 2
+            width: "100%", height: "100%", borderRadius: 200,
         },
         infoContainer2:{
-            padding:30,
-            // backgroundColor: COLORS.gray,
-            width: "100%",
+            padding:"10%",
             justifyContent:'center'
         },
         infoLine:{
-            padding: 10,
+            padding: "5%",
             flexDirection: 'row',
-            marginBottom: 20,
-            // backgroundColor: `#ff7f50`,
+            marginBottom: "10%",
             borderBottomWidth: 2,
             borderColor: `#000000`
         },
         infoText:{
-            marginLeft: 20,
-            fontSize: SIZES.extraLarge,
+            marginLeft: "10%",
+            fontSize: scale(16),
         },
         infoHeaderText:{
-            marginLeft: 25,
-            fontSize: SIZES.medium,
+            marginLeft: "12%",
+            fontSize: scale(12),
             opacity: 0.5
         },
         icon:{
-            alignSelf:'center'
+            alignSelf:'center'  
         }
     })
     if(parentInfo){
@@ -89,37 +90,40 @@ const Details = () => {
         return (
             <ScrollView>
                 <View style={styles.infoContainer}>
-                <Image 
-                    source={parentInfo?{uri:parentInfo.img}:assets.account  }
-                    style={styles.circleImg} 
-                    />
+                    <View style={styles.imgContainer}>
+                        <Image 
+                        source={parentInfo?{uri:parentInfo.img}:assets.account}
+                        style={styles.circleImg} 
+                        />
+                    </View>
+                
                 <View style={styles.infoContainer2}>
                     <View style={styles.infoLine}>
                         <Image size={40} source={assets.account} style={styles.icon}/>
                         <View>
-                            <Title style={styles.infoHeaderText}>Full Name</Title>
-                            <Title style={styles.infoText}> {parentInfo.name} </Title>
+                            <Text style={styles.infoHeaderText}>Full Name</Text>
+                            <Text style={styles.infoText}> {parentInfo.name} </Text>
                         </View> 
                     </View>
                     <View style={styles.infoLine}>
                         <Image size={40} source={assets.phone} style={styles.icon}/>
                         <View>
-                            <Title style={styles.infoHeaderText}>Phone Number</Title>
-                            <Title style={styles.infoText}> {parentInfo.phone} </Title>
+                            <Text style={styles.infoHeaderText}>Phone Number</Text>
+                            <Text style={styles.infoText}> {parentInfo.phone} </Text>
                         </View> 
                     </View>
                     <View style={styles.infoLine}>
                         <Image size={40} source={assets.calendar} style={styles.icon}/>
                         <View>
-                            <Title style={styles.infoHeaderText}>Birthday</Title>
-                            <Title style={styles.infoText}> {parentInfo.birth} </Title>
+                            <Text style={styles.infoHeaderText}>Birthday</Text>
+                            <Text style={styles.infoText}> {parentInfo.birth} </Text>
                         </View> 
                     </View>
                     <View style={styles.infoLine}>
                         <Image size={40} source={assets.email} style={styles.icon}/>
                         <View>
-                            <Title style={styles.infoHeaderText}>Email</Title>
-                            <Title style={styles.infoText}> {parentInfo.email} </Title>
+                            <Text style={styles.infoHeaderText}>Email</Text>
+                            <Text style={styles.infoText}> {parentInfo.email} </Text>
                         </View> 
                     </View>
                     

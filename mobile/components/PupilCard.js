@@ -1,6 +1,6 @@
 import { View, Image, Text, StyleSheet, Dimensions } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-
+import { scale, moderateScale } from 'react-native-size-matters';
 import { COLORS, SIZES, SHADOWS, assets, FONTS } from '../constants'
 import React from 'react'
 const PupilCard = ({data}) => {
@@ -16,34 +16,29 @@ const PupilCard = ({data}) => {
             backgroundColor: COLORS.white,
             padding:"5%",
             margin:"3%",
-            // marginBottom: "5%",
-            aspectRatio: 16/9,
-            // height: "35%",    
+            aspectRatio: 16/9, 
             borderRadius: 14,
             ...SHADOWS.dark
         },
         imgContainer:{
-            width: "50%", 
+            width: scale(100), 
             aspectRatio: 1,
             alignSelf:'center', 
-            // backgroundColor: COLORS.gray,
-            justifyContent: 'center'
+            justifyContent: 'center',
+            paddingRight: scale(5),
         },
         infoContainer:{
             alignSelf:'center',
-            paddingLeft: "5%",
+            paddingLeft: scale(5),
             width: "60%",
             aspectRatio: 1,
-            // marginLeft: "10%",
-            // backgroundColor: COLORS.gray,
             borderLeftWidth: 2,
             justifyContent: 'space-evenly'
         },
         infoLine:{
             flexDirection: 'row',
             height: "15%",
-            marginBottom: 20,
-            // backgroundColor: COLORS.gray
+            marginBottom: scale(5),
         },
         circleImg:{
             width: "80%", 
@@ -52,18 +47,19 @@ const PupilCard = ({data}) => {
             alignSelf: 'center'
         },
         infoText:{
-            marginLeft: windowWidth/35,
-            fontSize: windowWidth/35,
+            fontSize: scale(12),
         },
         infoHeaderText:{
-            marginLeft: windowWidth/35,
-            fontSize: windowWidth/50,
-            opacity: 0.5
+            fontSize: scale(12),
+            opacity: 0.5,
         },
         icon:{
             alignSelf:'center',
             height: "100%",
-            resizeMode: 'contain'
+            resizeMode: 'contain',
+        },
+        lineText:{
+            marginLeft:scale(10)
         }
     })
     return (
@@ -78,28 +74,28 @@ const PupilCard = ({data}) => {
             <View style={styles.infoContainer}>
                 <View style={styles.infoLine}>
                     <Image source={assets.account} style={styles.icon}/>
-                    <View>
+                    <View style={styles.lineText}>
                         <Text style={styles.infoHeaderText}>Full Name</Text>
                         <Text style={styles.infoText}> {data.name} </Text>
                     </View> 
                 </View>
                 <View style={styles.infoLine}>
                     <Image source={assets.classes} style={styles.icon}/>
-                    <View>
+                    <View style={styles.lineText}>
                         <Text style={styles.infoHeaderText}>Class</Text>
                         <Text style={styles.infoText}> {data.class} </Text>
                     </View> 
                 </View>
                 <View style={styles.infoLine}>
                     <Image source={assets.teacher} style={styles.icon}/>
-                    <View>
+                    <View style={styles.lineText}>
                         <Text style={styles.infoHeaderText}>Hoomroom Teacher</Text>
                         <Text style={styles.infoText}> {data.teacher} </Text>
                     </View> 
                 </View>
                 <View style={styles.infoLine}>
                     <Image size={40} source={assets.calendar} style={styles.icon}/>
-                    <View>
+                    <View style={styles.lineText}>
                         <Text style={styles.infoHeaderText}>Birthday</Text>
                         <Text style={styles.infoText}> {data.dateofbirth} </Text>
                     </View> 
