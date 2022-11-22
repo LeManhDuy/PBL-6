@@ -143,7 +143,6 @@ router.get("/get-score-by-grade-subjcet-id/:gradeID&:subjectID", async (req, res
             data.push(score)
         }
         finalData = (data[data.length - 1]).flat()
-        console.log(finalData);
         var Average = 0
         var Good = 0
         var VeryGood = 0
