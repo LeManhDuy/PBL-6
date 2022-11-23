@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#83acdc',
         borderRadius: 100,
         elevation: 8,
-        opacity: 0
+        // opacity: 0
       },
       floatButtonIcon: {
         fontSize: scale(25),
