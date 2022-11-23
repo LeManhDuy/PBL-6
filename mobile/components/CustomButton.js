@@ -2,7 +2,7 @@ import React from "react";
 import { FONTS } from "../constants";
 import styled from "styled-components/native";
 
-const CustomButton = ({...props}) => {
+const CustomButton = ({ ...props }) => {
     const ButtonContainer = styled.TouchableOpacity`
         width: 90%;
         height: 60px;
@@ -11,25 +11,24 @@ const CustomButton = ({...props}) => {
         border-radius: 10px;
         justify-content: center;
         align-self: center;
-        background-color: ${props => props.backgroundColor}; 
-        border: solid 2px black
+        background-color: #83ACDC; 
         `;
 
     const ButtonText = styled.Text`
         font-size: 20px;
-        color: ${props => props.textColor};
+        color: white;
         text-align: center;
         justify-content: center;
         `;
 
-    return(
+    return (
         <ButtonContainer
-                onPress={props.onPress}
-                backgroundColor={props.backgroundColor}
-                >
-                <ButtonText textColor={props.textColor}>{props.text}</ButtonText>
+            onPress={props.onPress}
+            backgroundColor={props.backgroundColor}
+        >
+            <ButtonText textColor={props.textColor}>{props.text}</ButtonText>
         </ButtonContainer>
-        )
-    };
+    )
+};
 
 export default CustomButton
