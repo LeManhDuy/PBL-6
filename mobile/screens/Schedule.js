@@ -81,17 +81,20 @@ const Schedule = () => {
                 console.log(error);
             })
     }
+    const handlePress = ()=>{
+        Animated.timing(offset, {
+            toValue: 0,
+            duration: 100,
+            useNativeDriver: false
+          }).start();
+        setSelectPupil(true)
+    }
     const handleSelect = (props)=>{
         setSelectPupil(false)
         setButtonText(props.name+' - '+props.class)
         const showSchedule = scheduleInfo.filter(x => {
             return x.class_id === props.class_id
         })
-        Animated.timing(offset, {
-            toValue: 0,
-            duration: 100,
-            useNativeDriver: false
-          }).start();
         setScheduleShow({
             Mon: showSchedule[0].periods.filter(x =>{
                 return x.period_date === 'Mon'
@@ -133,7 +136,7 @@ const Schedule = () => {
             <ListPupilModal show={selectPupil} data={pupilsInfo} 
                 handleClose={()=>setSelectPupil(false)}
                 handleSelect={handleSelect}/>
-            <AnimatedHeader animatedValue={offset} buttonText={buttonText} handlePress={()=>setSelectPupil(true)}/>
+            <AnimatedHeader animatedValue={offset} buttonText={buttonText} handlePress={handlePress}/>
             {scheduleShow?
             <> 
                 <AnimatedScrollView
@@ -266,7 +269,8 @@ const styles = StyleSheet.create({
         bottom: 40,
         backgroundColor: '#83acdc',
         borderRadius: 100,
-        elevation: 8
+        elevation: 8,
+        opacity: 0
       },
       floatButtonIcon: {
         fontSize: scale(25),
