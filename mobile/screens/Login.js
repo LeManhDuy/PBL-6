@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, Text, View, StyleSheet } from "react-native"
+import React,  { useEffect, useState } from "react";
+import { SafeAreaView, Text, View, StyleSheet} from "react-native"
 import { TextInput, Title } from "react-native-paper";
 import { CustomButton } from "../components";
 import AuthenticationService from "../config/service/AuthenticationService";
@@ -8,42 +8,40 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-const Login = ({ navigation }) => {
-    const [userInfo, setUserInfo] = useState({ username: "", password: "" });
+const Login = ({navigation}) => {
+    const [userInfo, setUserInfo] = useState({username:"",password:""});
     const [secureTextEntry, setSecureTextEntry] = useState(true)
     const [isLogin, setIsLogin] = useState(false)
     const [state, setState] = useState(false)
 
-    useEffect(() => {
+    useEffect(()=>{
         checkLogin()
     }, [state])
 
     const checkLogin = async () => {
         const i = await AsyncStorage.getItem("@Login")
-        setIsLogin(i !== null)
+        setIsLogin(i!==null)
     }
 
 
-    const handleLogin = async (navigation) => {
+    const handleLogin =  async (navigation) => {
         // console.log(userInfo)
         AuthenticationService.postLogin({
-            account_username: userInfo.username,
-            account_password: userInfo.password
+            account_username:userInfo.username, 
+            account_password:userInfo.password
         })
-            .then(async (response) => {
+            .then(async (response)=>{
                 console.log(response)
-                if (response.success && response.AccountRole === "Parents") {
-                    await AsyncStorage.setItem('@Login', JSON.stringify(response))
-                    setUserInfo({ username: "", password: "" })
-                    // setState(!state)
-                    navigation.navigate('Home', { screen: 'Details' })
-
+                if(response.success && response.AccountRole==="Parents"){
+                    await AsyncStorage.setItem('@Login',JSON.stringify(response))
+                    setUserInfo({username:"",password:""})
+                    navigation.navigate('Home',{screen: 'Details'})
                 }
-                else {
+                else{
                     alert("Incorrect email or password")
-                }
+                } 
             })
-            .catch((error) => {
+            .catch((error)=>{
                 console.log(error);
             })
     }
@@ -52,12 +50,6 @@ const Login = ({ navigation }) => {
         input: {
             width: "90%",
             alignSelf: 'center',
-            // borderColor: 'green',
-            // borderWidth: 1,
-            // backgroundColor: "pink",
-            // borderWidth: 5,
-            // borderBottomLeftRadius: 20,
-            // borderBottomRightRadius: 20,
         },
         container: {
             marginTop: "50%",
@@ -65,62 +57,48 @@ const Login = ({ navigation }) => {
             alignItems: 'center',
             justifyContent: 'center',
         },
-        header: {
+        header:{
             paddingTop: 50,
             paddingBottom: 20,
             fontSize: 50,
-            color: '#83ACDC',
         }
     })
-    if (isLogin) {
-        navigation.navigate('Home', { screen: 'Details' })
-    }
-    else {
 
-        return (
-            <SafeAreaView>
-                <View style={styles.container}>
-                    <Title style={styles.header}>LOGIN</Title>
-                    <TextInput
-                        label={'Username'}
-                        outlineColor={'#83ACDC'}
-                        activeOutlineColor={'#83ACDC'}
-                        selectionColor={'#83ACDC'}
-                        mode={"outlined"}
-                        value={userInfo.username}
-                        onChangeText={newText => { setUserInfo({ ...userInfo, username: newText }) }}
-                        style={styles.input}
-                    />
-                    <TextInput
-                        label={'Password'}
-                        outlineColor={'#83ACDC'}
-                        activeOutlineColor={'#83ACDC'}
-                        selectionColor={'#83ACDC'}
-                        mode={"outlined"}
-                        value={userInfo.password}
-                        secureTextEntry={secureTextEntry}
-                        right={
-                            <TextInput.Icon
-                                name="eye"
-                                color={'#83ACDC'}
-                                onPress={() => {
-                                    setSecureTextEntry(!secureTextEntry);
-                                    return false;
-                                }}
-                            />
-                        }
-                        onChangeText={newText => { setUserInfo({ ...userInfo, password: newText }) }}
-                        style={styles.input}
-                    />
-                    <CustomButton
+    return (
+      <SafeAreaView>
+            <View style={styles.container}>
+            <Title style={styles.header}>LOGIN</Title>
+                <TextInput 
+                    label={'Username'}
+                    mode={"outlined"}
+                    value={userInfo.username} 
+                    onChangeText={newText =>{setUserInfo({...userInfo,username:newText})}}
+                    style={styles.input}
+                />
+                <TextInput 
+                    label={'Password'}
+                    mode={"outlined"}
+                    value={userInfo.password} 
+                    secureTextEntry={secureTextEntry}
+                    right={
+                        <TextInput.Icon
+                        name="eye"
                         onPress={() => {
-                            handleLogin(navigation)
+                            setSecureTextEntry(!secureTextEntry);
+                            return false;
                         }}
-                        title="Submit" text={'Log in'} />
-                </View>
-            </SafeAreaView>
-        );
-    }
-};
-
+                        />
+                    }
+                    onChangeText={newText=>{setUserInfo({...userInfo,password:newText})}}
+                    style={styles.input}
+                />
+                <CustomButton onPress={() => {
+                    handleLogin(navigation)
+                }} 
+                title="Submit" text={'Submit'} />
+            </View>
+      </SafeAreaView>
+    );
+  };
+  
 export default Login
