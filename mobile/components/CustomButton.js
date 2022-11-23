@@ -3,7 +3,6 @@ import { FONTS } from "../constants";
 import styled from "styled-components/native";
 
 const CustomButton = ({...props}) => {
-    // console.log(props)
     const ButtonContainer = styled.TouchableOpacity`
         width: 90%;
         height: 60px;
@@ -12,25 +11,25 @@ const CustomButton = ({...props}) => {
         border-radius: 10px;
         justify-content: center;
         align-self: center;
-        background-color: #83ACDC;
+        background-color: ${props => props.backgroundColor}; 
+        border: solid 2px black
         `;
 
     const ButtonText = styled.Text`
         font-size: 20px;
-        color: white;
+        color: ${props => props.textColor};
         text-align: center;
         justify-content: center;
         `;
 
-    return (
+    return(
         <ButtonContainer
-            onPress={props.onPress}
-            backgroundColor={props.backgroundColor}
-        >
-            <ButtonText textColor={props.textColor}>{props.text}</ButtonText>
+                onPress={props.onPress}
+                backgroundColor={props.backgroundColor}
+                >
+                <ButtonText textColor={props.textColor}>{props.text}</ButtonText>
         </ButtonContainer>
-    )
-};
+        )
+    };
 
 export default CustomButton
-
