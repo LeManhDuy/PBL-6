@@ -10,7 +10,8 @@ import Details from './screens/Details';
 import ListPupils from './screens/ListPupils';
 import Notifications from './screens/Notifications';
 import SendNotice from './screens/SendNotice';
-import { Text, View } from 'react-native';
+import Schedule from './screens/Schedule';
+// import { Text, View } from 'react-native';
 
 const Stack = createStackNavigator();
 
@@ -70,6 +71,7 @@ export default function App() {
           <Drawer.Screen name="Details" component={Details}/>
           <Drawer.Screen name="Pupils" component={ListPupils} />
           <Drawer.Screen name="Notification" component={NotificationStack} />
+          <Drawer.Screen name="Schedule" component={Schedule} />
       </Drawer.Navigator>
     )
   }
