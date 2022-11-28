@@ -15,22 +15,10 @@ const AddFee = (props) => {
     const [classDropValue, setClassDropValue] = useState()
     const [gradeDropValue, setGradeDropValue] = useState()
     const [pupilDropValue, setPupilDropValue] = useState()
+    const [listPupil, setListPupil] = useState([])
+    const [selectAll, setSelectAll] = useState(false)
     const [allValuesFee, setAllValuesFee] = useState({
         fee_status: "",
-        start_date: `${date.split("/")[2]}-${date.split("/")[0] < 10
-            ? "0" + date.split("/")[0]
-            : date.split("/")[0]
-            }-${date.split("/")[1] < 10
-                ? "0" + date.split("/")[1]
-                : date.split("/")[1]
-            }`,
-        end_date: `${date.split("/")[2]}-${date.split("/")[0] < 10
-            ? "0" + date.split("/")[0]
-            : date.split("/")[0]
-            }-${date.split("/")[1] < 10
-                ? "0" + date.split("/")[1]
-                : date.split("/")[1]
-            }`,
         paid_date: `${date.split("/")[2]}-${date.split("/")[0] < 10
             ? "0" + date.split("/")[0]
             : date.split("/")[0]
@@ -47,8 +35,6 @@ const AddFee = (props) => {
     })
     const [FeeError, setFeeError] = useState({
         fee_status: false,
-        start_date: false,
-        end_date: false,
         paid_date: false,
         fee_category: false,
         pupil: false,
@@ -89,7 +75,7 @@ const AddFee = (props) => {
             .then((response) => {
                 const dataSources = response.studentsInfor.map((item, index) => {
                     return {
-                        //key: index + 1,
+                        key: index + 1,
                         value: item ? item._id : null,
                         label: item ? item.pupil_name : null
                     }
@@ -177,6 +163,7 @@ const AddFee = (props) => {
         })
         gradeID = event.value
         getClasses(gradeID)
+        resetListPupil()
     }
 
     const handleClassChange = (event) => {
@@ -188,9 +175,67 @@ const AddFee = (props) => {
         })
         studentID = event.value
         getPupil(studentID)
+        resetListPupil()
     }
 
+    const CheckList = ({ options }) => {
+        return (
+            <div className="div-scroll">
+                {options.map(option => (
+                    <div key={option.key}>
+                        <input
+                            name="pupil"
+                            type="checkbox"
+                            className="btn-check"
+                            id={option.key}
+                            //autoComplete="off"
+                            checked={listPupil[option.value]}
+                            onChange={() => {
+                                setListPupil({
+                                    ...listPupil,
+                                    [option.value]: !listPupil[option.value]
+                                })
+                            }}
+                        />
+                        <label
+                            className="btn btn-outline-primary"
+                            htmlFor={option.key}
+                            style={{
+                                width: "300px"
+                            }}>
+                            {option.label}
+                        </label><br />
+                    </div>
+                ))}
 
+            </div>
+        );
+    }
+
+    const resetListPupil = () => {
+        setListPupil({})
+    }
+    const toggle = (event) => {
+        var checkboxes = document.getElementsByName('pupil');
+        var hash = {};
+        if (event.target.checked) {
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = true;
+            }
+            const arrFeeID = pupil.map(e => e.value);
+            for (var i = 0; i < arrFeeID.length; i++)
+                hash[arrFeeID[i]] = true;
+            setListPupil(hash)
+            setSelectAll(true)
+        }
+        else {
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = false;
+            }
+            setSelectAll(false)
+            resetListPupil();
+        }
+    }
     const FormFee = (
         <div className="form-admin-content">
             <h4>Add Fee</h4>
@@ -202,54 +247,42 @@ const AddFee = (props) => {
             >
                 {props.errorMessage}
             </label>
-            <div className="form-teacher-content-fee" style={{ height: 500 }}>
+            <div className="form-teacher-content-fee" style={{ height: 430 }}>
                 <div className="teacher-content-left-fee">
                     <div className="type-input">
-                        <h4>Start Date</h4>
-                        <input
-                            className="input-content"
-                            type="date"
-                            name="start_date"
-                            placeholder="Enter Start Date"
-                            value={allValuesFee.start_date}
-                            onChange={changeHandlerFee}
+                        <h4>Fee Category</h4>
+                        <Select
+                            className="dropdown-class"
+                            value={feeCategoryDropValue}
+                            onChange={handleFeeCategoryChange}
+                            options={feeCategory}
+                            placeholder="Fee Category"
+                            maxMenuHeight={200}
                         />
                         <label
                             className={
                                 "error" +
-                                (FeeError.start_date
+                                (FeeError.fee_category
                                     ? " error-show"
                                     : " error-hidden")
                             }
                         >
-                            Invalid Start Date
+                            Invalid Fee Category
                         </label>
                     </div>
                     <div className="type-input">
-                        <h4>End Date</h4>
+                        <h4>Fee Ammount</h4>
                         <input
-                            className="input-content"
-                            type="date"
-                            name="end_date"
-                            placeholder="Enter End Date"
-                            value={allValuesFee.end_date}
-                            onChange={changeHandlerFee}
+                            className="input-content-fee"
+                            placeholder="Fee Ammount"
+                            value={allValuesFee.fee_amount}
+                            disabled
                         />
-                        <label
-                            className={
-                                "error" +
-                                (FeeError.end_date
-                                    ? " error-show"
-                                    : " error-hidden")
-                            }
-                        >
-                            Invalid End Date
-                        </label>
                     </div>
                     <div className="type-input" id="paiddate">
                         <h4>Paid Date</h4>
                         <input
-                            className="input-content"
+                            className="input-content date"
                             type="date"
                             name="paid_date"
                             placeholder="Enter Paid Date"
@@ -342,53 +375,26 @@ const AddFee = (props) => {
                             Invalid Class
                         </label>
                     </div>
-                    <div className="type-input">
-                        <h4>Fee Category</h4>
-                        <Select
-                            className="dropdown-class"
-                            value={feeCategoryDropValue}
-                            onChange={handleFeeCategoryChange}
-                            options={feeCategory}
-                            placeholder="Fee Category"
-                            maxMenuHeight={200}
-                        />
-                        <label
-                            className={
-                                "error" +
-                                (FeeError.fee_category
-                                    ? " error-show"
-                                    : " error-hidden")
-                            }
-                        >
-                            Invalid Fee Category
-                        </label>
-                    </div>
-                    <div className="type-input">
-                        <h4>Fee Ammount</h4>
-                        <input
-                            className="input-content-fee"
-                            placeholder="Fee Ammount"
-                            value={allValuesFee.fee_amount}
-                            disabled
-                        />
-                    </div>
+
                 </div>
                 <div className="teacher-content-right-fee">
                     <div className="type-input">
-                        <h4>Pupil</h4>
-                        <Select
-                            className="dropdown-class"
-                            value={pupilDropValue}
-                            onChange={handlePupilChange}
+                        <div className="type-header">
+                            <h4 className="type-header input">Pupil </h4>
+
+                            <input
+                                className="check-input"
+                                type="checkbox"
+                                onChange={toggle}
+                                checked={selectAll} />
+                        </div>
+                        <CheckList
                             options={pupil}
-                            placeholder="Name - Class"
-                            maxMenuHeight={135}
-                            //isMulti={true}
                         />
                         <label
                             className={
                                 "error" +
-                                (FeeError.pupil
+                                (FeeError.list_pupil
                                     ? " error-show"
                                     : " error-hidden")
                             }
@@ -396,7 +402,6 @@ const AddFee = (props) => {
                             Invalid Pupil
                         </label>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -405,39 +410,10 @@ const AddFee = (props) => {
     const handleAddFee = () => {
         let check = false
         let fee_status = false
-        let start_date = false
-        let end_date = false
         let paid_date = false
         let fee_category = false
         let pupil = false
-
-        let dateNow = new Date().toLocaleDateString()
-        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
-            ? "0" + dateNow.split("/")[0]
-            : dateNow.split("/")[0]
-            }-${dateNow.split("/")[1] < 10
-                ? "0" + dateNow.split("/")[1]
-                : dateNow.split("/")[1]
-            }`
-        // if (!allValuesFee.fee_status) {
-        //     fee_status = true
-        //     check = true
-        // } else fee_status = false
-        // console.log("Hello fee_status", check)
-        if (allValuesFee.start_date > allValuesFee.end_date) {
-            start_date = true
-            check = true
-        } else start_date = false
-
-        if (allValuesFee.end_date < allValuesFee.start_date) {
-            end_date = true
-            check = true
-        } else end_date = false
-
-        if (allValuesFee.paid_date < allValuesFee.start_date) {
-            paid_date = true
-            check = true
-        } else paid_date = false
+        let list_pupil = false
 
         if (!allValuesFee.fee_category) {
             fee_category = true
@@ -445,27 +421,22 @@ const AddFee = (props) => {
         } else {
             fee_category = false
         }
-        if (!allValuesFee.pupil) {
-            pupil = true
+        if (Object.keys(listPupil).length === 0 && listPupil.constructor === Object) {
             check = true
+            list_pupil = true
         } else {
-            pupil = false
+            list_pupil = false
         }
-        // if (allValuesFee.fee_status == "false") {
-        //     allValuesFee.paid_date = null
-        //     paid_date = false
-        // }
-
         setFeeError({
             fee_status: fee_status,
-            start_date: start_date,
-            end_date: end_date,
             paid_date: paid_date,
             fee_category: fee_category,
             pupil: pupil,
+            list_pupil: list_pupil
         })
         if (!check) {
-            props.handleConfirmAddFee(allValuesFee)
+            console.log(listPupil);
+            props.handleConfirmAddFee(allValuesFee, listPupil)
         }
     }
 

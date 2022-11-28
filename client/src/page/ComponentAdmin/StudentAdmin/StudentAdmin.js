@@ -14,15 +14,21 @@ import ModalInput from "../../../lib/ModalInput/ModalInput";
 import AddStudent from "../../../lib/ModalInput/AddStudent/AddStudent";
 import UpdateStudent from "../../../lib/ModalInput/UpdateStudent/UpdateStudent";
 import GradeService from "../../../config/service/GradeService";
+import ReactPaginate from 'react-paginate';
+import AddStudentExcel from "../../../lib/ModalInput/AddStudentExcel/AddStudentExcel";
+import PupilService from "../../../config/service/StudentService";
+import Loading from "../../../lib/Loading/Loading";
 
 
 const StudentAdmin = () => {
     const [student, setStudent] = useState([]);
+    const [listPupil, setListPupil] = useState([]);
     const [isChange, setIsChange] = useState(false);
     const [name, setName] = useState("");
     const [keyword, setKeyword] = useState("");
     const [id, setId] = useState("");
     const [addState, setAddState] = useState(false);
+    const [addExcelState, setAddExcelState] = useState(false);
     const [updateState, setUpdateState] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
@@ -31,6 +37,9 @@ const StudentAdmin = () => {
     const [classroom, setClass] = useState([]);
     const [grades, setGrade] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false)
+    const [selectAll, setSelectAll] = useState(false)
+    const [isMultiDelete, setIsMultiDelete] = useState(false);
 
     useEffect(() => {
         getStudent();
@@ -170,6 +179,40 @@ const StudentAdmin = () => {
                 console.log(error);
             });
     };
+    const getStudentWithGradeId = (filter) => {
+        PupilService.getPupilByGradeId(filter)
+            .then((response) => {
+                const dataSources = response.studentsInfor.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            name: item.pupil_name,
+                            gender: item.pupil_gender,
+                            parent: item.parent_id
+                                ? item.parent_id.person_id.person_fullname
+                                : "Empty",
+                            class: item.class_id
+                                ? item.class_id.class_name
+                                : "Empty",
+                            teacher: item.class_id
+                                ? item.class_id.homeroom_teacher_id.person_id
+                                    .person_fullname
+                                : "Empty",
+                            grade: item.class_id.grade_id
+                                ? item.class_id.grade_id.grade_name
+                                : "Empty",
+                        };
+                    }
+                );
+                setStudent(dataSources);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+
 
     const Dropdown = ({ value, options, onChange }) => {
         return (
@@ -226,17 +269,74 @@ const StudentAdmin = () => {
         setDropValueGrade(event.target.value);
         grades.map((item) => {
             if (event.target.value === item.id) {
+                getStudentWithGradeId(item.id)
                 getClassWithFilter(item.id);
             } else if (event.target.value === "All") {
+                getStudent();
                 getClass();
             }
         });
         setKeyword("");
     };
 
-    const TableStudent = ({ students }) => {
+    function PaginatedItems({ itemsPerPage, searchStudent }) {
+        const [itemOffset, setItemOffset] = useState(0);
+        const endOffset = itemOffset + itemsPerPage;
+        const currentItems = searchStudent.slice(itemOffset, endOffset);
+        const pageCount = Math.ceil(searchStudent.length / itemsPerPage);
+        const handlePageClick = (event) => {
+            const newOffset = (event.selected * itemsPerPage) % searchStudent.length;
+            setItemOffset(newOffset);
+        };
+        return (
+            <>
+                <div className="table-content">
+                    <TableStudent isLoading={isLoading} students={currentItems} />
+                </div>
+                <footer>
+                    <hr></hr>
+                    <ReactPaginate
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        breakLabel="..."
+                        breakClassName="page-item"
+                        breakLinkClassName="page-link"
+                        pageCount={pageCount}
+                        pageRangeDisplayed={4}
+                        marginPagesDisplayed={2}
+                        onPageChange={handlePageClick}
+                        containerClassName="pagination justify-content-center"
+                        pageClassName="page-item mr-2 ml-2"
+                        pageLinkClassName="page-link"
+                        previousClassName="previous-btn page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="next-btn page-item"
+                        nextLinkClassName="page-link"
+                        activeClassName="active"
+                        hrefAllControls
+                    />
+                </footer>
+
+            </>
+        );
+    }
+
+    const TableStudent = ({ isLoading, students }) => {
         const studentItem = students.map((item) => (
             <tr data-key={item.id} key={item.id}>
+                <td></td>
+                <td><input
+                    className="check-input"
+                    type="checkbox"
+                    checked={listPupil[item.id]}
+                    name="pupil"
+                    onChange={() => {
+                        setListPupil({
+                            ...listPupil,
+                            [item.id]: !listPupil[item.id]
+                        })
+                    }}
+                /></td>
                 <td>{item.name}</td>
                 <td>{item.gender ? "Male" : "Female"}</td>
                 <td>{`${item.grade}-${item.class}`}</td>
@@ -270,6 +370,14 @@ const StudentAdmin = () => {
         if (!headerStudent) {
             headerStudent = (
                 <tr>
+                    <th>
+                        <input
+                            className="check-input"
+                            type="checkbox"
+                            onChange={toggle}
+                            checked={selectAll} />
+                    </th>
+                    <th>Select</th>
                     <th>Name</th>
                     <th>Gender</th>
                     <th>Grade-Class</th>
@@ -280,15 +388,39 @@ const StudentAdmin = () => {
             );
         }
         return (
-            <table id="table">
-                <thead className="table-head-row">{headerStudent}</thead>
-                <tbody className="table-row">{studentItem}</tbody>
-            </table>
+            <>
+                <table id="table">
+                    <thead className="table-head-row">{headerStudent}</thead>
+                    <tbody className="table-row">{studentItem}</tbody>
+                </table>
+                {/* <h4 hidden={!isLoading} style={{ color: 'red' }}>Loading...</h4> */}
+            </>
         );
     };
-
+    const toggle = (event) => {
+        var checkboxes = document.getElementsByName('pupil');
+        var hash = {};
+        if (event.target.checked) {
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = true;
+            }
+            const arrFeeID = student.map(e => e.id);
+            for (var i = 0; i < arrFeeID.length; i++)
+                hash[arrFeeID[i]] = true;
+            setSelectAll(true);
+            setListPupil(hash)
+        }
+        else {
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = false;
+            }
+            setSelectAll(false);
+            setListPupil({})
+        }
+    }
     const handleCloseModalCustom = () => {
         setIsDelete(false);
+        setIsMultiDelete(false);
     };
 
     const handleDelete = () => {
@@ -303,6 +435,8 @@ const StudentAdmin = () => {
         setUpdateState(false);
         setErrorMessage("");
         setErrorServer(false);
+        setAddExcelState(false)
+        setSelectAll(false)
     };
 
     const handleConfirmAddStudent = (allValue) => {
@@ -323,6 +457,7 @@ const StudentAdmin = () => {
                 setErrorMessage("");
                 setAddState(false);
                 setKeyword("");
+                setSelectAll(false)
             } else {
                 setAddState(true);
                 setErrorMessage(res.message);
@@ -347,6 +482,7 @@ const StudentAdmin = () => {
                 setErrorMessage("");
                 setErrorServer(false);
                 setKeyword("");
+                setSelectAll(false)
             } else {
                 setUpdateState(true);
                 setErrorMessage(res.message);
@@ -400,8 +536,53 @@ const StudentAdmin = () => {
         />
     );
 
+    const handleConfirmAddExcel = (props) => {
+        setIsLoading(true)
+        let pupilFile = props.pupilFile
+        setAddExcelState(false);
+        PupilService.AddStudentByFile(pupilFile)
+            .then((res) => {
+                if (res.success) {
+                    setIsChange(!isChange)
+                    setErrorServer(false);
+                    setIsLoading(false)
+                    setErrorMessage("")
+                    setKeyword("");
+                    setSelectAll(false)
+                } else {
+                    setErrorMessage(res.message)
+                    setErrorServer(true);
+                    setIsLoading(false)
+                }
+            })
+    }
+
+    const DivAddStudentExcel = (
+        <ModalInput
+            show={addExcelState}
+            handleInputCustom={handleInputCustom}
+            content={
+                <AddStudentExcel
+                    handleInputCustom={handleInputCustom}
+                    handleConfirmAddExcel={
+                        handleConfirmAddExcel
+                    }
+                    errorServer={errorServer}
+                    errorMessage={errorMessage}
+                />
+            }
+        />
+    );
+
     const handleAddStudent = () => {
         setAddState(true);
+        setErrorServer(false);
+        setErrorMessage("");
+    };
+
+    const handleAddExcel = () => {
+        setAddExcelState(true);
+        setErrorServer(false);
         setErrorMessage("");
     };
 
@@ -417,6 +598,51 @@ const StudentAdmin = () => {
     const handleChangeSearch = (e) => {
         setKeyword(e.target.value);
     };
+
+    const checkClickDelete = () => {
+        setIsMultiDelete(true);
+    }
+    const handleMultiDelete = () => {
+        setIsLoading(true)
+        PupilService.deleteMultiPupil({
+            pupil_list: listPupil,
+        })
+            .then((res) => {
+                if (res.success) {
+                    setIsLoading(false)
+                    setIsChange(!isChange);
+                    setErrorServer(false);
+                    setListPupil({})
+                    setSelectAll(false)
+                    setErrorMessage("");
+                    setDropValueClass("All")
+                    setDropValueGrade("All")
+                } else {
+                    setIsLoading(false)
+                    setErrorServer(true);
+                    setErrorMessage(res.message);
+                    setDropValueClass("All")
+                    setDropValueGrade("All")
+                    setListPupil({})
+                }
+            })
+            .catch((error) => console.log("error", error));
+        setIsMultiDelete(false);
+    };
+
+    const ConfirmMultiDelete = (
+        <ModalCustom
+            show={isMultiDelete}
+            content={
+                <ConfirmAlert
+                    handleCloseModalCustom={handleCloseModalCustom}
+                    handleDelete={handleMultiDelete}
+                    title={`Do you want to delete?`}
+                />
+            }
+            handleCloseModalCustom={handleCloseModalCustom}
+        />
+    );
 
     return (
         <div className="main-container">
@@ -438,6 +664,10 @@ const StudentAdmin = () => {
                     <button className="btn-account" onClick={handleAddStudent}>
                         Add Pupil
                     </button>
+                    <button className="btn-account update" onClick={handleAddExcel}>Add File Excel</button>
+                    <button className="btn-account delete" onClick={checkClickDelete}>
+                        Delete
+                    </button>
                     <div className="search-box">
                         <button className="btn-search">
                             <FontAwesomeIcon
@@ -454,41 +684,14 @@ const StudentAdmin = () => {
                         ></input>
                     </div>
                 </div>
+                <Loading isLoading={isLoading} />
             </header>
-            <div className="table-content">
-                <TableStudent students={searchStudent(student)} />
-            </div>
-            <footer>
-                <hr></hr>
-                <div className="paging">
-                    <button className="previous">
-                        <FontAwesomeIcon
-                            className="icon icon-previous"
-                            icon={faArrowLeftLong}
-                        />
-                        Previous
-                    </button>
-                    <div className="list-number">
-                        <button>1</button>
-                        <button>2</button>
-                        <button>3</button>
-                        <button>...</button>
-                        <button>4</button>
-                        <button>5</button>
-                        <button>6</button>
-                    </div>
-                    <button className="next">
-                        Next
-                        <FontAwesomeIcon
-                            className="icon icon-next"
-                            icon={faArrowRightLong}
-                        />
-                    </button>
-                </div>
-                {isDelete ? ConfirmDelete : null}
-                {addState ? DivAddStudent : null}
-                {updateState ? DivUpdateStudent : null}
-            </footer>
+            <PaginatedItems itemsPerPage={9} searchStudent={searchStudent(student)} />
+            {isDelete ? ConfirmDelete : null}
+            {addState ? DivAddStudent : null}
+            {addExcelState ? DivAddStudentExcel : null}
+            {isMultiDelete ? ConfirmMultiDelete : null}
+            {updateState ? DivUpdateStudent : null}
         </div>
     );
 };

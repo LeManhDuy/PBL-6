@@ -32,6 +32,11 @@ const getPupilByParentId = async (personID) => {
         `pupil/get-pupil-by-parent/${personID}`
     );
 };
+const getPupilByGradeId = async (gradeID) => {
+    return await HandleApi.APIGetWithToken(
+        `pupil/get-pupil-by-grade-id/${gradeID}`
+    );
+};
 
 const getStudentByTeacherIdAtTeacherRole = async (id) => {
     return await HandleApi.APIGetWithToken(`class/get-pupil-at-teacher-role/${id}`);
@@ -40,7 +45,12 @@ const getStudentByTeacherIdAtTeacherRole = async (id) => {
 const getStudentByStudentId = async (id) => {
     return await HandleApi.APIGetWithToken(`pupil/${id}`);
 }
-
+const AddStudentByFile = async (file) => {
+    return await HandleApi.APIPostWithTokenFile("pupil/add-multi-pupil", file)
+}
+const deleteMultiPupil = async (array_params) => {
+    return await HandleApi.APIPostWithToken(`pupil/multi/delete/`, array_params);
+};
 const PupilService = {
     getPupils,
     addPupil,
@@ -50,6 +60,9 @@ const PupilService = {
     getPupilByParentId,
     getStudentByTeacherIdAtTeacherRole,
     getStudentByStudentId,
+    AddStudentByFile,
+    deleteMultiPupil,
+    getPupilByGradeId
 };
 
 export default PupilService;

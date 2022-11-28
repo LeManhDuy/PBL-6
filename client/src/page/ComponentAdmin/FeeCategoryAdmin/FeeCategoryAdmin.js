@@ -12,6 +12,7 @@ import AddFeeCategory from "../../../lib/ModalInput/AddFeeCategory/AddFeeCategor
 import UpdateFeeCategory from "../../../lib/ModalInput/UpdateFeeCategory/UpdateFeeCategory";
 import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
+import ReactPaginate from "react-paginate";
 
 const FeeCategoryAdmin = () => {
     const [addFeeCategoryState, setAddFeeCategoryState] = useState(false);
@@ -39,6 +40,8 @@ const FeeCategoryAdmin = () => {
                             id: item._id,
                             name: item.fee_name,
                             ammount: item.fee_amount,
+                            start_date: item.start_date.split("T")[0],
+                            end_date: item.end_date.split("T")[0],
                         };
                     }
                 );
@@ -51,9 +54,12 @@ const FeeCategoryAdmin = () => {
     };
 
     const handleConfirmAddFeeCategory = (allValue) => {
+        console.log(allValue);
         FeeCategoryService.addFeeCategory({
             fee_name: allValue.name,
             fee_amount: allValue.ammount,
+            start_date: allValue.start_date,
+            end_date: allValue.end_date,
         })
             .then((res) => {
                 if (res.success) {
@@ -91,9 +97,12 @@ const FeeCategoryAdmin = () => {
     );
 
     const handleConfirmUpdateFeeCategory = (allValue) => {
+        console.log(allValue);
         FeeCategoryService.updateFeeCategory(Id, {
             fee_name: allValue.name,
             fee_amount: allValue.ammount,
+            start_date: allValue.start_date,
+            end_date: allValue.end_date,
         })
             .then((res) => {
                 if (res.success) {
@@ -163,11 +172,55 @@ const FeeCategoryAdmin = () => {
         setKeyword("");
     };
 
+    function PaginatedItems({ itemsPerPage, searchFeeCategory }) {
+        const [itemOffset, setItemOffset] = useState(0);
+        const endOffset = itemOffset + itemsPerPage;
+        const currentItems = searchFeeCategory.slice(itemOffset, endOffset);
+        const pageCount = Math.ceil(searchFeeCategory.length / itemsPerPage);
+        const handlePageClick = (event) => {
+            const newOffset = (event.selected * itemsPerPage) % searchFeeCategory.length;
+            setItemOffset(newOffset);
+        };
+        return (
+            <>
+                <div className="table-content">
+                    <TableFeeCategory feecategories={currentItems} />
+                </div>
+                <footer>
+                    <hr></hr>
+                    <ReactPaginate
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        breakLabel="..."
+                        breakClassName="page-item"
+                        breakLinkClassName="page-link"
+                        pageCount={pageCount}
+                        pageRangeDisplayed={4}
+                        marginPagesDisplayed={2}
+                        onPageChange={handlePageClick}
+                        containerClassName="pagination justify-content-center"
+                        pageClassName="page-item mr-2 ml-2"
+                        pageLinkClassName="page-link"
+                        previousClassName="previous-btn page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="next-btn page-item"
+                        nextLinkClassName="page-link"
+                        activeClassName="active"
+                        hrefAllControls
+                    />
+                </footer>
+
+            </>
+        );
+    }
+
     const TableFeeCategory = ({ feecategories }) => {
         const feecategoryItem = feecategories.map((item) => (
             <tr data-key={item.id} key={item.id}>
                 <td>{item.name}</td>
                 <td>{item.ammount}</td>
+                <td>{item.start_date}</td>
+                <td>{item.end_date}</td>
                 <td onClick={click}>
                     <i className="fa-regular fa-pen-to-square btn-edit"></i>
                     <i className="fa-regular fa-trash-can btn-delete"></i>
@@ -196,6 +249,8 @@ const FeeCategoryAdmin = () => {
             <tr>
                 <th>Name</th>
                 <th>Amount</th>
+                <th>Start Date</th>
+                <th>End Date</th>
                 <th>Action</th>
             </tr>
         );
@@ -247,7 +302,8 @@ const FeeCategoryAdmin = () => {
                     </div>
                 </div>
             </header>
-            <div className="table-content">
+            <PaginatedItems itemsPerPage={10} searchFeeCategory={searchFeeCategory(feecategories)}/>
+            {/* <div className="table-content">
                 <TableFeeCategory
                     feecategories={searchFeeCategory(feecategories)}
                 />
@@ -282,7 +338,10 @@ const FeeCategoryAdmin = () => {
                 {addFeeCategoryState ? DivAddFeeCategory : null}
                 {updateFeeCategoryState ? DivUpdateFeeCategory : null}
                 {isDelete ? ConfirmDelete : null}
-            </footer>
+            </footer> */}
+            {addFeeCategoryState ? DivAddFeeCategory : null}
+            {updateFeeCategoryState ? DivUpdateFeeCategory : null}
+            {isDelete ? ConfirmDelete : null}
         </div>
     );
 };

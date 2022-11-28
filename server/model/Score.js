@@ -2,21 +2,29 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const scoreSchema = new Schema({
-    score_ratio:{
+    midterm_score: {
         type: Number,
-        require: true
+        require: true,
     },
-    score:{
+    final_score: {
         type: Number,
-        require: true
+        require: true,
     },
-    student_id:{
-        type: Schema.Types.ObjectId,
-        ref: 'Student'
+    result: {
+        type: String,
+        require: true,
     },
-    pupil_id:{
+    last_update: {
+        type: Date,
+        require: false,
+    },
+    subject_id: {
         type: Schema.Types.ObjectId,
-        ref: 'Pupil'
-    }
-})
-module.exports = mongoose.model('Score',scoreSchema)
+        ref: "Subject",
+    },
+    pupil_id: {
+        type: Schema.Types.ObjectId,
+        ref: "Pupil",
+    },
+});
+module.exports = mongoose.model("Score", scoreSchema);

@@ -16,6 +16,7 @@ import SubjectService from "../../../config/service/SubjectService";
 import AccountService from "../../../config/service/AccountService";
 import AddSubjectTeacher from "../../../lib/ModalInput/AddSubjectTeacher/AddSubjectTeacher";
 import UpdateSubjectTeacher from "../../../lib/ModalInput/UpdateSubjectTeacher/UpdateSubjectTeacher";
+import ReactPaginate from "react-paginate";
 
 const SubjectTeacherAdmin = () => {
     const [addSubjectTeacherState, setAddSubjectTeacherState] = useState(false);
@@ -207,7 +208,7 @@ const SubjectTeacherAdmin = () => {
         // console.log(filterST)
         setFiltered(filterST);
         // console.log(filtered)
-    };
+    }; 
 
     // Add Subject Teacher
     const handleConfirmAddSubjectTeacher = (teacher_id, subject_list) => {
@@ -335,6 +336,48 @@ const SubjectTeacherAdmin = () => {
         setErrorMessage("");
     };
 
+    function PaginatedItems({ itemsPerPage, subjectsTeacher }) {
+        const [itemOffset, setItemOffset] = useState(0);
+        const endOffset = itemOffset + itemsPerPage;
+        const currentItems = subjectsTeacher.slice(itemOffset, endOffset);
+        const pageCount = Math.ceil(subjectsTeacher.length / itemsPerPage);
+        const handlePageClick = (event) => {
+            const newOffset = (event.selected * itemsPerPage) % subjectsTeacher.length;
+            setItemOffset(newOffset);
+        };
+        return (
+            <>
+                <div className="table-content">
+                    <TableSubjectTeacher subjectsTeacher={currentItems} />
+                </div>
+                <footer>
+                    <hr></hr>
+                    <ReactPaginate
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        breakLabel="..."
+                        breakClassName="page-item"
+                        breakLinkClassName="page-link"
+                        pageCount={pageCount}
+                        pageRangeDisplayed={4}
+                        marginPagesDisplayed={2}
+                        onPageChange={handlePageClick}
+                        containerClassName="pagination justify-content-center"
+                        pageClassName="page-item mr-2 ml-2"
+                        pageLinkClassName="page-link"
+                        previousClassName="previous-btn page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="next-btn page-item"
+                        nextLinkClassName="page-link"
+                        activeClassName="active"
+                        hrefAllControls
+                    />
+                </footer>
+
+            </>
+        );
+    }
+
     const TableSubjectTeacher = ({ subjectsTeacher }) => {
         const subjectTeacherItem = subjectsTeacher.map((item) => (
             <tr data-key={item.teacher_id} key={item.id}>
@@ -432,7 +475,8 @@ const SubjectTeacherAdmin = () => {
                     {/* </div> */}
                 </div>
             </header>
-            <div className="table-content">
+            <PaginatedItems itemsPerPage={10} subjectsTeacher={filtered}/>
+            {/* <div className="table-content">
                 <TableSubjectTeacher subjectsTeacher={filtered} />
             </div>
             <footer>
@@ -465,7 +509,10 @@ const SubjectTeacherAdmin = () => {
                 {addSubjectTeacherState ? DivAddSubjectTeacher : null}
                 {updateSubjectTeacherState ? DivUpdateSubjectTeacher : null}
                 {isDelete ? ConfirmDelete : null}
-            </footer>
+            </footer> */}
+            {addSubjectTeacherState ? DivAddSubjectTeacher : null}
+            {updateSubjectTeacherState ? DivUpdateSubjectTeacher : null}
+            {isDelete ? ConfirmDelete : null}
         </div>
     );
 };

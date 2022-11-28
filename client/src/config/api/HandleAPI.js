@@ -1,6 +1,8 @@
 import AuthenticationService from "../service/AuthenticationService";
 
-const { REACT_APP_API_ENDPOINT } = process.env;
+// const { REACT_APP_API_ENDPOINT } = process.env;
+
+const REACT_APP_API_ENDPOINT = "https://blue-school-api.herokuapp.com/";
 
 const header = {
     Accept: "application/json",
@@ -81,7 +83,7 @@ function APIPostWithTokenIMG(url, params) {
 function APIPostWithTokenFile(url, file) {
     url = REACT_APP_API_ENDPOINT + "api/" + url;
     const formData = new FormData();
-    formData.append('scheduleFile',file)
+    formData.append('file',file)
     return fetch(url, {
         method: "POST",
         headers: {

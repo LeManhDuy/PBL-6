@@ -8,4 +8,4 @@ const scheduleSchema = new Schema({
     }
 })
 
-module.exports = mongoose.model('Schedule',scheduleSchema)
+module.exports = mongoose.model('Schedule',scheduleSchema) 

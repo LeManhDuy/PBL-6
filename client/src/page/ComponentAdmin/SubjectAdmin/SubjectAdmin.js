@@ -13,6 +13,7 @@ import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
 import AddSubject from "../../../lib/ModalInput/AddSubject/AddSubject";
 import UpdateSubject from "../../../lib/ModalInput/UpdateSubject/UpdateSubject";
+import ReactPaginate from "react-paginate";
 
 const SubjectAdmin = () => {
     const [addSubjectState, setAddSubjectState] = useState(false);
@@ -24,6 +25,7 @@ const SubjectAdmin = () => {
     const [errorServer, setErrorServer] = useState(false);
     const [name, setName] = useState();
     const [errorMessage, setErrorMessage] = useState("");
+    const [keyword, setKeyword] = useState("");
 
     useEffect(() => {
         getSubject();
@@ -159,6 +161,47 @@ const SubjectAdmin = () => {
         setErrorMessage("");
     };
 
+    function PaginatedItems({ itemsPerPage, searchSubject }) {
+        const [itemOffset, setItemOffset] = useState(0);
+        const endOffset = itemOffset + itemsPerPage;
+        const currentItems = searchSubject.slice(itemOffset, endOffset);
+        const pageCount = Math.ceil(searchSubject.length / itemsPerPage);
+        const handlePageClick = (event) => {
+            const newOffset = (event.selected * itemsPerPage) % searchSubject.length;
+            setItemOffset(newOffset);
+        };
+        return (
+            <>
+                <div className="table-content">
+                    <TableSubject subjects={currentItems} />
+                </div>
+                <footer>
+                    <hr></hr>
+                    <ReactPaginate
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        breakLabel="..."
+                        breakClassName="page-item"
+                        breakLinkClassName="page-link"
+                        pageCount={pageCount}
+                        pageRangeDisplayed={4}
+                        marginPagesDisplayed={2}
+                        onPageChange={handlePageClick}
+                        containerClassName="pagination justify-content-center"
+                        pageClassName="page-item mr-2 ml-2"
+                        pageLinkClassName="page-link"
+                        previousClassName="previous-btn page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="next-btn page-item"
+                        nextLinkClassName="page-link"
+                        activeClassName="active"
+                        hrefAllControls
+                    />
+                </footer>
+            </>
+        );
+    }
+
     const TableSubject = ({ subjects }) => {
         const subjectItem = subjects.map((item) => (
             <tr data-key={item.id} key={item.id}>
@@ -201,6 +244,17 @@ const SubjectAdmin = () => {
         );
     };
 
+    const searchSubject = (subjects) => {
+        return subjects.filter(
+            (subject) =>
+                subject.name.toLowerCase().includes(keyword.toLowerCase())
+        );
+    };
+
+    const handleChangeSearch = (e) => {
+        setKeyword(e.target.value);
+    };
+
     return (
         <div className="main-container">
             <header>
@@ -222,14 +276,17 @@ const SubjectAdmin = () => {
                             />
                         </button>
                         <input
+                            onChange={handleChangeSearch}
                             className="input-search"
                             type="text"
                             placeholder="Search..."
+                            value={keyword}
                         ></input>
                     </div>
                 </div>
             </header>
-            <div className="table-content">
+            <PaginatedItems itemsPerPage={10} searchSubject={searchSubject(subjects)}/>
+            {/* <div className="table-content">
                 <TableSubject subjects={subjects} />
             </div>
             <footer>
@@ -262,7 +319,10 @@ const SubjectAdmin = () => {
                 {addSubjectState ? DivAddSubject : null}
                 {updateSubjectState ? DivUpdateSubject : null}
                 {isDelete ? ConfirmDelete : null}
-            </footer>
+            </footer> */}
+            {addSubjectState ? DivAddSubject : null}
+            {updateSubjectState ? DivUpdateSubject : null}
+            {isDelete ? ConfirmDelete : null}
         </div>
     );
 };
