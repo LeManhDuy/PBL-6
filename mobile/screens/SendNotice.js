@@ -92,7 +92,6 @@ const SendNotice = ({ navigation }) => {
                 console.log(error);
             });
     };
-
     onSwipePerformed = (action) => {
         /// action : 'left' for left swipe
         /// action : 'right' for right swipe

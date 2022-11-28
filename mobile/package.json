@@ -21,7 +21,7 @@
     "expo": "~46.0.16",
     "expo-status-bar": "~1.4.0",
     "formik": "^2.2.9",
-    "react": "18.0.0",
+    "react": "^18.0.0",
     "react-native": "0.69.6",
     "react-native-auto-size-text": "^1.1.1",
     "react-native-gesture-handler": "~2.5.0",
@@ -34,6 +34,7 @@
     "react-native-size-matters": "^0.4.0",
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-tab-view": "^3.0.0",
+    "react-native-vector-icons": "^9.2.0",
     "styled-components": "^5.3.6"
   },
   "devDependencies": {
