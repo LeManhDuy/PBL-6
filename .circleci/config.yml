@@ -24,7 +24,10 @@ workflows:
   heroku_deploy:
     jobs:
       - unit_test
-      - heroku/deploy-via-git
+      - heroku/deploy-via-git:
+          filters:
+            branches:
+              only: develop
       - notify:
           requires:
             - heroku/deploy-via-git

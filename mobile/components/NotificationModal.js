@@ -1,5 +1,4 @@
-import { View, Modal, Text, StyleSheet, Pressable, Touchable, TouchableNativeFeedback } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { View, Modal, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 import React from 'react'
 import { scale } from 'react-native-size-matters';
 import { COLORS } from '../constants';
@@ -11,7 +10,7 @@ const NotificationModal = (props) => {
         visible={props.show}
         onRequestClose={props.handleChange}
       >
-        <TouchableNativeFeedback onPress={props.handleChange}>
+        <TouchableWithoutFeedback onPress={props.handleChange}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             {props.data?
@@ -40,7 +39,7 @@ const NotificationModal = (props) => {
             
           </View>
         </View>
-        </TouchableNativeFeedback>
+        </TouchableWithoutFeedback>
       </Modal>
     )
 }
