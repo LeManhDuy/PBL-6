@@ -68,7 +68,16 @@ const FormAddNotificationParents = (props) => {
                 const dataSourcesSorted = [...dataSources].sort((a, b) =>
                     a.name > b.name ? 1 : -1
                 );
-                setOptions(dataSourcesSorted);
+                const unique = [];
+                const uniqueTeacher = dataSourcesSorted.filter((element) => {
+                    const isDuplicate = unique.includes(element.teacherId);
+                    if (!isDuplicate) {
+                        unique.push(element.teacherId);
+                        return true;
+                    }
+                    return false;
+                });
+                setOptions(uniqueTeacher);
             })
             .catch((error) => {
                 console.log(error);
