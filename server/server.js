@@ -86,7 +86,7 @@ const port = process.env.PORT || "8000";
 app.set("port", port);
 
 // expection to slack
-app.use(slackErrors({ webhookUri: 'https://hooks.slack.com/services/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', channel: '#general' }));
+app.use(slackErrors({ webhookUri: process.env.SLACK_LINK, channel: '#general' }));
 
 //port
 app.listen(process.env.PORT || 8000, function () {
