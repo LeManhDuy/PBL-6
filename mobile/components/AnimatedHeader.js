@@ -30,7 +30,6 @@ const AnimatedHeader = ({ animatedValue, buttonText, handlePress, isDisable }) =
     // console.log(headerHeight) 
     const styles = StyleSheet.create({
         button:{
-            borderWidth: 2,
             width: '70%',
             // alignSelf: 'center',
             marginTop: 12,
@@ -41,12 +40,16 @@ const AnimatedHeader = ({ animatedValue, buttonText, handlePress, isDisable }) =
             left: scale(50),
             right: scale(50),
             height: ButtonHeight,
+            backgroundColor: '#83ACDC',
+            justifyContent: 'center',
             // opacity: headerOpacity
             // backgroundColor: 'lightblue'
         },
         buttonText:{
             alignSelf: 'center',
-            fontSize: scale(14),
+            fontSize: scale(16),
+            fontWeight: 'bold',
+            color: 'white',
             // opacity: headerOpacity
         }
     })

@@ -16,29 +16,29 @@ export default function SearchDropDown(props) {
         <View
             style={styles.container}>
 
-            <ScrollView 
-            style={styles.subContainer}
+            <ScrollView
+                style={styles.subContainer}
             >
                 <View style={styles.subContainer2}>
-                {
-                    dataSource.length ?
+                    {
+                        dataSource.length ?
 
-                        dataSource.map(item => {
-                            return (
-                                <TouchableOpacity 
-                                    key={item.key}
-                                    onPress={()=>{props.onPress(item)}}
-                                    style={styles.itemView}>
-                                    <Text style={styles.itemText}>{item.teacher}</Text>
-                                </TouchableOpacity>
-                            )
-                        })
-                        :
-                        <View
-                            style={styles.noResultView}>
-                            <Text style={styles.noResultText}>No search items matched</Text>
-                        </View>
-                }
+                            dataSource.map(item => {
+                                return (
+                                    <TouchableOpacity
+                                        key={item.key}
+                                        onPress={() => { props.onPress(item) }}
+                                        style={styles.itemView}>
+                                        <Text style={styles.itemText}>{item.teacher}</Text>
+                                    </TouchableOpacity>
+                                )
+                            })
+                            :
+                            <View
+                                style={styles.noResultView}>
+                                <Text style={styles.noResultText}>No search items matched</Text>
+                            </View>
+                    }
                 </View>
             </ScrollView>
         </View>
@@ -53,22 +53,22 @@ const styles = StyleSheet.create({
         top: scale(80),
         left: 0, right: 0, bottom: 0,
         height: scale(145),
-        alignItems: 'center',   
+        alignItems: 'center',
     },
     subContainer: {
         width: "100%",
     },
-    subContainer2:{
-        backgroundColor: 'gray',
+    subContainer2: {
+        backgroundColor: '#F5F4F9',
         paddingTop: scale(5),
         marginHorizontal: 20,
         borderTopLeftRadius: 4,
         borderTopRightRadius: 4,
         width: "95%",
-        // borderWidth: 2,
+        //borderWidth: 2,
         alignItems: 'center',
         justifyContent: 'center',
-        alignSelf: 'center'
+        alignSelf: 'center',
     },
     itemView: {
         // marginHorizontal: '10%',
@@ -78,9 +78,11 @@ const styles = StyleSheet.create({
         height: scale(30),
         marginBottom: scale(5),
         borderRadius: 4,
+        borderWidth: 1,
+        borderColor: '#83acdc',
     },
     itemText: {
-        color: 'black',
+        color: '#83ACDC',
         fontSize: scale(15),
         paddingHorizontal: 10,
     },
