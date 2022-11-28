@@ -6,9 +6,9 @@ import { SearchDropDown } from '../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import StudentService from "../config/service/StudentService";
 import NotificationService from '../config/service/NotificationService';
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
-const SendNotice = ({navigation}) => {
+const SendNotice = ({ navigation }) => {
 
   const [privateNotification, setPrivateNotification] = useState({
     title: "",
@@ -33,76 +33,76 @@ const SendNotice = ({navigation}) => {
       parent: JSON.parse(data).AccountId
     })
     StudentService.getPupilByParentId(
-        JSON.parse(data).AccountId
+      JSON.parse(data).AccountId
     )
-        .then((response) => {
-            const dataSources = response.getPupilInfor.map(
-                (item, index) => {
-                    return {
-                        key: index + 1,
-                        id: item._id,
-                        name: item.pupil_name,
-                        class: item.class_id
-                            ? item.class_id.class_name
-                            : "Empty",
-                        teacherId: item.class_id
-                            ? item.class_id.homeroom_teacher_id._id
-                            : null,
-                        teacher: item.class_id
-                            ? item.class_id.homeroom_teacher_id.person_id
-                                  .person_fullname
-                            : "Empty",
-                        teacher_phone: item.class_id
-                            ? item.class_id.homeroom_teacher_id.person_id
-                                  .person_phonenumber
-                            : "Empty",
-                        value: item._id,
-                        label: item.class_id
-                            ? item.class_id.homeroom_teacher_id.person_id
-                                  .person_fullname
-                            : null,
-                    };
-                }
-            );
-            const dataSourcesSorted = [...dataSources].sort((a, b) =>
-                a.name > b.name ? 1 : -1
-            );
-            // console.log(dataSourcesSorted)
-            setOptions(dataSourcesSorted);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-}; 
-  
-onSwipePerformed = (action) => {
-  /// action : 'left' for left swipe
-  /// action : 'right' for right swipe
-  /// action : 'up' for up swipe
-  /// action : 'down' for down swipe
-  
-  switch(action){
-    case 'left':{
-      console.log('left Swipe performed');
-      break;
+      .then((response) => {
+        const dataSources = response.getPupilInfor.map(
+          (item, index) => {
+            return {
+              key: index + 1,
+              id: item._id,
+              name: item.pupil_name,
+              class: item.class_id
+                ? item.class_id.class_name
+                : "Empty",
+              teacherId: item.class_id
+                ? item.class_id.homeroom_teacher_id._id
+                : null,
+              teacher: item.class_id
+                ? item.class_id.homeroom_teacher_id.person_id
+                  .person_fullname
+                : "Empty",
+              teacher_phone: item.class_id
+                ? item.class_id.homeroom_teacher_id.person_id
+                  .person_phonenumber
+                : "Empty",
+              value: item._id,
+              label: item.class_id
+                ? item.class_id.homeroom_teacher_id.person_id
+                  .person_fullname
+                : null,
+            };
+          }
+        );
+        const dataSourcesSorted = [...dataSources].sort((a, b) =>
+          a.name > b.name ? 1 : -1
+        );
+        // console.log(dataSourcesSorted)
+        setOptions(dataSourcesSorted);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  onSwipePerformed = (action) => {
+    /// action : 'left' for left swipe
+    /// action : 'right' for right swipe
+    /// action : 'up' for up swipe
+    /// action : 'down' for down swipe
+
+    switch (action) {
+      case 'left': {
+        console.log('left Swipe performed');
+        break;
+      }
+      case 'right': {
+        console.log('right Swipe performed');
+        break;
+      }
+      case 'up': {
+        console.log('up Swipe performed');
+        break;
+      }
+      case 'down': {
+        console.log('down Swipe performed');
+        break;
+      }
+      default: {
+        console.log('Undeteceted action');
+      }
     }
-     case 'right':{
-      console.log('right Swipe performed');
-      break;
-    }
-     case 'up':{
-      console.log('up Swipe performed');
-      break;
-    }
-     case 'down':{
-      console.log('down Swipe performed');
-      break;
-    }
-     default : {
-     console.log('Undeteceted action');
-     }
   }
-}
 
 
 
@@ -115,7 +115,7 @@ onSwipePerformed = (action) => {
       })
       const temp = text.toLowerCase()
 
-      const tempList = options.filter(item => {        
+      const tempList = options.filter(item => {
         if (item.teacher.toLowerCase().includes(temp))
           return item
       })
@@ -142,11 +142,11 @@ onSwipePerformed = (action) => {
   }
   const handleSend = () => {
 
-    if(!privateNotification.teacher || !privateNotification.title || !privateNotification.content){
+    if (!privateNotification.teacher || !privateNotification.title || !privateNotification.content) {
       alert('Please fill in all field!')
     }
-    else{
-      console.log('pri',privateNotification)
+    else {
+      console.log('pri', privateNotification)
       NotificationService.createPrivateNotification({
         title: privateNotification.title,
         content: privateNotification.content,
@@ -155,11 +155,11 @@ onSwipePerformed = (action) => {
         parents_send: privateNotification.sender,
       })
         .then((res) => {
-          if(res.success){
+          if (res.success) {
             alert('Notification Sent!')
             navigation.navigate('Notifications')
           }
-          else{
+          else {
             alert('Failed to send notification!')
           }
         })
@@ -168,22 +168,31 @@ onSwipePerformed = (action) => {
   }
   return (
     <View style={styles.container}>
-      <TextInput 
-            style={styles.textInput}
-            placeholder='Title'
-            value={privateNotification.title}
-            onChangeText={(props)=>{
-              setPrivateNotification({
-                ...privateNotification,
-                title: props
-              })
-            }}
-            />
       <TextInput
+        label={'Title'}
+        outlineColor={'#83ACDC'}
+        activeOutlineColor={'#83ACDC'}
+        selectionColor={'#83ACDC'}
+        mode={"outlined"}
         style={styles.textInput}
-        placeholder="Send to"
+        value={privateNotification.title}
+        onChangeText={(props) => {
+          setPrivateNotification({
+            ...privateNotification,
+            title: props
+          })
+        }}
+      />
+      <TextInput
+        label={'Send to'}
+        outlineColor={'#83ACDC'}
+        activeOutlineColor={'#83ACDC'}
+        selectionColor={'#83ACDC'}
+        mode={"outlined"}
+        style={styles.textInput}
+        // placeholder="Send to"
         value={searchText}
-        onChangeText={(props)=>{
+        onChangeText={(props) => {
           setSearchText(props)
           onSearch(props)
         }}
@@ -198,19 +207,23 @@ onSwipePerformed = (action) => {
       {
         !searching &&
         <>
-          <TextInput 
-            multiline = {true}
-            numberOfLines = {10}
+          <TextInput
+            outlineColor={'#83ACDC'}
+            activeOutlineColor={'#83ACDC'}
+            selectionColor={'#83ACDC'}
+            mode={"outlined"}
+            multiline={true}
+            numberOfLines={10}
             style={styles.textArea}
             placeholder='Content'
             value={privateNotification.content}
-            onChangeText={(props)=>{
+            onChangeText={(props) => {
               setPrivateNotification({
                 ...privateNotification,
                 content: props
               })
             }}
-            />
+          />
         </>
       }
       <TouchableHighlight style={styles.sendButton} onPress={handleSend}>
@@ -220,44 +233,45 @@ onSwipePerformed = (action) => {
   )
 }
 const styles = StyleSheet.create({
-    container: {
-      // justifyContent: 'center',
-      alignItems: 'center',
-      flex: 1,
-    },
-    textInput: {
-      backgroundColor: 'white',
-      width: '100%',
-      borderRadius: 5,
-      height: scale(40),
-      fontSize: scale(12),
-      fontWeight: 'bold',
-      paddingHorizontal: 10,
-    },
-    textArea:{
-      backgroundColor: '#white',
-      width: '100%',
-      borderRadius: 5,
-      // height: windowHeight-scale(80),
-      // textAlignVertical: "top",
-      // flexWrap: 'wrap',
-      fontSize: scale(12),
-      fontWeight: 'bold',
-    },
-    sendButton:{
-      position: 'absolute',
-      bottom: scale(30),
-      height: scale(50),
-      width: scale(150),
-      borderRadius: 50,
-      backgroundColor: 'gray',
-      justifyContent:'center',
-    },
-    buttonText:{
-      alignSelf: 'center',
-      color: 'white',
-      fontWeight: 'bold',
-      fontSize: scale(25)
-    }
-  });
+  container: {
+    backgroundColor: "#fff",
+    // justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    padding: 5,
+  },
+  textInput: {
+    backgroundColor: 'white',
+    width: '100%',
+    borderRadius: 5,
+    height: scale(40),
+    fontSize: scale(12),
+    fontWeight: 'bold',
+  },
+  textArea: {
+    backgroundColor: '#white',
+    width: '100%',
+    borderRadius: 5,
+    // height: windowHeight-scale(80),
+    // textAlignVertical: "top",
+    // flexWrap: 'wrap',
+    fontSize: scale(12),
+    fontWeight: 'bold',
+  },
+  sendButton: {
+    position: 'absolute',
+    bottom: scale(30),
+    height: scale(50),
+    width: scale(150),
+    borderRadius: 50,
+    backgroundColor: '#83ACDC',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    alignSelf: 'center',
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: scale(16)
+  }
+});
 export default SendNotice
