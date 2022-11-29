@@ -7,7 +7,6 @@ import { scale } from 'react-native-size-matters';
 import ListPupilModal from '../components/ListPupilModal';
 import { AnimatedHeader } from '../components';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Card, List } from 'react-native-paper';
 import { assets } from '../constants';
 const Schedule = () => {
 
@@ -17,7 +16,7 @@ const Schedule = () => {
     const [selectPupil, setSelectPupil] = useState(false)
     const [buttonText, setButtonText] = useState('Select Student')
     const [scheduleShow, setScheduleShow] = useState()
-    const [showButton, setShowButton] = useState(true)
+    
     useEffect(() => {
         getPupilsInfo()
         getScheduleInfo()

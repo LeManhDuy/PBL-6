@@ -11,6 +11,7 @@ import ListPupils from './screens/ListPupils';
 import Notifications from './screens/Notifications';
 import SendNotice from './screens/SendNotice';
 import Schedule from './screens/Schedule';
+import Score from './screens/Score'
 // import { Text, View } from 'react-native';
 
 const Stack = createStackNavigator();
@@ -72,6 +73,7 @@ export default function App() {
           <Drawer.Screen name="Pupils" component={ListPupils} />
           <Drawer.Screen name="Notification" component={NotificationStack} />
           <Drawer.Screen name="Schedule" component={Schedule} />
+          <Drawer.Screen name="Score" component={Score} />
       </Drawer.Navigator>
     )
   }

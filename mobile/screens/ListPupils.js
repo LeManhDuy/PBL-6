@@ -62,7 +62,7 @@ const ListPupils = ({}) => {
 
         return (
             <SafeAreaView>
-                <View style={{ zIndex: 0 }}>
+                <View style={{ marginBottom: 20 }}>
                 <FlatList
                     data={pupilsInfo}
                     renderItem={({item})=> <PupilCard data={item} />}
