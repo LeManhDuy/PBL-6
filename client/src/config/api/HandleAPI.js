@@ -2,7 +2,8 @@ import AuthenticationService from "../service/AuthenticationService";
 
 // const { REACT_APP_API_ENDPOINT } = process.env;
 
-const REACT_APP_API_ENDPOINT = "https://blue-school-api.herokuapp.com/";
+// const REACT_APP_API_ENDPOINT = "https://blue-school-api.herokuapp.com/";
+const REACT_APP_API_ENDPOINT = "http://localhost:8000/";
 
 const header = {
     Accept: "application/json",
@@ -83,7 +84,7 @@ function APIPostWithTokenIMG(url, params) {
 function APIPostWithTokenFile(url, file) {
     url = REACT_APP_API_ENDPOINT + "api/" + url;
     const formData = new FormData();
-    formData.append('file',file)
+    formData.append("file", file);
     return fetch(url, {
         method: "POST",
         headers: {
@@ -138,7 +139,7 @@ const HandleApi = {
     APIPutWithTokenIMG,
     APIPutWithToken,
     APIGetPublic,
-    APIPostWithTokenFile
+    APIPostWithTokenFile,
 };
 
 export default HandleApi;

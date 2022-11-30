@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-const slackErrors = require('./slack_error.js');
+const slackErrors = require("./slack_error.js");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
@@ -22,6 +22,7 @@ const notificationRoute = require("./routes/notification.js");
 const scoreRoute = require("./routes/score.js");
 const commentRoute = require("./routes/comment.js");
 const statisticRoute = require("./routes/statistic.js");
+const accountRoute = require("./routes/account.js");
 
 const app = express();
 app.use(express.json());
@@ -81,12 +82,16 @@ app.use("/api/score", scoreRoute);
 app.use("/api/comment", commentRoute);
 //statistic
 app.use("/api/statistic", statisticRoute);
+//account
+app.use("/api/account", accountRoute);
 
 const port = process.env.PORT || "8000";
 app.set("port", port);
 
 // expection to slack
-app.use(slackErrors({ webhookUri: process.env.SLACK_LINK, channel: '#general' }));
+app.use(
+    slackErrors({ webhookUri: process.env.SLACK_LINK, channel: "#general" })
+);
 
 //port
 app.listen(process.env.PORT || 8000, function () {
