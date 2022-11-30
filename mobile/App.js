@@ -12,6 +12,7 @@ import Notifications from './screens/Notifications';
 import SendNotice from './screens/SendNotice';
 import Schedule from './screens/Schedule';
 import Score from './screens/Score'
+import Fee from './screens/Fee';
 // import { Text, View } from 'react-native';
 
 const Stack = createStackNavigator();
@@ -74,6 +75,7 @@ export default function App() {
           <Drawer.Screen name="Notification" component={NotificationStack} />
           <Drawer.Screen name="Schedule" component={Schedule} />
           <Drawer.Screen name="Score" component={Score} />
+          <Drawer.Screen name="Fee" component={Fee} />
       </Drawer.Navigator>
     )
   }
