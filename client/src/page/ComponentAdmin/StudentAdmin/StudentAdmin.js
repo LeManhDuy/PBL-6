@@ -14,11 +14,10 @@ import ModalInput from "../../../lib/ModalInput/ModalInput";
 import AddStudent from "../../../lib/ModalInput/AddStudent/AddStudent";
 import UpdateStudent from "../../../lib/ModalInput/UpdateStudent/UpdateStudent";
 import GradeService from "../../../config/service/GradeService";
-import ReactPaginate from 'react-paginate';
+import ReactPaginate from "react-paginate";
 import AddStudentExcel from "../../../lib/ModalInput/AddStudentExcel/AddStudentExcel";
 import PupilService from "../../../config/service/StudentService";
 import Loading from "../../../lib/Loading/Loading";
-
 
 const StudentAdmin = () => {
     const [student, setStudent] = useState([]);
@@ -37,8 +36,8 @@ const StudentAdmin = () => {
     const [classroom, setClass] = useState([]);
     const [grades, setGrade] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
-    const [isLoading, setIsLoading] = useState(false)
-    const [selectAll, setSelectAll] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
+    const [selectAll, setSelectAll] = useState(false);
     const [isMultiDelete, setIsMultiDelete] = useState(false);
 
     useEffect(() => {
@@ -48,6 +47,7 @@ const StudentAdmin = () => {
     }, [isChange]);
 
     const getStudent = () => {
+        setIsLoading(true);
         StudentService.getPupils()
             .then((response) => {
                 const dataSources = response.getPuilInfor.map((item, index) => {
@@ -65,7 +65,7 @@ const StudentAdmin = () => {
                         teacher: item.class_id
                             ? item.class_id.homeroom_teacher_id
                                 ? item.class_id.homeroom_teacher_id.person_id
-                                    .person_fullname
+                                      .person_fullname
                                 : "Empty"
                             : "Empty",
                         grade: item.class_id
@@ -75,8 +75,11 @@ const StudentAdmin = () => {
                             : "Empty",
                     };
                 });
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.class > b.class ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.class > b.class ? 1 : -1
+                );
                 setStudent(dataSourcesSorted);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -113,7 +116,9 @@ const StudentAdmin = () => {
                         grade_name: item ? item.grade_name : "Empty",
                     };
                 });
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.grade_name > b.grade_name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.grade_name > b.grade_name ? 1 : -1
+                );
                 setGrade(dataSourcesSorted);
             })
             .catch((error) => {
@@ -124,28 +129,33 @@ const StudentAdmin = () => {
     const getClassWithFilter = (filter) => {
         GradeService.getClassByGradeId(filter)
             .then((response) => {
-                const dataSources = response.getClassByGradeId.map((item, index) => {
-                    return {
-                        key: index + 1,
-                        id: item._id,
-                        class_name: item.class_name,
-                        homeroomteacher_name: item.homeroom_teacher_id
-                            ? item.homeroom_teacher_id.person_id
-                                ? item.homeroom_teacher_id.person_id.person_fullname
-                                : "Empty"
-                            : "Empty",
-                        grade_name: item.grade_id
-                            ? item.grade_id.grade_name
-                            : "Empty",
+                const dataSources = response.getClassByGradeId.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            class_name: item.class_name,
+                            homeroomteacher_name: item.homeroom_teacher_id
+                                ? item.homeroom_teacher_id.person_id
+                                    ? item.homeroom_teacher_id.person_id
+                                          .person_fullname
+                                    : "Empty"
+                                : "Empty",
+                            grade_name: item.grade_id
+                                ? item.grade_id.grade_name
+                                : "Empty",
+                        };
                     }
-                })
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.class_name > b.class_name ? 1 : -1,);
-                setClass(dataSourcesSorted)
+                );
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.class_name > b.class_name ? 1 : -1
+                );
+                setClass(dataSourcesSorted);
             })
             .catch((error) => {
-                console.log(error)
-            })
-    }
+                console.log(error);
+            });
+    };
 
     const getStudentWithFilter = (filter) => {
         ClassService.getStudentByClassID(filter)
@@ -165,7 +175,7 @@ const StudentAdmin = () => {
                                 : "Empty",
                             teacher: item.class_id
                                 ? item.class_id.homeroom_teacher_id.person_id
-                                    .person_fullname
+                                      .person_fullname
                                 : "Empty",
                             grade: item.class_id.grade_id
                                 ? item.class_id.grade_id.grade_name
@@ -197,7 +207,7 @@ const StudentAdmin = () => {
                                 : "Empty",
                             teacher: item.class_id
                                 ? item.class_id.homeroom_teacher_id.person_id
-                                    .person_fullname
+                                      .person_fullname
                                 : "Empty",
                             grade: item.class_id.grade_id
                                 ? item.class_id.grade_id.grade_name
@@ -211,8 +221,6 @@ const StudentAdmin = () => {
                 console.log(error);
             });
     };
-
-
 
     const Dropdown = ({ value, options, onChange }) => {
         return (
@@ -269,7 +277,7 @@ const StudentAdmin = () => {
         setDropValueGrade(event.target.value);
         grades.map((item) => {
             if (event.target.value === item.id) {
-                getStudentWithGradeId(item.id)
+                getStudentWithGradeId(item.id);
                 getClassWithFilter(item.id);
             } else if (event.target.value === "All") {
                 getStudent();
@@ -285,13 +293,17 @@ const StudentAdmin = () => {
         const currentItems = searchStudent.slice(itemOffset, endOffset);
         const pageCount = Math.ceil(searchStudent.length / itemsPerPage);
         const handlePageClick = (event) => {
-            const newOffset = (event.selected * itemsPerPage) % searchStudent.length;
+            const newOffset =
+                (event.selected * itemsPerPage) % searchStudent.length;
             setItemOffset(newOffset);
         };
         return (
             <>
                 <div className="table-content">
-                    <TableStudent isLoading={isLoading} students={currentItems} />
+                    <TableStudent
+                        isLoading={isLoading}
+                        students={currentItems}
+                    />
                 </div>
                 <footer>
                     <hr></hr>
@@ -316,7 +328,6 @@ const StudentAdmin = () => {
                         hrefAllControls
                     />
                 </footer>
-
             </>
         );
     }
@@ -325,18 +336,20 @@ const StudentAdmin = () => {
         const studentItem = students.map((item) => (
             <tr data-key={item.id} key={item.id}>
                 <td></td>
-                <td><input
-                    className="check-input"
-                    type="checkbox"
-                    checked={listPupil[item.id]}
-                    name="pupil"
-                    onChange={() => {
-                        setListPupil({
-                            ...listPupil,
-                            [item.id]: !listPupil[item.id]
-                        })
-                    }}
-                /></td>
+                <td>
+                    <input
+                        className="check-input"
+                        type="checkbox"
+                        checked={listPupil[item.id]}
+                        name="pupil"
+                        onChange={() => {
+                            setListPupil({
+                                ...listPupil,
+                                [item.id]: !listPupil[item.id],
+                            });
+                        }}
+                    />
+                </td>
                 <td>{item.name}</td>
                 <td>{item.gender ? "Male" : "Female"}</td>
                 <td>{`${item.grade}-${item.class}`}</td>
@@ -375,7 +388,8 @@ const StudentAdmin = () => {
                             className="check-input"
                             type="checkbox"
                             onChange={toggle}
-                            checked={selectAll} />
+                            checked={selectAll}
+                        />
                     </th>
                     <th>Select</th>
                     <th>Name</th>
@@ -398,26 +412,24 @@ const StudentAdmin = () => {
         );
     };
     const toggle = (event) => {
-        var checkboxes = document.getElementsByName('pupil');
+        var checkboxes = document.getElementsByName("pupil");
         var hash = {};
         if (event.target.checked) {
             for (var i = 0, n = checkboxes.length; i < n; i++) {
                 checkboxes[i].checked = true;
             }
-            const arrFeeID = student.map(e => e.id);
-            for (var i = 0; i < arrFeeID.length; i++)
-                hash[arrFeeID[i]] = true;
+            const arrFeeID = student.map((e) => e.id);
+            for (var i = 0; i < arrFeeID.length; i++) hash[arrFeeID[i]] = true;
             setSelectAll(true);
-            setListPupil(hash)
-        }
-        else {
+            setListPupil(hash);
+        } else {
             for (var i = 0, n = checkboxes.length; i < n; i++) {
                 checkboxes[i].checked = false;
             }
             setSelectAll(false);
-            setListPupil({})
+            setListPupil({});
         }
-    }
+    };
     const handleCloseModalCustom = () => {
         setIsDelete(false);
         setIsMultiDelete(false);
@@ -435,8 +447,8 @@ const StudentAdmin = () => {
         setUpdateState(false);
         setErrorMessage("");
         setErrorServer(false);
-        setAddExcelState(false)
-        setSelectAll(false)
+        setAddExcelState(false);
+        setSelectAll(false);
     };
 
     const handleConfirmAddStudent = (allValue) => {
@@ -457,7 +469,7 @@ const StudentAdmin = () => {
                 setErrorMessage("");
                 setAddState(false);
                 setKeyword("");
-                setSelectAll(false)
+                setSelectAll(false);
             } else {
                 setAddState(true);
                 setErrorMessage(res.message);
@@ -482,7 +494,7 @@ const StudentAdmin = () => {
                 setErrorMessage("");
                 setErrorServer(false);
                 setKeyword("");
-                setSelectAll(false)
+                setSelectAll(false);
             } else {
                 setUpdateState(true);
                 setErrorMessage(res.message);
@@ -537,25 +549,24 @@ const StudentAdmin = () => {
     );
 
     const handleConfirmAddExcel = (props) => {
-        setIsLoading(true)
-        let pupilFile = props.pupilFile
+        setIsLoading(true);
+        let pupilFile = props.pupilFile;
         setAddExcelState(false);
-        PupilService.AddStudentByFile(pupilFile)
-            .then((res) => {
-                if (res.success) {
-                    setIsChange(!isChange)
-                    setErrorServer(false);
-                    setIsLoading(false)
-                    setErrorMessage("")
-                    setKeyword("");
-                    setSelectAll(false)
-                } else {
-                    setErrorMessage(res.message)
-                    setErrorServer(true);
-                    setIsLoading(false)
-                }
-            })
-    }
+        PupilService.AddStudentByFile(pupilFile).then((res) => {
+            if (res.success) {
+                setIsChange(!isChange);
+                setErrorServer(false);
+                setIsLoading(false);
+                setErrorMessage("");
+                setKeyword("");
+                setSelectAll(false);
+            } else {
+                setErrorMessage(res.message);
+                setErrorServer(true);
+                setIsLoading(false);
+            }
+        });
+    };
 
     const DivAddStudentExcel = (
         <ModalInput
@@ -564,9 +575,7 @@ const StudentAdmin = () => {
             content={
                 <AddStudentExcel
                     handleInputCustom={handleInputCustom}
-                    handleConfirmAddExcel={
-                        handleConfirmAddExcel
-                    }
+                    handleConfirmAddExcel={handleConfirmAddExcel}
                     errorServer={errorServer}
                     errorMessage={errorMessage}
                 />
@@ -601,29 +610,29 @@ const StudentAdmin = () => {
 
     const checkClickDelete = () => {
         setIsMultiDelete(true);
-    }
+    };
     const handleMultiDelete = () => {
-        setIsLoading(true)
+        setIsLoading(true);
         PupilService.deleteMultiPupil({
             pupil_list: listPupil,
         })
             .then((res) => {
                 if (res.success) {
-                    setIsLoading(false)
+                    setIsLoading(false);
                     setIsChange(!isChange);
                     setErrorServer(false);
-                    setListPupil({})
-                    setSelectAll(false)
+                    setListPupil({});
+                    setSelectAll(false);
                     setErrorMessage("");
-                    setDropValueClass("All")
-                    setDropValueGrade("All")
+                    setDropValueClass("All");
+                    setDropValueGrade("All");
                 } else {
-                    setIsLoading(false)
+                    setIsLoading(false);
                     setErrorServer(true);
                     setErrorMessage(res.message);
-                    setDropValueClass("All")
-                    setDropValueGrade("All")
-                    setListPupil({})
+                    setDropValueClass("All");
+                    setDropValueGrade("All");
+                    setListPupil({});
                 }
             })
             .catch((error) => console.log("error", error));
@@ -664,8 +673,16 @@ const StudentAdmin = () => {
                     <button className="btn-account" onClick={handleAddStudent}>
                         Add Pupil
                     </button>
-                    <button className="btn-account update" onClick={handleAddExcel}>Add File Excel</button>
-                    <button className="btn-account delete" onClick={checkClickDelete}>
+                    <button
+                        className="btn-account update"
+                        onClick={handleAddExcel}
+                    >
+                        Add File Excel
+                    </button>
+                    <button
+                        className="btn-account delete"
+                        onClick={checkClickDelete}
+                    >
                         Delete
                     </button>
                     <div className="search-box">
@@ -686,7 +703,10 @@ const StudentAdmin = () => {
                 </div>
                 <Loading isLoading={isLoading} />
             </header>
-            <PaginatedItems itemsPerPage={9} searchStudent={searchStudent(student)} />
+            <PaginatedItems
+                itemsPerPage={9}
+                searchStudent={searchStudent(student)}
+            />
             {isDelete ? ConfirmDelete : null}
             {addState ? DivAddStudent : null}
             {addExcelState ? DivAddStudentExcel : null}

@@ -13,6 +13,7 @@ import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
 import AddAccount from "../../../lib/ModalInput/AddAccount/AddAccount";
 import UpdateAccount from "../../../lib/ModalInput/UpdateAccount/UpdateAccount";
 import ReactPaginate from "react-paginate";
+import Loading from "../../../lib/Loading/Loading";
 
 function AccountAdmin() {
     const [parents, setParents] = useState([]);
@@ -29,6 +30,7 @@ function AccountAdmin() {
     const [isDelete, setIsDelete] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         getPrincipal();
@@ -64,6 +66,7 @@ function AccountAdmin() {
     };
 
     const handleChange = (event) => {
+        setIsLoading(false);
         setDropValue(event.target.value);
         setKeyword("");
     };
@@ -75,6 +78,7 @@ function AccountAdmin() {
     // Get Account
 
     const getPrincipal = () => {
+        setIsLoading(true);
         AccountService.getAccountsPrincipal()
             .then((response) => {
                 const dataSources = response.getPrincipalInfor.map(
@@ -94,8 +98,11 @@ function AccountAdmin() {
                         };
                     }
                 );
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.name > b.name ? 1 : -1
+                );
                 setPrincipal(dataSourcesSorted);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -103,6 +110,7 @@ function AccountAdmin() {
     };
 
     const getParents = () => {
+        setIsLoading(true);
         AccountService.getAccountsParents()
             .then((response) => {
                 const dataSources = response.getParentsInfor.map(
@@ -113,8 +121,7 @@ function AccountAdmin() {
                             name: item.person_id.person_fullname,
                             username:
                                 item.person_id.account_id.account_username,
-                            role:
-                                item.person_id.account_id.account_role,
+                            role: item.person_id.account_id.account_role,
                             birth: item.person_id.person_dateofbirth,
                             email: item.person_id.person_email,
                             gender: item.person_id.person_gender,
@@ -124,8 +131,11 @@ function AccountAdmin() {
                         };
                     }
                 );
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.name > b.name ? 1 : -1
+                );
                 setParents(dataSourcesSorted);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -133,6 +143,7 @@ function AccountAdmin() {
     };
 
     const getTeachers = () => {
+        setIsLoading(true);
         AccountService.getAccountsTeacher()
             .then((response) => {
                 const dataSources = response.getTeacherInfor.map(
@@ -143,8 +154,7 @@ function AccountAdmin() {
                             name: item.person_id.person_fullname,
                             username:
                                 item.person_id.account_id.account_username,
-                            role:
-                                item.person_id.account_id.account_role,
+                            role: item.person_id.account_id.account_role,
                             birth: item.person_id.person_dateofbirth,
                             email: item.person_id.person_email,
                             gender: item.person_id.person_gender,
@@ -154,8 +164,11 @@ function AccountAdmin() {
                         };
                     }
                 );
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.name > b.name ? 1 : -1
+                );
                 setTeacher(dataSourcesSorted);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -163,6 +176,7 @@ function AccountAdmin() {
     };
 
     const getAffair = () => {
+        setIsLoading(true);
         AccountService.getAccountsAffair()
             .then((response) => {
                 const dataSources = response.getAffairInfor.map(
@@ -182,8 +196,11 @@ function AccountAdmin() {
                         };
                     }
                 );
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.name > b.name ? 1 : -1
+                );
                 setAffair(dataSourcesSorted);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -198,13 +215,14 @@ function AccountAdmin() {
         const currentItems = searchAccount.slice(itemOffset, endOffset);
         const pageCount = Math.ceil(searchAccount.length / itemsPerPage);
         const handlePageClick = (event) => {
-            const newOffset = (event.selected * itemsPerPage) % searchAccount.length;
+            const newOffset =
+                (event.selected * itemsPerPage) % searchAccount.length;
             setItemOffset(newOffset);
         };
         return (
             <>
                 <div className="table-content">
-                    <TableAccounts accounts={currentItems} value={dropValue}/>
+                    <TableAccounts accounts={currentItems} value={dropValue} />
                 </div>
                 <footer>
                     <hr></hr>
@@ -229,7 +247,6 @@ function AccountAdmin() {
                         hrefAllControls
                     />
                 </footer>
-
             </>
         );
     }
@@ -733,31 +750,43 @@ function AccountAdmin() {
                 </div>
             </header>
             {/* <div className="table-content"> */}
-                {dropValue === "principal" ? (
-                    // <TableAccounts
-                    //     accounts={searchAccount(principal)}
-                    //     value={dropValue}
-                    // />
-                    <PaginatedItems itemsPerPage={10} searchAccount={searchAccount(principal)} />    
-                ) : dropValue === "parents" ? (
-                    // <TableAccounts
-                    //     accounts={searchAccount(parents)}
-                    //     value={dropValue}
-                    // />
-                    <PaginatedItems itemsPerPage={10} searchAccount={searchAccount(parents)} />
-                ) : dropValue === "teacher" ? (
-                    // <TableAccounts
-                    //     accounts={searchAccount(teacher)}
-                    //     value={dropValue}
-                    // />
-                    <PaginatedItems itemsPerPage={10} searchAccount={searchAccount(teacher)} />
-                ) : (
-                    // <TableAccounts
-                    //     accounts={searchAccount(affair)}
-                    //     value={dropValue}
-                    // />
-                    <PaginatedItems itemsPerPage={10} searchAccount={searchAccount(affair)} />
-                )}
+            {dropValue === "principal" ? (
+                // <TableAccounts
+                //     accounts={searchAccount(principal)}
+                //     value={dropValue}
+                // />
+                <PaginatedItems
+                    itemsPerPage={10}
+                    searchAccount={searchAccount(principal)}
+                />
+            ) : dropValue === "parents" ? (
+                // <TableAccounts
+                //     accounts={searchAccount(parents)}
+                //     value={dropValue}
+                // />
+                <PaginatedItems
+                    itemsPerPage={10}
+                    searchAccount={searchAccount(parents)}
+                />
+            ) : dropValue === "teacher" ? (
+                // <TableAccounts
+                //     accounts={searchAccount(teacher)}
+                //     value={dropValue}
+                // />
+                <PaginatedItems
+                    itemsPerPage={10}
+                    searchAccount={searchAccount(teacher)}
+                />
+            ) : (
+                // <TableAccounts
+                //     accounts={searchAccount(affair)}
+                //     value={dropValue}
+                // />
+                <PaginatedItems
+                    itemsPerPage={10}
+                    searchAccount={searchAccount(affair)}
+                />
+            )}
             {/* </div> */}
             {/* <footer>
                 <hr></hr>
@@ -793,6 +822,7 @@ function AccountAdmin() {
             {isDelete ? ConfirmDelete : null}
             {addState ? DivAddAccount : null}
             {updateState ? DivUpdateAccount : null}
+            <Loading isLoading={isLoading} />
         </div>
     );
 }

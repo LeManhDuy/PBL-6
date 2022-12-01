@@ -6,6 +6,7 @@ import StudentService from "../../../config/service/StudentService";
 import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import FormSubject from "./FormSubject/FormSubject";
 import ReactPaginate from "react-paginate";
+import Loading from "../../../lib/Loading/Loading";
 
 const ScoreTeacher = () => {
     const [students, setStudents] = useState([]);
@@ -13,12 +14,14 @@ const ScoreTeacher = () => {
     const [id, setId] = useState("");
     const [nameClass, setNameClass] = useState("");
     const [keyword, setKeyword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         getStudentByTeacherId();
     }, []);
 
     const getStudentByTeacherId = () => {
+        setIsLoading(true);
         StudentService.getStudentByTeacherIdAtTeacherRole(
             JSON.parse(localStorage.getItem("@Login")).AccountId
         )
@@ -49,6 +52,7 @@ const ScoreTeacher = () => {
                         a.student_name > b.student_name ? 1 : -1
                     );
                     setStudents(dataSourcesSorted);
+                    setIsLoading(false);
                 }
             })
             .catch((error) => console.log("error", error));
@@ -79,7 +83,8 @@ const ScoreTeacher = () => {
         const currentItems = searchStudent.slice(itemOffset, endOffset);
         const pageCount = Math.ceil(searchStudent.length / itemsPerPage);
         const handlePageClick = (event) => {
-            const newOffset = (event.selected * itemsPerPage) % searchStudent.length;
+            const newOffset =
+                (event.selected * itemsPerPage) % searchStudent.length;
             setItemOffset(newOffset);
         };
         return (
@@ -110,7 +115,6 @@ const ScoreTeacher = () => {
                         hrefAllControls
                     />
                 </footer>
-
             </>
         );
     }
@@ -195,8 +199,12 @@ const ScoreTeacher = () => {
             {/* <div className="table-content">
                 <TableAccounts students={searchStudent(students)} />
             </div> */}
-            <PaginatedItems itemsPerPage={10} searchStudent={searchStudent(students)}/>
+            <PaginatedItems
+                itemsPerPage={10}
+                searchStudent={searchStudent(students)}
+            />
             {isMark ? DivFormSubject : null}
+            <Loading isLoading={isLoading} />
         </div>
     );
 };

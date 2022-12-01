@@ -2,67 +2,70 @@ import React, { useEffect, useState } from "react";
 import FeeService from "../../../config/service/FeeService";
 import Logo from "../../../assets/image/Logo.png";
 import "./FeeParents.css";
-
+import Loading from "../../../lib/Loading/Loading";
 
 const FeeParents = () => {
     const [fees, setFees] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         getFee();
     }, []);
 
     const getFee = async () => {
+        setIsLoading(true);
         await FeeService.getFeeInforByParentId(
             JSON.parse(localStorage.getItem("@Login")).AccountId
         )
             .then((response) => {
-                const dataSources = response.getFeeInfor.map(
-                    (item, index) => {
-                        return {
-                            key: index + 1,
-                            id: item._id,
+                const dataSources = response.getFeeInfor.map((item, index) => {
+                    return {
+                        key: index + 1,
+                        id: item._id,
 
-                            name: item.pupil_id.pupil_name,
-                            class: item.pupil_id
-                                ? item.pupil_id.class_id
-                                    ? item.pupil_id.class_id.class_name
+                        name: item.pupil_id.pupil_name,
+                        class: item.pupil_id
+                            ? item.pupil_id.class_id
+                                ? item.pupil_id.class_id.class_name
+                                : "Empty"
+                            : "Empty",
+                        grade: item.pupil_id
+                            ? item.pupil_id.class_id
+                                ? item.pupil_id.class_id.grade_id
+                                    ? item.pupil_id.class_id.grade_id.grade_name
                                     : "Empty"
-                                : "Empty",
-                            grade: item.pupil_id
-                                ? item.pupil_id.class_id
-                                    ? item.pupil_id.class_id.grade_id
-                                        ? item.pupil_id.class_id.grade_id.grade_name
-                                        : "Empty"
-                                    : "Empty"
-                                : "Empty",
-                            image: item.pupil_id ? item.pupil_id.pupil_image : Logo,
+                                : "Empty"
+                            : "Empty",
+                        image: item.pupil_id ? item.pupil_id.pupil_image : Logo,
 
+                        fee_name: item.fee_category_id
+                            ? item.fee_category_id.fee_name
+                            : "Empty",
+                        fee_amount: item.fee_category_id
+                            ? item.fee_category_id.fee_amount
+                            : "Empty",
+                        fee_status: item.fee_status ? "Paid" : "UnPaid",
 
-                            fee_name: item.fee_category_id
-                                ? item.fee_category_id.fee_name
-                                : "Empty",
-                            fee_amount: item.fee_category_id
-                                ? item.fee_category_id.fee_amount
-                                : "Empty",
-                            fee_status: item.fee_status ? "Paid" : "UnPaid",
-
-                            start_date: item.fee_category_id
-                                ?
-                                new Date(item.fee_category_id.start_date).toLocaleDateString()
-                                : "Empty",
-                            end_date: item.fee_category_id
-                                ?
-                                new Date(item.fee_category_id.end_date).toLocaleDateString()
-                                : "Empty",
-                            paid_date: item.paid_date ?
-                                new Date(item.paid_date).toLocaleDateString()
-                                : "Empty",
-                        };
-                    }
+                        start_date: item.fee_category_id
+                            ? new Date(
+                                  item.fee_category_id.start_date
+                              ).toLocaleDateString()
+                            : "Empty",
+                        end_date: item.fee_category_id
+                            ? new Date(
+                                  item.fee_category_id.end_date
+                              ).toLocaleDateString()
+                            : "Empty",
+                        paid_date: item.paid_date
+                            ? new Date(item.paid_date).toLocaleDateString()
+                            : "Empty",
+                    };
+                });
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.name > b.name ? 1 : -1
                 );
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
                 setFees(dataSourcesSorted);
-                console.log(response);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -162,6 +165,7 @@ const FeeParents = () => {
             <div className="detail-content">
                 <FeeInfo fees={fees} />
             </div>
+            <Loading isLoading={isLoading} />
         </div>
     );
 };
