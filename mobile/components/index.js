@@ -5,6 +5,7 @@ import NotificationModal from './NotificationModal';
 import SearchDropDown from './SearchableDropdown';
 import ListPupilModal from './ListPupilModal';
 import AnimatedHeader from './AnimatedHeader';
+import FeeCard from './FeeCard';
 export {
     PupilCard,
     CustomButton, 
@@ -13,4 +14,5 @@ export {
     SearchDropDown,
     ListPupilModal,
     AnimatedHeader,
+    FeeCard
 }

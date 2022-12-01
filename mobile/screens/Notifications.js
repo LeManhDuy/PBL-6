@@ -86,7 +86,7 @@ const Notifications = ({ navigation }) => {
     setModalVisible(!modalVisible)
   }
   return (
-    <View style={styles.centeredView} blurRadius={4}>
+    <View style={styles.centeredView}>
       <NotificationModal
         data={modalData}
         show={modalVisible}
