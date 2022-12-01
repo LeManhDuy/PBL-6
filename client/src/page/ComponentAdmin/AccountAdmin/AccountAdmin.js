@@ -28,6 +28,7 @@ function AccountAdmin() {
     const [addState, setAddState] = useState(false);
     const [updateState, setUpdateState] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
+    const [isReset, setIsReset] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -88,6 +89,7 @@ function AccountAdmin() {
                             id: item._id,
                             name: item.person_fullname,
                             username: item.account_id.account_username,
+                            account_id: item.account_id._id,
                             role: item.account_id.account_role,
                             birth: item.person_dateofbirth,
                             email: item.person_email,
@@ -121,6 +123,7 @@ function AccountAdmin() {
                             name: item.person_id.person_fullname,
                             username:
                                 item.person_id.account_id.account_username,
+                            account_id: item.person_id.account_id._id,
                             role: item.person_id.account_id.account_role,
                             birth: item.person_id.person_dateofbirth,
                             email: item.person_id.person_email,
@@ -154,6 +157,7 @@ function AccountAdmin() {
                             name: item.person_id.person_fullname,
                             username:
                                 item.person_id.account_id.account_username,
+                            account_id: item.person_id.account_id._id,
                             role: item.person_id.account_id.account_role,
                             birth: item.person_id.person_dateofbirth,
                             email: item.person_id.person_email,
@@ -186,6 +190,7 @@ function AccountAdmin() {
                             id: item._id,
                             name: item.person_fullname,
                             username: item.account_id.account_username,
+                            account_id: item.account_id._id,
                             role: item.account_id.account_role,
                             birth: item.person_dateofbirth,
                             email: item.person_email,
@@ -253,7 +258,7 @@ function AccountAdmin() {
 
     const TableAccounts = ({ accounts, value }) => {
         const accountItem = accounts.map((item) => (
-            <tr data-key={item.id} key={item.id}>
+            <tr data-key={item.id} key={item.id} data-account={item.account_id}>
                 <td>{item.username}</td>
                 <td>{item.name}</td>
                 <td>{item.email}</td>
@@ -261,6 +266,7 @@ function AccountAdmin() {
                 <td onClick={click}>
                     <i className="fa-regular fa-pen-to-square btn-edit"></i>
                     <i className="fa-regular fa-trash-can btn-delete"></i>
+                    <i className="fa-solid fa-shield-halved btn-reset"></i>
                 </td>
             </tr>
         ));
@@ -268,6 +274,10 @@ function AccountAdmin() {
         function click(e) {
             const id =
                 e.target.parentElement.parentElement.getAttribute("data-key");
+            const accountId =
+                e.target.parentElement.parentElement.getAttribute(
+                    "data-account"
+                );
             if (e.target.className.includes("btn-delete")) {
                 setIsDelete(true);
                 setId(id);
@@ -279,7 +289,9 @@ function AccountAdmin() {
             } else if (e.target.className.includes("btn-edit")) {
                 setUpdateState(true);
                 setId(id);
-                console.log(id);
+            } else if (e.target.className.includes("btn-reset")) {
+                setIsReset(true);
+                setId(accountId);
             }
         }
 
@@ -310,6 +322,7 @@ function AccountAdmin() {
 
     const handleCloseModalCustom = () => {
         setIsDelete(false);
+        setIsReset(false);
     };
 
     const handleInputCustom = () => {
@@ -664,6 +677,16 @@ function AccountAdmin() {
         setIsDelete(false);
     };
 
+    //Handle reset password
+    const handleReset = () => {
+        AccountService.resetPasswordById(id).then((res) => {
+            if (res.success) {
+                setState(!state);
+            }
+        });
+        setIsReset(false);
+    };
+
     //Handle Search
     const searchAccount = (account) => {
         if (dropValue === "principal") {
@@ -711,6 +734,20 @@ function AccountAdmin() {
                     handleCloseModalCustom={handleCloseModalCustom}
                     handleDelete={handleDelete}
                     title={`Do you want to delete the ${name}?`}
+                />
+            }
+            handleCloseModalCustom={handleCloseModalCustom}
+        />
+    );
+
+    const ConfirmReset = (
+        <ModalCustom
+            show={isReset}
+            content={
+                <ConfirmAlert
+                    handleCloseModalCustom={handleCloseModalCustom}
+                    handleDelete={handleReset}
+                    title={`Do you want to reset this account password?`}
                 />
             }
             handleCloseModalCustom={handleCloseModalCustom}
@@ -820,6 +857,7 @@ function AccountAdmin() {
                 {updateState ? DivUpdateAccount : null}
             </footer> */}
             {isDelete ? ConfirmDelete : null}
+            {isReset ? ConfirmReset : null}
             {addState ? DivAddAccount : null}
             {updateState ? DivUpdateAccount : null}
             <Loading isLoading={isLoading} />

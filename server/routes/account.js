@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Person = require("../model/Person");
+const argon2 = require("argon2");
 const Account = require("../model/Account");
 const multer = require("multer");
 const validator = require("email-validator");
@@ -160,5 +161,27 @@ router.put(
         }
     }
 );
+
+router.post("/reset-password/:accountID", async (req, res, next) => {
+    try {
+        let resetPassword = "123456";
+        const hashPassword = await argon2.hash(resetPassword);
+        let updateAccount = {
+            account_password: hashPassword,
+        };
+        const account = await Account.findById(req.params.accountID);
+        account.account_password = hashPassword;
+        await account.save();
+        res.json({
+            success: true,
+            message: "Your password has been reset.",
+        });
+    } catch (error) {
+        const err = new Error("Internal Server Error");
+        err.status = 500;
+        next(err);
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+});
 
 module.exports = router;
