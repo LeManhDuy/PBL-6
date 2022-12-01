@@ -3,15 +3,18 @@ import "./StudentParents.css";
 import Logo from "../../../assets/image/Logo.png";
 import NotFound from "../../../assets/image/404.png";
 import StudentService from "../../../config/service/StudentService";
+import Loading from "../../../lib/Loading/Loading";
 
 const StudentParents = () => {
     const [students, setStudents] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         getStudent();
     }, []);
 
     const getStudent = async () => {
+        setIsLoading(true);
         await StudentService.getPupilByParentId(
             JSON.parse(localStorage.getItem("@Login")).AccountId
         )
@@ -45,8 +48,11 @@ const StudentParents = () => {
                         };
                     }
                 );
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.name > b.name ? 1 : -1
+                );
                 setStudents(dataSourcesSorted);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -127,6 +133,7 @@ const StudentParents = () => {
             <div className="detail-content">
                 <StudentInfo students={students} />
             </div>
+            <Loading isLoading={isLoading} />
         </div>
     );
 };

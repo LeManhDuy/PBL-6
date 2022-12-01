@@ -30,11 +30,11 @@ const FeeAdmin = () => {
     const [isMultiUpdate, setIsMultiUpdate] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [listFee, setListFee] = useState([])
-    const [selectAll, setSelectAll] = useState(false)
+    const [listFee, setListFee] = useState([]);
+    const [selectAll, setSelectAll] = useState(false);
     const [dropValue, setDropValue] = useState("All");
     const [dropValueFeeCateogory, setDropValueFeeCateogory] = useState("All");
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         getFee();
@@ -48,6 +48,7 @@ const FeeAdmin = () => {
     ];
 
     const getFee = () => {
+        setIsLoading(true);
         FeeService.getFee()
             .then((response) => {
                 const dataSources = response.allFee.map((item, index) => {
@@ -77,8 +78,11 @@ const FeeAdmin = () => {
                         fee_status: item.fee_status ? "PAIDED" : "UNPAID",
                     };
                 });
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.class_name > b.class_name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.class_name > b.class_name ? 1 : -1
+                );
                 setFee(dataSourcesSorted);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -110,7 +114,9 @@ const FeeAdmin = () => {
                         fee_status: item.fee_status ? "PAIDED" : "UNPAID",
                     };
                 });
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.fee_name > b.fee_name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.fee_name > b.fee_name ? 1 : -1
+                );
                 setFee(dataSourcesSorted);
             })
             .catch((error) => {
@@ -130,7 +136,9 @@ const FeeAdmin = () => {
                         };
                     }
                 );
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.name > b.name ? 1 : -1
+                );
                 setFeeCategory(dataSourcesSorted);
             })
             .catch((error) => {
@@ -166,15 +174,17 @@ const FeeAdmin = () => {
                             ? item.paid_date.split("T")[0]
                             : "YYYY-MM-DD",
                         fee_status: item.fee_status ? "PAIDED" : "UNPAID",
-                    }
-                })
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.class_name > b.class_name ? 1 : -1,);
-                setFee(dataSourcesSorted)
+                    };
+                });
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.class_name > b.class_name ? 1 : -1
+                );
+                setFee(dataSourcesSorted);
             })
             .catch((error) => {
-                console.log(error)
-            })
-    }
+                console.log(error);
+            });
+    };
 
     const Dropdown = ({ value, options, onChange }) => {
         return (
@@ -220,7 +230,7 @@ const FeeAdmin = () => {
                 getFeeByFeeCategoryId(item.id);
             } else if (event.target.value === "All") {
                 getFee();
-                setDropValue("All")
+                setDropValue("All");
             }
         });
     };
@@ -228,22 +238,20 @@ const FeeAdmin = () => {
     const handleChange = (event) => {
         setDropValue(event.target.value);
         if (event.target.value === "paided") {
-            const feesArray = fees.filter(
-                (fee) =>
-                    fee.fee_status.toLowerCase().includes("paided")
+            const feesArray = fees.filter((fee) =>
+                fee.fee_status.toLowerCase().includes("paided")
             );
-            setFee(feesArray)
+            setFee(feesArray);
         }
         if (event.target.value === "unpaid") {
-            const feesArray = fees.filter(
-                (fee) =>
-                    fee.fee_status.toLowerCase().includes("unpaid")
+            const feesArray = fees.filter((fee) =>
+                fee.fee_status.toLowerCase().includes("unpaid")
             );
-            setFee(feesArray)
+            setFee(feesArray);
         }
         if (event.target.value === "all") {
             getFee();
-            setDropValueFeeCateogory("All")
+            setDropValueFeeCateogory("All");
         }
     };
 
@@ -255,7 +263,7 @@ const FeeAdmin = () => {
     };
 
     const handleConfirmAddFee = (allValue, list_pupil) => {
-        setIsLoading(true)
+        setIsLoading(true);
         if (allValue.fee_status === "false" || allValue.fee_status == "") {
             allValue.paid_date = null;
         }
@@ -269,19 +277,19 @@ const FeeAdmin = () => {
                 if (res.success) {
                     setState(!state);
                     setErrorServer(false);
-                    setIsLoading(false)
+                    setIsLoading(false);
                     setErrorMessage("");
                     setAddFeeState(false);
                     setKeyword("");
-                    setDropValue("All")
-                    setDropValueFeeCateogory("All")
+                    setDropValue("All");
+                    setDropValueFeeCateogory("All");
                 } else {
                     setErrorServer(true);
                     setErrorMessage(res.message);
-                    setIsLoading(false)
+                    setIsLoading(false);
                     setAddFeeState(true);
-                    setDropValue("All")
-                    setDropValueFeeCateogory("All")
+                    setDropValue("All");
+                    setDropValueFeeCateogory("All");
                 }
             })
             .catch((error) => console.log("error", error));
@@ -321,16 +329,16 @@ const FeeAdmin = () => {
                     setState(!state);
                     setErrorServer(false);
                     setErrorMessage("");
-                    setUpdateFeeState(false)
+                    setUpdateFeeState(false);
                     setKeyword("");
-                    setDropValue("All")
-                    setDropValueFeeCateogory("All")
+                    setDropValue("All");
+                    setDropValueFeeCateogory("All");
                 } else {
                     setErrorServer(true);
                     setErrorMessage(res.message);
                     setUpdateFeeState(true);
-                    setDropValue("All")
-                    setDropValueFeeCateogory("All")
+                    setDropValue("All");
+                    setDropValueFeeCateogory("All");
                 }
             })
             .catch((error) => console.log("error", error));
@@ -371,7 +379,8 @@ const FeeAdmin = () => {
         const currentItems = searchFee.slice(itemOffset, endOffset);
         const pageCount = Math.ceil(searchFee.length / itemsPerPage);
         const handlePageClick = (event) => {
-            const newOffset = (event.selected * itemsPerPage) % searchFee.length;
+            const newOffset =
+                (event.selected * itemsPerPage) % searchFee.length;
             setItemOffset(newOffset);
         };
         return (
@@ -402,7 +411,6 @@ const FeeAdmin = () => {
                         hrefAllControls
                     />
                 </footer>
-
             </>
         );
     }
@@ -411,18 +419,20 @@ const FeeAdmin = () => {
         const feeItem = fees.map((item) => (
             <tr data-key={item.id} key={item.id}>
                 <td></td>
-                <td><input
-                    className="check-input"
-                    type="checkbox"
-                    checked={listFee[item.id]}
-                    name="fee"
-                    onChange={() => {
-                        setListFee({
-                            ...listFee,
-                            [item.id]: !listFee[item.id]
-                        })
-                    }}
-                /></td>
+                <td>
+                    <input
+                        className="check-input"
+                        type="checkbox"
+                        checked={listFee[item.id]}
+                        name="fee"
+                        onChange={() => {
+                            setListFee({
+                                ...listFee,
+                                [item.id]: !listFee[item.id],
+                            });
+                        }}
+                    />
+                </td>
                 <td>{item.fee_name}</td>
                 <td>{item.start_date}</td>
                 <td>{item.end_date}</td>
@@ -451,10 +461,10 @@ const FeeAdmin = () => {
                         className="check-input"
                         type="checkbox"
                         onChange={toggle}
-                        checked={selectAll} />
+                        checked={selectAll}
+                    />
                 </th>
-                <th>
-                    Select</th>
+                <th>Select</th>
                 <th>Fee's Name</th>
                 <th>Start date</th>
                 <th>End date</th>
@@ -477,26 +487,24 @@ const FeeAdmin = () => {
         );
     };
     const toggle = (event) => {
-        var checkboxes = document.getElementsByName('fee');
+        var checkboxes = document.getElementsByName("fee");
         var hash = {};
         if (event.target.checked) {
             for (var i = 0, n = checkboxes.length; i < n; i++) {
                 checkboxes[i].checked = true;
             }
-            const arrFeeID = fees.map(e => e.id);
-            for (var i = 0; i < arrFeeID.length; i++)
-                hash[arrFeeID[i]] = true;
-            setListFee(hash)
-            setSelectAll(true)
-        }
-        else {
+            const arrFeeID = fees.map((e) => e.id);
+            for (var i = 0; i < arrFeeID.length; i++) hash[arrFeeID[i]] = true;
+            setListFee(hash);
+            setSelectAll(true);
+        } else {
             for (var i = 0, n = checkboxes.length; i < n; i++) {
                 checkboxes[i].checked = false;
             }
-            setSelectAll(false)
+            setSelectAll(false);
             resetListFee();
         }
-    }
+    };
     const ConfirmDelete = (
         <ModalCustom
             show={isDelete}
@@ -526,11 +534,11 @@ const FeeAdmin = () => {
     };
 
     const resetListFee = () => {
-        setListFee({})
-    }
+        setListFee({});
+    };
     const checkClickUpdate = () => {
         setIsMultiUpdate(true);
-    }
+    };
 
     const handleUpdateStatus = () => {
         setIsLoading(true);
@@ -542,18 +550,18 @@ const FeeAdmin = () => {
                     setState(!state);
                     setErrorServer(false);
                     setIsLoading(false);
-                    resetListFee()
-                    setSelectAll(false)
+                    resetListFee();
+                    setSelectAll(false);
                     setErrorMessage("");
-                    setDropValue("All")
-                    setDropValueFeeCateogory("All")
+                    setDropValue("All");
+                    setDropValueFeeCateogory("All");
                 } else {
                     setErrorServer(true);
                     setIsLoading(false);
                     setErrorMessage(res.message);
-                    setDropValue("All")
-                    resetListFee()
-                    setDropValueFeeCateogory("All")
+                    setDropValue("All");
+                    resetListFee();
+                    setDropValueFeeCateogory("All");
                 }
             })
             .catch((error) => console.log("error", error));
@@ -576,7 +584,7 @@ const FeeAdmin = () => {
 
     const checkClickDelete = () => {
         setIsMultiDelete(true);
-    }
+    };
 
     const handleMultiDelete = () => {
         setIsLoading(true);
@@ -588,18 +596,18 @@ const FeeAdmin = () => {
                     setState(!state);
                     setIsLoading(false);
                     setErrorServer(false);
-                    resetListFee()
-                    setSelectAll(false)
+                    resetListFee();
+                    setSelectAll(false);
                     setErrorMessage("");
-                    setDropValue("All")
-                    setDropValueFeeCateogory("All")
+                    setDropValue("All");
+                    setDropValueFeeCateogory("All");
                 } else {
                     setErrorServer(true);
                     setIsLoading(false);
                     setErrorMessage(res.message);
-                    setDropValue("All")
-                    setDropValueFeeCateogory("All")
-                    resetListFee()
+                    setDropValue("All");
+                    setDropValueFeeCateogory("All");
+                    resetListFee();
                 }
             })
             .catch((error) => console.log("error", error));
@@ -640,10 +648,16 @@ const FeeAdmin = () => {
                     <button className="btn-account" onClick={handleAddFee}>
                         Add
                     </button>
-                    <button className="btn-account update" onClick={checkClickUpdate}>
+                    <button
+                        className="btn-account update"
+                        onClick={checkClickUpdate}
+                    >
                         Update Status
                     </button>
-                    <button className="btn-account delete" onClick={checkClickDelete}>
+                    <button
+                        className="btn-account delete"
+                        onClick={checkClickDelete}
+                    >
                         Delete
                     </button>
                     {/* <button className="btn-account" onClick={handleUpdateStatus(listFee)}>

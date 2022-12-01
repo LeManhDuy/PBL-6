@@ -14,6 +14,7 @@ import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
 import AddSubject from "../../../lib/ModalInput/AddSubject/AddSubject";
 import UpdateSubject from "../../../lib/ModalInput/UpdateSubject/UpdateSubject";
 import ReactPaginate from "react-paginate";
+import Loading from "../../../lib/Loading/Loading";
 
 const SubjectAdmin = () => {
     const [addSubjectState, setAddSubjectState] = useState(false);
@@ -26,12 +27,14 @@ const SubjectAdmin = () => {
     const [name, setName] = useState();
     const [errorMessage, setErrorMessage] = useState("");
     const [keyword, setKeyword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         getSubject();
     }, [state]);
 
     const getSubject = () => {
+        setIsLoading(true);
         SubjectService.getSubject()
             .then((response) => {
                 const dataSources = response.allSubject.map((item, index) => {
@@ -41,8 +44,11 @@ const SubjectAdmin = () => {
                         name: item.subject_name,
                     };
                 });
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.name > b.name ? 1 : -1
+                );
                 setSubject(dataSourcesSorted);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -167,7 +173,8 @@ const SubjectAdmin = () => {
         const currentItems = searchSubject.slice(itemOffset, endOffset);
         const pageCount = Math.ceil(searchSubject.length / itemsPerPage);
         const handlePageClick = (event) => {
-            const newOffset = (event.selected * itemsPerPage) % searchSubject.length;
+            const newOffset =
+                (event.selected * itemsPerPage) % searchSubject.length;
             setItemOffset(newOffset);
         };
         return (
@@ -245,9 +252,8 @@ const SubjectAdmin = () => {
     };
 
     const searchSubject = (subjects) => {
-        return subjects.filter(
-            (subject) =>
-                subject.name.toLowerCase().includes(keyword.toLowerCase())
+        return subjects.filter((subject) =>
+            subject.name.toLowerCase().includes(keyword.toLowerCase())
         );
     };
 
@@ -285,7 +291,10 @@ const SubjectAdmin = () => {
                     </div>
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={10} searchSubject={searchSubject(subjects)}/>
+            <PaginatedItems
+                itemsPerPage={10}
+                searchSubject={searchSubject(subjects)}
+            />
             {/* <div className="table-content">
                 <TableSubject subjects={subjects} />
             </div>
@@ -323,6 +332,7 @@ const SubjectAdmin = () => {
             {addSubjectState ? DivAddSubject : null}
             {updateSubjectState ? DivUpdateSubject : null}
             {isDelete ? ConfirmDelete : null}
+            <Loading isLoading={isLoading} />
         </div>
     );
 };

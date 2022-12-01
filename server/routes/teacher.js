@@ -318,7 +318,7 @@ router.get("/get-cbb-teacher-dont-have-class/:classID", async (req, res, next) =
 router.put("/:teacherID", upload.single("person_image"), async (req, res, next) => {
     const {
         account_username,
-        account_password,
+        // account_password,
         person_fullname,
         person_dateofbirth,
         person_email,
@@ -332,7 +332,7 @@ router.put("/:teacherID", upload.single("person_image"), async (req, res, next) 
     // Validation
     if (
         !account_username ||
-        !account_password ||
+        // !account_password ||
         !person_fullname ||
         !person_dateofbirth ||
         !person_email ||
@@ -384,12 +384,12 @@ router.put("/:teacherID", upload.single("person_image"), async (req, res, next) 
             message: "Email must be in the correct format.",
         });
     }
-    if (account_password.length < 6) {
-        return res.status(400).json({
-            success: false,
-            message: "Password must have at least 6 characters.",
-        });
-    }
+    // if (account_password.length < 6) {
+    //     return res.status(400).json({
+    //         success: false,
+    //         message: "Password must have at least 6 characters.",
+    //     });
+    // }
     try {
         const teacher = await Teacher.findById(req.params.teacherID);
         const person = await Person.findById(teacher.person_id);
@@ -406,6 +406,11 @@ router.put("/:teacherID", upload.single("person_image"), async (req, res, next) 
         //         })
         //     }
         // }
+        if (person.person_image) {
+            if (person_image === null) {
+                person_image = person.person_image;
+            }
+        }
         //update Teacher Information
         let updateTeacher = {
             graduated_school,
@@ -435,18 +440,19 @@ router.put("/:teacherID", upload.single("person_image"), async (req, res, next) 
             { new: true }
         );
         //update Account Information
-        const hashPassword = await argon2.hash(account_password);
-        let updateAccount = {
-            account_username,
-            account_password: hashPassword,
-        };
-        const postUpdateAccount = { _id: person.account_id };
-        const updatedAcccount = await Account.findOneAndUpdate(
-            postUpdateAccount,
-            updateAccount,
-            { new: true }
-        );
-        if (!updatedTeacher || !updatedPerson || !updatedAcccount)
+        // const hashPassword = await argon2.hash(account_password);
+        // let updateAccount = {
+        //     account_username,
+        //     account_password: hashPassword,
+        // };
+        // const postUpdateAccount = { _id: person.account_id };
+        // const updatedAcccount = await Account.findOneAndUpdate(
+        //     postUpdateAccount,
+        //     updateAccount,
+        //     { new: true }
+        // );
+        // if (!updatedTeacher || !updatedPerson || !updatedAcccount)
+        if (!updatedTeacher || !updatedPerson)
             return res
                 .status(401)
                 .json({ success: false, message: "Update failed." });
@@ -456,7 +462,7 @@ router.put("/:teacherID", upload.single("person_image"), async (req, res, next) 
             updated_info: [
                 updatePerson,
                 updateTeacher,
-                { account_username: updateAccount.account_username },
+                // { account_username: updateAccount.account_username },
             ],
         });
     } catch (error) {
