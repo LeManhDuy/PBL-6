@@ -5,6 +5,7 @@ import ModalInput from "../../../lib/ModalInput/ModalInput";
 import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
 import FormAddNotificationParents from "../NotificationParents/FormAddNotificationParents/FormAddNotificationParents";
+import Loading from "../../../lib/Loading/Loading";
 
 const NotificationParents = () => {
     const [isPublic, setIsPublic] = useState(true);
@@ -17,6 +18,7 @@ const NotificationParents = () => {
     const [isDelete, setIsDelete] = useState(false);
     const [errorService, setErrorServer] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         getNotifications();
@@ -24,6 +26,7 @@ const NotificationParents = () => {
     }, [state]);
 
     const getNotifications = () => {
+        setIsLoading(true);
         NotificationService.getNotifications()
             .then((response) => {
                 const dataSources = response.publicNotifications.map(
@@ -42,6 +45,7 @@ const NotificationParents = () => {
                 });
 
                 setNotifications(dataSources);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -49,6 +53,7 @@ const NotificationParents = () => {
     };
 
     const getNotificationsParents = () => {
+        setIsLoading(true);
         NotificationService.getNotificationsParents(
             JSON.parse(localStorage.getItem("@Login")).AccountId
         )
@@ -72,6 +77,7 @@ const NotificationParents = () => {
                     return new Date(b.date) - new Date(a.date);
                 });
                 setNotificationsPrivate(dataSources);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -298,6 +304,7 @@ const NotificationParents = () => {
             </div>
             {isCreate || isUpdate ? DivAddNotification : null}
             {isDelete ? ConfirmDelete : null}
+            <Loading isLoading={isLoading} />
         </div>
     );
 };

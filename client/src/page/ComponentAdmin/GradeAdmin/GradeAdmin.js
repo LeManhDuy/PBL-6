@@ -13,6 +13,7 @@ import UpdateGrade from "../../../lib/ModalInput/UpdateGrade/UpdateGrade";
 import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
 import ReactPaginate from "react-paginate";
+import Loading from "../../../lib/Loading/Loading";
 
 const GradeAdmin = () => {
     const [addGradeState, setAddGradeState] = useState(false);
@@ -25,12 +26,14 @@ const GradeAdmin = () => {
     const [errorMessage, setErrorMessage] = useState();
     const [name, setName] = useState();
     const [keyword, setKeyword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         getGrade();
     }, [state]);
 
     const getGrade = () => {
+        setIsLoading(true);
         GradeService.getGrades()
             .then((response) => {
                 const dataSources = response.allGrade.map((item, index) => {
@@ -40,8 +43,11 @@ const GradeAdmin = () => {
                         name: item.grade_name,
                     };
                 });
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.name > b.name ? 1 : -1
+                );
                 setGrade(dataSourcesSorted);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -160,9 +166,8 @@ const GradeAdmin = () => {
     };
 
     const searchGrade = (grades) => {
-        return grades.filter(
-            (grade) =>
-                grade.name.toLowerCase().includes(keyword.toLowerCase())
+        return grades.filter((grade) =>
+            grade.name.toLowerCase().includes(keyword.toLowerCase())
         );
     };
 
@@ -176,7 +181,8 @@ const GradeAdmin = () => {
         const currentItems = searchGrade.slice(itemOffset, endOffset);
         const pageCount = Math.ceil(searchGrade.length / itemsPerPage);
         const handlePageClick = (event) => {
-            const newOffset = (event.selected * itemsPerPage) % searchGrade.length;
+            const newOffset =
+                (event.selected * itemsPerPage) % searchGrade.length;
             setItemOffset(newOffset);
         };
         return (
@@ -207,7 +213,6 @@ const GradeAdmin = () => {
                         hrefAllControls
                     />
                 </footer>
-
             </>
         );
     }
@@ -280,7 +285,10 @@ const GradeAdmin = () => {
                     </div>
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={10} searchGrade={searchGrade(grades)}/>
+            <PaginatedItems
+                itemsPerPage={10}
+                searchGrade={searchGrade(grades)}
+            />
             {/* <div className="table-content">
                 <TableGrade grades={searchGrade(grades)} />
             </div> */}
@@ -318,6 +326,7 @@ const GradeAdmin = () => {
             {addGradeState ? DivAddGrade : null}
             {updateGradeState ? DivUpdateGrade : null}
             {isDelete ? ConfirmDelete : null}
+            <Loading isLoading={isLoading} />
         </div>
     );
 };

@@ -208,7 +208,7 @@ router.get("/:personID", async (req, res, next) => {
 // @access Private Only Admin
 router.put("/:personID", upload.single("person_image"), async (req, res, next) => {
     const {
-        account_password,
+        // account_password,
         person_fullname,
         person_dateofbirth,
         person_email,
@@ -218,7 +218,7 @@ router.put("/:personID", upload.single("person_image"), async (req, res, next) =
     } = req.body;
     // Validation
     if (
-        !account_password ||
+        // !account_password ||
         !person_fullname ||
         !person_dateofbirth ||
         !person_email ||
@@ -263,12 +263,12 @@ router.put("/:personID", upload.single("person_image"), async (req, res, next) =
             message: "Email must correct address form.",
         });
     }
-    if (account_password.length < 6) {
-        return res.status(400).json({
-            success: false,
-            message: "Password must have at least 6 characters.",
-        });
-    }
+    // if (account_password.length < 6) {
+    //     return res.status(400).json({
+    //         success: false,
+    //         message: "Password must have at least 6 characters.",
+    //     });
+    // }
     try {
         const person = await Person.findById(req.params.personID);
         // if (person.person_image) {
@@ -302,17 +302,19 @@ router.put("/:personID", upload.single("person_image"), async (req, res, next) =
             { new: true }
         );
         //update Account Information
-        const hashPassword = await argon2.hash(account_password);
-        let updateAccount = {
-            account_password: hashPassword,
-        };
-        const postUpdateAccount = { _id: person.account_id };
-        updatedAcccount = await Account.findOneAndUpdate(
-            postUpdateAccount,
-            updateAccount,
-            { new: true }
-        );
-        if (!updatePerson || !updateAccount)
+        // const hashPassword = await argon2.hash(account_password);
+        // let updateAccount = {
+        //     account_password: hashPassword,
+        // };
+        // const postUpdateAccount = { _id: person.account_id };
+        // updatedAcccount = await Account.findOneAndUpdate(
+        //     postUpdateAccount,
+        //     updateAccount,
+        //     { new: true }
+        // );
+        // if (!updatePerson || !updateAccount)
+        if (!updatePerson)
+
             return res
                 .status(401)
                 .json({ success: false, message: "Person does not found." });

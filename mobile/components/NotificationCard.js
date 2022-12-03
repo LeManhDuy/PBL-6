@@ -1,7 +1,6 @@
-import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { scale, moderateScale } from 'react-native-size-matters';
-import { COLORS, SIZES, SHADOWS, assets, FONTS } from '../constants'
+import { COLORS, SHADOWS } from '../constants'
 import React from 'react'
 const NotificationCard = (props) => {
 

@@ -91,6 +91,20 @@ const updateAccountAffairs = async (params, id) => {
     return await HandleApi.APIPutWithTokenIMG(`affair/${id}`, params);
 };
 
+// Account
+
+const getAccountsById = async (id) => {
+    return await HandleApi.APIGetWithToken(`account/${id}`);
+};
+
+const updateAccountsById = async (id, params) => {
+    return await HandleApi.APIPutWithTokenIMG(`account/${id}`, params);
+};
+
+const resetPasswordById = async (id) => {
+    return await HandleApi.APIPost(`account/reset-password/${id}`);
+};
+
 const AccountService = {
     //Principal
     getAccountsPrincipal,
@@ -117,6 +131,10 @@ const AccountService = {
     deleteAccountAffairsById,
     updateAccountAffairs,
     getAccountsAffairsById,
+    //Account
+    getAccountsById,
+    updateAccountsById,
+    resetPasswordById,
 };
 
 export default AccountService;

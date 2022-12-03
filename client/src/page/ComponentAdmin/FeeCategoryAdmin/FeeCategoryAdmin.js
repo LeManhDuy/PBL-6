@@ -13,6 +13,7 @@ import UpdateFeeCategory from "../../../lib/ModalInput/UpdateFeeCategory/UpdateF
 import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import ConfirmAlert from "../../../lib/ConfirmAlert/ConfirmAlert";
 import ReactPaginate from "react-paginate";
+import Loading from "../../../lib/Loading/Loading";
 
 const FeeCategoryAdmin = () => {
     const [addFeeCategoryState, setAddFeeCategoryState] = useState(false);
@@ -25,12 +26,14 @@ const FeeCategoryAdmin = () => {
     const [errorServer, setErrorServer] = useState(false);
     const [name, setName] = useState();
     const [errorMessage, setErrorMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         getFeeCategory();
     }, [state]);
 
     const getFeeCategory = () => {
+        setIsLoading(true);
         FeeCategoryService.getFeeCategory()
             .then((response) => {
                 const dataSources = response.allFeeCategory.map(
@@ -45,8 +48,11 @@ const FeeCategoryAdmin = () => {
                         };
                     }
                 );
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.name > b.name ? 1 : -1
+                );
                 setFeeCategory(dataSourcesSorted);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -54,7 +60,6 @@ const FeeCategoryAdmin = () => {
     };
 
     const handleConfirmAddFeeCategory = (allValue) => {
-        console.log(allValue);
         FeeCategoryService.addFeeCategory({
             fee_name: allValue.name,
             fee_amount: allValue.ammount,
@@ -97,7 +102,6 @@ const FeeCategoryAdmin = () => {
     );
 
     const handleConfirmUpdateFeeCategory = (allValue) => {
-        console.log(allValue);
         FeeCategoryService.updateFeeCategory(Id, {
             fee_name: allValue.name,
             fee_amount: allValue.ammount,
@@ -178,7 +182,8 @@ const FeeCategoryAdmin = () => {
         const currentItems = searchFeeCategory.slice(itemOffset, endOffset);
         const pageCount = Math.ceil(searchFeeCategory.length / itemsPerPage);
         const handlePageClick = (event) => {
-            const newOffset = (event.selected * itemsPerPage) % searchFeeCategory.length;
+            const newOffset =
+                (event.selected * itemsPerPage) % searchFeeCategory.length;
             setItemOffset(newOffset);
         };
         return (
@@ -209,7 +214,6 @@ const FeeCategoryAdmin = () => {
                         hrefAllControls
                     />
                 </footer>
-
             </>
         );
     }
@@ -302,7 +306,10 @@ const FeeCategoryAdmin = () => {
                     </div>
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={10} searchFeeCategory={searchFeeCategory(feecategories)}/>
+            <PaginatedItems
+                itemsPerPage={10}
+                searchFeeCategory={searchFeeCategory(feecategories)}
+            />
             {/* <div className="table-content">
                 <TableFeeCategory
                     feecategories={searchFeeCategory(feecategories)}
@@ -342,6 +349,7 @@ const FeeCategoryAdmin = () => {
             {addFeeCategoryState ? DivAddFeeCategory : null}
             {updateFeeCategoryState ? DivUpdateFeeCategory : null}
             {isDelete ? ConfirmDelete : null}
+            <Loading isLoading={isLoading} />
         </div>
     );
 };
