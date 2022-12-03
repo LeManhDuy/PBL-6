@@ -356,7 +356,6 @@ router.put("/:teacherID", upload.single("person_image"), async (req, res, next) 
         .populate("person_id", ["person_id"])
 
     const phoneValidate = await Person.findOne({ person_phonenumber: person_phonenumber })
-    console.log(phoneValidate._id.toString());
     if (phoneValidate)
         if (phoneValidate._id.toString() !== teacherInfor.person_id._id.toString()) {
             return res.status(400).json({
