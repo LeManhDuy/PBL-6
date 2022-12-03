@@ -49,7 +49,6 @@ const UpdateProfile = (props) => {
         AccountService.getAccountsById(
             JSON.parse(localStorage.getItem("@Login")).AccountId
         ).then((res) => {
-            console.log(res);
             !!res.personInfor.person_image
                 ? setAvatar(res.personInfor.person_image)
                 : setAvatar(Logo);
@@ -181,7 +180,7 @@ const UpdateProfile = (props) => {
 
     const FormAccountPrincipal = (
         <div className="form-admin-content">
-            <h4>Update Admin Account</h4>
+            <h4>Update Account Information</h4>
             <label
                 className={
                     "error" +
