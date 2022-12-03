@@ -1,26 +1,15 @@
-import {
-    View,
-    Modal,
-    Text,
-    StyleSheet,
-    Pressable,
-    Touchable,
-    TouchableNativeFeedback,
-    FlatList,
-    TouchableHighlight,
-} from "react-native";
+import { View, Modal, Text, StyleSheet, Pressable, Touchable, TouchableNativeFeedback, FlatList, TouchableHighlight } from 'react-native'
 import React, { useState, useEffect } from "react";
-import { TextInput } from "react-native-paper";
-import { scale } from "react-native-size-matters";
-import { SearchDropDown } from "../components";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { TextInput } from 'react-native-paper';
+import { scale } from 'react-native-size-matters';
+import { SearchDropDown } from '../components';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import StudentService from "../config/service/StudentService";
-import NotificationService from "../config/service/NotificationService";
-import GestureRecognizer, {
-    swipeDirections,
-} from "react-native-swipe-gestures";
+import NotificationService from '../config/service/NotificationService';
+import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
 const SendNotice = ({ navigation }) => {
+
     const [privateNotification, setPrivateNotification] = useState({
         title: "",
         content: "",
@@ -28,22 +17,24 @@ const SendNotice = ({ navigation }) => {
         teacher: "",
         sender: true,
     });
-    const [searchText, setSearchText] = useState("");
-    const [searching, setSearching] = useState(false);
+    const [searchText, setSearchText] = useState("")
+    const [searching, setSearching] = useState(false)
     const [options, setOptions] = useState([]);
-    const [filtered, setFiltered] = useState([]);
+    const [filtered, setFiltered] = useState([])
     useEffect(() => {
         getStudents();
     }, []);
 
     const getStudents = async () => {
-        const data = await AsyncStorage.getItem("@Login");
+        const data = await AsyncStorage.getItem("@Login")
         // console.log(JSON.parse(data))
         setPrivateNotification({
             ...privateNotification,
-            parent: JSON.parse(data).AccountId,
-        });
-        StudentService.getPupilByParentId(JSON.parse(data).AccountId)
+            parent: JSON.parse(data).AccountId
+        })
+        StudentService.getPupilByParentId(
+            JSON.parse(data).AccountId
+        )
             .then((response) => {
                 const dataSources = response.getPupilInfor.map(
                     (item, index) => {
@@ -59,16 +50,16 @@ const SendNotice = ({ navigation }) => {
                                 : null,
                             teacher: item.class_id
                                 ? item.class_id.homeroom_teacher_id.person_id
-                                      .person_fullname
+                                    .person_fullname
                                 : "Empty",
                             teacher_phone: item.class_id
                                 ? item.class_id.homeroom_teacher_id.person_id
-                                      .person_phonenumber
+                                    .person_phonenumber
                                 : "Empty",
                             value: item._id,
                             label: item.class_id
                                 ? item.class_id.homeroom_teacher_id.person_id
-                                      .person_fullname
+                                    .person_fullname
                                 : null,
                         };
                     }
@@ -77,21 +68,13 @@ const SendNotice = ({ navigation }) => {
                     a.name > b.name ? 1 : -1
                 );
                 // console.log(dataSourcesSorted)
-                const unique = [];
-                const uniqueTeacher = dataSourcesSorted.filter((element) => {
-                    const isDuplicate = unique.includes(element.teacherId);
-                    if (!isDuplicate) {
-                        unique.push(element.teacherId);
-                        return true;
-                    }
-                    return false;
-                });
-                setOptions(uniqueTeacher);
+                setOptions(dataSourcesSorted);
             })
             .catch((error) => {
                 console.log(error);
             });
     };
+
     onSwipePerformed = (action) => {
         /// action : 'left' for left swipe
         /// action : 'right' for right swipe
@@ -99,69 +82,71 @@ const SendNotice = ({ navigation }) => {
         /// action : 'down' for down swipe
 
         switch (action) {
-            case "left": {
-                console.log("left Swipe performed");
+            case 'left': {
+                console.log('left Swipe performed');
                 break;
             }
-            case "right": {
-                console.log("right Swipe performed");
+            case 'right': {
+                console.log('right Swipe performed');
                 break;
             }
-            case "up": {
-                console.log("up Swipe performed");
+            case 'up': {
+                console.log('up Swipe performed');
                 break;
             }
-            case "down": {
-                console.log("down Swipe performed");
+            case 'down': {
+                console.log('down Swipe performed');
                 break;
             }
             default: {
-                console.log("Undeteceted action");
+                console.log('Undeteceted action');
             }
         }
-    };
+    }
+
+
 
     const onSearch = (text) => {
         if (text) {
-            setSearching(true);
+            setSearching(true)
             setPrivateNotification({
                 ...privateNotification,
-                teacher: "",
-            });
-            const temp = text.toLowerCase();
+                teacher: ''
+            })
+            const temp = text.toLowerCase()
 
-            const tempList = options.filter((item) => {
-                if (item.teacher.toLowerCase().includes(temp)) return item;
-            });
-            setFiltered(tempList);
-        } else {
-            setSearching(false);
-            setFiltered(options);
+            const tempList = options.filter(item => {
+                if (item.teacher.toLowerCase().includes(temp))
+                    return item
+            })
+            setFiltered(tempList)
         }
-    };
+        else {
+            setSearching(false)
+            setFiltered(options)
+        }
+    }
     const showAll = () => {
         // console.log()
-        setSearching(!searching);
-        setFiltered(options);
-    };
+        setSearching(!searching)
+        setFiltered(options)
+    }
     const handleDropdown = (item) => {
         // alert(id)
         setPrivateNotification({
             ...privateNotification,
-            teacher: item.teacherId,
-        });
-        setSearchText(item.teacher);
-        setSearching(false);
-    };
+            teacher: item.teacherId
+        })
+        setSearchText(item.teacher)
+        setSearching(false)
+    }
     const handleSend = () => {
-        if (
-            !privateNotification.teacher ||
-            !privateNotification.title ||
-            !privateNotification.content
-        ) {
-            alert("Please fill in all field!");
-        } else {
-            console.log("pri", privateNotification);
+
+        if (!privateNotification.teacher || !privateNotification.title || !privateNotification.content) {
+            alert('Please fill in all field!')
+        }
+        else {
+            console.log('pri', privateNotification)
             NotificationService.createPrivateNotification({
                 title: privateNotification.title,
                 content: privateNotification.content,
@@ -171,106 +156,124 @@ const SendNotice = ({ navigation }) => {
             })
                 .then((res) => {
                     if (res.success) {
-                        alert("Notification Sent!");
-                        navigation.navigate("Notifications");
-                    } else {
-                        alert("Failed to send notification!");
+                        alert('Notification Sent!')
+                        navigation.navigate('Notifications')
+                    }
+                    else {
+                        alert('Failed to send notification!')
                     }
                 })
                 .catch((error) => console.log("error", error));
         }
-    };
+    }
     return (
         <View style={styles.container}>
             <TextInput
+                label={'Title'}
+                outlineColor={'#1A5CAC'}
+                activeOutlineColor={'#1A5CAC'}
+                selectionColor={'#1A5CAC'}
+                cursorColor={'#1A5CAC'}
+                mode={"outlined"}
                 style={styles.textInput}
-                placeholder="Title"
                 value={privateNotification.title}
                 onChangeText={(props) => {
                     setPrivateNotification({
                         ...privateNotification,
-                        title: props,
-                    });
+                        title: props
+                    })
                 }}
             />
             <TextInput
+                label={'Send to'}
+                outlineColor={'#1A5CAC'}
+                activeOutlineColor={'#1A5CAC'}
+                selectionColor={'#1A5CAC'}
+                cursorColor={'#1A5CAC'}
+                mode={"outlined"}
                 style={styles.textInput}
-                placeholder="Send to"
+                // placeholder="Send to"
                 value={searchText}
                 onChangeText={(props) => {
-                    setSearchText(props);
-                    onSearch(props);
+                    setSearchText(props)
+                    onSearch(props)
                 }}
                 onTouchStart={showAll}
             />
-            {searching && (
+            {
+                searching &&
                 <SearchDropDown
                     onPress={handleDropdown}
-                    dataSource={filtered}
-                />
-            )}
-            {!searching && (
+                    dataSource={filtered} />
+            }
+            {
+                !searching &&
                 <>
                     <TextInput
+                        outlineColor={'#1A5CAC'}
+                        activeOutlineColor={'#1A5CAC'}
+                        selectionColor={'#1A5CAC'}
+                        cursorColor={'#1A5CAC'}
+                        mode={"outlined"}
                         multiline={true}
                         numberOfLines={10}
                         style={styles.textArea}
-                        placeholder="Content"
+                        placeholder='Content'
                         value={privateNotification.content}
                         onChangeText={(props) => {
                             setPrivateNotification({
                                 ...privateNotification,
-                                content: props,
-                            });
+                                content: props
+                            })
                         }}
                     />
                 </>
-            )}
+            }
             <TouchableHighlight style={styles.sendButton} onPress={handleSend}>
                 <Text style={styles.buttonText}>Send</Text>
             </TouchableHighlight>
         </View>
-    );
-};
+    )
+}
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: "#fff",
         // justifyContent: 'center',
-        alignItems: "center",
+        alignItems: 'center',
         flex: 1,
+        padding: 5,
     },
     textInput: {
-        backgroundColor: "white",
-        width: "100%",
+        backgroundColor: 'white',
+        width: '100%',
         borderRadius: 5,
         height: scale(40),
         fontSize: scale(12),
-        fontWeight: "bold",
-        paddingHorizontal: 10,
     },
     textArea: {
-        backgroundColor: "#white",
-        width: "100%",
+        backgroundColor: '#white',
+        width: '100%',
         borderRadius: 5,
         // height: windowHeight-scale(80),
         // textAlignVertical: "top",
         // flexWrap: 'wrap',
         fontSize: scale(12),
-        fontWeight: "bold",
+        fontWeight: 'bold',
     },
     sendButton: {
-        position: "absolute",
+        position: 'absolute',
         bottom: scale(30),
         height: scale(50),
         width: scale(150),
         borderRadius: 50,
-        backgroundColor: "gray",
-        justifyContent: "center",
+        backgroundColor: '#83ACDC',
+        justifyContent: 'center',
     },
     buttonText: {
-        alignSelf: "center",
-        color: "white",
-        fontWeight: "bold",
-        fontSize: scale(25),
-    },
+        alignSelf: 'center',
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: scale(16)
+    }
 });
-export default SendNotice;
+export default SendNotice

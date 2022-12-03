@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         marginBottom: scale(5),
         borderRadius: 4,
         borderWidth: 1,
-        borderColor: '#83acdc',
+        borderColor: '#1A5CAC',
     },
     itemText: {
         color: '#83ACDC',

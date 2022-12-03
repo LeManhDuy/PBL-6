@@ -53,23 +53,26 @@ const Details = () => {
             backgroundColor: "#fff",
         },
         infoContainer: {
-            padding: 20,
+            padding: 5,
             width: "75%",
             alignSelf: 'center',
             alignItems: 'center',
+            
             // ...SHADOWS.dark
         },
         circleImg: {
-            width: 200,
-            height: 200,
-            borderRadius: 200 / 2,
+            width: 170,
+            height: 170,
+            borderRadius: 170 / 2,
         },
         flexContainer: {
             flexDirection: "row",
             flex: 1,
-            marginTop: 50,
+            marginTop: 10,
             backgroundColor: '#F5F4F9',
             borderRadius: 20,
+            borderWidth: 1.5,
+            borderColor: '#1A5CAC',
         },
         infoContainer2: {
         },
@@ -88,12 +91,12 @@ const Details = () => {
         },
         infoHeaderText: {
             marginLeft: 25,
-            color: '#225896',
+            color: '#1A5CAC',
             fontSize: 17,
         },
         icon: {
             alignSelf: 'center',
-            color: '#83ACDC',
+            color: '#1A5CAC',
         }
     })
     if (parentInfo) {
