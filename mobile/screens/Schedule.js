@@ -16,7 +16,7 @@ const Schedule = () => {
     const [selectPupil, setSelectPupil] = useState(false)
     const [buttonText, setButtonText] = useState('Select Student')
     const [scheduleShow, setScheduleShow] = useState()
-    
+
     useEffect(() => {
         getPupilsInfo()
         getScheduleInfo()
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     button: {
-        borderWidth: 2,
+        borderWidth: 1.5,
         width: '70%',
         alignSelf: 'center',
         marginTop: scale(12),
@@ -280,23 +280,23 @@ const styles = StyleSheet.create({
     dateContainer: {
         alignSelf: 'center',
         width: '90%',
-        borderWidth: 2,
+        borderWidth: 1.5,
         padding: scale(10),
         borderRadius: 14,
         marginBottom: 20,
-        borderColor: '#83acdc',
+        borderColor: '#1A5CAC',
         backgroundColor: '#F5F4F9',
     },
     dateTextContainer: {
-        borderBottomWidth: 2,
+        borderBottomWidth: 1.5,
         marginBottom: 12,
-        borderColor: '#83acdc',
+        borderColor: '#1A5CAC',
     },
     dateText: {
         fontSize: scale(24),
         fontWeight: 'bold',
         marginLeft: scale(20),
-        color: '#83acdc',
+        color: '#1A5CAC',
     },
     periodContainer: {
         paddingHorizontal: scale(20),
@@ -313,6 +313,8 @@ const styles = StyleSheet.create({
     },
     periodSubject: {
         fontSize: scale(16),
+        color: '#DF0846',
+        //fontWeight: 'bold',
     }
 })
 

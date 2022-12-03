@@ -1,10 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const REACT_APP_API_ENDPOINT="https://blue-school-api.herokuapp.com/"
+// const REACT_APP_API_ENDPOINT="http://192.168.1.133:8000/"
+//const REACT_APP_API_ENDPOINT = "http://192.168.1.13:8000/"
+const REACT_APP_API_ENDPOINT = "https://blue-school-api.onrender.com/"
 
 async function getToken() {
     const data = await AsyncStorage.getItem("@Login")
-    if (data!==null) {
+    if (data !== null) {
         return data.type + " " + data.accessToken;
     }
 }
@@ -75,7 +77,7 @@ function APIPostWithTokenIMG(url, params) {
 function APIPostWithTokenFile(url, file) {
     url = REACT_APP_API_ENDPOINT + "api/" + url;
     const formData = new FormData();
-    formData.append('scheduleFile',file)
+    formData.append('scheduleFile', file)
     return fetch(url, {
         method: "POST",
         headers: {

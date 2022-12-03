@@ -20,6 +20,7 @@
     "@react-navigation/stack": "^6.3.4",
     "expo": "~46.0.16",
     "expo-status-bar": "~1.4.0",
+    "expo-updates": "~0.14.7",
     "formik": "^2.2.9",
     "react": "^18.0.0",
     "react-native": "0.69.6",
@@ -35,8 +36,7 @@
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-tab-view": "^3.0.0",
     "react-native-vector-icons": "^9.2.0",
-    "styled-components": "^5.3.6",
-    "expo-updates": "~0.14.7"
+    "styled-components": "^5.3.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

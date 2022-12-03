@@ -9,20 +9,22 @@ const NotificationCard = (props) => {
             width: "90%",
             alignSelf: 'center',
             justifyContent: 'center',
-            backgroundColor: COLORS.white,
+            backgroundColor: '#F5F4F9',
             padding: 10,
             margin: 10,
             height: moderateScale(100, 0.5),
             borderRadius: 20,
-            ...SHADOWS.dark
+            borderWidth: 1.5,
+            borderColor: '#1A5CAC',
         },
         titleContainer: {
             justifyContent: 'space-evenly',
         },
         dateText: {
-            color: '#fd5d5d',
+            color: '#DF0846',
             fontWeight: 'bold',
-            fontSize: scale(12)
+            fontSize: scale(12),
+            margin: 7,
         },
         containerText: {
             textAlign: 'left',
@@ -30,7 +32,7 @@ const NotificationCard = (props) => {
         titleText: {
             textAlign: 'left',
             fontWeight: 'bold',
-            color: '#1473e6',
+            color: '#1A5CAC',
             fontSize: scale(13)
         },
         contentText: {

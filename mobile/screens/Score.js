@@ -98,11 +98,11 @@ const Score = () => {
                                 : "-",
                             behavior: res.pupilComment[0]
                                 ? res.pupilComment[0] === "Excellent" ||
-                                  res.pupilComment[0] === "Good"
+                                    res.pupilComment[0] === "Good"
                                     ? "Good"
                                     : res.pupilComment[0] === "Passed"
-                                    ? "Passed"
-                                    : "Need to try more."
+                                        ? "Passed"
+                                        : "Need to try more."
                                 : "-",
                         };
                     })
@@ -138,14 +138,14 @@ const Score = () => {
     const handleSelect = (props) => {
         setSelectPupil(false)
         setButtonText(props.name + ' - ' + props.class)
-        const filtered = scoreInfo.filter(x=> {
+        const filtered = scoreInfo.filter(x => {
             return x.student.id == props.id
         })
         setShowScore(filtered[0])
         console.log(filtered[0])
 
     }
-    
+
     const offset = useRef(new Animated.Value(0)).current;
     const marginScroll = offset.interpolate({
         inputRange: [0, scale(70)],
@@ -178,47 +178,47 @@ const Score = () => {
                                 <View style={styles.commentContainer}>
                                     <View style={styles.commentLine}>
                                         <Text style={styles.dateTextContainer}>Behavior</Text>
-                                        <Text style={styles.dateTextContainer}>
+                                        <Text style={styles.dateTextContainerSub}>
                                             {showScore.summary.behavior}
                                         </Text>
                                     </View>
                                     <View style={styles.commentLine}>
                                         <Text style={styles.dateTextContainer}>Perfomance</Text>
-                                        <Text style={styles.dateTextContainer}>
+                                        <Text style={styles.dateTextContainerSub}>
                                             {showScore.summary.content}
                                         </Text>
                                     </View>
                                 </View>
                                 <View style={styles.scoreContainer}>
-                                    {showScore.score.map((item)=>{
+                                    {showScore.score.map((item) => {
                                         return (
-                                        <View key={item.key} style={styles.singleSubject}>
-                                            <Text style={styles.SubjectNameText}>{item.name}</Text>
-                                            <View style={styles.ScoreLine}>
-                                                <Text style={styles.ScoreLabel}>Midterm Score</Text>
-                                                <Text style={styles.ScoreNumber}>{item.midterm_score}</Text>
+                                            <View key={item.key} style={styles.singleSubject}>
+                                                <Text style={styles.SubjectNameText}>{item.name}</Text>
+                                                <View style={styles.ScoreLine}>
+                                                    <Text style={styles.ScoreLabel}>Midterm Score</Text>
+                                                    <Text style={styles.ScoreNumber}>{item.midterm_score}</Text>
+                                                </View>
+                                                <View style={styles.ScoreLine}>
+                                                    <Text style={styles.ScoreLabel}>Final Score</Text>
+                                                    <Text style={styles.ScoreNumber}>{item.final_score}</Text>
+                                                </View>
+                                                <View style={styles.ScoreLine}>
+                                                    <Text style={styles.ScoreLabel}>Average</Text>
+                                                    <Text style={styles.ScoreNumber}>{item.result}</Text>
+                                                </View>
+                                                <View style={styles.ScoreLine}>
+                                                    <Text style={styles.ScoreLabel}>Last Update</Text>
+                                                    <Text style={styles.ScoreNumber}>{item.last_update}</Text>
+                                                </View>
                                             </View>
-                                            <View style={styles.ScoreLine}>
-                                                <Text style={styles.ScoreLabel}>Final Score</Text>
-                                                <Text style={styles.ScoreNumber}>{item.final_score}</Text>
-                                            </View>
-                                            <View style={styles.ScoreLine}>
-                                                <Text style={styles.ScoreLabel}>Average</Text>
-                                                <Text style={styles.ScoreNumber}>{item.result}</Text>
-                                            </View>
-                                            <View style={styles.ScoreLine}>
-                                                <Text style={styles.ScoreLabel}>Last Update</Text>
-                                                <Text style={styles.ScoreNumber}>{item.last_update}</Text>
-                                            </View>
-                                        </View>
                                         )
                                     })}
                                 </View>
                             </View>
                         </AnimatedScrollView>
                     </>
-                     : <Text style={{ marginTop: scale(58) }}>Empty</Text>
-                    } 
+                    : <Text style={{ marginTop: scale(58) }}>Empty</Text>
+                }
 
             </SafeAreaView>
         )
@@ -235,59 +235,69 @@ const styles = StyleSheet.create({
     },
     dataContainer: {
         alignSelf: 'center',
-        width: '90%',        
+        width: '90%',
     },
     dateTextContainer: {
-        fontSize: scale(16),
+        fontSize: scale(15),
         marginBottom: 12,
+        color: '#1A5CAC',
         borderColor: '#83acdc',
         fontWeight: 'bold'
     },
-    commentContainer:{
+    dateTextContainerSub: {
+        fontSize: scale(15),
+        marginBottom: 12,
+        color: '#DF0846',
         borderColor: '#83acdc',
+        fontWeight: 'bold'
+    },
+    commentContainer: {
+        borderColor: '#1A5CAC',
         padding: scale(10),
         borderRadius: 14,
         marginBottom: 20,
-        borderBottomWidth: 2,
-        borderWidth: 2,
+        borderBottomWidth: 1.5,
+        borderWidth: 1.5,
         backgroundColor: '#F5F4F9',
     },
-    commentLine:{
+    commentLine: {
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    scoreContainer:{
-        
+    scoreContainer: {
+
     },
-    singleSubject:{
-        borderColor: '#83acdc',
+    singleSubject: {
+        borderColor: '#1A5CAC',
         padding: scale(13),
         borderRadius: 14,
         marginBottom: 20,
-        borderBottomWidth: 2,
-        borderWidth: 2,
+        borderBottomWidth: 1.5,
+        borderWidth: 1.5,
         backgroundColor: '#F5F4F9',
     },
-    SubjectNameText:{
-        fontSize: scale(16),
+    SubjectNameText: {
+        fontSize: scale(15),
         marginBottom: 12,
-        borderColor: '#83acdc',
+        borderColor: '#1A5CAC',
         fontWeight: 'bold',
-        borderBottomWidth: 2
+        borderBottomWidth: 1.5,
+        color: '#1A5CAC',
     },
     ScoreLine: {
         flexDirection: 'row',
         marginBottom: 10,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     ScoreLabel: {
-        fontWeight: 'bold',
-        fontSize: scale(16),
-        color: '#83acdc',
+        //fontWeight: 'bold',
+        fontSize: scale(14),
+        color: '#1A5CAC',
     },
     ScoreNumber: {
-        fontSize: scale(16),
-        fontWeight: 'bold'
+        fontSize: scale(14),
+        fontWeight: 'bold',
+        color: '#DF0846',
     }
 })
 
