@@ -76,9 +76,12 @@ const PupilCard = ({ data }) => {
             alignSelf: 'center',
             alignItems: 'center',
             flexDirection: 'row',
-            marginBottom: 10,
+            marginBottom: 15,
+            marginTop: 15,
             backgroundColor: '#F5F4F9',
             borderRadius: 20,
+            borderWidth: 1.5,
+            borderColor: '#1A5CAC',
         },
         circleImg: {
             width: 100,
@@ -101,12 +104,13 @@ const PupilCard = ({ data }) => {
         },
         infoHeaderText: {
             marginLeft: 22,
-            color: '#225896',
+            color: '#1A5CAC',
             fontSize: 15,
+            //fontWeight: 'bold',
         },
         icon: {
             alignSelf: 'center',
-            color: '#83ACDC',
+            color: '#1A5CAC',
         }
     })
     return (

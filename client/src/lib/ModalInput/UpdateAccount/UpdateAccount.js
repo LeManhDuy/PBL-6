@@ -10,13 +10,15 @@ const UpdateAccount = (props) => {
     const [allValuesPrincipal, setAllValuesPrincipal] = useState({
         name: "",
         username: "",
-        dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
-            ? "0" + date.split("/")[0]
-            : date.split("/")[0]
-            }-${date.split("/")[1] < 10
+        dateOfBirth: `${date.split("/")[2]}-${
+            date.split("/")[0] < 10
+                ? "0" + date.split("/")[0]
+                : date.split("/")[0]
+        }-${
+            date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-            }`,
+        }`,
         email: "",
         gender: null,
         phone: "",
@@ -28,13 +30,15 @@ const UpdateAccount = (props) => {
     const [allValuesTeacher, setAllValuesTeacher] = useState({
         name: "",
         username: "",
-        dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
-            ? "0" + date.split("/")[0]
-            : date.split("/")[0]
-            }-${date.split("/")[1] < 10
+        dateOfBirth: `${date.split("/")[2]}-${
+            date.split("/")[0] < 10
+                ? "0" + date.split("/")[0]
+                : date.split("/")[0]
+        }-${
+            date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-            }`,
+        }`,
         email: "",
         gender: null,
         phone: "",
@@ -49,13 +53,15 @@ const UpdateAccount = (props) => {
     const [allValuesAffair, setAllValuesAffair] = useState({
         name: "",
         username: "",
-        dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
-            ? "0" + date.split("/")[0]
-            : date.split("/")[0]
-            }-${date.split("/")[1] < 10
+        dateOfBirth: `${date.split("/")[2]}-${
+            date.split("/")[0] < 10
+                ? "0" + date.split("/")[0]
+                : date.split("/")[0]
+        }-${
+            date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-            }`,
+        }`,
         email: "",
         gender: null,
         phone: "",
@@ -67,13 +73,15 @@ const UpdateAccount = (props) => {
     const [allValuesParents, setAllValuesParents] = useState({
         name: "",
         username: "",
-        dateOfBirth: `${date.split("/")[2]}-${date.split("/")[0] < 10
-            ? "0" + date.split("/")[0]
-            : date.split("/")[0]
-            }-${date.split("/")[1] < 10
+        dateOfBirth: `${date.split("/")[2]}-${
+            date.split("/")[0] < 10
+                ? "0" + date.split("/")[0]
+                : date.split("/")[0]
+        }-${
+            date.split("/")[1] < 10
                 ? "0" + date.split("/")[1]
                 : date.split("/")[1]
-            }`,
+        }`,
         email: "",
         gender: null,
         phone: "",
@@ -159,9 +167,7 @@ const UpdateAccount = (props) => {
             AccountService.getAccountsPrincipalsById(props.AccountId).then(
                 (res) => {
                     !!res.getPrincipalInfor[0].person_image
-                        ? setAvatar(
-                            res.getPrincipalInfor[0].person_image
-                        )
+                        ? setAvatar(res.getPrincipalInfor[0].person_image)
                         : setAvatar(Logo);
                     setAllValuesPrincipal({
                         name: res.getPrincipalInfor[0].person_fullname,
@@ -174,8 +180,7 @@ const UpdateAccount = (props) => {
                             )[0],
                         email: res.getPrincipalInfor[0].person_email,
                         gender: `${res.getPrincipalInfor[0].person_gender}`,
-                        phone: res.getPrincipalInfor[0]
-                            .person_phonenumber,
+                        phone: res.getPrincipalInfor[0].person_phonenumber,
                         address: res.getPrincipalInfor[0].person_address,
                         password: "",
                         confirmPassword: "",
@@ -187,8 +192,8 @@ const UpdateAccount = (props) => {
                 (res) => {
                     !!res.getParentInfor[0].person_id.person_image
                         ? setAvatar(
-                            res.getParentInfor[0].person_id.person_image
-                        )
+                              res.getParentInfor[0].person_id.person_image
+                          )
                         : setAvatar(Logo);
                     setAllValuesParents({
                         name: res.getParentInfor[0].person_id.person_fullname,
@@ -218,8 +223,8 @@ const UpdateAccount = (props) => {
                 (res) => {
                     !!res.getTeacherInfor[0].person_id.person_image
                         ? setAvatar(
-                            res.getTeacherInfor[0].person_id.person_image
-                        )
+                              res.getTeacherInfor[0].person_id.person_image
+                          )
                         : setAvatar(Logo);
                     setAllValuesTeacher({
                         name: res.getTeacherInfor[0].person_id.person_fullname,
@@ -234,39 +239,36 @@ const UpdateAccount = (props) => {
                         gender: `${res.getTeacherInfor[0].person_id.person_gender}`,
                         phone: res.getTeacherInfor[0].person_id
                             .person_phonenumber,
-                        address: res.getTeacherInfor[0].person_id.person_address,
+                        address:
+                            res.getTeacherInfor[0].person_id.person_address,
                         graduated: res.getTeacherInfor[0].graduated_school,
-                        working: res.getTeacherInfor[0].working_since.split(
-                            "T"
-                        )[0],
+                        working:
+                            res.getTeacherInfor[0].working_since.split("T")[0],
                         certificate: res.getTeacherInfor[0].certificate,
                         password: "",
                         confirmPassword: "",
                     });
-                })
+                }
+            );
         }
         // Affair
         else {
             AccountService.getAccountsAffairsById(props.AccountId).then(
                 (res) => {
                     !!res.getAffairInfor[0].person_image
-                        ? setAvatar(
-                            res.getAffairInfor[0].person_image
-                        )
+                        ? setAvatar(res.getAffairInfor[0].person_image)
                         : setAvatar(Logo);
                     setAllValuesAffair({
                         name: res.getAffairInfor[0].person_fullname,
                         username:
-                            res.getAffairInfor[0].account_id
-                                .account_username,
+                            res.getAffairInfor[0].account_id.account_username,
                         dateOfBirth:
                             res.getAffairInfor[0].person_dateofbirth.split(
                                 "T"
                             )[0],
                         email: res.getAffairInfor[0].person_email,
                         gender: `${res.getAffairInfor[0].person_gender}`,
-                        phone: res.getAffairInfor[0]
-                            .person_phonenumber,
+                        phone: res.getAffairInfor[0].person_phonenumber,
                         address: res.getAffairInfor[0].person_address,
                         password: "",
                         confirmPassword: "",
@@ -289,9 +291,7 @@ const UpdateAccount = (props) => {
         let confirmPassword = false;
 
         let check = false;
-        if (
-            allValuesPrincipal.name.length < 2
-        ) {
+        if (allValuesPrincipal.name.length < 2) {
             name = true;
             check = true;
         } else name = false;
@@ -301,28 +301,30 @@ const UpdateAccount = (props) => {
             check = true;
         } else email = false;
 
-        if (allValuesPrincipal.password.length < 6) {
-            password = true;
-            check = true;
-        } else if (
-            allValuesPrincipal.confirmPassword !== allValuesPrincipal.password
-        ) {
-            confirmPassword = true;
-            check = true;
-        } else {
-            password = false;
-            confirmPassword = false;
-        }
+        // if (allValuesPrincipal.password.length < 6) {
+        //     password = true;
+        //     check = true;
+        // } else if (
+        //     allValuesPrincipal.confirmPassword !== allValuesPrincipal.password
+        // ) {
+        //     confirmPassword = true;
+        //     check = true;
+        // } else {
+        //     password = false;
+        //     confirmPassword = false;
+        // }
 
         let dateNow = new Date().toLocaleDateString();
 
-        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
-            ? "0" + dateNow.split("/")[0]
-            : dateNow.split("/")[0]
-            }-${dateNow.split("/")[1] < 10
+        let dateConvert = `${dateNow.split("/")[2]}-${
+            dateNow.split("/")[0] < 10
+                ? "0" + dateNow.split("/")[0]
+                : dateNow.split("/")[0]
+        }-${
+            dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
-            }`;
+        }`;
 
         if (dateConvert < allValuesPrincipal.dateOfBirth) {
             dateOfBirth = true;
@@ -402,9 +404,7 @@ const UpdateAccount = (props) => {
         let confirmPassword = false;
 
         let check = false;
-        if (
-            allValuesTeacher.name.length < 2
-        ) {
+        if (allValuesTeacher.name.length < 2) {
             name = true;
             check = true;
         } else name = false;
@@ -414,28 +414,30 @@ const UpdateAccount = (props) => {
             check = true;
         } else email = false;
 
-        if (allValuesTeacher.password.length < 6) {
-            password = true;
-            check = true;
-        } else if (
-            allValuesTeacher.confirmPassword !== allValuesTeacher.password
-        ) {
-            confirmPassword = true;
-            check = true;
-        } else {
-            password = false;
-            confirmPassword = false;
-        }
+        // if (allValuesTeacher.password.length < 6) {
+        //     password = true;
+        //     check = true;
+        // } else if (
+        //     allValuesTeacher.confirmPassword !== allValuesTeacher.password
+        // ) {
+        //     confirmPassword = true;
+        //     check = true;
+        // } else {
+        //     password = false;
+        //     confirmPassword = false;
+        // }
 
         let dateNow = new Date().toLocaleDateString();
 
-        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
-            ? "0" + dateNow.split("/")[0]
-            : dateNow.split("/")[0]
-            }-${dateNow.split("/")[1] < 10
+        let dateConvert = `${dateNow.split("/")[2]}-${
+            dateNow.split("/")[0] < 10
+                ? "0" + dateNow.split("/")[0]
+                : dateNow.split("/")[0]
+        }-${
+            dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
-            }`;
+        }`;
 
         if (dateConvert < allValuesTeacher.dateOfBirth) {
             dateOfBirth = true;
@@ -520,9 +522,7 @@ const UpdateAccount = (props) => {
         let confirmPassword = false;
 
         let check = false;
-        if (
-            allValuesAffair.name.length < 2
-        ) {
+        if (allValuesAffair.name.length < 2) {
             name = true;
             check = true;
         } else name = false;
@@ -532,28 +532,30 @@ const UpdateAccount = (props) => {
             check = true;
         } else email = false;
 
-        if (allValuesAffair.password.length < 6) {
-            password = true;
-            check = true;
-        } else if (
-            allValuesAffair.confirmPassword !== allValuesAffair.password
-        ) {
-            confirmPassword = true;
-            check = true;
-        } else {
-            password = false;
-            confirmPassword = false;
-        }
+        // if (allValuesAffair.password.length < 6) {
+        //     password = true;
+        //     check = true;
+        // } else if (
+        //     allValuesAffair.confirmPassword !== allValuesAffair.password
+        // ) {
+        //     confirmPassword = true;
+        //     check = true;
+        // } else {
+        //     password = false;
+        //     confirmPassword = false;
+        // }
 
         let dateNow = new Date().toLocaleDateString();
 
-        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
-            ? "0" + dateNow.split("/")[0]
-            : dateNow.split("/")[0]
-            }-${dateNow.split("/")[1] < 10
+        let dateConvert = `${dateNow.split("/")[2]}-${
+            dateNow.split("/")[0] < 10
+                ? "0" + dateNow.split("/")[0]
+                : dateNow.split("/")[0]
+        }-${
+            dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
-            }`;
+        }`;
 
         if (dateConvert < allValuesAffair.dateOfBirth) {
             dateOfBirth = true;
@@ -634,9 +636,7 @@ const UpdateAccount = (props) => {
         let confirmPassword = false;
 
         let check = false;
-        if (
-            allValuesParents.name.length < 2
-        ) {
+        if (allValuesParents.name.length < 2) {
             name = true;
             check = true;
         } else name = false;
@@ -646,28 +646,30 @@ const UpdateAccount = (props) => {
             check = true;
         } else email = false;
 
-        if (allValuesParents.password.length < 6) {
-            password = true;
-            check = true;
-        } else if (
-            allValuesParents.confirmPassword !== allValuesParents.password
-        ) {
-            confirmPassword = true;
-            check = true;
-        } else {
-            password = false;
-            confirmPassword = false;
-        }
+        // if (allValuesParents.password.length < 6) {
+        //     password = true;
+        //     check = true;
+        // } else if (
+        //     allValuesParents.confirmPassword !== allValuesParents.password
+        // ) {
+        //     confirmPassword = true;
+        //     check = true;
+        // } else {
+        //     password = false;
+        //     confirmPassword = false;
+        // }
 
         let dateNow = new Date().toLocaleDateString();
 
-        let dateConvert = `${dateNow.split("/")[2]}-${dateNow.split("/")[0] < 10
-            ? "0" + dateNow.split("/")[0]
-            : dateNow.split("/")[0]
-            }-${dateNow.split("/")[1] < 10
+        let dateConvert = `${dateNow.split("/")[2]}-${
+            dateNow.split("/")[0] < 10
+                ? "0" + dateNow.split("/")[0]
+                : dateNow.split("/")[0]
+        }-${
+            dateNow.split("/")[1] < 10
                 ? "0" + dateNow.split("/")[1]
                 : dateNow.split("/")[1]
-            }`;
+        }`;
 
         if (dateConvert < allValuesParents.dateOfBirth) {
             dateOfBirth = true;
@@ -776,7 +778,7 @@ const UpdateAccount = (props) => {
             address: allValuesPrincipal.address,
             password: allValuesPrincipal.password,
             confirmPassword: allValuesPrincipal.confirmPassword,
-        })
+        });
         try {
             setAvatar(URL.createObjectURL(e.target.files[0]));
         } catch (err) {
@@ -892,7 +894,9 @@ const UpdateAccount = (props) => {
                                     value={true}
                                     name="gender"
                                     onChange={changeHandlerPrincipal}
-                                    checked={allValuesPrincipal.gender === "true"}
+                                    checked={
+                                        allValuesPrincipal.gender === "true"
+                                    }
                                 />
                                 Male
                                 <input
@@ -900,7 +904,9 @@ const UpdateAccount = (props) => {
                                     value={false}
                                     name="gender"
                                     onChange={changeHandlerPrincipal}
-                                    checked={allValuesPrincipal.gender === "false"}
+                                    checked={
+                                        allValuesPrincipal.gender === "false"
+                                    }
                                 />
                                 Female
                             </div>
@@ -981,7 +987,7 @@ const UpdateAccount = (props) => {
                             Address is required.
                         </label>
                     </div>
-                    <div className="type-input">
+                    {/* <div className="type-input">
                         <h4>Password</h4>
                         <input
                             className="input-content"
@@ -1001,8 +1007,8 @@ const UpdateAccount = (props) => {
                         >
                             Password must be at least 6 chars long
                         </label>
-                    </div>
-                    <div className="type-input">
+                    </div> */}
+                    {/* <div className="type-input">
                         <h4>Confirm Password</h4>
                         <input
                             className="input-content"
@@ -1022,7 +1028,7 @@ const UpdateAccount = (props) => {
                         >
                             Password incorrect
                         </label>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
@@ -1195,7 +1201,9 @@ const UpdateAccount = (props) => {
                                     value={false}
                                     name="gender"
                                     onChange={changeHandlerTeacher}
-                                    checked={allValuesTeacher.gender === "false"}
+                                    checked={
+                                        allValuesTeacher.gender === "false"
+                                    }
                                 />
                                 Female
                             </div>
@@ -1318,7 +1326,7 @@ const UpdateAccount = (props) => {
                             Invalid birthday
                         </label>
                     </div>
-                    <div className="type-input">
+                    {/* <div className="type-input">
                         <h4>Password</h4>
                         <input
                             className="input-content"
@@ -1338,8 +1346,8 @@ const UpdateAccount = (props) => {
                         >
                             Password must be at least 6 chars long
                         </label>
-                    </div>
-                    <div className="type-input">
+                    </div> */}
+                    {/* <div className="type-input">
                         <h4>Confirm Password</h4>
                         <input
                             className="input-content"
@@ -1359,7 +1367,7 @@ const UpdateAccount = (props) => {
                         >
                             Password incorrect
                         </label>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
@@ -1384,7 +1392,7 @@ const UpdateAccount = (props) => {
             address: allValuesAffair.address,
             password: allValuesAffair.password,
             confirmPassword: allValuesAffair.confirmPassword,
-        })
+        });
         try {
             setAvatar(URL.createObjectURL(e.target.files[0]));
         } catch (err) {
@@ -1589,7 +1597,7 @@ const UpdateAccount = (props) => {
                             Address is required.
                         </label>
                     </div>
-                    <div className="type-input">
+                    {/* <div className="type-input">
                         <h4>Password</h4>
                         <input
                             className="input-content"
@@ -1609,8 +1617,8 @@ const UpdateAccount = (props) => {
                         >
                             Password must be at least 6 chars long
                         </label>
-                    </div>
-                    <div className="type-input">
+                    </div> */}
+                    {/* <div className="type-input">
                         <h4>Confirm Password</h4>
                         <input
                             className="input-content"
@@ -1630,7 +1638,7 @@ const UpdateAccount = (props) => {
                         >
                             Password incorrect
                         </label>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
@@ -1806,7 +1814,9 @@ const UpdateAccount = (props) => {
                                     value={false}
                                     name="gender"
                                     onChange={changeHandlerParents}
-                                    checked={allValuesParents.gender === "false"}
+                                    checked={
+                                        allValuesParents.gender === "false"
+                                    }
                                 />
                                 Female
                             </div>
@@ -1966,7 +1976,7 @@ const UpdateAccount = (props) => {
                             Address must be less than 150 chars
                         </label>
                     </div>
-                    <div className="type-input">
+                    {/* <div className="type-input">
                         <h4>Password</h4>
                         <input
                             className="input-content"
@@ -1986,8 +1996,8 @@ const UpdateAccount = (props) => {
                         >
                             Password must be at least 6 chars long
                         </label>
-                    </div>
-                    <div className="type-input">
+                    </div> */}
+                    {/* <div className="type-input">
                         <h4>Confirm Password</h4>
                         <input
                             className="input-content"
@@ -2007,7 +2017,7 @@ const UpdateAccount = (props) => {
                         >
                             Password incorrect
                         </label>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
@@ -2018,10 +2028,10 @@ const UpdateAccount = (props) => {
             {props.dropValue === "principal"
                 ? FormAccountPrincipal
                 : props.dropValue === "parents"
-                    ? FormAccountParents
-                    : props.dropValue === "teacher"
-                        ? FormAccountTeacher
-                        : FormAccountAffair}
+                ? FormAccountParents
+                : props.dropValue === "teacher"
+                ? FormAccountTeacher
+                : FormAccountAffair}
             <button onClick={props.handleInputCustom} className="btn-cancel">
                 Cancel
             </button>

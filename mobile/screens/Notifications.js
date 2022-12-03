@@ -86,7 +86,7 @@ const Notifications = ({ navigation }) => {
     setModalVisible(!modalVisible)
   }
   return (
-    <View style={styles.centeredView} blurRadius={4}>
+    <View style={styles.centeredView}>
       <NotificationModal
         data={modalData}
         show={modalVisible}
@@ -98,7 +98,7 @@ const Notifications = ({ navigation }) => {
         >
           <Text
             style={styles.buttonText}>
-            Public Notification
+            Public
           </Text>
         </Pressable>
         <Pressable style={!isPublic ? [styles.button, styles.buttonOpen] : [styles.button, styles.buttonClose]}
@@ -107,7 +107,7 @@ const Notifications = ({ navigation }) => {
           {/* <Text style={styles.buttonText}>Private Notification</Text> */}
           <Text
             style={styles.buttonText}>
-            Private Notification
+            Private
           </Text>
         </Pressable>
       </View>

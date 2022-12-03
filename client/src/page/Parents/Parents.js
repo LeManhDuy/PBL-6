@@ -5,6 +5,7 @@ import ModalCustom from "../../lib/ModalCustom/ModalCustom";
 import ConfirmAlert from "../../lib/ConfirmAlert/ConfirmAlert";
 import ModalInput from "../../lib/ModalInput/ModalInput";
 import AccountService from "../../config/service/AccountService";
+import Loading from "../../lib/Loading/Loading";
 
 const Parents = () => {
     const [parentsInfo, setParentsInfo] = useState({
@@ -22,12 +23,14 @@ const Parents = () => {
         parent_username: "",
     });
     const [state, setState] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         getInfoParents();
     }, [state]);
 
     const getInfoParents = () => {
+        setIsLoading(true);
         AccountService.GetParentsInformation(
             JSON.parse(localStorage.getItem("@Login")).AccountId
         ).then((res) => {
@@ -52,11 +55,11 @@ const Parents = () => {
                 parent_username: JSON.parse(localStorage.getItem("@Login"))
                     .AccountUserName,
             });
+            setIsLoading(false);
         });
     };
 
     const ParentsContent = ({ parentsInfo }) => (
-
         // <div className="parents-item">
         <div className="student-item">
             <div className="left-student-content">
@@ -161,6 +164,7 @@ const Parents = () => {
             <div className="detail-content">
                 <ParentsContent parentsInfo={parentsInfo} />
             </div>
+            <Loading isLoading={isLoading} />
         </div>
     );
 };

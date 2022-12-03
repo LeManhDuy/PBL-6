@@ -15,6 +15,7 @@ import GradeService from "../../../config/service/GradeService";
 import UpdateClass from "../../../lib/ModalInput/UpdateClass/UpdateClass";
 import ViewClass from "../../../lib/ModalInput/ViewClass/ViewClass";
 import ReactPaginate from "react-paginate";
+import Loading from "../../../lib/Loading/Loading";
 
 const ClassAdmin = () => {
     const [addClassState, setAddClassState] = useState(false);
@@ -30,6 +31,7 @@ const ClassAdmin = () => {
     const [viewState, setViewState] = useState(false);
     const [dropValueGrade, setDropValueGrade] = useState("All");
     const [errorMessage, setErrorMessage] = useState();
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         getClass();
@@ -37,6 +39,7 @@ const ClassAdmin = () => {
     }, [state]);
 
     const getClass = () => {
+        setIsLoading(true);
         ClassService.getClass()
             .then((response) => {
                 const dataSources = response.allClass.map((item, index) => {
@@ -46,7 +49,8 @@ const ClassAdmin = () => {
                         class_name: item.class_name,
                         homeroomteacher_name: item.homeroom_teacher_id
                             ? item.homeroom_teacher_id.person_id
-                                ? item.homeroom_teacher_id.person_id.person_fullname
+                                ? item.homeroom_teacher_id.person_id
+                                      .person_fullname
                                 : "Empty"
                             : "Empty",
                         grade_name: item.grade_id
@@ -54,8 +58,11 @@ const ClassAdmin = () => {
                             : "Empty",
                     };
                 });
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.class_name > b.class_name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.class_name > b.class_name ? 1 : -1
+                );
                 setClass(dataSourcesSorted);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -63,6 +70,7 @@ const ClassAdmin = () => {
     };
 
     const getGrade = () => {
+        setIsLoading(true);
         GradeService.getGrades()
             .then((response) => {
                 const dataSources = response.allGrade.map((item, index) => {
@@ -72,8 +80,11 @@ const ClassAdmin = () => {
                         grade_name: item ? item.grade_name : "Empty",
                     };
                 });
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.grade_name > b.grade_name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.grade_name > b.grade_name ? 1 : -1
+                );
                 setGrade(dataSourcesSorted);
+                setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -81,30 +92,37 @@ const ClassAdmin = () => {
     };
 
     const getClassWithFilter = (filter) => {
+        setIsLoading(true);
         GradeService.getClassByGradeId(filter)
             .then((response) => {
-                const dataSources = response.getClassByGradeId.map((item, index) => {
-                    return {
-                        key: index + 1,
-                        id: item._id,
-                        class_name: item.class_name,
-                        homeroomteacher_name: item.homeroom_teacher_id
-                            ? item.homeroom_teacher_id.person_id
-                                ? item.homeroom_teacher_id.person_id.person_fullname
-                                : "Empty"
-                            : "Empty",
-                        grade_name: item.grade_id
-                            ? item.grade_id.grade_name
-                            : "Empty",
+                const dataSources = response.getClassByGradeId.map(
+                    (item, index) => {
+                        return {
+                            key: index + 1,
+                            id: item._id,
+                            class_name: item.class_name,
+                            homeroomteacher_name: item.homeroom_teacher_id
+                                ? item.homeroom_teacher_id.person_id
+                                    ? item.homeroom_teacher_id.person_id
+                                          .person_fullname
+                                    : "Empty"
+                                : "Empty",
+                            grade_name: item.grade_id
+                                ? item.grade_id.grade_name
+                                : "Empty",
+                        };
                     }
-                })
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.class_name > b.class_name ? 1 : -1,);
-                setClass(dataSourcesSorted)
+                );
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.class_name > b.class_name ? 1 : -1
+                );
+                setClass(dataSourcesSorted);
+                setIsLoading(false);
             })
             .catch((error) => {
-                console.log(error)
-            })
-    }
+                console.log(error);
+            });
+    };
 
     const Dropdown = ({ value, options, onChange }) => {
         return (
@@ -149,7 +167,7 @@ const ClassAdmin = () => {
     // Add Class
     const handleConfirmAddClass = (allValue) => {
         ClassService.addClass({
-            class_name: allValue.gradeName + '/' + allValue.name.toUpperCase(),
+            class_name: allValue.gradeName + "/" + allValue.name.toUpperCase(),
             grade_id: allValue.grade,
             homeroom_teacher_id: allValue.teacher,
         })
@@ -170,7 +188,7 @@ const ClassAdmin = () => {
 
     const handleConfirmUpdateClass = (allValue) => {
         ClassService.updateClass(id, {
-            class_name: allValue.grade_name + '/' + allValue.name.toUpperCase(),
+            class_name: allValue.grade_name + "/" + allValue.name.toUpperCase(),
             grade_id: allValue.grade,
             homeroom_teacher_id: allValue.teacher,
         })
@@ -244,7 +262,8 @@ const ClassAdmin = () => {
         const currentItems = searchClassRoom.slice(itemOffset, endOffset);
         const pageCount = Math.ceil(searchClassRoom.length / itemsPerPage);
         const handlePageClick = (event) => {
-            const newOffset = (event.selected * itemsPerPage) % searchClassRoom.length;
+            const newOffset =
+                (event.selected * itemsPerPage) % searchClassRoom.length;
             setItemOffset(newOffset);
         };
         return (
@@ -275,7 +294,6 @@ const ClassAdmin = () => {
                         hrefAllControls
                     />
                 </footer>
-
             </>
         );
     }
@@ -403,7 +421,10 @@ const ClassAdmin = () => {
                     </div>
                 </div>
             </header>
-            <PaginatedItems itemsPerPage={10} searchClassRoom={searchClass(classRooms)}/>
+            <PaginatedItems
+                itemsPerPage={10}
+                searchClassRoom={searchClass(classRooms)}
+            />
             {/* <div className="table-content">
                 <TableClasses classRooms={searchClass(classRooms)} />
             </div>
@@ -443,6 +464,7 @@ const ClassAdmin = () => {
             {updateClassState ? DivUpdateClass : null}
             {isDelete ? ConfirmDelete : null}
             {viewState ? DivViewClass : null}
+            <Loading isLoading={isLoading} />
         </div>
     );
 };

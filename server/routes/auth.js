@@ -49,9 +49,9 @@ router.post("/register", async (req, res, next) => {
             accessToken,
         });
     } catch (error) {
-        const err = new Error('Internal Server Error');
+        const err = new Error("Internal Server Error");
         err.status = 500;
-        next(err)
+        next(err);
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
@@ -95,6 +95,7 @@ router.post("/login", async (req, res, next) => {
                 return res.status(200).json({
                     success: true,
                     AccountUserName: checkAcccountUserName.account_username,
+                    AccountName: personId[0].person_fullname,
                     AccountRole: checkAcccountUserName.account_role,
                     AccountId: personId[0]._id,
                     AccountImage: personId[0].person_image,
@@ -114,9 +115,9 @@ router.post("/login", async (req, res, next) => {
                 message: "Incorrect email or password",
             });
     } catch (error) {
-        const err = new Error('Internal Server Error');
+        const err = new Error("Internal Server Error");
         err.status = 500;
-        next(err)
+        next(err);
         return res.status(500).json({ success: false, message: "" + error });
     }
 });
@@ -160,9 +161,9 @@ router.put("/:personID", multer().single(), async (req, res, next) => {
             update_Account: updateAccount,
         });
     } catch (error) {
-        const err = new Error('Internal Server Error');
+        const err = new Error("Internal Server Error");
         err.status = 500;
-        next(err)
+        next(err);
         return res.status(500).json({ success: false, message: "" + error });
     }
 });

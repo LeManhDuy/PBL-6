@@ -8,18 +8,21 @@ import {
 import ClassService from "../../../config/service/ClassService";
 import "./AssociationTeacher.css";
 import ReactPaginate from "react-paginate";
+import Loading from "../../../lib/Loading/Loading";
 
 const AssociationTeacher = () => {
     const [parents, setParent] = useState([]);
     const [state, setState] = useState(false);
     const [className, setClassName] = useState("");
     const [keyword, setKeyword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         getParent();
-    }, [state])
+    }, [state]);
 
     const getParent = () => {
+        setIsLoading(true);
         const personID = JSON.parse(localStorage.getItem("@Login")).AccountId;
         ClassService.getParentAssociations(personID)
             .then((response) => {
@@ -28,20 +31,25 @@ const AssociationTeacher = () => {
                         key: index + 1,
                         id: item._id,
                         name: item.person_id.person_fullname,
-                        dateOfBirth: item.person_id.person_dateofbirth.split("T")[0],
+                        dateOfBirth:
+                            item.person_id.person_dateofbirth.split("T")[0],
                         gender: item.person_id.person_gender,
                         mail: item.person_id.person_email,
                         phone: item.person_id.person_phonenumber,
-                        isInAssociation: item.is_in_association
+                        isInAssociation: item.is_in_association,
                     };
                 });
-                const dataSourcesSorted = [...dataSources].sort((a, b) => a.name > b.name ? 1 : -1,);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.name > b.name ? 1 : -1
+                );
                 setClassName(response.class_name);
                 setParent(dataSourcesSorted);
-            }).catch((error) => {
+                setIsLoading(false);
+            })
+            .catch((error) => {
                 console.log(error);
             });
-    }
+    };
 
     const changeIsAssociation = (id) => {
         ClassService.changeIsAssociation(id)
@@ -49,7 +57,8 @@ const AssociationTeacher = () => {
                 if (response.success) {
                     setState(!state);
                 }
-            }).catch((error) => {
+            })
+            .catch((error) => {
                 console.log(error);
             });
     };
@@ -61,12 +70,10 @@ const AssociationTeacher = () => {
     const searchParent = (parents) => {
         return parents.filter(
             (parents) =>
-                parents.name
-                    .toLowerCase()
-                    .includes(keyword.toLowerCase()) ||
+                parents.name.toLowerCase().includes(keyword.toLowerCase()) ||
                 parents.mail.toLowerCase().includes(keyword.toLowerCase())
         );
-    }
+    };
 
     function PaginatedItems({ itemsPerPage, searchParent }) {
         const [itemOffset, setItemOffset] = useState(0);
@@ -74,7 +81,8 @@ const AssociationTeacher = () => {
         const currentItems = searchParent.slice(itemOffset, endOffset);
         const pageCount = Math.ceil(searchParent.length / itemsPerPage);
         const handlePageClick = (event) => {
-            const newOffset = (event.selected * itemsPerPage) % searchParent.length;
+            const newOffset =
+                (event.selected * itemsPerPage) % searchParent.length;
             setItemOffset(newOffset);
         };
         return (
@@ -105,7 +113,6 @@ const AssociationTeacher = () => {
                         hrefAllControls
                     />
                 </footer>
-
             </>
         );
     }
@@ -152,9 +159,7 @@ const AssociationTeacher = () => {
                 <thead className="table-head-row">{headerParent}</thead>
                 <tbody className="table-row">{parentItem}</tbody>
             </table>
-        )
-
-
+        );
     };
 
     return (
@@ -162,7 +167,7 @@ const AssociationTeacher = () => {
             <div className="class-teacher-header">
                 <header>
                     <div className="title">
-                        <h3>Manage Parent Association Class { className }</h3>
+                        <h3>Manage Parent Association Class {className}</h3>
                         <div className="right-header">
                             <div className="search-box">
                                 <button className="btn-search">
@@ -183,7 +188,10 @@ const AssociationTeacher = () => {
                     </div>
                 </header>
             </div>
-            <PaginatedItems itemsPerPage={10} searchParent={searchParent(parents)}/>
+            <PaginatedItems
+                itemsPerPage={10}
+                searchParent={searchParent(parents)}
+            />
             {/* <div className="table-content">
                 <TableParents parents={searchParent(parents)} />
             </div>
@@ -215,8 +223,9 @@ const AssociationTeacher = () => {
                     </button>
                 </div>
             </footer> */}
+            <Loading isLoading={isLoading} />
         </div>
     );
-}
+};
 
-export default AssociationTeacher
+export default AssociationTeacher;

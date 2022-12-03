@@ -235,10 +235,10 @@ function UserHeader() {
             <div className="info-header">
                 <h5>
                     {AuthenticationService.isAdmin()
-                        ? AuthenticationService.getData().AccountUserName.toString()
+                        ? AuthenticationService.getData().AccountName.toString()
                         : AuthenticationService.isParents()
-                        ? AuthenticationService.getData().AccountUserName.toString()
-                        : AuthenticationService.getData().AccountUserName.toString()}
+                        ? AuthenticationService.getData().AccountName.toString()
+                        : AuthenticationService.getData().AccountName.toString()}
                 </h5>
                 <h6>
                     {AuthenticationService.getData().AccountRole.toUpperCase()}
