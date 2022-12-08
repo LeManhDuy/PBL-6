@@ -123,7 +123,7 @@ const FormShowScore = (props) => {
             grade = false;
             check = false
         }
-
+        props.handleInputCustom();
         setScoreError({ classroom: classroom, subject: subject, grade: grade })
         if (!check) {
             props.handleShowScore(dropValueGrade, dropValueClass, dropValueSubject);

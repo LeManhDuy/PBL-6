@@ -46,9 +46,8 @@ router.get("/get-comment-by-class-id/:classID", async (req, res) => {
 // @route GET api/admin/grade
 // @desc Get Comment By Class ID
 // @access Private
-router.get("/get-static-pupil-by-class-id/:classID&:label", async (req, res) => {
+router.get("/get-static-comment-pupil-by-class-id/:classID&:label", async (req, res) => {
     try {
-        console.log('aaaaaa');
         var label = "";
         if (req.params.label === 'Average(0-4)') {
             label = 'Failed'
@@ -97,17 +96,49 @@ router.get("/get-score-by-class-subject-id/:classID&:subjectID", async (req, res
                 pupil_id: item._id, subject_id: req.params.subjectID
             })
                 .select("result")
-            if (getScoreByPupilID[0].result === "Average")
+            if (getScoreByPupilID[0].result === "Failed")
                 Average = Average + 1
-            if (getScoreByPupilID[0].result === "Good")
+            if (getScoreByPupilID[0].result === "Passed")
                 Good = Good + 1
-            if (getScoreByPupilID[0].result === "Very Good")
+            if (getScoreByPupilID[0].result === "Good")
                 VeryGood = VeryGood + 1
             if (getScoreByPupilID[0].result === "Excellent")
                 Excellent = Excellent + 1
         }
         res.status(200).json({ "Average(0-4)": Average, "Good(5-6)": Good, "VeryGood(7-8)": VeryGood, "Excellent(9-10)": Excellent })
     } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
+// @route GET api/admin/grade
+// @desc Get score by subject class id
+// @access Private
+router.get("/get-score-pupil-by-class-subject-id/:classID&:subjectID&:label", async (req, res) => {
+    try {
+        var label = "";
+        if (req.params.label === 'Average(0-4)') {
+            label = 'Failed'
+        } else if (req.params.label === 'Good(5-6)') {
+            label = 'Passed'
+        } else if (req.params.label === 'VeryGood(7-8)') {
+            label = 'Good'
+        } else if (req.params.label === 'Excellent(9-10)') {
+            label = 'Excellent'
+        }
+        const getPupilsInfor = await Score
+            .find({ subject_id: req.params.subjectID, result: label })
+            .populate({
+                path: "pupil_id",
+                model: "Pupil",
+                match: { class_id: req.params.classID }
+            })
+        const statisticPupils = getPupilsInfor.filter(function (item) {
+            return item.pupil_id != null;
+        })
+        res.status(200).json({ statisticPupils })
+    }
+    catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }
 })
@@ -140,16 +171,50 @@ router.get("/get-comment-by-grade-id/:gradeID", async (req, res) => {
         var VeryGood = 0
         var Excellent = 0
         for (let item of finalData) {
-            if (item.comment_content === "Average")
+            if (item.comment_content === "Failed")
                 Average = Average + 1
-            if (item.comment_content === "Good")
+            if (item.comment_content === "Passed")
                 Good = Good + 1
-            if (item.comment_content === "Very Good")
+            if (item.comment_content === "Good")
                 VeryGood = VeryGood + 1
             if (item.comment_content === "Excellent")
                 Excellent = Excellent + 1
         }
         res.status(200).json({ "Average(0-4)": Average, "Good(5-6)": Good, "VeryGood(7-8)": VeryGood, "Excellent(9-10)": Excellent })
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
+router.get("/get-comment-pupil-by-grade-id/:gradeID&:label", async (req, res) => {
+    try {
+        var label = "";
+        if (req.params.label === 'Average(0-4)') {
+            label = 'Failed'
+        } else if (req.params.label === 'Good(5-6)') {
+            label = 'Passed'
+        } else if (req.params.label === 'VeryGood(7-8)') {
+            label = 'Good'
+        } else if (req.params.label === 'Excellent(9-10)') {
+            label = 'Excellent'
+        }
+
+        const getPupilsInfor = await Comment
+            .find({ comment_content: label })
+            .populate({
+                path: "pupil_id",
+                model: "Pupil",
+                populate: [{
+                    path: "class_id",
+                    model: "Class",
+                    match: { grade_id: req.params.gradeID }
+                }]
+            })
+        const statisticPupils = getPupilsInfor.filter(function (item) {
+            return item.pupil_id.class_id != null;
+        })
+        res.status(200).json({ statisticPupils })
     }
     catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
@@ -184,16 +249,52 @@ router.get("/get-score-by-grade-subjcet-id/:gradeID&:subjectID", async (req, res
         var VeryGood = 0
         var Excellent = 0
         for (let item of finalData) {
-            if (item.result === "Average")
+            if (item.result === "Failed")
                 Average = Average + 1
-            if (item.result === "Good")
+            if (item.result === "Passed")
                 Good = Good + 1
-            if (item.result === "Very Good")
+            if (item.result === "Good")
                 VeryGood = VeryGood + 1
             if (item.result === "Excellent")
                 Excellent = Excellent + 1
         }
         res.status(200).json({ "Average(0-4)": Average, "Good(5-6)": Good, "VeryGood(7-8)": VeryGood, "Excellent(9-10)": Excellent })
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
+// @route GET api/admin/grade
+// @desc Get score by subject class id
+// @access Private
+router.get("/get-score-pupil-by-grade-subjcet-id/:gradeID&:subjectID&:label", async (req, res) => {
+    try {
+        var label = "";
+        if (req.params.label === 'Average(0-4)') {
+            label = 'Failed'
+        } else if (req.params.label === 'Good(5-6)') {
+            label = 'Passed'
+        } else if (req.params.label === 'VeryGood(7-8)') {
+            label = 'Good'
+        } else if (req.params.label === 'Excellent(9-10)') {
+            label = 'Excellent'
+        }
+
+        const getPupilsInfor = await Score
+            .find({ subject_id: req.params.subjectID, result: label })
+            .populate({
+                path: "pupil_id",
+                model: "Pupil",
+                populate: [{
+                    path: "class_id",
+                    model: "Class",
+                    match: { grade_id: req.params.gradeID }
+                }]
+            })
+        const statisticPupils = getPupilsInfor.filter(function (item) {
+            return item.pupil_id.class_id != null;
+        })
+        res.status(200).json({ statisticPupils })
     } catch (error) {
         return res.status(500).json({ success: false, message: "" + error })
     }
@@ -232,6 +333,35 @@ router.get("/get-fee-by-fee-category-and-class-id/:feeCategoryID&:classID", asyn
 })
 
 // @route GET api/admin/statistic
+// @desc get-fee-by-fee-category-id
+// @access Private
+router.get("/get-fee-pupil-by-fee-category-and-class-id/:feeCategoryID&:classID&:label", async (req, res) => {
+    try {
+        var status = true;
+        if (req.params.label === 'Paided') {
+            status = true
+        } else if (req.params.label === 'UnPaid') {
+            status = false
+        }
+
+        const getPupilsInfor = await Fee
+            .find({ fee_category_id: req.params.feeCategoryID, fee_status: status })
+            .populate({
+                path: "pupil_id",
+                model: "Pupil",
+                match: { class_id: req.params.classID }
+            })
+        const statisticPupils = getPupilsInfor.filter(function (item) {
+            return item.pupil_id != null;
+        })
+        res.status(200).json({ statisticPupils })
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
+// @route GET api/admin/statistic
 // @desc get-fee-by-class-id
 // @access Private
 router.get("/get-fee-by-class-id/:classID", async (req, res) => {
@@ -263,6 +393,36 @@ router.get("/get-fee-by-class-id/:classID", async (req, res) => {
         return res.status(500).json({ success: false, message: "" + error })
     }
 })
+
+// @route GET api/admin/statistic
+// @desc get-fee-by-class-id
+// @access Private
+router.get("/get-fee-pupil-by-class-id/:classID&:label", async (req, res) => {
+    try {
+        var status = true;
+        if (req.params.label === 'Paided') {
+            status = true
+        } else if (req.params.label === 'UnPaid') {
+            status = false
+        }
+
+        const getPupilsInfor = await Fee
+            .find({ fee_status: status })
+            .populate({
+                path: "pupil_id",
+                model: "Pupil",
+                match: { class_id: req.params.classID }
+            })
+        const statisticPupils = getPupilsInfor.filter(function (item) {
+            return item.pupil_id != null;
+        })
+        res.status(200).json({ statisticPupils })
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
 // @route GET api/admin/statistic
 // @desc get-fee-by-class-id
 // @access Private
@@ -298,6 +458,41 @@ router.get("/get-fee-by-fee-category-and-grade-id/:feeCategoryID&:gradeID", asyn
         return res.status(500).json({ success: false, message: "" + error })
     }
 })
+
+
+// @route GET api/admin/statistic
+// @desc get-fee-by-class-id
+// @access Private
+router.get("/get-fee-pupil-by-fee-category-and-grade-id/:feeCategoryID&:gradeID&:label", async (req, res) => {
+    try {
+        var status = true;
+        if (req.params.label === 'Paided') {
+            status = true
+        } else if (req.params.label === 'UnPaid') {
+            status = false
+        }
+
+        const getPupilsInfor = await Fee
+            .find({ fee_category_id: req.params.feeCategoryID ,fee_status: status })
+            .populate({
+                path: "pupil_id",
+                model: "Pupil",
+                populate: [{
+                    path: "class_id",
+                    model: "Class",
+                    match: { grade_id: req.params.gradeID }
+                }]
+            })
+        const statisticPupils = getPupilsInfor.filter(function (item) {
+            return item.pupil_id != null && item.pupil_id.class_id != null;
+        })
+        res.status(200).json({ statisticPupils })
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
 // @route GET api/admin/statistic
 // @desc get-fee-by-grade-id
 // @access Private
@@ -333,6 +528,41 @@ router.get("/get-fee-by-grade-id/:gradeID", async (req, res) => {
         return res.status(500).json({ success: false, message: "" + error })
     }
 })
+
+// @route GET api/admin/statistic
+// @desc get-fee-by-grade-id
+// @access Private
+router.get("/get-fee-pupil-by-grade-id/:gradeID&:label", async (req, res) => {
+    try {
+        var status = true;
+        if (req.params.label === 'Paided') {
+            status = true
+        } else if (req.params.label === 'UnPaid') {
+            status = false
+        }
+
+        const getPupilsInfor = await Fee
+            .find({ fee_status: status })
+            .populate({
+                path: "pupil_id",
+                model: "Pupil",
+                populate: [{
+                    path: "class_id",
+                    model: "Class",
+                    match: { grade_id: req.params.gradeID }
+                }]
+            })
+        const statisticPupils = getPupilsInfor.filter(function (item) {
+            return item.pupil_id != null && item.pupil_id.class_id != null;
+        })
+        res.status(200).json({ statisticPupils })
+
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
 // @route GET api/admin/statistic
 // @desc get-fee-by-grade-id
 // @access Private
@@ -355,6 +585,35 @@ router.get("/get-fee-by-fee-category-id/:feeCategoryID", async (req, res) => {
         return res.status(500).json({ success: false, message: "" + error })
     }
 })
+
+// @route GET api/admin/statistic
+// @desc get-fee-by-grade-id
+// @access Private
+router.get("/get-fee-pupil-by-fee-category-id/:feeCategoryID&:label", async (req, res) => {
+    try {
+        var status = true;
+        if (req.params.label === 'Paided') {
+            status = true
+        } else if (req.params.label === 'UnPaid') {
+            status = false
+        }
+
+        const getPupilsInfor = await Fee
+            .find({ fee_category_id: req.params.feeCategoryID, fee_status: status })
+            .populate({
+                path: "pupil_id",
+                model: "Pupil"
+            })
+        const statisticPupils = getPupilsInfor.filter(function (item) {
+            return item.pupil_id != null && item.pupil_id.class_id != null;
+        })
+        res.status(200).json({ statisticPupils })
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
 // @route GET api/admin/statistic
 // @desc get-fee
 // @access Private
@@ -372,6 +631,34 @@ router.get("/get-fee", async (req, res) => {
             }
         }
         res.status(200).json({ Paided, UnPaid })
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
+// @route GET api/admin/statistic
+// @desc get-fee
+// @access Private
+router.get("/get-fee-pupil/:label", async (req, res) => {
+    try {
+        var status = true;
+        if (req.params.label === 'Paided') {
+            status = true
+        } else if (req.params.label === 'UnPaid') {
+            status = false
+        }
+
+        const getPupilsInfor = await Fee
+            .find({ fee_status: status })
+            .populate({
+                path: "pupil_id",
+                model: "Pupil"
+            })
+        const statisticPupils = getPupilsInfor.filter(function (item) {
+            return item.pupil_id != null;
+        })
+        res.status(200).json({ statisticPupils })
     }
     catch (error) {
         return res.status(500).json({ success: false, message: "" + error })

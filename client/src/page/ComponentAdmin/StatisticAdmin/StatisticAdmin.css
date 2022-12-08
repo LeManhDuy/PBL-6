@@ -1,10 +1,10 @@
 .chart {
-    width: 65%;
+    width: 55%;
 }
 
 .father-chart {
     align-items: center;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     margin-top: 25px;
 }
