@@ -26,16 +26,52 @@ router.get("/get-comment-by-class-id/:classID", async (req, res) => {
                 pupil_id: item._id
             })
                 .select("comment_content")
-            if (getCommentByPupilID[0].comment_content === "Average")
+            if (getCommentByPupilID[0].comment_content === "Failed")
                 Average = Average + 1
-            if (getCommentByPupilID[0].comment_content === "Good")
+            if (getCommentByPupilID[0].comment_content === "Passed")
                 Good = Good + 1
-            if (getCommentByPupilID[0].comment_content === "Very Good")
+            if (getCommentByPupilID[0].comment_content === "Good")
                 VeryGood = VeryGood + 1
             if (getCommentByPupilID[0].comment_content === "Excellent")
                 Excellent = Excellent + 1
         }
         res.status(200).json({ "Average(0-4)": Average, "Good(5-6)": Good, "VeryGood(7-8)": VeryGood, "Excellent(9-10)": Excellent })
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: "" + error })
+    }
+})
+
+
+// @route GET api/admin/grade
+// @desc Get Comment By Class ID
+// @access Private
+router.get("/get-static-pupil-by-class-id/:classID&:label", async (req, res) => {
+    try {
+        console.log('aaaaaa');
+        var label = "";
+        if (req.params.label === 'Average(0-4)') {
+            label = 'Failed'
+        } else if (req.params.label === 'Good(5-6)') {
+            label = 'Passed'
+        } else if (req.params.label === 'VeryGood(7-8)') {
+            label = 'Good'
+        } else if (req.params.label === 'Excellent(9-10)') {
+            label = 'Excellent'
+        }
+        const getPupilsInfor = await Comment
+            .find({ comment_content: label })
+            .populate({
+                path: "pupil_id",
+                model: "Pupil",
+                match: { class_id: req.params.classID }
+            })
+
+        const statisticPupils = getPupilsInfor.filter(function (item) {
+            return item.pupil_id != null;
+        })
+
+        res.status(200).json({ statisticPupils })
     }
     catch (error) {
         return res.status(500).json({ success: false, message: "" + error })

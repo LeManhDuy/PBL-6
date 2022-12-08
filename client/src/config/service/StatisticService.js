@@ -3,6 +3,11 @@ import HandleApi from "../api/HandleAPI";
 const getCommentByClassId = async (id) => {
     return await HandleApi.APIGetWithToken(`statistic/get-comment-by-class-id/${id}`)
 }
+
+const getStaticPupilByClassId = async (id, label) => {
+    return await HandleApi.APIGetWithToken(`statistic/get-static-pupil-by-class-id/${id}&${label}`)
+}
+
 const getScoreByClassSubjectId = async (classID, subjectID) => {
     return await HandleApi.APIGetWithToken(`statistic/get-score-by-class-subject-id/${classID}&${subjectID}`)
 }
@@ -32,6 +37,7 @@ const getFee = async () => {
 };
 const StatisticService = {
     getCommentByClassId,
+    getStaticPupilByClassId,
     getScoreByClassSubjectId,
     getCommentByGradeId,
     getCommentByGradeSubjectId,

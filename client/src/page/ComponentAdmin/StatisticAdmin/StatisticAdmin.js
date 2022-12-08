@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./StatisticAdmin.css";
-import { Bar, Doughnut } from 'react-chartjs-2';
+import { Bar, Doughnut, getElementsAtEvent } from 'react-chartjs-2';
 import ModalInput from "../../../lib/ModalInput/ModalInput";
 import ChooseStatistic from "../../../lib/ModalInput/ChooseStatistic/ChooseStatistic";
 import StatisticService from "../../../config/service/StatisticService";
@@ -25,12 +25,18 @@ Chart.register(CategoryScale,
 
 const StatisticAdmin = (props) => {
     const [addState, setAddState] = useState(false);
+    const [detailState, setDetailState] = useState(false);
     const [errorServer, setErrorServer] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
     const [label, setLabel] = useState([]);
     const [data, setData] = useState([]);
     const [legend, setLegend] = useState("");
+
+    const [grades, setGrade] = useState("")
+    const [classroom, setClass] = useState("")
+    const [subject, setSubject] = useState("")
+    const [students, setStudents] = useState([])
 
     const option = {
         responsive: true,
@@ -75,12 +81,67 @@ const StatisticAdmin = (props) => {
         ],
     };
 
+    const scoreLabes = ["Average(0-4)", "Good(5-6)", "VeryGood(7-8)", "Excellent(9-10)"];
+    const feeLabes = ["Paided", "UnPaid"];
+
+    const printDatasetAtEvent = (item) => {
+        if (!item.length) return;
+        const datasetIndex = item[0].index;
+
+        return dataScore.labels[datasetIndex];
+    };
+
+    const chartRef = useRef();
+    const onClick = (event) => {
+        var label = printDatasetAtEvent(getElementsAtEvent(chartRef.current, event))
+        console.log(label);
+        if (scoreLabes.includes(label)) {
+            console.log('Score');
+            console.log(classroom);
+            if (grades == "" && classroom != "" && subject == "") {
+                StatisticService.getStaticPupilByClassId(classroom, label)
+                    .then((response) => {
+                        const dataSources = response.statisticPupils.map((item, index) => {
+                            return {
+                                key: index + 1,
+                                id: item.pupil_id._id,
+                                name: item.pupil_id.pupil_name,
+                                date: item.pupil_id.pupil_dateofbirth,
+                                gender: item.pupil_id.pupil_gender
+                            };
+                        });
+                        setStudents(dataSources);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+
+                // setStudents([
+                //     { key: 1, id: 2323, name: 'nouuuu', date: '2323', gender: 'boi' },
+                //     { key: 2, id: 2323, name: 'nouuuu', date: '2323', gender: 'boi' },
+                //     { key: 3, id: 2323, name: 'nouuuu', date: '2323', gender: 'boi' }
+                // ])
+            }
+            setDetailState(true);
+
+        } else if (feeLabes.includes(label)) {
+            console.log('Fee');
+        }
+
+    }
+
     const Statistics = () => {
         return (
             <div className="father-chart">
                 <div className="chart">
-                    <Doughnut options={option} data={dataScore} />
+                    <Doughnut
+                        ref={chartRef}
+                        options={option}
+                        data={dataScore}
+                        onClick={onClick}
+                    />
                 </div>
+                {detailState ? <DetailView /> : null}
             </div>
         );
     };
@@ -98,6 +159,7 @@ const StatisticAdmin = (props) => {
     const handleShowScore = (dropValueGrade, dropValueClass, dropValueSubject) => {
         if (dropValueGrade && dropValueClass.value != "0" && dropValueSubject.value == "0") {
             StatisticService.getCommentByClassId(dropValueClass.value).then((response) => {
+                setClass(dropValueClass.value);
                 setLabel(Object.keys(response))
                 setData(Object.values(response))
                 setLegend("Statistical results of all subjects of class " + dropValueClass.label)
@@ -188,6 +250,52 @@ const StatisticAdmin = (props) => {
             }
         />
     );
+
+    const DetailView = () => {
+        const TableClasses = ({ students }) => {
+            const classItem = students.map((item) => (
+                <tr key={item.key}>
+                    <td>{item.name}</td>
+                    <td>{item.date}</td>
+                    <td>{item.gender ? "Male" : "Female"}</td>
+                </tr>
+            ));
+
+            let headerClass;
+            if (!headerClass) {
+                headerClass = (
+                    <tr>
+                        <th>Name</th>
+                        <th>DateOfBirth</th>
+                        <th>Gender</th>
+                    </tr>
+                );
+            }
+            return (
+                <table id="table">
+                    <thead>{headerClass}</thead>
+                    <tbody>{classItem}</tbody>
+                </table>
+            );
+        };
+
+        return (
+            <div className="show-student-form">
+                <header>
+                    <div>
+                        <h3>
+                            List Result
+                        </h3>
+                    </div>
+                </header>
+                <div className="table-content">
+                    <TableClasses students={students} />
+                </div>
+            </div>
+        );
+    };
+
+
     return (
         <div className="main-container">
             <header>
@@ -200,8 +308,10 @@ const StatisticAdmin = (props) => {
                     Choose Type Statistic
                 </button>
             </div>
+
             {legend ? <Statistics /> : null}
             {addState ? DivStatistic : null}
+
         </div>
     )
 

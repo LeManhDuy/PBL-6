@@ -2,8 +2,8 @@ import AuthenticationService from "../service/AuthenticationService";
 
 // const { REACT_APP_API_ENDPOINT } = process.env;
 
-const REACT_APP_API_ENDPOINT = "https://blue-school-api.onrender.com/";
-// const REACT_APP_API_ENDPOINT = "http://localhost:8000/";;;
+// const REACT_APP_API_ENDPOINT = "https://blue-school-api.onrender.com/";
+const REACT_APP_API_ENDPOINT = "http://localhost:8000/";;;
 
 const header = {
     Accept: "application/json",
