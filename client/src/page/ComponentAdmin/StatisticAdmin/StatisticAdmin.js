@@ -110,7 +110,9 @@ const StatisticAdmin = (props) => {
                                 key: index + 1,
                                 id: item.pupil_id._id,
                                 name: item.pupil_id.pupil_name,
-                                date: item.pupil_id.pupil_dateofbirth,
+                                date: item.pupil_id.pupil_dateofbirth.split(
+                                "T"
+                            )[0],
                                 gender: item.pupil_id.pupil_gender
                             };
                         });
@@ -128,7 +130,9 @@ const StatisticAdmin = (props) => {
                             key: index + 1,
                             id: item.pupil_id._id,
                             name: item.pupil_id.pupil_name,
-                            date: item.pupil_id.pupil_dateofbirth,
+                            date: item.pupil_id.pupil_dateofbirth.split(
+                                "T"
+                            )[0],
                             gender: item.pupil_id.pupil_gender
                         };
                     });
@@ -146,7 +150,9 @@ const StatisticAdmin = (props) => {
                             key: index + 1,
                             id: item.pupil_id._id,
                             name: item.pupil_id.pupil_name,
-                            date: item.pupil_id.pupil_dateofbirth,
+                            date: item.pupil_id.pupil_dateofbirth.split(
+                                "T"
+                            )[0],
                             gender: item.pupil_id.pupil_gender
                         };
                     });
@@ -164,7 +170,9 @@ const StatisticAdmin = (props) => {
                             key: index + 1,
                             id: item.pupil_id._id,
                             name: item.pupil_id.pupil_name,
-                            date: item.pupil_id.pupil_dateofbirth,
+                            date: item.pupil_id.pupil_dateofbirth.split(
+                                "T"
+                            )[0],
                             gender: item.pupil_id.pupil_gender
                         };
                     });
@@ -186,7 +194,9 @@ const StatisticAdmin = (props) => {
                             key: index + 1,
                             id: item.pupil_id._id,
                             name: item.pupil_id.pupil_name,
-                            date: item.pupil_id.pupil_dateofbirth,
+                            date: item.pupil_id.pupil_dateofbirth.split(
+                                "T"
+                            )[0],
                             gender: item.pupil_id.pupil_gender
                         };
                     });
@@ -204,7 +214,9 @@ const StatisticAdmin = (props) => {
                             key: index + 1,
                             id: item.pupil_id._id,
                             name: item.pupil_id.pupil_name,
-                            date: item.pupil_id.pupil_dateofbirth,
+                            date: item.pupil_id.pupil_dateofbirth.split(
+                                "T"
+                            )[0],
                             gender: item.pupil_id.pupil_gender
                         };
                     });
@@ -222,7 +234,9 @@ const StatisticAdmin = (props) => {
                             key: index + 1,
                             id: item.pupil_id._id,
                             name: item.pupil_id.pupil_name,
-                            date: item.pupil_id.pupil_dateofbirth,
+                            date: item.pupil_id.pupil_dateofbirth.split(
+                                "T"
+                            )[0],
                             gender: item.pupil_id.pupil_gender
                         };
                     });
@@ -240,7 +254,9 @@ const StatisticAdmin = (props) => {
                             key: index + 1,
                             id: item.pupil_id._id,
                             name: item.pupil_id.pupil_name,
-                            date: item.pupil_id.pupil_dateofbirth,
+                            date: item.pupil_id.pupil_dateofbirth.split(
+                                "T"
+                            )[0],
                             gender: item.pupil_id.pupil_gender
                         };
                     });
@@ -258,7 +274,9 @@ const StatisticAdmin = (props) => {
                             key: index + 1,
                             id: item.pupil_id._id,
                             name: item.pupil_id.pupil_name,
-                            date: item.pupil_id.pupil_dateofbirth,
+                            date: item.pupil_id.pupil_dateofbirth.split(
+                                "T"
+                            )[0],
                             gender: item.pupil_id.pupil_gender
                         };
                     });
@@ -276,12 +294,15 @@ const StatisticAdmin = (props) => {
                             key: index + 1,
                             id: item.pupil_id._id,
                             name: item.pupil_id.pupil_name,
-                            date: item.pupil_id.pupil_dateofbirth,
+                            date: item.pupil_id.pupil_dateofbirth.split(
+                                "T"
+                            )[0],
                             gender: item.pupil_id.pupil_gender
                         };
                     });
                     setLabelTitleListRs(label);
                     setStudents(dataSources);
+                    console.log(dataSources)
                 })
                 .catch((error) => {
                     console.log(error);
@@ -473,7 +494,7 @@ const StatisticAdmin = (props) => {
                 headerClass = (
                     <tr>
                         <th>Name</th>
-                        <th>DateOfBirth</th>
+                        <th>Date Of Birth</th>
                         <th>Gender</th>
                     </tr>
                 );
