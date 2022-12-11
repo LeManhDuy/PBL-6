@@ -47,6 +47,7 @@ const ChooseStatistic = (props) => {
         }
     };
     const handleInputCustom = () => {
+        props.handleInputCustom();
         setIsShowType(true);
         setIsShowScore(false);
         setIsShowFee(false);

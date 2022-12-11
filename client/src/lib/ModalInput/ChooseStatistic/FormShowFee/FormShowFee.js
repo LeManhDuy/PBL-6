@@ -131,6 +131,7 @@ const FormShowFee = (props) => {
             check = false
         }
         setFeeError({ classroom: classroom, fee: fee, grade: grade })
+        props.handleInputCustom();
         if (!check) {
             props.handleShowFee(dropValueGrade, dropValueClass, dropValueFee);
         }
