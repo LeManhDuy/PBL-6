@@ -24,20 +24,21 @@ const createComment = async (req, res, next) => {
             .select(["midterm_score", "final_score", "result"])
             .populate({ path: "subject_id", model: "Subject" });
         if (pupilScore[0]) {
+            let min = 11;
             pupilScore.map((item) => {
-                if (item.final_score === null) {
-                    none = true;
-                }
-                if (item.final_score < 5) {
-                    check = "Failed";
-                }
-                if (item.final_score < 7 && item.final_score >= 5) {
-                    check = "Passed";
-                }
-                if (item.final_score >= 7 && item.final_score < 9) {
-                    check = "Good";
+                if(item.final_score < min) {
+                    min = item.final_score;
                 }
             });
+            if (min < 5) {
+                check = "Failed";
+            }
+            if (min < 7 && min >= 5) {
+                check = "Passed";
+            }
+            if (min >= 7 && min < 9) {
+                check = "Good";
+            }
         } else {
             check = "-";
         }
