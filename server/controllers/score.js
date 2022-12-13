@@ -5,6 +5,7 @@ const Period = require("../model/Period");
 const SubjectTeacher = require("../model/SubjectTeacher");
 const Subject = require("../model/Subject");
 const Score = require("../model/Score");
+const Classroom = require("../model/Class");
 
 const createSubjectScore = async (req, res, next) => {
     let { midterm_score, final_score, pupil_id } = req.body;
@@ -298,10 +299,93 @@ const getAllSubjectByPupilId = async (req, res, next) => {
     }
 };
 
+const getAllScoreByClassID = async (req, res, next) => {
+    const existed_class = await Classroom.findById(req.params.classID);
+    if (!existed_class) {
+        return res
+            .status(400)
+            .json({ success: false, message: "Class does not found." });
+    }
+
+    //all good
+    try {
+        let data = [];
+        const pupils = await Pupil.find({
+            class_id: req.params.classID,
+        }).select(["pupil_name"]);
+        for (let item of pupils) {
+            let scores = await Score.find({ pupil_id: item._id })
+                .select(["midterm_score", "final_score"])
+                .populate({
+                    path: "subject_id",
+                    model: "Subject",
+                    select: ["subject_name"],
+                });
+            let newItem = { item, scores };
+            data.push(newItem);
+        }
+        return res.json({ success: true, data });
+    } catch (error) {
+        const err = new Error("Internal Server Error");
+        err.status = 500;
+        next(err);
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
+const getSubjectByClassId = async (req, res, next) => {
+    try {
+        const schedule = await Schedule.findOne({
+            class_id: req.params.classID,
+        });
+        if (!schedule) {
+            return res.status(400).json({
+                success: false,
+                message: "This class does not have any schedule",
+            });
+        }
+
+        const periods = await Period.find({ schedule_id: schedule._id });
+        if (periods.length === 0) {
+            return res.status(400).json({ success: false, message: "P" });
+        }
+
+        let subject_teachers = [];
+        for (let period of periods) {
+            const st_id = period.subject_teacher_id.toString();
+            subject_teachers.push(st_id);
+        }
+        let uniqueST = subject_teachers.filter((c, index) => {
+            return subject_teachers.indexOf(c) === index;
+        });
+        let subjects = [];
+        for (let st of uniqueST) {
+            const existed_subject_teacher = await SubjectTeacher.findOne({
+                _id: st,
+            });
+            if (!existed_subject_teacher) {
+                return res.status(400).json({ success: false, message: "ST" });
+            }
+            const subject = await Subject.findOne({
+                _id: existed_subject_teacher.subject_id,
+            }).select(["subject_name"]);
+            subjects.push(subject);
+        }
+        res.json({ success: true, subjects });
+    } catch (error) {
+        const err = new Error("Internal Server Error");
+        err.status = 500;
+        next(err);
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
 module.exports = {
     createSubjectScore,
     getScoreByPupilId,
     updateScore,
     getAllSubjectByPupilId,
     getScoreById,
+    getAllScoreByClassID,
+    getSubjectByClassId,
 };

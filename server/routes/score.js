@@ -22,4 +22,10 @@ router.get("/:studentID", ScoreController.getAllSubjectByPupilId);
 // Get score by ID
 router.get("/get-detail-score/:scoreID", ScoreController.getScoreById);
 
+// Get all score by classID
+router.get("/get-all-score/:classID", ScoreController.getAllScoreByClassID);
+
+// Get all subject by classID
+router.get("/get-all-subject/:classID", ScoreController.getSubjectByClassId);
+
 module.exports = router;
