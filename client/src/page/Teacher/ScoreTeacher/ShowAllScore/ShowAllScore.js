@@ -58,10 +58,6 @@ const ShowAllScore = (props) => {
                 },
             });
         }
-        console.log(arraySubject);
-        console.log(newScore);
-        console.log(records.score);
-        // console.log(arraySubject);
 
         if (records.score.length !== 0) {
             for (let item of records.score) {
@@ -76,9 +72,6 @@ const ShowAllScore = (props) => {
                 }
             }
         }
-
-        console.log("New ne");
-        console.log(newScore);
 
         // if (records.score.length !== 0) {
         //     if (arraySubject.length !== records.score.length) {
