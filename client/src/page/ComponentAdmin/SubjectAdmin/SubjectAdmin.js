@@ -6,7 +6,7 @@ import {
     faArrowLeftLong,
     faArrowRightLong,
 } from "@fortawesome/free-solid-svg-icons";
-
+import { Link, useHistory } from "react-router-dom";
 import SubjectService from "../../../config/service/SubjectService";
 import ModalInput from "../../../lib/ModalInput/ModalInput";
 import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
@@ -268,9 +268,11 @@ const SubjectAdmin = () => {
                     <h3>Manage Subject</h3>
                 </div>
                 <div className="right-header">
-                    <a href="subject_teacher">
+                    <Link
+                            to={"/admin/subject_teacher"}
+                        >
                         <button className="btn-account">Assign Subject</button>
-                    </a>
+                    </Link>
                     <button className="btn-account" onClick={handleAddSubject}>
                         Add Subject
                     </button>
