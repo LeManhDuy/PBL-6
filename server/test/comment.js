@@ -20,7 +20,7 @@ describe("Comment", () => {
     describe("/GET/:pupilID comment", () => {
         it("it should GET a comment by the given pupil id", (done) => {
             // TODO add a model to db then get that *id* to take this test
-            let id = "639938d2eba813ce7c61843f";
+            let id = "6396b4682695623b059c6a64";
             chai.request(API)
                 .get(APIComment + id)
                 .end((err, res) => {
