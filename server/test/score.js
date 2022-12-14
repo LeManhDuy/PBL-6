@@ -23,7 +23,7 @@ describe("Score", () => {
     describe("/GET/:pupilID score", () => {
         it("it should GET all score by the pupil id", (done) => {
             // TODO add a model to db then get that *id* to take this test
-            let id = "63704f5c1d1371ad460d532a";
+            let id = "6396b4672695623b059c6a50";
             chai.request(API)
                 .get(APIScore + id)
                 .end((err, res) => {
@@ -38,7 +38,7 @@ describe("Score", () => {
     describe("/GET/:scoreID score", () => {
         it("it should GET a score by the score id", (done) => {
             // TODO add a model to db then get that *id* to take this test
-            let id = "63705c308dcd23141cc77a0f";
+            let id = "6397f7c1e850caa282b74f15";
             chai.request(API)
                 .get(APIScore + "get-detail-score/" + id)
                 .end((err, res) => {

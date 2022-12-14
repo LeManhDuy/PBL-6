@@ -6,6 +6,7 @@ import StudentService from "../../../config/service/StudentService";
 import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import FormSubject from "./FormSubject/FormSubject";
 import ReactPaginate from "react-paginate";
+import ShowAllScore from "./ShowAllScore/ShowAllScore";
 import Loading from "../../../lib/Loading/Loading";
 
 const ScoreTeacher = () => {
@@ -14,6 +15,8 @@ const ScoreTeacher = () => {
     const [id, setId] = useState("");
     const [nameClass, setNameClass] = useState("");
     const [keyword, setKeyword] = useState("");
+    const [classId, setClassID] = useState("");
+    const [isShowAll, setIsShowAll] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -29,6 +32,7 @@ const ScoreTeacher = () => {
                 if (response.success === false) setStudents([]);
                 else {
                     setNameClass(response.class_name);
+                    setClassID(response.getPupilsInfor[0].class_id._id);
                     const dataSources = response.getPupilsInfor.map(
                         (item, index) => {
                             return {
@@ -60,6 +64,7 @@ const ScoreTeacher = () => {
 
     const handleCloseModalCustom = () => {
         setIsMark(false);
+        setIsShowAll(false);
     };
 
     const handleMark = (e) => {
@@ -159,13 +164,30 @@ const ScoreTeacher = () => {
     const DivFormSubject = (
         <ModalCustom
             show={isMark}
+            handleCloseModalCustom={handleCloseModalCustom}
             content={
                 <FormSubject
                     handleCloseModalCustom={handleCloseModalCustom}
                     id={id}
                 />
             }
+        />
+    );
+
+    const showAllScore = () => {
+        setIsShowAll(true);
+    };
+
+    const DivShowAllScore = (
+        <ModalCustom
+            show={isShowAll}
             handleCloseModalCustom={handleCloseModalCustom}
+            content={
+                <ShowAllScore
+                    classID={classId}
+                    handleCloseModalCustom={handleCloseModalCustom}
+                />
+            }
         />
     );
 
@@ -177,6 +199,12 @@ const ScoreTeacher = () => {
                         <h4>{"List Student Of The Class " + nameClass}</h4>
                         <h4>{"Total: " + students.length}</h4>
                         <div className="right-header">
+                            <button
+                                className="btn-account"
+                                onClick={showAllScore}
+                            >
+                                Show all score
+                            </button>
                             <div className="search-box">
                                 <button className="btn-search">
                                     <FontAwesomeIcon
@@ -204,6 +232,7 @@ const ScoreTeacher = () => {
                 searchStudent={searchStudent(students)}
             />
             {isMark ? DivFormSubject : null}
+            {isShowAll ? DivShowAllScore : null}
             <Loading isLoading={isLoading} />
         </div>
     );

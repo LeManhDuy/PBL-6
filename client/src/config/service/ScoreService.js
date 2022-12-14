@@ -20,12 +20,22 @@ const getScoreByID = async (id) => {
     return await HandleApi.APIGetWithToken(`score/get-detail-score/${id}`);
 };
 
+const getAllScoreOfPupilByClassID = async (id) => {
+    return await HandleApi.APIGetWithToken(`score/get-all-score/${id}`);
+};
+
+const getSubjectByClassID = async (id) => {
+    return await HandleApi.APIGetWithToken(`score/get-all-subject/${id}`);
+};
+
 const ScoreService = {
     getSubjectByPupilID,
     createSubjectScore,
     getAllScoreByPupilID,
     updateScoreByID,
     getScoreByID,
+    getAllScoreOfPupilByClassID,
+    getSubjectByClassID,
 };
 
 export default ScoreService;
