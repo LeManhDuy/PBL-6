@@ -8,7 +8,7 @@ const validator = require("email-validator");
 const FirebaseStorage = require("multer-firebase-storage");
 
 const fileFilter = (req, file, cb) => {
-    // reject a file
+    // reject a fileee
     if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
         cb(null, true);
     } else {

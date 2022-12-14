@@ -704,7 +704,7 @@ const StudentAdmin = () => {
                 <Loading isLoading={isLoading} />
             </header>
             <PaginatedItems
-                itemsPerPage={9}
+                itemsPerPage={10}
                 searchStudent={searchStudent(student)}
             />
             {isDelete ? ConfirmDelete : null}
