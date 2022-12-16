@@ -28,6 +28,13 @@ const getSubjectByClassID = async (id) => {
     return await HandleApi.APIGetWithToken(`score/get-all-subject/${id}`);
 };
 
+const AddScoreByFile = async (id, file) => {
+    return await HandleApi.APIPostWithTokenFile(
+        `score/add-score-excel/${id}`,
+        file
+    );
+};
+
 const ScoreService = {
     getSubjectByPupilID,
     createSubjectScore,
@@ -36,6 +43,7 @@ const ScoreService = {
     getScoreByID,
     getAllScoreOfPupilByClassID,
     getSubjectByClassID,
+    AddScoreByFile,
 };
 
 export default ScoreService;

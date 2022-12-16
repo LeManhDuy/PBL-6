@@ -6,6 +6,7 @@ const SubjectTeacher = require("../model/SubjectTeacher");
 const Subject = require("../model/Subject");
 const Score = require("../model/Score");
 const Classroom = require("../model/Class");
+const excelToJson = require("convert-excel-to-json");
 
 const createSubjectScore = async (req, res, next) => {
     let { midterm_score, final_score, pupil_id } = req.body;
@@ -347,7 +348,10 @@ const getSubjectByClassId = async (req, res, next) => {
 
         const periods = await Period.find({ schedule_id: schedule._id });
         if (periods.length === 0) {
-            return res.status(400).json({ success: false, message: "P" });
+            return res.status(400).json({
+                success: false,
+                message: "This schedule does not have any periods",
+            });
         }
 
         let subject_teachers = [];
@@ -380,6 +384,141 @@ const getSubjectByClassId = async (req, res, next) => {
     }
 };
 
+const addScoreExcel = async (req, res, next) => {
+    //Validate class
+    const classValidate = await Classroom.findById(req.params.classID);
+    if (!classValidate) {
+        return res
+            .status(400)
+            .json({ success: false, message: "Class does not exist." });
+    }
+    let date = Date.now();
+    try {
+        let scoreFile = null;
+        if (req.file) {
+            scoreFile = Buffer.from(req.file.buffer);
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: "File does not exist!",
+                body: req.file,
+            });
+        }
+        const score = excelToJson({
+            source: scoreFile,
+            header: {
+                rows: 1,
+            },
+            columnToKey: {
+                "*": "{{columnHeader}}",
+            },
+            sheetStubs: true,
+        });
+        let subject = Object.keys(score["Sheet1"][0]);
+        // delete score["Sheet1"][0]["Full Name"];
+        subject.shift();
+        subject.pop();
+        let subjectArray = [];
+        for (let item of subject) {
+            const subjectID = await Subject.findOne({
+                subject_name: item,
+            }).select(["subject_name"]);
+            if (!subjectID) {
+                return res.status(400).json({
+                    success: false,
+                    message: item + " does not exist!Please check the name!",
+                    body: req.file,
+                });
+            } else {
+                subjectArray.push(subjectID);
+            }
+        }
+        // console.log(subjectArray);
+        // console.log(Object.keys(score["Sheet1"][0]));
+        for (let c of score["Sheet1"]) {
+            const pupilValidate = await Pupil.findOne({
+                pupil_name: c["Full Name"],
+                class_id: req.params.classID,
+            }).select("_id");
+            if (!pupilValidate) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Pupil does not exist in this class.",
+                });
+            }
+            // console.log(pupilValidate);
+            // console.log(c["Full Name"]);
+            for (let item of subjectArray) {
+                // console.log(item.subject_name);
+                if (c[item.subject_name] !== null) {
+                    let result = "";
+                    let final_score = c[item.subject_name].split("-")[1];
+                    let midterm_score = c[item.subject_name].split("-")[0];
+                    if (midterm_score < 0 || midterm_score > 10)
+                        return res.status(400).json({
+                            success: false,
+                            message: "midterm_score:invalid format",
+                        });
+                    if (!final_score) {
+                        // console.log("Hello");
+                    } else {
+                        if (final_score < 0 || final_score > 10)
+                            return res.status(400).json({
+                                success: false,
+                                message: "final_score:invalid format",
+                            });
+                        if (final_score >= 9) {
+                            result = "Excellent";
+                        } else if (final_score >= 7 && final_score < 9) {
+                            result = "Good";
+                        } else if (final_score >= 5 && final_score < 7) {
+                            result = "Passed";
+                        } else {
+                            result = "Failed";
+                        }
+                    }
+                    // console.log("Final:" + final_score);
+                    const ScoreValidate = await Score.findOne({
+                        pupil_id: pupilValidate._id,
+                        subject_id: item._id,
+                    }).select(["_id"]);
+                    if (!ScoreValidate) {
+                        const newSubjectScore = new Score({
+                            midterm_score,
+                            final_score,
+                            result,
+                            pupil_id: pupilValidate._id,
+                            subject_id: item._id,
+                            last_update: date,
+                        });
+                        await newSubjectScore.save();
+                    } else {
+                        //Update
+                        ScoreValidate.midterm_score = midterm_score;
+                        ScoreValidate.final_score = final_score;
+                        ScoreValidate.result = result;
+                        ScoreValidate.last_update = date;
+                        ScoreValidate.save();
+                    }
+                    // console.log("MT:" + midterm_score);
+                } else {
+                    // console.log("Mid-term: null");
+                    // console.log("Final: null");
+                }
+            }
+        }
+        res.json({
+            success: true,
+            message: "Add score successfully",
+        });
+    } catch (error) {
+        const err = new Error("Internal Server Error");
+        err.status = 500;
+        next(err);
+        return res.status(500).json({ success: false, message: "" + error });
+    }
+};
+
 module.exports = {
     createSubjectScore,
     getScoreByPupilId,
@@ -388,4 +527,5 @@ module.exports = {
     getScoreById,
     getAllScoreByClassID,
     getSubjectByClassId,
+    addScoreExcel,
 };
