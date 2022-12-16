@@ -6,6 +6,7 @@ const Period = require("../model/Period");
 const SubjectTeacher = require("../model/SubjectTeacher");
 const Subject = require("../model/Subject");
 const ScoreController = require("../controllers/score");
+const multer = require("multer");
 
 // Create score for a subject
 router.post("/:subjectID", ScoreController.createSubjectScore);
@@ -27,5 +28,12 @@ router.get("/get-all-score/:classID", ScoreController.getAllScoreByClassID);
 
 // Get all subject by classID
 router.get("/get-all-subject/:classID", ScoreController.getSubjectByClassId);
+
+// Add score by excel
+router.post(
+    "/add-score-excel/:classID",
+    multer().single("file"),
+    ScoreController.addScoreExcel
+);
 
 module.exports = router;
