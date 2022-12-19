@@ -8,6 +8,7 @@ const Person = require("../model/Person");
 const Classroom = require("../model/Class");
 const FirebaseStorage = require("multer-firebase-storage");
 const excelToJson = require('convert-excel-to-json');
+const verifyJWTAdmin = require("../middleware/verifyJWTAdmin");
 const fs = require("fs");
 
 const fileFilter = (req, file, cb) => {
@@ -39,6 +40,7 @@ const upload = multer({
 // @access Private
 router.post(
     "/:classID&:parentID",
+    verifyJWTAdmin,
     upload.single("pupil_image"),
     async (req, res, next) => {
         const { pupil_name, pupil_dateofbirth, pupil_gender } = req.body;
@@ -86,7 +88,7 @@ router.post(
             const err = new Error('Internal Server Error');
             err.status = 500;
             next(err)
-            return res.status(500).json({ success: false, message: "" + error });  
+            return res.status(500).json({ success: false, message: "" + error });
         }
     }
 );
@@ -164,7 +166,7 @@ router.post("/add-multi-pupil", multer().single('file'), async (req, res, next) 
         const err = new Error('Internal Server Error');
         err.status = 500;
         next(err)
-        return res.status(500).json({ success: false, message: "" + error });  
+        return res.status(500).json({ success: false, message: "" + error });
     }
 
 })
@@ -349,7 +351,7 @@ router.get("/get-pupil-by-teacher-id/:teacherID", async (req, res, next) => {
         const err = new Error('Internal Server Error');
         err.status = 500;
         next(err)
-        return res.status(500).json({ success: false, message: "" + error });  
+        return res.status(500).json({ success: false, message: "" + error });
     }
 });
 // // @route GET api/admin/pupil
