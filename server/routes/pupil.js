@@ -40,7 +40,6 @@ const upload = multer({
 // @access Private
 router.post(
     "/:classID&:parentID",
-    verifyJWTAdmin,
     upload.single("pupil_image"),
     async (req, res, next) => {
         const { pupil_name, pupil_dateofbirth, pupil_gender } = req.body;
