@@ -1,6 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const slackErrors = require("./slack_error.js");
+const Sentry = require("@sentry/node");
+const SentryTracing = require("@sentry/tracing");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
@@ -28,16 +30,51 @@ const app = express();
 app.use(express.json());
 
 //database
-const connectDB = async () => {
-    try {
-        await mongoose.connect(process.env.DATABASE);
-        console.log("MongoDB connected");
-    } catch (error) {
-        console.log(error.message);
-        process.exit(1);
-    }
+// const connectDB = async () => {
+//     try {
+//         await mongoose.connect(process.env.DATABASE);
+//         console.log("MongoDB connected");
+//     } catch (error) {
+//         console.log(error.message);
+//         process.exit(1);
+//     }
+// };
+
+
+const connectDB = () => {
+    mongoose.connect(process.env.DATABASE);
+    console.log("MongoDB connected");
 };
-connectDB();
+// connectDB();
+
+//sentry
+
+
+Sentry.init({
+    dsn: "https://aebdea3748fb43e784e82f68ac1b4376@o4504343356833792.ingest.sentry.io/4504343387766784",
+    tracesSampleRate: 0.75,
+});
+
+const transaction = Sentry.startTransaction({
+    op: "test",
+    name: "My First Test Transaction",
+});
+
+const test = () => {
+    console.log('test');
+}
+
+setTimeout(() => {
+    try {
+        connectDB();
+    } catch (e) {
+        Sentry.captureException(e);
+    } finally {
+        transaction.finish();
+    }
+}, 99);
+
+
 
 //cors
 app.use(cors());

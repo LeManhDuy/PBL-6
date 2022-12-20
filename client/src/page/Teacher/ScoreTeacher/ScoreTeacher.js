@@ -7,7 +7,10 @@ import ModalCustom from "../../../lib/ModalCustom/ModalCustom";
 import FormSubject from "./FormSubject/FormSubject";
 import ReactPaginate from "react-paginate";
 import ShowAllScore from "./ShowAllScore/ShowAllScore";
+import AddScoreExcel from "./AddScoreExcel/AddScoreExcel";
+import ModalInput from "../../../lib/ModalInput/ModalInput";
 import Loading from "../../../lib/Loading/Loading";
+import ScoreService from "../../../config/service/ScoreService";
 
 const ScoreTeacher = () => {
     const [students, setStudents] = useState([]);
@@ -18,14 +21,17 @@ const ScoreTeacher = () => {
     const [classId, setClassID] = useState("");
     const [isShowAll, setIsShowAll] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [addExcelState, setAddExcelState] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [errorServer, setErrorServer] = useState(false);
 
     useEffect(() => {
         getStudentByTeacherId();
     }, []);
 
-    const getStudentByTeacherId = () => {
+    const getStudentByTeacherId = async () => {
         setIsLoading(true);
-        StudentService.getStudentByTeacherIdAtTeacherRole(
+        await StudentService.getStudentByTeacherIdAtTeacherRole(
             JSON.parse(localStorage.getItem("@Login")).AccountId
         )
             .then((response) => {
@@ -65,6 +71,7 @@ const ScoreTeacher = () => {
     const handleCloseModalCustom = () => {
         setIsMark(false);
         setIsShowAll(false);
+        setAddExcelState(false);
     };
 
     const handleMark = (e) => {
@@ -191,6 +198,50 @@ const ScoreTeacher = () => {
         />
     );
 
+    const handleAddExcel = () => {
+        setAddExcelState(true);
+    };
+
+    const handleConfirmAddExcel = (props) => {
+        setIsLoading(true);
+        let scoreFile = props.scoreFile;
+        setAddExcelState(false);
+        ScoreService.AddScoreByFile(classId, scoreFile).then((res) => {
+            if (res.success) {
+                setIsLoading(false);
+                setAddExcelState(false);
+                setErrorServer(false);
+                setErrorMessage("");
+            } else {
+                setIsLoading(false);
+                setAddExcelState(true);
+                setErrorServer(true);
+                setErrorMessage(res.message);
+            }
+        });
+    };
+
+    const handleInputCustom = () => {
+        setAddExcelState(false);
+        setErrorMessage("");
+        setErrorServer(false);
+    };
+
+    const DivAddScoreExcel = (
+        <ModalInput
+            show={addExcelState}
+            handleInputCustom={handleInputCustom}
+            content={
+                <AddScoreExcel
+                    handleInputCustom={handleInputCustom}
+                    handleConfirmAddExcel={handleConfirmAddExcel}
+                    errorServer={errorServer}
+                    errorMessage={errorMessage}
+                />
+            }
+        />
+    );
+
     return (
         <div className="class-teacher">
             <div className="class-teacher-header">
@@ -204,6 +255,12 @@ const ScoreTeacher = () => {
                                 onClick={showAllScore}
                             >
                                 Show all score
+                            </button>
+                            <button
+                                className="btn-account update"
+                                onClick={handleAddExcel}
+                            >
+                                Add File Excel
                             </button>
                             <div className="search-box">
                                 <button className="btn-search">
@@ -233,6 +290,7 @@ const ScoreTeacher = () => {
             />
             {isMark ? DivFormSubject : null}
             {isShowAll ? DivShowAllScore : null}
+            {addExcelState ? DivAddScoreExcel : null}
             <Loading isLoading={isLoading} />
         </div>
     );

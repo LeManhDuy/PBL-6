@@ -7,6 +7,7 @@ const SubjectTeacher = require("../model/SubjectTeacher");
 const Subject = require("../model/Subject");
 const ScoreController = require("../controllers/score");
 const verifyJWT = require("../middleware/verifyJWTAdmin");
+const multer = require("multer");
 
 // Create score for a subject
 router.post("/:subjectID", verifyJWT, ScoreController.createSubjectScore);
@@ -28,5 +29,12 @@ router.get("/get-all-score/:classID", verifyJWT, ScoreController.getAllScoreByCl
 
 // Get all subject by classID
 router.get("/get-all-subject/:classID", verifyJWT, ScoreController.getSubjectByClassId);
+
+// Add score by excel
+router.post(
+    "/add-score-excel/:classID",
+    multer().single("file"),
+    ScoreController.addScoreExcel
+);
 
 module.exports = router;
