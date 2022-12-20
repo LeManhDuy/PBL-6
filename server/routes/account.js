@@ -6,6 +6,7 @@ const Account = require("../model/Account");
 const multer = require("multer");
 const validator = require("email-validator");
 const FirebaseStorage = require("multer-firebase-storage");
+const verifyJWT = require("../middleware/verifyJWTAdmin");
 
 const fileFilter = (req, file, cb) => {
     // reject a fileee
@@ -31,7 +32,7 @@ const upload = multer({
     fileFilter: fileFilter,
 });
 
-router.get("/:personID", async (req, res, next) => {
+router.get("/:personID", verifyJWT, async (req, res, next) => {
     try {
         const personInfor = await Person.findById(req.params.personID).populate(
             {
@@ -50,7 +51,7 @@ router.get("/:personID", async (req, res, next) => {
 });
 
 router.put(
-    "/:personID",
+    "/:personID", verifyJWT,
     upload.single("person_image"),
     async (req, res, next) => {
         const {
@@ -162,7 +163,7 @@ router.put(
     }
 );
 
-router.post("/reset-password/:accountID", async (req, res, next) => {
+router.post("/reset-password/:accountID", verifyJWT, async (req, res, next) => {
     try {
         let resetPassword = "123456";
         const hashPassword = await argon2.hash(resetPassword);

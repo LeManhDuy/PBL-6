@@ -3,12 +3,13 @@ const router = express.Router()
 const Subject = require("../model/Subject")
 const multer = require("multer")
 const upload = multer().any()
+const verifyJWT = require("../middleware/verifyJWTAdmin");
 
 // @route GET api/subject
 // @desc Get subject
 // @access Private
-router.get("/", async(req, res, next) => {
-    try{
+router.get("/", verifyJWT, async (req, res, next) => {
+    try {
         const allSubject = await Subject.find()
             .select([
                 "subject_id",
@@ -24,7 +25,7 @@ router.get("/", async(req, res, next) => {
     }
 })
 
-router.get("/:subjectID", async (req, res, next) => {
+router.get("/:subjectID", verifyJWT, async (req, res, next) => {
     try {
         // Return token
         const getSubjectInfor = await Subject.find({ _id: req.params.subjectID })
@@ -43,13 +44,13 @@ router.get("/:subjectID", async (req, res, next) => {
 // @route POST api/subject
 // @desc post subject
 // @access Private
-router.post("/",multer().single(), async(req, res, next) =>{
-    const {subject_name} = req.body
+router.post("/", verifyJWT, multer().single(), async (req, res, next) => {
+    const { subject_name } = req.body
     if (!subject_name)
-    return res.status(400).json({
-        success: false,
-        message: "Please fill in complete information.",
-    })
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information.",
+        })
     try {
         const subjectValidate = await Subject.findOne({ subject_name })
         if (subjectValidate)
@@ -77,13 +78,13 @@ router.post("/",multer().single(), async(req, res, next) =>{
 // @route PUT api/subject
 // @desc put subject
 // @access Private
-router.put("/:subjectID",multer().single(), async(req, res, next) =>{
-    const {subject_name} = req.body
+router.put("/:subjectID", verifyJWT, multer().single(), async (req, res, next) => {
+    const { subject_name } = req.body
     if (!subject_name)
-    return res.status(400).json({
-        success: false,
-        message: "Please fill in complete information.",
-    })
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information.",
+        })
     try {
         const subject = await Subject.findById(req.params.subjectID)
         if (!subject)
@@ -103,7 +104,7 @@ router.put("/:subjectID",multer().single(), async(req, res, next) =>{
             postUpdateSubject,
             updateSubject,
             { new: true }
-        )      
+        )
         res.json({
             success: true,
             message: "Update subject successfully.",
@@ -121,10 +122,10 @@ router.put("/:subjectID",multer().single(), async(req, res, next) =>{
 // @route DELETE api/subject
 // @desc delete subject
 // @access Private
-router.delete("/:subjectID", async (req, res, next) => {
+router.delete("/:subjectID", verifyJWT, async (req, res, next) => {
     try {
         const deletedSubject = await Subject.findOneAndDelete(
-            {_id: req.params.subjectID}
+            { _id: req.params.subjectID }
         )
 
         res.json({ success: true, message: "Deleted subject successfully!", subject: deletedSubject })

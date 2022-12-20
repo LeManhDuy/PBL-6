@@ -8,53 +8,54 @@ const multer = require("multer");
 // @route POST api/auth/register
 // @desc Register user
 // @access Private
-router.post("/register", async (req, res, next) => {
-    const { account_username, account_password, account_role } = req.body;
-    //Simple validation
-    if (!account_username || !account_password || !account_role)
-        return res.status(400).json({
-            success: false,
-            message: "Please fill in complete information",
-        });
-    try {
-        // check for existing user
-        const accountExisted = await Account.findOne({
-            account_username: account_username,
-        });
-        if (accountExisted)
-            return res
-                .status(400)
-                .json({ success: false, message: "Username is existing" });
-        if (account_password.length < 6) {
-            return res.status(400).json({
-                success: false,
-                message: "Password must have at least 6 characters.",
-            });
-        }
-        // all good
-        const hashPassword = await argon2.hash(account_password);
-        const newAccount = new Account({
-            account_username: account_username,
-            account_password: hashPassword,
-            account_role: account_role,
-        });
-        await newAccount.save();
-        const accessToken = jwt.sign(
-            { accountId: newAccount._id },
-            process.env.ACCESS_TOKEN_SECRET
-        );
-        res.json({
-            success: true,
-            message: "Create account successfully",
-            accessToken,
-        });
-    } catch (error) {
-        const err = new Error("Internal Server Error");
-        err.status = 500;
-        next(err);
-        return res.status(500).json({ success: false, message: "" + error });
-    }
-});
+// router.post("/register", async (req, res, next) => {
+//     const { account_username, account_password, account_role } = req.body;
+//     //Simple validation
+//     if (!account_username || !account_password || !account_role)
+//         return res.status(400).json({
+//             success: false,
+//             message: "Please fill in complete information",
+//         });
+//     try {
+//         // check for existing user
+//         const accountExisted = await Account.findOne({
+//             account_username: account_username,
+//         });
+//         if (accountExisted)
+//             return res
+//                 .status(400)
+//                 .json({ success: false, message: "Username is existing" });
+//         if (account_password.length < 6) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Password must have at least 6 characters.",
+//             });
+//         }
+//         // all good
+//         const hashPassword = await argon2.hash(account_password);
+//         const newAccount = new Account({
+//             account_username: account_username,
+//             account_password: hashPassword,
+//             account_role: account_role,
+//         });
+//         await newAccount.save();
+//         const accessToken = jwt.sign(
+//             { accountId: newAccount._id },
+//             process.env.ACCESS_TOKEN_SECRET,
+//             { expiresIn: '2h' }
+//         );
+//         res.json({
+//             success: true,
+//             message: "Create account successfully",
+//             accessToken,
+//         });
+//     } catch (error) {
+//         const err = new Error("Internal Server Error");
+//         err.status = 500;
+//         next(err);
+//         return res.status(500).json({ success: false, message: "" + error });
+//     }
+// });
 
 // @route GET api/auth/
 // @desc Login user
@@ -77,7 +78,8 @@ router.post("/login", async (req, res, next) => {
         if (checkAcccountUserName) {
             accessToken = jwt.sign(
                 { accountId: checkAcccountUserName._id },
-                process.env.ACCESS_TOKEN_SECRET
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn: '3h' }
             );
             validatePassword = await argon2.verify(
                 checkAcccountUserName.account_password,

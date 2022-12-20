@@ -11,6 +11,7 @@ const validator = require("email-validator");
 const multer = require("multer");
 const FirebaseStorage = require("multer-firebase-storage");
 const fs = require("fs");
+const verifyJWT = require("../middleware/verifyJWTAdmin");
 
 const fileFilter = (req, file, cb) => {
     // reject a file
@@ -39,7 +40,7 @@ const upload = multer({
 // @route POST api/admin/parent
 // @desc Create parent user
 // @access Private
-router.post("/", upload.single("person_image"), async (req, res, next) => {
+router.post("/", verifyJWT, upload.single("person_image"), async (req, res, next) => {
     const {
         account_username,
         account_password,
@@ -162,7 +163,7 @@ router.post("/", upload.single("person_image"), async (req, res, next) => {
 // @route GET api/admin/parent
 // @desc GET parent
 // @access Private Only Admin
-router.get("/", async (req, res, next) => {
+router.get("/", verifyJWT, async (req, res, next) => {
     try {
         const getParentsInfor = await Parent.find()
             .select([
@@ -194,7 +195,7 @@ router.get("/", async (req, res, next) => {
 // @route GET api/admin/parent
 // @desc GET parent by Id
 // @access Private Only Admin
-router.get("/:parentID", async (req, res, next) => {
+router.get("/:parentID", verifyJWT, async (req, res, next) => {
     try {
         // Return token
         const getParentInfor = await Parent.find({
@@ -229,7 +230,7 @@ router.get("/:parentID", async (req, res, next) => {
 // @route PUT api/admin/parent
 // @desc PUT parent
 // @access Private Only Admin
-router.put("/:parentID", upload.single("person_image"), async (req, res, next) => {
+router.put("/:parentID", verifyJWT, upload.single("person_image"), async (req, res, next) => {
     const {
         account_username,
         // account_password,
@@ -393,7 +394,7 @@ router.put("/:parentID", upload.single("person_image"), async (req, res, next) =
 // @route PUT api/admin/parent
 // @desc DELETE parent
 // @access Private Only Admin
-router.delete("/:parentID", async (req, res, next) => {
+router.delete("/:parentID", verifyJWT, async (req, res, next) => {
     try {
         const parent = await Parent.findById(req.params.parentID);
         const person = await Person.findById(parent.person_id.toString());
@@ -440,7 +441,7 @@ router.delete("/:parentID", async (req, res, next) => {
     }
 });
 
-router.get("/get-parents-info/:personID", async (req, res, next) => {
+router.get("/get-parents-info/:personID", verifyJWT, async (req, res, next) => {
     try {
         // Return token
         const personInfor = await Person.findById(req.params.personID);
@@ -473,7 +474,7 @@ router.get("/get-parents-info/:personID", async (req, res, next) => {
     }
 });
 
-router.get("/change-is-association/:parentID", async(req, res, next) => {
+router.get("/change-is-association/:parentID", verifyJWT, async (req, res, next) => {
     try {
         const parentInfor = await Parent.findById(req.params.parentID);
         parentInfor.is_in_association = !parentInfor.is_in_association;
