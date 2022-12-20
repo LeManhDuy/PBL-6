@@ -6,12 +6,13 @@ const Teacher = require("../model/Teacher")
 const Subject = require("../model/Subject")
 const { json } = require("express")
 const upload = multer().any()
+const verifyJWT = require("../middleware/verifyJWTAdmin");
 
 // @route GET api/subject
 // @desc Get subject
 // @access Private
-router.get("/", async(req, res, next) => {
-    try{
+router.get("/", verifyJWT, async (req, res, next) => {
+    try {
         const allSubjectTeacher = await Subject_Teacher.find()
             .select()
             .populate({
@@ -21,7 +22,7 @@ router.get("/", async(req, res, next) => {
             .populate({
                 path: "teacher_id",
                 model: "Teacher",
-                populate:[{
+                populate: [{
                     path: "person_id",
                     model: "Person",
                 }]
@@ -62,7 +63,7 @@ router.get("/", async(req, res, next) => {
 //     }
 // })
 
-router.get("/search", async (req, res, next) => {
+router.get("/search", verifyJWT, async (req, res, next) => {
     try {
         // Return token
         let match = {}
@@ -79,7 +80,7 @@ router.get("/search", async (req, res, next) => {
             .populate({
                 path: "teacher_id",
                 model: "Teacher",
-                populate:[{
+                populate: [{
                     path: "person_id",
                     model: "Person",
                 }]
@@ -96,15 +97,15 @@ router.get("/search", async (req, res, next) => {
 // @route POST api/subject
 // @desc post subject
 // @access Private
-router.post("/",multer().single(), async(req, res, next) =>{
-    const {subject_id, teacher_id} = req.body
+router.post("/", verifyJWT, multer().single(), async (req, res, next) => {
+    const { subject_id, teacher_id } = req.body
     if (!subject_id || !teacher_id)
-    return res.status(400).json({
-        success: false,
-        message: "Please fill in complete information.",
-    })
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information.",
+        })
     try {
-        const subjectTeacherValidate = await Subject_Teacher.findOne({ subject_id:subject_id, teacher_id:teacher_id })
+        const subjectTeacherValidate = await Subject_Teacher.findOne({ subject_id: subject_id, teacher_id: teacher_id })
         if (subjectTeacherValidate)
             return res
                 .status(400)
@@ -131,13 +132,13 @@ router.post("/",multer().single(), async(req, res, next) =>{
 // @route PUT api/subject
 // @desc put subject
 // @access Private
-router.put("/:subjectTeacherID",multer().single(), async(req, res, next) =>{
-    const {subject_id, teacher_id} = req.body
+router.put("/:subjectTeacherID", verifyJWT, multer().single(), async (req, res, next) => {
+    const { subject_id, teacher_id } = req.body
     if (!subject_id || !teacher_id)
-    return res.status(400).json({
-        success: false,
-        message: "Please fill in complete information.",
-    })
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information.",
+        })
     try {
         const subjectTeacher = await Subject_Teacher.findById(req.params.subjectTeacherID)
         if (!subjectTeacher)
@@ -168,7 +169,7 @@ router.put("/:subjectTeacherID",multer().single(), async(req, res, next) =>{
             postUpdateSubjectTeacher,
             updateSubjectTeacher,
             { new: true }
-        )      
+        )
         res.json({
             success: true,
             message: "Update subject teacher successfully.",
@@ -186,10 +187,10 @@ router.put("/:subjectTeacherID",multer().single(), async(req, res, next) =>{
 // @route DELETE api/subject
 // @desc delete subject
 // @access Private
-router.delete("/:subjectTeacherID", async (req, res, next) => {
+router.delete("/:subjectTeacherID", verifyJWT, async (req, res, next) => {
     try {
         const deletedSubjectTeacher = await Subject_Teacher.findOneAndDelete(
-            {_id: req.params.subjectTeacherID}
+            { _id: req.params.subjectTeacherID }
         )
 
         res.json({ success: true, message: "Deleted subject successfully!", subjectTeacher: deletedSubjectTeacher })
@@ -201,45 +202,47 @@ router.delete("/:subjectTeacherID", async (req, res, next) => {
     }
 })
 
-router.post("/multi",multer().single(), async(req, res, next) =>{
-    const {teacher_id, subject_list} = req.body
+router.post("/multi", verifyJWT, multer().single(), async (req, res, next) => {
+    const { teacher_id, subject_list } = req.body
     // return res.status(400).json({
     //     success: false,
     //     subject_list
     // })
     if (!teacher_id || !subject_list)
-    return res.status(400).json({
-        success: false,
-        message: "Please fill in complete information.",
-    })
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information.",
+        })
     try {
         //validate teacher id
-        const existed_teacher = await Teacher.findOne({_id:teacher_id})
-        if(!existed_teacher){
-            return res.status(400).json({ success:false, message: "Teacher Id doesn't exist!"})
+        const existed_teacher = await Teacher.findOne({ _id: teacher_id })
+        if (!existed_teacher) {
+            return res.status(400).json({ success: false, message: "Teacher Id doesn't exist!" })
         }
         let newSubjectTeacherList = []
-        for( const [key,value] of Object.entries(subject_list)){
+        for (const [key, value] of Object.entries(subject_list)) {
             //validate subject id
-            const existed_subject = await Subject.findOne({_id: key})
-            if(existed_subject && value==true){
+            const existed_subject = await Subject.findOne({ _id: key })
+            if (existed_subject && value == true) {
                 //validate if subject teacher already exist
                 const existed_subject_teacher = await Subject_Teacher
-                    .findOne({subject_id:existed_subject._id, teacher_id: existed_teacher._id})
-                if(!existed_subject_teacher){
+                    .findOne({ subject_id: existed_subject._id, teacher_id: existed_teacher._id })
+                if (!existed_subject_teacher) {
                     const newSubjectTeacher = new Subject_Teacher({
                         subject_id: key,
-                        teacher_id: existed_teacher._id 
+                        teacher_id: existed_teacher._id
                     })
                     await newSubjectTeacher.save()
                     newSubjectTeacherList.push(newSubjectTeacher)
                 }
-            }else if(existed_subject && value==false){
-                await Subject_Teacher.deleteOne({subject_id:key,teacher_id:teacher_id})
+            } else if (existed_subject && value == false) {
+                await Subject_Teacher.deleteOne({ subject_id: key, teacher_id: teacher_id })
             }
         }
-        return res.status(200).json({ success: true, message: "Create Subject Teacher successfully",
-                    newSubjectTeacherList: newSubjectTeacherList.length>0?newSubjectTeacherList:"None"})
+        return res.status(200).json({
+            success: true, message: "Create Subject Teacher successfully",
+            newSubjectTeacherList: newSubjectTeacherList.length > 0 ? newSubjectTeacherList : "None"
+        })
 
     }
     catch (error) {
@@ -250,50 +253,52 @@ router.post("/multi",multer().single(), async(req, res, next) =>{
     }
 })
 
-router.put("/multi/:teacherID",multer().single(), async(req, res, next) =>{
-    const {teacher_id, subject_list} = req.body
+router.put("/multi/:teacherID", verifyJWT, multer().single(), async (req, res, next) => {
+    const { teacher_id, subject_list } = req.body
     return res.status(400).json({
         success: false,
         subject_list
     })
     if (!teacher_id || !subject_list)
-    return res.status(400).json({
-        success: false,
-        message: "Please fill in complete information.",
-    })
+        return res.status(400).json({
+            success: false,
+            message: "Please fill in complete information.",
+        })
     try {
         //validate teacher id
-        const existed_teacher = await Teacher.findOne({_id:teacher_id})
-        if(!existed_teacher){
-            return res.status(400).json({ success:false, message: "Teacher Id doesn't exist!"})
+        const existed_teacher = await Teacher.findOne({ _id: teacher_id })
+        if (!existed_teacher) {
+            return res.status(400).json({ success: false, message: "Teacher Id doesn't exist!" })
         }
         let newSubjectTeacherList = []
-        for( const [key,value] of Object.entries(subject_list)){
+        for (const [key, value] of Object.entries(subject_list)) {
             //validate subject id
-            const existed_subject = await Subject.findOne({_id: key})
-            if(existed_subject && value==true){
+            const existed_subject = await Subject.findOne({ _id: key })
+            if (existed_subject && value == true) {
                 //validate if subject teacher already exist
                 const existed_subject_teacher = await Subject_Teacher
-                    .findOne({subject_id:existed_subject._id, teacher_id: existed_teacher._id})
-                if(!existed_subject_teacher){
+                    .findOne({ subject_id: existed_subject._id, teacher_id: existed_teacher._id })
+                if (!existed_subject_teacher) {
                     const newSubjectTeacher = new Subject_Teacher({
                         subject_id: key,
-                        teacher_id: existed_teacher._id 
+                        teacher_id: existed_teacher._id
                     })
                     await newSubjectTeacher.save()
                     newSubjectTeacherList.push(newSubjectTeacher)
                 }
             }
-            else if(existed_subject && value==false){
+            else if (existed_subject && value == false) {
                 const existed_subject_teacher = await Subject_Teacher
-                    .findOne({subject_id:existed_subject._id, teacher_id: existed_teacher._id})
-                if(!existed_subject_teacher){
+                    .findOne({ subject_id: existed_subject._id, teacher_id: existed_teacher._id })
+                if (!existed_subject_teacher) {
                     await Subject_Teacher.deleteOne(existed_subject_teacher)
                 }
             }
         }
-        return res.status(200).json({ success: true, message: "Create Subject Teacher successfully",
-                    newSubjectTeacherList: newSubjectTeacherList.length>0?newSubjectTeacherList:"None"})
+        return res.status(200).json({
+            success: true, message: "Create Subject Teacher successfully",
+            newSubjectTeacherList: newSubjectTeacherList.length > 0 ? newSubjectTeacherList : "None"
+        })
 
     }
     catch (error) {

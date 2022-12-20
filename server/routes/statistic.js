@@ -6,11 +6,12 @@ const Pupil = require("../model/Pupil")
 const Comment = require("../model/Comment")
 const FeeCategory = require("../model/FeeCategory")
 const Fee = require("../model/Fee")
+const verifyJWT = require("../middleware/verifyJWTAdmin");
 
 // @route GET api/admin/grade
 // @desc Get Comment By Class ID
 // @access Private
-router.get("/get-comment-by-class-id/:classID", async (req, res) => {
+router.get("/get-comment-by-class-id/:classID", verifyJWT, async (req, res) => {
     try {
         const getPupilsInfor = await Pupil.find({
             class_id: req.params.classID
@@ -46,7 +47,7 @@ router.get("/get-comment-by-class-id/:classID", async (req, res) => {
 // @route GET api/admin/grade
 // @desc Get Comment By Class ID
 // @access Private
-router.get("/get-static-comment-pupil-by-class-id/:classID&:label", async (req, res) => {
+router.get("/get-static-comment-pupil-by-class-id/:classID&:label", verifyJWT, async (req, res) => {
     try {
         var label = "";
         if (req.params.label === 'Average(0-4)') {
@@ -80,7 +81,7 @@ router.get("/get-static-comment-pupil-by-class-id/:classID&:label", async (req, 
 // @route GET api/admin/grade
 // @desc Get score by subject class id
 // @access Private
-router.get("/get-score-by-class-subject-id/:classID&:subjectID", async (req, res) => {
+router.get("/get-score-by-class-subject-id/:classID&:subjectID", verifyJWT, async (req, res) => {
     try {
         const getPupilsInfor = await Pupil.find({
             class_id: req.params.classID
@@ -114,7 +115,7 @@ router.get("/get-score-by-class-subject-id/:classID&:subjectID", async (req, res
 // @route GET api/admin/grade
 // @desc Get score by subject class id
 // @access Private
-router.get("/get-score-pupil-by-class-subject-id/:classID&:subjectID&:label", async (req, res) => {
+router.get("/get-score-pupil-by-class-subject-id/:classID&:subjectID&:label", verifyJWT, async (req, res) => {
     try {
         var label = "";
         if (req.params.label === 'Average(0-4)') {
@@ -146,7 +147,7 @@ router.get("/get-score-pupil-by-class-subject-id/:classID&:subjectID&:label", as
 // @route GET api/admin/grade
 // @desc Get Comment By grade ID
 // @access Private
-router.get("/get-comment-by-grade-id/:gradeID", async (req, res) => {
+router.get("/get-comment-by-grade-id/:gradeID", verifyJWT, async (req, res) => {
     try {
         const getClassInfor = await Class.find({ grade_id: req.params.gradeID })
         let data = []
@@ -187,7 +188,7 @@ router.get("/get-comment-by-grade-id/:gradeID", async (req, res) => {
     }
 })
 
-router.get("/get-comment-pupil-by-grade-id/:gradeID&:label", async (req, res) => {
+router.get("/get-comment-pupil-by-grade-id/:gradeID&:label", verifyJWT, async (req, res) => {
     try {
         var label = "";
         if (req.params.label === 'Average(0-4)') {
@@ -224,7 +225,7 @@ router.get("/get-comment-pupil-by-grade-id/:gradeID&:label", async (req, res) =>
 // @route GET api/admin/grade
 // @desc Get score by subject class id
 // @access Private
-router.get("/get-score-by-grade-subjcet-id/:gradeID&:subjectID", async (req, res) => {
+router.get("/get-score-by-grade-subjcet-id/:gradeID&:subjectID", verifyJWT, async (req, res) => {
     try {
         const getClassInfor = await Class.find({ grade_id: req.params.gradeID })
         let data = []
@@ -267,7 +268,7 @@ router.get("/get-score-by-grade-subjcet-id/:gradeID&:subjectID", async (req, res
 // @route GET api/admin/grade
 // @desc Get score by subject class id
 // @access Private
-router.get("/get-score-pupil-by-grade-subjcet-id/:gradeID&:subjectID&:label", async (req, res) => {
+router.get("/get-score-pupil-by-grade-subjcet-id/:gradeID&:subjectID&:label", verifyJWT, async (req, res) => {
     try {
         var label = "";
         if (req.params.label === 'Average(0-4)') {
@@ -304,7 +305,7 @@ router.get("/get-score-pupil-by-grade-subjcet-id/:gradeID&:subjectID&:label", as
 // @route GET api/admin/statistic
 // @desc get-fee-by-fee-category-id
 // @access Private
-router.get("/get-fee-by-fee-category-and-class-id/:feeCategoryID&:classID", async (req, res) => {
+router.get("/get-fee-by-fee-category-and-class-id/:feeCategoryID&:classID", verifyJWT, async (req, res) => {
     try {
         const getPupilsInfor = await Pupil.find({
             class_id: req.params.classID
@@ -335,7 +336,7 @@ router.get("/get-fee-by-fee-category-and-class-id/:feeCategoryID&:classID", asyn
 // @route GET api/admin/statistic
 // @desc get-fee-by-fee-category-id
 // @access Private
-router.get("/get-fee-pupil-by-fee-category-and-class-id/:feeCategoryID&:classID&:label", async (req, res) => {
+router.get("/get-fee-pupil-by-fee-category-and-class-id/:feeCategoryID&:classID&:label", verifyJWT, async (req, res) => {
     try {
         var status = true;
         if (req.params.label === 'Paided') {
@@ -364,7 +365,7 @@ router.get("/get-fee-pupil-by-fee-category-and-class-id/:feeCategoryID&:classID&
 // @route GET api/admin/statistic
 // @desc get-fee-by-class-id
 // @access Private
-router.get("/get-fee-by-class-id/:classID", async (req, res) => {
+router.get("/get-fee-by-class-id/:classID", verifyJWT, async (req, res) => {
     try {
         const getPupilsInfor = await Pupil.find({
             class_id: req.params.classID
@@ -397,7 +398,7 @@ router.get("/get-fee-by-class-id/:classID", async (req, res) => {
 // @route GET api/admin/statistic
 // @desc get-fee-by-class-id
 // @access Private
-router.get("/get-fee-pupil-by-class-id/:classID&:label", async (req, res) => {
+router.get("/get-fee-pupil-by-class-id/:classID&:label", verifyJWT, async (req, res) => {
     try {
         var status = true;
         if (req.params.label === 'Paided') {
@@ -426,7 +427,7 @@ router.get("/get-fee-pupil-by-class-id/:classID&:label", async (req, res) => {
 // @route GET api/admin/statistic
 // @desc get-fee-by-class-id
 // @access Private
-router.get("/get-fee-by-fee-category-and-grade-id/:feeCategoryID&:gradeID", async (req, res) => {
+router.get("/get-fee-by-fee-category-and-grade-id/:feeCategoryID&:gradeID", verifyJWT, async (req, res) => {
     try {
         const getClassInfor = await Class.find({ grade_id: req.params.gradeID })
         let finalData = []
@@ -463,7 +464,7 @@ router.get("/get-fee-by-fee-category-and-grade-id/:feeCategoryID&:gradeID", asyn
 // @route GET api/admin/statistic
 // @desc get-fee-by-class-id
 // @access Private
-router.get("/get-fee-pupil-by-fee-category-and-grade-id/:feeCategoryID&:gradeID&:label", async (req, res) => {
+router.get("/get-fee-pupil-by-fee-category-and-grade-id/:feeCategoryID&:gradeID&:label", verifyJWT, async (req, res) => {
     try {
         var status = true;
         if (req.params.label === 'Paided') {
@@ -473,7 +474,7 @@ router.get("/get-fee-pupil-by-fee-category-and-grade-id/:feeCategoryID&:gradeID&
         }
 
         const getPupilsInfor = await Fee
-            .find({ fee_category_id: req.params.feeCategoryID ,fee_status: status })
+            .find({ fee_category_id: req.params.feeCategoryID, fee_status: status })
             .populate({
                 path: "pupil_id",
                 model: "Pupil",
@@ -496,7 +497,7 @@ router.get("/get-fee-pupil-by-fee-category-and-grade-id/:feeCategoryID&:gradeID&
 // @route GET api/admin/statistic
 // @desc get-fee-by-grade-id
 // @access Private
-router.get("/get-fee-by-grade-id/:gradeID", async (req, res) => {
+router.get("/get-fee-by-grade-id/:gradeID", verifyJWT, async (req, res) => {
     try {
         const getClassInfor = await Class.find({ grade_id: req.params.gradeID })
         let finalData = []
@@ -532,7 +533,7 @@ router.get("/get-fee-by-grade-id/:gradeID", async (req, res) => {
 // @route GET api/admin/statistic
 // @desc get-fee-by-grade-id
 // @access Private
-router.get("/get-fee-pupil-by-grade-id/:gradeID&:label", async (req, res) => {
+router.get("/get-fee-pupil-by-grade-id/:gradeID&:label", verifyJWT, async (req, res) => {
     try {
         var status = true;
         if (req.params.label === 'Paided') {
@@ -566,7 +567,7 @@ router.get("/get-fee-pupil-by-grade-id/:gradeID&:label", async (req, res) => {
 // @route GET api/admin/statistic
 // @desc get-fee-by-grade-id
 // @access Private
-router.get("/get-fee-by-fee-category-id/:feeCategoryID", async (req, res) => {
+router.get("/get-fee-by-fee-category-id/:feeCategoryID", verifyJWT, async (req, res) => {
     try {
         const feeInfor = await Fee.find({ fee_category_id: req.params.feeCategoryID }).select("paid_date")
         var Paided = 0
@@ -589,7 +590,7 @@ router.get("/get-fee-by-fee-category-id/:feeCategoryID", async (req, res) => {
 // @route GET api/admin/statistic
 // @desc get-fee-by-grade-id
 // @access Private
-router.get("/get-fee-pupil-by-fee-category-id/:feeCategoryID&:label", async (req, res) => {
+router.get("/get-fee-pupil-by-fee-category-id/:feeCategoryID&:label", verifyJWT, async (req, res) => {
     try {
         var status = true;
         if (req.params.label === 'Paided') {
@@ -617,7 +618,7 @@ router.get("/get-fee-pupil-by-fee-category-id/:feeCategoryID&:label", async (req
 // @route GET api/admin/statistic
 // @desc get-fee
 // @access Private
-router.get("/get-fee", async (req, res) => {
+router.get("/get-fee", verifyJWT, async (req, res) => {
     try {
         const feeInfor = await Fee.find().select("paid_date")
         var Paided = 0
@@ -640,7 +641,7 @@ router.get("/get-fee", async (req, res) => {
 // @route GET api/admin/statistic
 // @desc get-fee
 // @access Private
-router.get("/get-fee-pupil/:label", async (req, res) => {
+router.get("/get-fee-pupil/:label", verifyJWT, async (req, res) => {
     try {
         var status = true;
         if (req.params.label === 'Paided') {

@@ -9,7 +9,7 @@ const validator = require("email-validator");
 const multer = require("multer");
 const FirebaseStorage = require("multer-firebase-storage");
 const fs = require("fs");
-  
+const verifyJWT = require("../middleware/verifyJWTAdmin");
 // const storage = multer.diskStorage({
 //     destination: function (req, res, cb) {
 //         cb(null, "./uploads/affairs")
@@ -46,7 +46,7 @@ const upload = multer({
 // @route POST api/admin/affair
 // @desc Create affairs user
 // @access Private
-router.post("/", upload.single("person_image"), async (req, res, next) => {
+router.post("/", verifyJWT, upload.single("person_image"), async (req, res, next) => {
     const {
         account_username,
         account_password,
@@ -152,7 +152,7 @@ router.post("/", upload.single("person_image"), async (req, res, next) => {
 // @route GET api/admin/affair
 // @desc GET affair
 // @access Private Only Admin
-router.get("/", async (req, res, next) => {
+router.get("/", verifyJWT, async (req, res, next) => {
     try {
         // Return token
         const allAffair = await Account.find({
@@ -185,7 +185,7 @@ router.get("/", async (req, res, next) => {
 // @route GET api/admin/affair
 // @desc GET affair by Id
 // @access Private Only Admin
-router.get("/:personID", async (req, res, next) => {
+router.get("/:personID", verifyJWT, async (req, res, next) => {
     try {
         // Return token
         const getAffairInfor = await Person.find({ _id: req.params.personID })
@@ -211,7 +211,7 @@ router.get("/:personID", async (req, res, next) => {
 // @route PUT api/admin/affair
 // @desc PUT affair
 // @access Private Only Admin
-router.put("/:personID", upload.single("person_image"), async (req, res, next) => {
+router.put("/:personID", verifyJWT, upload.single("person_image"), async (req, res, next) => {
     const {
         // account_password,
         person_fullname,
@@ -340,7 +340,7 @@ router.put("/:personID", upload.single("person_image"), async (req, res, next) =
 // @route PUT api/admin/affair
 // @desc DELETE affair
 // @access Private Only Admin
-router.delete("/:personID", async (req, res, next) => {
+router.delete("/:personID", verifyJWT, async (req, res, next) => {
     try {
         const person = await Person.findById(req.params.personID);
         const postDeletePerson = {

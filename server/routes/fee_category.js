@@ -2,11 +2,12 @@ const express = require("express")
 const Fee = require("../model/Fee")
 const router = express.Router()
 const FeeCategory = require("../model/FeeCategory")
+const verifyJWT = require("../middleware/verifyJWTAdmin");
 
 // @route GET api/FeeCategory
 // @desc Get FeeCategory
 // @access Private
-router.get("/", async (req, res, next) => {
+router.get("/", verifyJWT, async (req, res, next) => {
     try {
         const allFeeCategory = await FeeCategory.find()
         res.json({ success: true, allFeeCategory })
@@ -22,7 +23,7 @@ router.get("/", async (req, res, next) => {
 // @route GET api/FeeCategory
 // @desc GET FeeCategory by Id
 // @access Private Only Admin
-router.get("/:feeCategoryID", async (req, res, next) => {
+router.get("/:feeCategoryID", verifyJWT, async (req, res, next) => {
     try {
         // Return token
         const getFeeCategoryInfor = await FeeCategory.find({ _id: req.params.feeCategoryID })
@@ -38,7 +39,7 @@ router.get("/:feeCategoryID", async (req, res, next) => {
 // @route POST api/FeeCategory
 // @desc post FeeCategory
 // @access Private
-router.post("/", async (req, res, next) => {
+router.post("/", verifyJWT, async (req, res, next) => {
     const { start_date, end_date, fee_name, fee_amount } = req.body
     if (!start_date || !end_date || !fee_name || !fee_amount)
         return res.status(400).json({
@@ -75,7 +76,7 @@ router.post("/", async (req, res, next) => {
 // @route PUT api/admin/grade
 // @desc put grade
 // @access Private
-router.put("/:feeCategoryId", async (req, res, next) => {
+router.put("/:feeCategoryId", verifyJWT, async (req, res, next) => {
     const { start_date, end_date, fee_name, fee_amount } = req.body
     if (!start_date || !end_date || !fee_name || !fee_amount)
         return res.status(400).json({
@@ -122,7 +123,7 @@ router.put("/:feeCategoryId", async (req, res, next) => {
 // @route DELETE api/FeeCategory
 // @desc delete FeeCategory
 // @access Private
-router.delete("/:feeCategoryId", async (req, res, next) => {
+router.delete("/:feeCategoryId", verifyJWT, async (req, res, next) => {
     try {
         const deletedFeeCategory = await FeeCategory.findOneAndDelete(
             { _id: req.params.feeCategoryId }
