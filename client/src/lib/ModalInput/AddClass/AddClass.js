@@ -209,7 +209,7 @@ const AddClass = (props) => {
                                     : " error-hidden")
                             }
                         >
-                            Name must be less than 30 chars
+                            Name must be less than 30 chars and not null
                         </label>
                     </div>
                 </div>
@@ -224,7 +224,7 @@ const AddClass = (props) => {
         let grade = false;
         let check = false;
 
-        if (allValuesClass.name.length > 30) {
+        if (allValuesClass.name.length > 30 || allValuesClass.name.length == 0) {
             name = true;
             check = true;
         } else name = false;

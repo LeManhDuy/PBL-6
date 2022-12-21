@@ -9,6 +9,7 @@ const validator = require("email-validator");
 const multer = require("multer");
 const FirebaseStorage = require("multer-firebase-storage");
 const fs = require("fs");
+const verifyJWT = require("../middleware/verifyJWTAdmin");
 
 const fileFilter = (req, file, cb) => {
     // reject a file
@@ -36,7 +37,7 @@ const upload = multer({
 // @route POST api/admin/principal
 // @desc Create principal user
 // @access Private
-router.post("/", upload.single("person_image"), async (req, res, next) => {
+router.post("/", verifyJWT, upload.single("person_image"), async (req, res, next) => {
     const {
         account_username,
         account_password,
@@ -143,7 +144,7 @@ router.post("/", upload.single("person_image"), async (req, res, next) => {
 // @route GET api/admin/principal
 // @desc GET principal
 // @access Private Only Admin
-router.get("/", async (req, res, next) => {
+router.get("/", verifyJWT, async (req, res, next) => {
     try {
         // Return token
         const allPrincipal = await Account.find({
@@ -178,7 +179,7 @@ router.get("/", async (req, res, next) => {
 // @route GET api/admin/principal
 // @desc GET principal by Id
 // @access Private Only Admin
-router.get("/:personID", async (req, res, next) => {
+router.get("/:personID", verifyJWT, async (req, res, next) => {
     try {
         // Return token
         const getPrincipalInfor = await Person.find({
@@ -206,7 +207,7 @@ router.get("/:personID", async (req, res, next) => {
 // @route PUT api/admin/principal
 // @desc PUT principal
 // @access Private Only Admin
-router.put("/:personID", upload.single("person_image"), async (req, res, next) => {
+router.put("/:personID", verifyJWT, upload.single("person_image"), async (req, res, next) => {
     const {
         // account_password,
         person_fullname,
@@ -347,7 +348,7 @@ router.put("/:personID", upload.single("person_image"), async (req, res, next) =
 // @route PUT api/admin/principal
 // @desc DELETE principal
 // @access Private Only Admin
-router.delete("/:personID", async (req, res, next) => {
+router.delete("/:personID", verifyJWT, async (req, res, next) => {
     try {
         const person = await Person.findById(req.params.personID);
         // if (person.person_image) {

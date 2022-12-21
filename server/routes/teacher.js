@@ -12,6 +12,7 @@ const multer = require("multer");
 const FirebaseStorage = require("multer-firebase-storage");
 const mongoose = require('mongoose');
 const fs = require("fs");
+const verifyJWT = require("../middleware/verifyJWTAdmin");
 
 const fileFilter = (req, file, cb) => {
     // reject a file
@@ -39,7 +40,7 @@ const upload = multer({
 // @route POST api/teacher
 // @desc Create teacher user
 // @access Private
-router.post("/", upload.single("person_image"), async (req, res, next) => {
+router.post("/", verifyJWT, upload.single("person_image"), async (req, res, next) => {
     const {
         account_username,
         account_password,
@@ -161,7 +162,7 @@ router.post("/", upload.single("person_image"), async (req, res, next) => {
 // @route GET api/teacher
 // @desc GET teacher
 // @access Private Only Admin
-router.get("/", async (req, res, next) => {
+router.get("/", verifyJWT, async (req, res, next) => {
     try {
         const getTeacherInfor = await Teacher.find()
             .select(["graduated_school", "working_since", "certificate"])
@@ -189,7 +190,7 @@ router.get("/", async (req, res, next) => {
 // @route GET api/teacher/id
 // @desc GET teacher by ID
 // @access Private Only Admin
-router.get("/:teacherID", async (req, res, next) => {
+router.get("/:teacherID", verifyJWT, async (req, res, next) => {
     try {
         // Return token
         const getTeacherInfor = await Teacher.find({
@@ -220,7 +221,7 @@ router.get("/:teacherID", async (req, res, next) => {
 // @route GET api/teacher/id
 // @desc GET teacher by ID
 // @access Private Only Admin
-router.post("/get-teacher-dont-have-class", async (req, res, next) => {
+router.post("/get-teacher-dont-have-class", verifyJWT, async (req, res, next) => {
     try {
         // Return token
         //get Teacher Have Class Id Id and All Teacher Id
@@ -265,7 +266,7 @@ router.post("/get-teacher-dont-have-class", async (req, res, next) => {
 // @route GET api/teacher/id
 // @desc GET teacher by ID
 // @access Private Only Admin
-router.get("/get-cbb-teacher-dont-have-class/:classID", async (req, res, next) => {
+router.get("/get-cbb-teacher-dont-have-class/:classID", verifyJWT, async (req, res, next) => {
     try {
         // Return token
         //get Teacher Have Class Id Id and All Teacher Id
@@ -315,7 +316,7 @@ router.get("/get-cbb-teacher-dont-have-class/:classID", async (req, res, next) =
 // @route PUT api/teacher
 // @desc PUT teacher
 // @access Private Only Admin
-router.put("/:teacherID", upload.single("person_image"), async (req, res, next) => {
+router.put("/:teacherID", verifyJWT, upload.single("person_image"), async (req, res, next) => {
     const {
         account_username,
         // account_password,
@@ -475,7 +476,7 @@ router.put("/:teacherID", upload.single("person_image"), async (req, res, next) 
 // @route PUT api/admin/principle
 // @desc DELETE principle
 // @access Private Only Admin
-router.delete("/:teacherID", async (req, res, next) => {
+router.delete("/:teacherID", verifyJWT, async (req, res, next) => {
     try {
         const teacher = await Teacher.findById(req.params.teacherID);
         const person = await Person.findById(teacher.person_id);

@@ -6,28 +6,29 @@ const Period = require("../model/Period");
 const SubjectTeacher = require("../model/SubjectTeacher");
 const Subject = require("../model/Subject");
 const ScoreController = require("../controllers/score");
+const verifyJWT = require("../middleware/verifyJWTAdmin");
 const multer = require("multer");
 
 // Create score for a subject
-router.post("/:subjectID", ScoreController.createSubjectScore);
+router.post("/:subjectID", verifyJWT, ScoreController.createSubjectScore);
 
 // Get score by pupilID
-router.get("/get-score/:studentID", ScoreController.getScoreByPupilId);
+router.get("/get-score/:studentID", verifyJWT, ScoreController.getScoreByPupilId);
 
 // Update score by scoreID
-router.put("/:scoreID", ScoreController.updateScore);
+router.put("/:scoreID", verifyJWT, ScoreController.updateScore);
 
 // Get all subject by pupilID
-router.get("/:studentID", ScoreController.getAllSubjectByPupilId);
+router.get("/:studentID", verifyJWT, ScoreController.getAllSubjectByPupilId);
 
 // Get score by ID
-router.get("/get-detail-score/:scoreID", ScoreController.getScoreById);
+router.get("/get-detail-score/:scoreID", verifyJWT, ScoreController.getScoreById);
 
 // Get all score by classID
-router.get("/get-all-score/:classID", ScoreController.getAllScoreByClassID);
+router.get("/get-all-score/:classID", verifyJWT, ScoreController.getAllScoreByClassID);
 
 // Get all subject by classID
-router.get("/get-all-subject/:classID", ScoreController.getSubjectByClassId);
+router.get("/get-all-subject/:classID", verifyJWT, ScoreController.getSubjectByClassId);
 
 // Add score by excel
 router.post(

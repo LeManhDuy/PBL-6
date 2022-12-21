@@ -4,11 +4,12 @@ const Fee = require("../model/Fee")
 const Pupil = require("../model/Pupil")
 const Parent = require("../model/Parent")
 const FeeCategory = require("../model/FeeCategory")
+const verifyJWT = require("../middleware/verifyJWTAdmin");
 
 // @route GET api/fee
 // @desc Get fee
 // @access Private
-router.get("/", async (req, res, next) => {
+router.get("/", verifyJWT, async (req, res, next) => {
     try {
         const allFee = await Fee.find()
             .populate({
@@ -41,7 +42,7 @@ router.get("/", async (req, res, next) => {
 // // @route GET api/fee
 // // @desc GET fee by Id
 // // @access Private Only Admin
-router.get("/:feeID", async (req, res, next) => {
+router.get("/:feeID", verifyJWT, async (req, res, next) => {
     try {
         // Return token
         const getfeeInfor = await Fee.find({ _id: req.params.feeID })
@@ -77,7 +78,7 @@ router.get("/:feeID", async (req, res, next) => {
         return res.status(500).json({ success: false, message: "" + error });
     }
 })
-router.get("/get-fee-by-category-id/:feeCategoryID", async (req, res, next) => {
+router.get("/get-fee-by-category-id/:feeCategoryID", verifyJWT, async (req, res, next) => {
     try {
         // Return token
         const getfeeInfor = await Fee.find({ fee_category_id: req.params.feeCategoryID })
@@ -116,7 +117,7 @@ router.get("/get-fee-by-category-id/:feeCategoryID", async (req, res, next) => {
 // // @route GET api/fee
 // // @desc GET fee by Id
 // // @access Private Only Admin
-router.get("/get-fee-status/:feeStatus", async (req, res, next) => {
+router.get("/get-fee-status/:feeStatus", verifyJWT, async (req, res, next) => {
     try {
         // Return token
         const getfeeInfor = await Fee.find({ fee_status: req.params.feeStatus })
@@ -156,7 +157,7 @@ router.get("/get-fee-status/:feeStatus", async (req, res, next) => {
 // @route GET api/fee
 // @desc GET fee by Id
 // @access Private Only Admin
-router.get("/get-fee-infor-by-parent-id/:personID", async (req, res, next) => {
+router.get("/get-fee-infor-by-parent-id/:personID", verifyJWT, async (req, res, next) => {
     try {
         // Return token
         const getParentsID = await Parent.find({
@@ -200,7 +201,7 @@ router.get("/get-fee-infor-by-parent-id/:personID", async (req, res, next) => {
 // // @route POST api/fee
 // // @desc post fee
 // // @access Private
-router.post("/", async (req, res, next) => {
+router.post("/", verifyJWT, async (req, res, next) => {
     const { list_pupil, paid_date, fee_category_id } = req.body
     if (!list_pupil || !fee_category_id)
         return res.status(400).json({
@@ -255,7 +256,7 @@ router.post("/", async (req, res, next) => {
 // // @route PUT api/admin/grade
 // // @desc put grade
 // // @access Private
-router.put("/:feeId", async (req, res, next) => {
+router.put("/:feeId", verifyJWT, async (req, res, next) => {
     const { paid_date, fee_category_id, pupil_id } = req.body
     if (!fee_category_id || !pupil_id)
         return res.status(400).json({
@@ -308,7 +309,7 @@ router.put("/:feeId", async (req, res, next) => {
 })
 
 
-router.post("/multi", async (req, res, next) => {
+router.post("/multi", verifyJWT, async (req, res, next) => {
     const { fee_list } = req.body
     if (!fee_list)
         return res.status(400).json({
@@ -362,7 +363,7 @@ router.post("/multi", async (req, res, next) => {
 // // @route DELETE api/fee
 // // @desc delete fee
 // // @access Private
-router.delete("/:feeId", async (req, res, next) => {
+router.delete("/:feeId", verifyJWT, async (req, res, next) => {
     try {
         const deletedFee = await Fee.findOneAndDelete(
             { _id: req.params.feeId }
@@ -375,7 +376,7 @@ router.delete("/:feeId", async (req, res, next) => {
         return res.status(500).json({ success: false, message: "" + error });
     }
 })
-router.post("/multi/delete", async (req, res, next) => {
+router.post("/multi/delete", verifyJWT, async (req, res, next) => {
     const { fee_list } = req.body
     if (!fee_list)
         return res.status(400).json({
