@@ -4,23 +4,12 @@ const getPupils = async () => {
     return await HandleApi.APIGetWithToken("pupil/");
 };
 
-const addPupil = async (classID, parentID, params) => {
-    return await HandleApi.APIPostWithTokenIMG(
-        `pupil/${classID}&${parentID}`,
-        params
-    );
-};
-
 const deletePupilById = async (id) => {
     return await HandleApi.APIDelete(`pupil/${id}`);
 };
 
 const getPupilById = async (id) => {
     return await HandleApi.APIGetWithToken(`pupil/${id}`);
-};
-
-const updatePupil = async (pupilID, params) => {
-    return await HandleApi.APIPutWithTokenIMG(`pupil/${pupilID}`, params);
 };
 
 const getPupilByParentId = async (personID) => {
@@ -39,10 +28,8 @@ const getStudentByStudentId = async (id) => {
 
 const PupilService = {
     getPupils,
-    addPupil,
     deletePupilById,
     getPupilById,
-    updatePupil,
     getPupilByParentId,
     getStudentByTeacherIdAtTeacherRole,
     getStudentByStudentId,

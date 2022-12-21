@@ -12,19 +12,10 @@ const getScheduleByPupilID = async (id) =>{
     return await HandleApi.APIGetWithToken(`schedule/pupil/${id}`)
 } 
 
-const AddScheduleByFile = async (file) => {
-    return await HandleApi.APIPostWithTokenFile("schedule/",file)
-}
-const DeleteScheduleById = async (id) =>{
-    return await HandleApi.APIDelete(`schedule/${id}`)
-}
-
 const ScheduleService = {
     getSchedule,
     getScheduleByHomeRoomTeacher,
     getScheduleByPupilID,
-    AddScheduleByFile,
-    DeleteScheduleById
 };
 
 export default ScheduleService;
