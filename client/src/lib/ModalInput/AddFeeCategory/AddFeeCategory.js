@@ -149,12 +149,12 @@ const AddFeeCategory = (props) => {
                         </label>
                     </div>
                     <div className="type-input">
-                        <h4>Fee Ammount</h4>
+                        <h4>Fee Amount</h4>
                         <NumericFormat
                             className="input-content"
                             type="text"
                             name="ammount"
-                            placeholder="Enter Fee Ammount"
+                            placeholder="Enter Fee Amount"
                             value={allValuesFeeCategory.ammount}
                             onChange={changeHandlerFeeCategory}
                             allowLeadingZeros
