@@ -167,7 +167,7 @@ const UpdateFeeCategory = (props) => {
                         </label>
                     </div>
                     <div className="type-input">
-                        <h4>Fee Ammount</h4>
+                        <h4>Fee Amount</h4>
                         <NumericFormat
                             className="input-content"
                             type="text"
