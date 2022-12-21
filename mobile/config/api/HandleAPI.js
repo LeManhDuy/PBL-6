@@ -7,7 +7,9 @@ const REACT_APP_API_ENDPOINT = "https://blue-school-api.onrender.com/"
 async function getToken() {
     const data = await AsyncStorage.getItem("@Login")
     if (data !== null) {
-        return data.type + " " + data.accessToken;
+        const dataJSON = JSON.parse(data)
+        // console.log(dataJSON.accessToken)
+        return dataJSON.type + " " + dataJSON.accessToken;
     }
 }
 
