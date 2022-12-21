@@ -162,7 +162,7 @@ const FeeCategoryAdmin = () => {
                 <ConfirmAlert
                     handleCloseModalCustom={handleCloseModalCustom}
                     handleDelete={handleDelete}
-                    title={`Do you want to delete the ${name}?`}
+                    title={`Do you want to delete?`}
                 />
             }
             handleCloseModalCustom={handleCloseModalCustom}
