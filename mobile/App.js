@@ -13,6 +13,8 @@ import SendNotice from './screens/SendNotice';
 import Schedule from './screens/Schedule';
 import Score from './screens/Score'
 import Fee from './screens/Fee';
+import { CustomDrawer } from './components';
+import Home from './screens/Home';
 // import { Text, View } from 'react-native';
 
 const Stack = createStackNavigator();
@@ -21,9 +23,10 @@ const Stack = createStackNavigator();
 export default function App() {
     const [initalRoute, setInitialRoute] = useState('Login')
     const [statusKeyLoaded, setStatusKeyLoaded] = useState(false)
+    const [state, setState] = useState(false);
     useEffect(() => {
       getInitialState();
-    }, []);
+    }, [state]);
 
   const getInitialState = async () => {
     try {
@@ -37,49 +40,6 @@ export default function App() {
       console.log(e)
     }
   }
-  const NotificationStack = () => {
-    const Stack = createStackNavigator();
-    return (
-      <Stack.Navigator defaultScreenOptions={'Notifications'} screenOptions={{
-        headerShown: false
-      }}>
-          <Stack.Screen name="Notifications" component={Notifications} />
-          <Stack.Screen name="SendNotice" component={SendNotice} 
-          />
-      </Stack.Navigator>
-    )
-  }
-
-  const HomeDrawer = () => {
-    const Drawer = createDrawerNavigator();
-    return (
-      <Drawer.Navigator useLegacyImplementation initialRouteName="Details"
-      drawerContent={props => {
-          return (
-            <DrawerContentScrollView {...props}>
-              <DrawerItemList {...props} />
-              <DrawerItem label="Logout" onPress={async () =>{
-                  try {
-                      await AsyncStorage.removeItem('@Login')
-                      props.navigation.navigate("Login")
-                  }
-                  catch(err) {
-                      console.log(err)
-                  }
-              }} />
-            </DrawerContentScrollView>
-          )
-        }}>
-          <Drawer.Screen name="Details" component={Details}/>
-          <Drawer.Screen name="Pupils" component={ListPupils} />
-          <Drawer.Screen name="Notification" component={NotificationStack} />
-          <Drawer.Screen name="Schedule" component={Schedule} />
-          <Drawer.Screen name="Score" component={Score} />
-          <Drawer.Screen name="Fee" component={Fee} />
-      </Drawer.Navigator>
-    )
-  }
-
 
   return (
     <>{statusKeyLoaded && (
@@ -88,7 +48,7 @@ export default function App() {
         headerShown: false
       }}>
         <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Home" component={HomeDrawer} />
+        <Stack.Screen name="Home" component={Home} />
       </Stack.Navigator>
     </NavigationContainer>
     )}

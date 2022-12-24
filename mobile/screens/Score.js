@@ -6,9 +6,10 @@ import CommentService from "../config/service/CommentService";
 import React, { useState, useEffect, useRef } from "react";
 import { scale } from 'react-native-size-matters';
 import ListPupilModal from '../components/ListPupilModal';
-import { AnimatedHeader } from '../components';
+import { AnimatedHeader, EmptyContent } from '../components';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { assets } from '../constants';
+import { ActivityIndicator } from 'react-native-paper';
 const Score = () => {
     const [pupilsInfo, setPupilsInfo] = useState()
     const [state, setState] = useState(false)
@@ -217,7 +218,7 @@ const Score = () => {
                             </View>
                         </AnimatedScrollView>
                     </>
-                    : <Text style={{ marginTop: scale(58) }}>Empty</Text>
+                    : <EmptyContent/>
                 }
 
             </SafeAreaView>
@@ -225,7 +226,12 @@ const Score = () => {
     }
     else {
         return (
-            <Text>Loading</Text>
+            <View style={{
+                width:'100%',
+                height: '100%',
+                justifyContent:'center',}}>
+                <ActivityIndicator size={'large'} color={'#1A5CAC'}/>
+            </View>
         )
     }
 }

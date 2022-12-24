@@ -6,6 +6,8 @@ import SearchDropDown from './SearchableDropdown';
 import ListPupilModal from './ListPupilModal';
 import AnimatedHeader from './AnimatedHeader';
 import FeeCard from './FeeCard';
+import CustomDrawer from './CustomDrawer';
+import EmptyContent from './EmptyContent';
 export {
     PupilCard,
     CustomButton, 
@@ -14,5 +16,7 @@ export {
     SearchDropDown,
     ListPupilModal,
     AnimatedHeader,
-    FeeCard
+    FeeCard,
+    CustomDrawer,
+    EmptyContent,
 }

@@ -9,7 +9,7 @@ import NotificationService from '../config/service/NotificationService';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
 const SendNotice = ({ navigation }) => {
-
+    const [state, setState] = useState(false);
     const [privateNotification, setPrivateNotification] = useState({
         title: "",
         content: "",
@@ -23,7 +23,7 @@ const SendNotice = ({ navigation }) => {
     const [filtered, setFiltered] = useState([])
     useEffect(() => {
         getStudents();
-    }, []);
+    }, [state]);
 
     const getStudents = async () => {
         const data = await AsyncStorage.getItem("@Login")

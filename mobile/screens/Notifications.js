@@ -17,14 +17,12 @@ const Notifications = ({ navigation }) => {
   useEffect(() => {
     getNotifications();
     getNotificationsParents();
-  }, [state]);
+  }, []);
   useFocusEffect(
     React.useCallback(() => {
       getNotifications();
       getNotificationsParents();
-      // alert('Screen was focused');
-      // setState(!state)
-    }, [])
+    }, [state])
   );
   const getNotifications = () => {
     NotificationService.getNotifications()
@@ -127,12 +125,14 @@ const Notifications = ({ navigation }) => {
           keyExtractor={(item) => item.id}
           showsHorizontalScrollIndicator={false}
         />
+        {isPublic?null:
         <TouchableOpacity onPress={() => {
           // console.log("this")
           navigation.navigate('SendNotice')
         }} style={styles.floatButton}>
           <Text style={styles.floatButtonIcon}>+</Text>
         </TouchableOpacity>
+        }
       </View>
     </View>
   );

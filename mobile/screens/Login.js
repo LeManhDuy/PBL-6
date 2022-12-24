@@ -17,6 +17,16 @@ const Login = ({ navigation }) => {
     useEffect(() => {
         checkLogin()
     }, [state])
+    // React.useEffect(
+    //     () =>
+    //       navigation.addListener('beforeRemove', (e) => {
+    //         // if(!isLogin) return;
+    //         e.preventDefault();
+            
+    //         // return;
+    //       }),
+    //     [navigation]
+    //   );
 
     const checkLogin = async () => {
         const i = await AsyncStorage.getItem("@Login")
@@ -33,6 +43,7 @@ const Login = ({ navigation }) => {
             .then(async (response) => {
                 console.log(response)
                 if (response.success && response.AccountRole === "Parents") {
+                    // setIsLogin(true)
                     await AsyncStorage.setItem('@Login', JSON.stringify(response))
                     setUserInfo({ username: "", password: "" })
                     // setState(!state)

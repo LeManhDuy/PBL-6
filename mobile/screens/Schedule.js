@@ -5,9 +5,10 @@ import ScheduleService from "../config/service/ScheduleService";
 import React, { useState, useEffect, useRef } from "react";
 import { scale } from 'react-native-size-matters';
 import ListPupilModal from '../components/ListPupilModal';
-import { AnimatedHeader } from '../components';
+import { AnimatedHeader, EmptyContent } from '../components';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { assets } from '../constants';
+import { ActivityIndicator } from 'react-native-paper';
 const Schedule = () => {
 
     const [pupilsInfo, setPupilsInfo] = useState()
@@ -230,7 +231,7 @@ const Schedule = () => {
                             <Image size={40} source={assets.arrowup} />
                         </TouchableOpacity>
                     </>
-                    : <Text style={{ marginTop: scale(58) }}>Empty</Text>}
+                    : <EmptyContent />}
 
             </SafeAreaView>
         )
@@ -239,7 +240,12 @@ const Schedule = () => {
         // console.log(pupilsInfo)
         // console.log(scheduleInfo)
         return (
-            <Text>Loading</Text>
+            <View style={{
+                width:'100%',
+                height: '100%',
+                justifyContent:'center',}}>
+                <ActivityIndicator size={'large'} color={'#1A5CAC'}/>
+            </View>
         )
     }
 }
