@@ -9,6 +9,7 @@ import email from '../assets/icons/email.png'
 import teacher from '../assets/icons/teacher.png'
 import classes from '../assets/icons/class.png'
 import arrowup from '../assets/icons/arrow-up-bold.png'
+import drawerBackground from '../assets/image/DrawerBackground.png'
 
 export default {
   badge,
@@ -21,5 +22,6 @@ export default {
   email,
   teacher,
   classes,
-  arrowup
+  arrowup,
+  drawerBackground
 };

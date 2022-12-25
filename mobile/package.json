@@ -21,7 +21,6 @@
     "expo": "~46.0.16",
     "expo-status-bar": "~1.4.0",
     "expo-updates": "~0.14.7",
-    "formik": "^2.2.9",
     "react": "^18.0.0",
     "react-native": "0.69.6",
     "react-native-auto-size-text": "^1.1.1",
