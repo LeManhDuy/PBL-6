@@ -27,7 +27,6 @@ const SendNotice = ({ navigation }) => {
 
     const getStudents = async () => {
         const data = await AsyncStorage.getItem("@Login")
-        // console.log(JSON.parse(data))
         setPrivateNotification({
             ...privateNotification,
             parent: JSON.parse(data).AccountId
@@ -74,36 +73,6 @@ const SendNotice = ({ navigation }) => {
                 console.log(error);
             });
     };
-
-    onSwipePerformed = (action) => {
-        /// action : 'left' for left swipe
-        /// action : 'right' for right swipe
-        /// action : 'up' for up swipe
-        /// action : 'down' for down swipe
-
-        switch (action) {
-            case 'left': {
-                console.log('left Swipe performed');
-                break;
-            }
-            case 'right': {
-                console.log('right Swipe performed');
-                break;
-            }
-            case 'up': {
-                console.log('up Swipe performed');
-                break;
-            }
-            case 'down': {
-                console.log('down Swipe performed');
-                break;
-            }
-            default: {
-                console.log('Undeteceted action');
-            }
-        }
-    }
-
 
 
     const onSearch = (text) => {
