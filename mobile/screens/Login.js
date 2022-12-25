@@ -17,16 +17,20 @@ const Login = ({ navigation }) => {
     useEffect(() => {
         checkLogin()
     }, [state])
-    // React.useEffect(
-    //     () =>
-    //       navigation.addListener('beforeRemove', (e) => {
-    //         // if(!isLogin) return;
-    //         e.preventDefault();
+    React.useEffect(
+        () =>
+          navigation.addListener('beforeRemove', (e) => {
+            if(isLogin){
+                navigation.dispatch(e.data.action)
+            }
+            else{
+                e.preventDefault();
+            }
             
-    //         // return;
-    //       }),
-    //     [navigation]
-    //   );
+            // return;
+          }),
+        [navigation]
+      );
 
     const checkLogin = async () => {
         const i = await AsyncStorage.getItem("@Login")
