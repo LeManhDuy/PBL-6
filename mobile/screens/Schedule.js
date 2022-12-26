@@ -9,6 +9,7 @@ import { AnimatedHeader, EmptyContent } from '../components';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { assets } from '../constants';
 import { ActivityIndicator } from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/core';
 const Schedule = () => {
 
     const [pupilsInfo, setPupilsInfo] = useState()
@@ -22,7 +23,12 @@ const Schedule = () => {
         getPupilsInfo()
         getScheduleInfo()
     }, [state])
-
+    useFocusEffect(
+        React.useCallback(() => {
+            getPupilsInfo()
+            getScheduleInfo()
+        }, [])
+      );
     const getPupilsInfo = async () => {
         const account_data = JSON.parse(await AsyncStorage.getItem('@Login'))
         if (account_data) {

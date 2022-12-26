@@ -5,6 +5,7 @@ import { CustomButton } from "../components";
 import AuthenticationService from "../config/service/AuthenticationService";
 // import AsyncStorageManager from "../config/service/AsyncStorageManager";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from "@react-navigation/core";
 
 
 
@@ -17,20 +18,6 @@ const Login = ({ navigation }) => {
     useEffect(() => {
         checkLogin()
     }, [state])
-    React.useEffect(
-        () =>
-          navigation.addListener('beforeRemove', (e) => {
-            if(isLogin){
-                navigation.dispatch(e.data.action)
-            }
-            else{
-                e.preventDefault();
-            }
-            
-            // return;
-          }),
-        [navigation]
-      );
 
     const checkLogin = async () => {
         const i = await AsyncStorage.getItem("@Login")

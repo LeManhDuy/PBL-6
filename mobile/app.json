@@ -4,7 +4,7 @@
     "slug": "PBL-6",
     "version": "1.1.0",
     "orientation": "portrait",
-    "icon": "./assets/Logo.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -29,6 +29,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3c6603f4-47c0-43ed-a873-b64e2c2c2e23"
+      }
     }
   }
 }

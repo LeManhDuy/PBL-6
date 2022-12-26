@@ -13,6 +13,7 @@ import { scale } from 'react-native-size-matters';
 import SendNotice from './SendNotice'
 import Notifications from './Notifications'
 import NotificationStack from './NotificationStack';
+import { useFocusEffect } from '@react-navigation/core';
 
 const Home = () => {
   const [isLogin, setIsLogin] = useState(false)
@@ -23,6 +24,12 @@ const Home = () => {
         checkLogin()
         getParentInfo()
     }, [state])
+    useFocusEffect(
+      React.useCallback(() => {
+        checkLogin()
+        getParentInfo()
+      }, [state])
+    );
 
     const getParentInfo = async () => {
         const account_data = JSON.parse(await AsyncStorage.getItem('@Login'))

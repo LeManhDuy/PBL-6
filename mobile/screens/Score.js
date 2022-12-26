@@ -10,6 +10,7 @@ import { AnimatedHeader, EmptyContent } from '../components';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { assets } from '../constants';
 import { ActivityIndicator } from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/core';
 const Score = () => {
     const [pupilsInfo, setPupilsInfo] = useState()
     const [state, setState] = useState(false)
@@ -20,7 +21,11 @@ const Score = () => {
     useEffect(() => {
         getPupilsInfo()
     }, [state])
-
+    useFocusEffect(
+        React.useCallback(() => {
+            getPupilsInfo()
+        }, [state])
+      );
     const getPupilsInfo = async () => {
         const account_data = JSON.parse(await AsyncStorage.getItem('@Login'))
         let studentData = []

@@ -5,6 +5,7 @@ import { assets, COLORS, FONTS, SIZES } from "../constants";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import StudentService from "../config/service/StudentService";
 import { PupilCard } from "../components";
+import { useFocusEffect } from "@react-navigation/core";
 
 
 const ListPupils = ({}) => {
@@ -14,6 +15,11 @@ const ListPupils = ({}) => {
     useEffect(()=>{
         getPupilsInfo()
     }, [state])
+    useFocusEffect(
+        React.useCallback(() => {
+            getPupilsInfo()
+        }, [state])
+      );
 
     const getPupilsInfo = async () => {
         const account_data = JSON.parse(await AsyncStorage.getItem('@Login'))
