@@ -1,10 +1,11 @@
 import { SafeAreaView, View, StyleSheet, Image, ScrollView } from "react-native"
 import React, { useState, useEffect } from "react";
-import { TextInput, Title } from "react-native-paper";
+import { Text, Title } from "react-native-paper";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { assets, COLORS, FONTS, SIZES } from "../constants";
 import AccountService from "../config/service/AccountService";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from "@react-navigation/core";
 
 const Details = () => {
     const [parentInfo, setParentInfo] = useState()
@@ -13,6 +14,11 @@ const Details = () => {
     useEffect(() => {
         getParentInfo()
     }, [state])
+    useFocusEffect(
+        React.useCallback(() => {
+            getParentInfo()
+        }, [state])
+      );
 
     const getParentInfo = async () => {
         const account_data = JSON.parse(await AsyncStorage.getItem('@Login'))

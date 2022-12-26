@@ -7,6 +7,7 @@ import { scale } from 'react-native-size-matters';
 import FeeCard from '../components/FeeCard';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { assets } from '../constants';
+import { useFocusEffect } from '@react-navigation/core';
 
 const Fee = () => {
     const [fees, setFees] = useState([]);
@@ -14,6 +15,11 @@ const Fee = () => {
     useEffect(() => {
         getFee();
     }, []);
+    useFocusEffect(
+      React.useCallback(() => {
+        getFee()
+      }, [])
+    );
 
     const getFee = async () => {
         await FeeService.getFeeInforByParentId(
