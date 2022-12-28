@@ -95,10 +95,12 @@ const ScoreParents = () => {
                                 ? res.pupilComment[0].comment_content
                                 : "-",
                             behavior: res.pupilComment[0]
-                                ? res.pupilComment[0] === "Excellent" ||
-                                  res.pupilComment[0] === "Good"
+                                ? res.pupilComment[0].comment_content ===
+                                      "Excellent" ||
+                                  res.pupilComment[0].comment_content === "Good"
                                     ? "Good"
-                                    : res.pupilComment[0] === "Passed"
+                                    : res.pupilComment[0].comment_content ===
+                                      "Passed"
                                     ? "Passed"
                                     : "Need to try more."
                                 : "-",

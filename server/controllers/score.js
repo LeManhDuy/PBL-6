@@ -6,6 +6,7 @@ const SubjectTeacher = require("../model/SubjectTeacher");
 const Subject = require("../model/Subject");
 const Score = require("../model/Score");
 const Classroom = require("../model/Class");
+const Comment = require("../model/Comment");
 const excelToJson = require("convert-excel-to-json");
 
 const createSubjectScore = async (req, res, next) => {
@@ -505,6 +506,50 @@ const addScoreExcel = async (req, res, next) => {
                     // console.log("Mid-term: null");
                     // console.log("Final: null");
                 }
+            }
+            let check = "Excellent";
+            let none = false;
+            const pupilScore = await Score.find({
+                pupil_id: pupilValidate._id,
+            })
+                .select(["midterm_score", "final_score", "result"])
+                .populate({ path: "subject_id", model: "Subject" });
+            if (pupilScore[0]) {
+                let min = 11;
+                pupilScore.map((item) => {
+                    if (item.final_score < min) {
+                        min = item.final_score;
+                    }
+                });
+                if (min < 5) {
+                    check = "Failed";
+                }
+                if (min < 7 && min >= 5) {
+                    check = "Passed";
+                }
+                if (min >= 7 && min < 9) {
+                    check = "Good";
+                }
+            } else {
+                check = "-";
+            }
+            if (none) {
+                check = "-";
+            }
+            //Validate
+            const commentBefore = await Comment.find({
+                pupil_id: pupilValidate._id,
+            });
+            // console.log(commentBefore[0]);
+            if (commentBefore[0]) {
+                commentBefore[0].comment_content = check;
+                await commentBefore[0].save();
+            } else {
+                const newComment = new Comment({
+                    comment_content: check,
+                    pupil_id: pupilValidate._id,
+                });
+                await newComment.save();
             }
         }
         res.json({

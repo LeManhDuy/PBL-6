@@ -26,7 +26,7 @@ const createComment = async (req, res, next) => {
         if (pupilScore[0]) {
             let min = 11;
             pupilScore.map((item) => {
-                if(item.final_score < min) {
+                if (item.final_score < min) {
                     min = item.final_score;
                 }
             });
@@ -93,7 +93,12 @@ const getCommentByPupilID = async (req, res, next) => {
             success: true,
             pupilComment,
         });
-    } catch (error) {}
+    } catch (error) {
+        const err = new Error("Internal Server Error");
+        err.status = 500;
+        next(err);
+        return res.status(500).json({ success: false, message: "" + error });
+    }
 };
 
 module.exports = {
