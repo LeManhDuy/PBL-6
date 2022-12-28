@@ -83,8 +83,11 @@ const ScheduleAdmin = () => {
                         label: item.class_name,
                     };
                 });
-
-                setClasses(dataSources);
+                const dataSourcesSorted = [...dataSources].sort((a, b) =>
+                    a.label > b.label ? 1 : -1
+                );
+                setClasses(dataSourcesSorted);
+                //setClasses(dataSources);
                 setDropValueClass(dataSources[0]);
             })
             .catch((error) => {
